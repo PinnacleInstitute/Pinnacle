@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="UploadCustomers">Import Customers</LABEL>
+	<LABEL name="UploadCustomersText">The Customer Import File must be a comma delimited (CSV) format. 
+	Fields that contain commas must be contained within double quotes. 
+	Missing fields can be skipped with consecutive commas (, ,).</LABEL>
+	<LABEL name="UploadCustomersFormat">Each row of the file must include the Sales Campaign Number, Customer Date, Customer Name. Optional fields include the, 
+	contact first name, contact last name, Title, Email, Day Phone, Night Phone, Street, Unit, City, State, Zip, Country.</LABEL>
+	<LABEL name="UploadCustomersExample">1, 1/1/2006, "Acme, Inc.", Bob, Jones, President, bob@jones.com, (214)345-9876, , 123 Main Street, , Dallas, TX, 75075, USA</LABEL>
+	<LABEL name="Submit">Submit</LABEL>
+	<LABEL name="Close">Close</LABEL>
+</LANGUAGE>

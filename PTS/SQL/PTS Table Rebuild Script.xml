@@ -1,0 +1,163 @@
+<ROOT>
+	<PROC name="pts_CheckTableRebuild" path="Custom" />
+
+	<TABLE name="AdRebuild" />
+	<TABLE name="AddressRebuild" />
+	<TABLE name="AdvanceRebuild" />
+	<TABLE name="AffiliateRebuild" />
+	<TABLE name="ApptRebuild" />
+	<TABLE name="AssessAnswerRebuild" />
+	<TABLE name="AssessChoiceRebuild" />
+	<TABLE name="AssessmentRebuild" />
+	<TABLE name="AssessQuestionRebuild" />
+	<TABLE name="AttachmentRebuild" />
+	<TABLE name="AttachmentFTRebuild" />
+	<TABLE name="AuditRebuild" />
+	<TABLE name="AuthLogRebuild" />
+	<TABLE name="AuthUserRebuild" />
+
+	<TABLE name="BillingRebuild" />
+	<TABLE name="BinarySaleRebuild" />
+	<TABLE name="BoardUserRebuild" />
+	<TABLE name="BonusRebuild" />
+	<TABLE name="BonusItemRebuild" />
+	<TABLE name="BroadcastRebuild" />
+	<TABLE name="BroadcastNewsRebuild" />
+	<TABLE name="BusinessRebuild" />
+
+	<TABLE name="CalendarRebuild" />
+	<TABLE name="CashRebuild" />
+	<TABLE name="ChannelRebuild" />
+	<TABLE name="CommissionRebuild" />
+	<TABLE name="CommPlanRebuild" />
+	<TABLE name="CommTypeRebuild" />
+	<TABLE name="CompanyRebuild" />
+	<TABLE name="CompPlan"/>
+	<TABLE name="ContestRebuild" />
+	<TABLE name="CoptionRebuild" />
+	<TABLE name="CountryRebuild" />
+	<TABLE name="CourseRebuild" />
+	<TABLE name="CourseFTRebuild" />
+	<TABLE name="CourseCategoryRebuild" />
+	<TABLE name="CreditRebuild" />
+
+	<TABLE name="DebtRebuild" />
+	<TABLE name="DomainRebuild" />
+	<TABLE name="DownlineRebuild" />
+	<TABLE name="DownTitleRebuild" />
+	<TABLE name="DripCampaignRebuild" />
+	<TABLE name="DripPageRebuild" />
+	<TABLE name="DripTargetRebuild" />
+
+	<TABLE name="EmailRebuild" />
+	<TABLE name="EmaileeRebuild" />
+	<TABLE name="EmailListRebuild" />
+	<TABLE name="EmailSourceRebuild" />
+	<TABLE name="EmployeeRebuild" />
+	<TABLE name="EventRebuild" />
+	<TABLE name="ExpenseRebuild" />
+	<TABLE name="ExpenseTypeRebuild" />
+
+	<TABLE name="FavoriteRebuild" />
+	<TABLE name="FileUploadRebuild" />
+	<TABLE name="FinanceRebuild" />
+	<TABLE name="FolderRebuild" />
+	<TABLE name="FolderItemRebuild" />
+	<TABLE name="ForumRebuild" />
+	<TABLE name="ForumModeratorRebuild" />
+	<TABLE name="FriendRebuild" />
+	<TABLE name="FriendGroupRebuild" />
+
+	<TABLE name="GenealogyRebuild" />
+	<TABLE name="GoalRebuild" />
+	<TABLE name="GovidRebuild" />
+	<TABLE name="GuestRebuild" />
+
+	<TABLE name="HomeTaxRebuild" />
+	<TABLE name="HomeWorkRebuild" />
+
+	<TABLE name="InventoryRebuild" />
+	<TABLE name="IssueRebuild" />
+	<TABLE name="IssueCategoryRebuild" />
+
+	<!--	<TABLE name="LabAttr"/>-->
+	<!--	<TABLE name="Label"/>-->
+	<!--	<TABLE name="LabEnty"/>-->
+	<!--	<TABLE name="LabLang"/>-->
+
+	<TABLE name="LeadRebuild" />
+	<TABLE name="LeadCampaignRebuild" />
+	<TABLE name="LeadLogRebuild" />
+	<TABLE name="LeadPageRebuild" />
+	<TABLE name="LessonRebuild" />
+
+	<TABLE name="MailRebuild" />
+	<TABLE name="MemberRebuild" />
+	<TABLE name="MemberAssessRebuild" />
+	<TABLE name="MemberContestRebuild" />
+	<TABLE name="MemberDomainRebuild" />
+	<TABLE name="MemberNewsRebuild" />
+	<TABLE name="MemberSalesRebuild" />
+	<TABLE name="MemberTaxRebuild" />
+	<TABLE name="MemberTitleRebuild" />
+	<TABLE name="MessageRebuild" />
+	<TABLE name="MetricRebuild" />
+	<TABLE name="MetricTypeRebuild" />
+	<TABLE name="MoptionRebuild" />
+	<TABLE name="MsgRebuild" />
+
+	<TABLE name="NewsRebuild" />
+	<TABLE name="NewsletterRebuild" />
+	<TABLE name="NewsTopicRebuild" />
+	<TABLE name="NoteRebuild" />
+
+	<TABLE name="OrgRebuild" />
+	<TABLE name="OrgCourseRebuild" />
+	<TABLE name="OrgMemberRebuild" />
+
+	<TABLE name="PageRebuild" />
+	<TABLE name="PageSectionRebuild" />
+	<TABLE name="PartyRebuild" />
+	<TABLE name="PaymentRebuild" />
+	<TABLE name="PayoutRebuild" />
+	<!--	<TABLE name="PoolRebuild" />-->
+	<!--	<TABLE name="PrepaidRebuild" />-->
+	<TABLE name="ProductRebuild" />
+	<TABLE name="ProductTypeRebuild" />
+	<TABLE name="ProjectRebuild" />
+	<TABLE name="ProjectMemberRebuild" />
+	<TABLE name="ProjectTypeRebuild" />
+	<TABLE name="PromotionRebuild" />
+	<TABLE name="ProspectRebuild" />
+	<TABLE name="ProspectTypeRebuild" />
+
+	<TABLE name="QuestionRebuild" />
+	<TABLE name="QuestionTypeRebuild" />
+	<TABLE name="QuizAnswerRebuild" />
+	<TABLE name="QuizChoiceRebuild" />
+	<TABLE name="QuizQuestionRebuild" />
+
+	<TABLE name="ResourceRebuild" />
+
+	<TABLE name="SalesCampaignRebuild" />
+	<TABLE name="SalesItemRebuild" />
+	<TABLE name="SalesOrderRebuild" />
+	<TABLE name="SalesPhaseRebuild" />
+	<TABLE name="SalesReportRebuild" />
+	<TABLE name="SalesStepRebuild" />
+	<TABLE name="SessionRebuild" />
+	<TABLE name="SessionLessonRebuild" />
+	<TABLE name="ShortcutRebuild" />
+	<TABLE name="SignatureRebuild" />
+	<TABLE name="SuggestionRebuild" />
+	<TABLE name="SurveyRebuild" />
+	<TABLE name="SurveyAnswerRebuild" />
+	<TABLE name="SurveyChoiceRebuild" />
+	<TABLE name="SurveyQuestionRebuild" />
+
+	<TABLE name="TaskRebuild" />
+	<TABLE name="TaxRateRebuild" />
+	<TABLE name="TitleRebuild" />
+	<TABLE name="TrainerRebuild" />
+
+</ROOT>

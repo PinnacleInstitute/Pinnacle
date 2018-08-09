@@ -1,0 +1,30 @@
+<STYLE>
+TABLE.ProgressBox{
+	BORDER: inset 2px;
+	SPACING: none;
+	PADDING: none;
+	BACKGROUND-COLOR: gray;
+	WIDTH: 100%;
+}
+TD.ProgressBar{
+	BACKGROUND-COLOR: blue;
+}
+TD.Status{
+	font-weight: 700; 
+	color: #333333; 
+	font-family: arial
+	font-size: 12pt;
+}
+TD.Title{
+	font-weight: 700; 
+	color: #333333; 
+	font-size: 14pt;
+	font-family: arial
+}
+TD.Error{
+	font-weight: 700; 
+	color: #FF0000; 
+	font-size: 14pt;
+	font-family: arial
+}
+</STYLE>

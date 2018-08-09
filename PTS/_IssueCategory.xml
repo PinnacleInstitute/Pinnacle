@@ -1,0 +1,595 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="94" name="IssueCategory" alias="zic" log="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="9401" name="IssueCategoryID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="9402" name="CompanyID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="9405" name="IssueCategoryName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="9406" name="Seq" type="number" min="1" source="entity" seq="10"/>
+		<WTATTRIBUTE id="9407" name="UserType" type="number" source="entity">
+      <WTENUM id="-2" name="UserTypeCustom2"/>
+      <WTENUM id="-1" name="UserTypeCustom1"/>
+      <WTENUM id="1" name="UserTypePublic"/>
+      <WTENUM id="2" name="UserTypeFree"/>
+      <WTENUM id="3" name="UserTypeGeneral"/>
+			<WTENUM id="4" name="UserTypeAdmin"/>
+      <WTENUM id="5" name="UserTypePrivate"/>
+    </WTATTRIBUTE>
+		<WTATTRIBUTE id="9408" name="AssignedTo" type="text" length="15" min="1" max="15" source="entity"/>
+		<WTATTRIBUTE id="9409" name="InputOptions" type="text" length="1000" min="1" max="1000" source="entity"/>
+		<WTATTRIBUTE id="9410" name="Email" type="text" length="100" min="1" max="100" source="entity"/>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="IssueCategory" entity="IssueCategory" alias="ic"/>
+		</WTRELATIONSHIPS>
+		
+		<!--Indexes-->
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+		</WTINDEX>
+		
+		<WTINDEX name="IssueCategoryName">
+			<WTATTRIBUTE name="IssueCategoryName"/>
+		</WTINDEX>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumList" blankrow="false" enumname="EnumUserList" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(IssueCategory.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(IssueCategory.UserType)" direction="input"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserList" style="GenerateDataProc.xsl" column="IssueCategoryName" template="new" passthru="true">
+			<WTPARAM name="ATTR(IssueCategory.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(IssueCategory.UserType)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(IssueCategory.IssueCategoryID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(IssueCategory.IssueCategoryName)"/>
+					<WTJOIN name="IssueCategory"/>
+					<WTCONDITION expr="ATTR(IssueCategory.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(IssueCategory.UserType)" oper="less-equal" value="PARAM(UserType)" connector="and"/>
+					<WTORDER name="ATTR(IssueCategory.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="ListAll" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(IssueCategory.IssueCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(IssueCategory.IssueCategoryName)"/>
+					<WTATTRIBUTE value="ATTR(IssueCategory.Seq)"/>
+					<WTATTRIBUTE value="ATTR(IssueCategory.UserType)"/>
+					<WTATTRIBUTE value="ATTR(IssueCategory.AssignedTo)"/>
+					<WTATTRIBUTE value="ATTR(IssueCategory.Email)"/>
+					<WTJOIN name="IssueCategory"/>
+					<WTCONDITION expr="ATTR(IssueCategory.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+          <WTORDER name="ATTR(IssueCategory.UserType)"/>
+          <WTORDER name="ATTR(IssueCategory.Seq)"/>
+        </WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9402" header="false" navbar="false" footer="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="IssueCategory" project="ptsIssueCategoryUser" class="CIssueCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueCategoryID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssueCategory" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="IssueCategory" project="ptsIssueCategoryUser" class="CIssueCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueCategoryID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="IssueCategoryID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+	 					<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlIssueCategory" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="ViewEmployees()">
+					var url, win;
+					url = "9404.asp?companyid=" + document.getElementById('CompanyID').value
+		            win = window.open(url,"Employees","height=451,width=200,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewIssueCategory" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="IssueCategoryName"/>
+					<WTTEXT col="2" value="ATTR(IssueCategory.IssueCategoryName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(IssueCategory.Seq)" size="3"/>
+					<WTSTATIC col="2" tag="UserType"/>
+					<WTCOMBO col="2" value="ATTR(IssueCategory.UserType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AssignedTo"/>
+					<WTTEXT col="2" value="ATTR(IssueCategory.AssignedTo)"/>
+					<WTIMAGE col="2" value="CONST(employee.gif)" align="center" valign="center">
+						<WTLINK name="ViewEmployees()" click="true" />
+					</WTIMAGE>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9403" header="false" navbar="false" footer="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="IssueCategoryID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSUB name="UpdateIssueCategory">
+				<WTOBJECT name="IssueCategory" project="ptsIssueCategoryUser" class="CIssueCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueCategoryID" direction="input" value="PARAM(IssueCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssueCategory" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="IssueCategory" project="ptsIssueCategoryUser" class="CIssueCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueCategoryID" direction="input" value="PARAM(IssueCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssueCategory" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="UpdateExit" type="Update">
+				<WTCALLSUB name="UpdateIssueCategory"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="Update" type="Update">
+				<WTCALLSUB name="UpdateIssueCategory"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="IssueCategory" project="ptsIssueCategoryUser" class="CIssueCategory">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="IssueCategoryID" direction="input" value="PARAM(IssueCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="IssueCategory" project="ptsIssueCategoryUser" class="CIssueCategory">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueCategoryID" direction="input" value="PARAM(IssueCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssueCategory" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="ViewEmployees()">
+					var url, win;
+					url = "9404.asp?companyid=" + document.getElementById('CompanyID').value
+		            win = window.open(url,"Employees","height=451,width=200,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+				<WTFUNCTION name="TestOptions()">
+					var url, win;
+					url = "9405.asp?issuecategoryid=" + document.getElementById('IssueCategoryID').value
+		            win = window.open(url,"TestOptions","top=100,left=100,height=300,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=yes");
+					win.focus();
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(IssueCategoryID)"/>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="IssueCategory" value="ATTR(IssueCategory.IssueCategoryName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="IssueCategoryName"/>
+					<WTTEXT col="2" value="ATTR(IssueCategory.IssueCategoryName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(IssueCategory.Seq)" size="3"/>
+					<WTSTATIC col="2" tag="UserType"/>
+					<WTCOMBO col="2" value="ATTR(IssueCategory.UserType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AssignedTo"/>
+					<WTTEXT col="2" value="ATTR(IssueCategory.AssignedTo)"/>
+					<WTIMAGE col="2" value="CONST(employee.gif)" align="center" valign="center">
+						<WTLINK name="ViewEmployees()" click="true" />
+					</WTIMAGE>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="EmailText" class="Prompt" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(IssueCategory.Email)" size="60"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CustomFields" align="left"/>
+					<WTBUTTON col="1" value="CONST(Test)" btnclass="smbutton" align="right">
+						<WTCLICK>TestOptions()</WTCLICK>
+					</WTBUTTON>
+					<WTSTATIC col="1" label="SaveFirst" class="prompt" space="2"/>
+					<WTIMAGE col="1" value="CONST(LearnMore.gif)">
+						<WTLINK name="Page" target="Help">
+							<WTPARAM name="Page" value="CONST(CustomField)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(IssueCategory.InputOptions)" cols="72" rows="10"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(UpdateExit)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="9404" caption="Employees" focus="false" navbar="false" header="false" footer="false"
+		margin="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Employees" project="ptsOrgUser" class="CEmployees">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="ListActive">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmployees" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="ListActiveUsers">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="240" align="left"/>
+
+				<WTFUNCTION name="SetAssigned(V)">
+					window.opener.document.getElementById('AssignedTo').value = V;
+					window.close();
+				</WTFUNCTION>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" label="ClickEmployee" class="Prompt" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Employee">
+						<WTCOLUMN width="100" align="center" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Employee.EmployeeName)">
+									<WTLINK click="true" name="CONST(SetAssigned('&lt;xsl:value-of select=&quot;@namefirst&quot;/&gt;');)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Org">
+						<WTCOLUMN width="100" align="center" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Org.ContactName)">
+									<WTLINK click="true" name="CONST(SetAssigned('&lt;xsl:value-of select=&quot;@namefirst&quot;/&gt;');)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="9405" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="IssueCategoryID" datatype="number"/>
+			<WTPARAM name="InputOptions" datatype="text"/>
+			<WTPARAM name="Test" datatype="number"/>
+
+			<WTSUB name="LoadInputOptions">
+				<WTOBJECT name="IssueCategory" project="ptsIssueCategoryUser" class="CIssueCategory">
+					<WTCONDITION expr="PARAM(IssueCategoryID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueCategoryID" direction="input" value="PARAM(IssueCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(InputOptions)" value="ATTR(InputOptions)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssueCategory" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Issue" project="ptsIssueUser" class="CIssue">
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(InputOptions)" value="PARAM(InputOptions)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssue" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadInputOptions"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Test" type="Update">
+				<WTCALLSUB name="LoadInputOptions"/>
+				<WTOBJECT name="Issue" project="ptsIssueUser" class="CIssue">
+					<WTMETHOD name="Load">
+						<WTPARAM name="IssueID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(InputOptions)" value="PARAM(InputOptions)"/>
+					<WTINPUTOPTIONS name="ATTR(InputOptions)" values="ATTR(InputValues)" price="CONST(tmpPrice)" secure="0"/>
+					<WTSETATTRIBUTE name="PARAM(Test)" value="CONST(1)">
+						<WTCONDITION expr="NoErrors"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="PARAM(Test)" value="CONST(2)">
+						<WTCONDITION expr="IsErrors"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssue" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="center" class="PageHeading">
+						<WTSTATIC label="TestOptions"/>
+						<WTSTATIC fontcolor="red">
+							<WTCONDITION expr="PARAM(Test)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="2"/>
+							<WTSTATIC label="TestSuccess">
+								<WTCONDITION expr="PARAM(Test)" oper="equal" value="CONST(1)"/>
+							</WTSTATIC>
+							<WTSTATIC label="TestFail">
+								<WTCONDITION expr="PARAM(Test)" oper="equal" value="CONST(2)"/>
+							</WTSTATIC>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTINPUTOPTIONS name="InputOptions" values="InputValues" entity="Issue"/>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Test)" align="center"/>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9411" caption="List" header="false" navbar="false" footer="false" wrapper="wrapper600"
+               aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="IssueCategorys" project="ptsIssueCategoryUser" class="CIssueCategorys">
+					<WTMETHOD name="ListAll">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlIssueCategorys" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="IssueCategorys" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" label="NewIssueCategory" class="PageHeader" align="right">
+						<WTCONDITION expr="IsActive"/>
+						<WTLINK name="9402">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="IssueCategory">
+            <WTCOLUMN width="15" align="center" valign="top" label="UserType"/>
+            <WTCOLUMN width="15" align="left" valign="top" label="Seq"/>
+						<WTCOLUMN width="50" align="left" valign="top" label="IssueCategoryName"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="AssignedTo"/>
+						<WTROW>
+              <WTSTATIC col="1" value="DATA(IssueCategory.UserType)"/>
+              <WTSTATIC col="2" value="DATA(IssueCategory.Seq)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(IssueCategory.IssueCategoryName)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="9403">
+											<WTPARAM name="IssueCategoryID" value="DATA(IssueCategory.IssueCategoryID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(IssueCategory.AssignedTo)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="3" value="DATA(IssueCategory.Email)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12">
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

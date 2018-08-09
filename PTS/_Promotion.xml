@@ -1,0 +1,529 @@
+ <WTROOT prefix="pts" dbo="dbo" language="false">
+	<WTENTITY id="07" name="Promotion" alias="pm" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="0701" name="PromotionID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="0702" name="CompanyID" type="number" source="entity"/>
+		<WTATTRIBUTE id="0703" name="ProductID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="0705" name="PromotionName" type="text" length="60" min="1" max="60" title="true" required="true" source="entity"/>
+		<WTATTRIBUTE id="0706" name="Description" type="text" length="500" min="1" max="500" source="entity"/>
+		<WTATTRIBUTE id="0707" name="Code" type="text" length="6" min="1" max="6" source="entity"/>
+		<WTATTRIBUTE id="0708" name="Amount" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="0709" name="Rate" type="currency" min="0" max="999.999" source="entity">
+			<WTFORMAT value="##0.000" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0710" name="StartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="0711" name="EndDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="0712" name="Qty" type="number" source="entity"/>
+		<WTATTRIBUTE id="0713" name="Used" type="number" source="entity"/>
+		<WTATTRIBUTE id="0714" name="Products" type="text" length="50" min="1" max="50" source="entity"/>
+
+		<!-- non-persist attrs -->
+		
+		<!--Indexes-->
+		<WTINDEX name="Code">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="Code"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Promotion" entity="Promotion" alias="pm"/>
+			<WTRELATIONSHIP name="Common" entity="Promotion" alias="pm"/>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="PromotionName" contains="true" default="true"/>
+			<WTATTRIBUTE name="Code"/>
+			<WTATTRIBUTE name="Description" contains="true"/>
+			<WTATTRIBUTE name="PromotionID"/>
+			<WTATTRIBUTE name="ProductID"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(Promotion.CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Promotion.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetUsed" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(PromotionID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="0701" caption="Find" action="5" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(PromotionName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Promotions" project="ptsPromotionUser" class="CPromotions">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlPromotions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN />
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Promotions" project="ptsPromotionUser" class="CPromotions">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlPromotions" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="FindPromotion" class="PageHeading"/>
+							<WTLINKGROUP col="2">
+								<WTLINK name="0702" label="NewPromotion" class="PageHeadingLink">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								</WTLINK>
+							</WTLINKGROUP>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Promotions.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+<!--					<WTBUTTON col="1" action="3" value="CONST(Return)"/>-->
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Promotion">
+						<WTCOLUMN width="9" align="left" valign="top" label="#"/>
+						<WTCOLUMN width="45" align="left" valign="top" label="PromotionName"/>
+						<WTCOLUMN width="12" align="left" valign="top" label="Amount"/>
+						<WTCOLUMN width="12" align="left" valign="top" label="StartDate"/>
+						<WTCOLUMN width="12" align="left" valign="top" label="EndDate"/>
+						<WTCOLUMN width="5" align="left" valign="top" label="Qty"/>
+						<WTCOLUMN width="5" align="left" valign="top" label="Used"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Promotion.PromotionID)"/>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Promotion.PromotionName)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="0703"><WTPARAM name="PromotionID" value="DATA(Promotion.PromotionID)"/></WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Preview.gif)">
+										<WTLINK name="5212" target="report"><WTPARAM name="PromotionID" value="DATA(Promotion.PromotionID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Promotion.Amount)"/>
+							<WTSTATIC col="4" value="DATA(Promotion.StartDate)"/>
+							<WTSTATIC col="5" value="DATA(Promotion.EndDate)"/>
+							<WTSTATIC col="6" value="DATA(Promotion.Qty)"/>
+							<WTSTATIC col="7" value="DATA(Promotion.Used)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Promotion.Code)"/>
+							<WTSTATIC col="2" merge="6" value="DATA(Promotion.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="0702" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--===============================================================================-->
+		   <WTPARAM name="CompanyID" datatype="number"/>
+		   
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Promotion" project="ptsPromotionUser" class="CPromotion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PromotionID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlPromotion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Promotion" project="ptsPromotionUser" class="CPromotion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PromotionID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="PromotionID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlPromotion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="0703" skipreturn="true" nolocaldata="true">
+						<WTPARAM name="PromotionID" value="CONST(PromotionID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewPromotion" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="PromotionName"/>
+					<WTTEXT col="2" value="ATTR(Promotion.PromotionName)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)"/>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="0703" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="PromotionID" datatype="number"/>
+
+			<WTSUB name="LoadPromotion">
+				<WTOBJECT name="Promotion" project="ptsPromotionUser" class="CPromotion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PromotionID" direction="input" value="PARAM(PromotionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlPromotion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqPromotionID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Promotion&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdatePromotion">
+				<WTOBJECT name="Promotion" project="ptsPromotionUser" class="CPromotion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PromotionID" direction="input" value="PARAM(PromotionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlPromotion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqPromotionID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Promotion&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadPromotion"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdatePromotion"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Promotion" project="ptsPromotionUser" class="CPromotion">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="PromotionID" direction="input" value="PARAM(PromotionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Promotion" project="ptsPromotionUser" class="CPromotion">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="PromotionID" direction="input" value="PARAM(PromotionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlPromotion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="Used" type="Update">
+				<WTCALLSUB name="UpdatePromotion"/>
+				<WTOBJECT name="Promotion" project="ptsPromotionUser" class="CPromotion">
+					<WTMETHOD name="GetUsed">
+						<WTPARAM name="PromotionID" direction="input" value="PARAM(PromotionID)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadPromotion"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Promotion" value="ATTR(Promotion.PromotionName)" class="PageHeading" align="left"/>
+					<WTIMAGE col="1" merge="2" value="CONST(Preview.gif)">
+						<WTLINK name="5212" target="report">
+							<WTPARAM name="PromotionID" value="ATTR(Promotion.PromotionID)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="PromotionID"/>
+					<WTSTATIC col="2" value="ATTR(Promotion.PromotionID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="PromotionName"/>
+					<WTTEXT col="2" value="ATTR(Promotion.PromotionName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Promotion.Description)" cols="68" rows="4"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1" tag="Code"/>
+					<WTTEXT col="2" value="ATTR(Promotion.Code)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ProductID"/>
+					<WTTEXT col="2" value="ATTR(Promotion.ProductID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(Promotion.Amount)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Rate"/>
+					<WTTEXT col="2" value="ATTR(Promotion.Rate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Promotion.StartDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Promotion.EndDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Qty"/>
+					<WTTEXT col="2" value="ATTR(Promotion.Qty)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Used"/>
+					<WTTEXT col="2" value="ATTR(Promotion.Used)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ProductsText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Products"/>
+					<WTTEXT col="2" value="ATTR(Promotion.Products)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="5" value="CONST(CalcUseage)">
+						<WTCONDITION expr="IsActive"/>
+						<WTCONDITION expr="ATTR(Promotion.Qty)" oper="not-equal" value="CONST(0)" connector="and"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="Instructions" align="center" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" value="ATTR(HTMLFile.Data)" rows="15" cols="72" htmleditor="editor_simple" embedhtml="true" align="left"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="0704" caption="Promotion" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false">
+		<!--==================================================================-->
+			<WTPARAM name="PromotionID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqPromotionID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Promotion&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+				<WTROW>
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

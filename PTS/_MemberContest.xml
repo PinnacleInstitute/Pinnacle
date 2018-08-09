@@ -1,0 +1,52 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="127" name="MemberContest" alias="mcn">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="12701" name="MemberContestID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="12702" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="12703" name="ContestID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="12705" name="MemberName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Member" name="CompanyName" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="12706" name="ContestName" type="text" length="40" min="1" max="40" source="join">
+			<WTJOIN entity="Contest" name="ContestName" />
+		</WTATTRIBUTE>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+		<WTINDEX name="ContestID">
+			<WTATTRIBUTE name="ContestID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="MemberContest" entity="MemberContest" alias="mcn"/>
+			<WTRELATIONSHIP name="Common" entity="MemberContest" alias="mcn">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="mcn" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+				<WTENTITY name="Contest" entity="Contest" alias="con">
+					<WTATTRIBUTE alias="mcn" name="ContestID" relalias="con" relname="ContestID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE name="Add" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ContestID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+	<WTWEBPAGES>
+	</WTWEBPAGES>
+
+</WTROOT>

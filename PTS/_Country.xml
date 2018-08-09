@@ -1,0 +1,227 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="39" name="Country" alias="cou" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="3901" name="CountryID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="3903" name="CountryName" type="text" length="50" min="1" max="50" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="3904" name="Code" type="text" length="2" min="1" max="2" source="entity" language="false"/>
+		<WTATTRIBUTE id="3905" name="Curr" type="number" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="3990" name="CompanyID" type="number" source="entity" persist="false" passthru="true"/>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Country" entity="Country" alias="cou"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompany" enumname="EnumUserCompany" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(Country.CompanyID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompany" style="GenerateDataProc.xsl" column="CountryName" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(Country.CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(Country.CountryID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(Country.CountryName)"/>
+					<WTJOIN name="Country"/>
+					<WTCONDITION expr="ATTR(Country.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(Country.CountryName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Country.CountryID)"/>
+					<WTATTRIBUTE value="ATTR(Country.CountryName)"/>
+					<WTATTRIBUTE value="ATTR(Country.Code)"/>
+					<WTATTRIBUTE value="ATTR(Country.Curr)"/>
+					<WTJOIN name="Country"/>
+					<WTORDER name="ATTR(Country.CountryName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="3903" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CountryID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Country" project="ptsCountryUser" class="CCountry">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CountryID" direction="input" value="PARAM(CountryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCountry" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Country" project="ptsCountryUser" class="CCountry">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CountryID" direction="input" value="PARAM(CountryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCountry" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Country" project="ptsCountryUser" class="CCountry">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="CountryID" direction="input" value="PARAM(CountryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Country" project="ptsCountryUser" class="CCountry">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CountryID" direction="input" value="PARAM(CountryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCountry" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Country" value="ATTR(Country.CountryName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="CountryID"/>
+					<WTSTATIC col="2" value="ATTR(Country.CountryID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CountryName"/>
+					<WTTEXT col="2" value="ATTR(Country.CountryName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Code"/>
+					<WTTEXT col="2" value="ATTR(Country.Code)" size="2"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Curr"/>
+					<WTTEXT col="2" value="ATTR(Country.Curr)" size="2"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="3911" caption="Countrys" header="false" footer="false" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+					<WTMETHOD name="List">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCountrys" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Countrys" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1"  height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Country">
+						<WTCOLUMN width="10" align="center" label="CountryID"/>
+						<WTCOLUMN width="70" align="left" label="CountryName"/>
+						<WTCOLUMN width="10" align="center" label="Code"/>
+						<WTCOLUMN width="10" align="center" label="Curr"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Country.CountryID)"/>
+							<WTSTATIC col="2" value="DATA(Country.CountryName)">
+								<WTLINK name="3903"><WTPARAM name="CountryID" value="DATA(Country.CountryID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Country.Code)"/>
+							<WTSTATIC col="4" value="DATA(Country.Curr)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="24">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

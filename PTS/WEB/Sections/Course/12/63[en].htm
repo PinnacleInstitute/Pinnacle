@@ -1,0 +1,61 @@
+The distinguishing feature of a spreadsheet program such as Excel is that it allows you to create mathematical formulas and execute functions. Otherwise, it is not much more than a large table for displaying text. This page will show you how to create these calculations. 
+<P><B> Formulas</B>
+<P>Formulas are entered in the worksheet cell and must begin with an equal sign "=". The formula then includes the addresses of the cells whose values will be manipulated with appropriate operands placed in between. After the formula is typed into the cell, the calculation executes immediately and the formula itself is visible in the formula bar. See the example below to view the formula for calculating the sub total for a number of textbooks. The formula multiplies the quantity and price of each textbook and adds the subtotal for each book.
+<P align=center><IMG height=333 alt="[Formula example]" src="http://www.fgcu.edu/support/office2000/excel/images/formula1.gif" width=413 border=1>
+<P><B> Linking Worksheets</B>
+<P>You may want to use the value from a cell in another worksheet within the same workbook in a formula. For example, the value of cell A1 in the current worksheet and cell A2 in the second worksheet can be added using the format "sheetname!celladdress". The formula for this example would be "=A1+Sheet2!A2" where the value of cell A1 in the current worksheet is added to the value of cell A2 in the worksheet named "Sheet2".
+<P><B> Relative, Absolute, and Mixed Referencing</B>
+<P>Calling cells by just their column and row labels (such as "A1") is called <B>relative referencing</B>. When a formula contains relative referencing and it is copied from one cell to another, Excel does not create an exact copy of the formula. It will change cell addresses relative to the row and column they are moved to. For example, if a simple addition formula in cell C1 "=(A1+B1)" is copied to cell C2, the formula would change to "=(A2+B2)" to reflect the new row. To prevent this change, cells must be called by <B>absolute referencing</B> and this is accomplished by placing dollar signs "$" within the cell addresses in the formula. Continuing the previous example, the formula in cell C1 would read "=($A$1+$B$1)" if the value of cell C2 should be the sum of cells A1 and B1. Both the column and row of both cells are absolute and will not change when copied. <B>Mixed referencing</B> can also be used where only the row OR column fixed. For example, in the formula "=(A$1+$B2)", the row of cell A1 is fixed and the column of cell B2 is fixed.
+<P><B> Basic Functions</B>
+<P>Functions can be a more efficient way of performing mathematical operations than formulas. For example, if you wanted to add the values of cells D1 through D10, you would type the formula "=D1+D2+D3+D4+D5+D6+D7+D8+D9+D10". A shorter way would be to use the SUM function and simply type "=SUM(D1:D10)". Several other functions and examples are given in the table below:
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" align=center border=1>
+<TBODY>
+<TR bgColor=#d7dfee>
+<TD><B>Function</B></TD>
+<TD><B>Example</B></TD>
+<TD><B>Description</B></TD>
+</TR><TR>
+<TD>SUM</TD>
+<TD>=SUM(A1:100)</TD>
+<TD>finds the sum of cells A1 through A100</TD>
+</TR><TR>
+<TD>AVERAGE</TD>
+<TD>=AVERAGE(B1:B10)</TD>
+<TD>finds the average of cells B1 through B10</TD>
+</TR><TR>
+<TD>MAX</TD>
+<TD>=MAX(C1:C100)</TD>
+<TD>returns the highest number from cells C1 through C100</TD>
+</TR><TR>
+<TD>MIN</TD>
+<TD>=MIN(D1:D100)</TD>
+<TD>returns the lowest number from cells D1 through D100</TD>
+</TR><TR>
+<TD>SQRT</TD>
+<TD>=SQRT(D10)</TD>
+<TD>finds the square root of the value in cell D10</TD>
+</TR><TR>
+<TD>TODAY</TD>
+<TD>=TODAY()</TD>
+<TD>returns the current date (leave the parentheses empty)</TD>
+</TR></TBODY></TABLE>
+<P><B> Function Wizard</B>  <IMG height=18 alt="[function wizard]" src="http://www.fgcu.edu/support/office2000/excel/images/functionwizard.gif" width=20 align=absMiddle border=1>
+<P>View all functions available in Excel by using the Function Wizard.
+<OL>
+<LI>Activate the cell where the function will be placed and click the <B>Function Wizard</B> button on the standard toolbar. 
+<LI>From the <B>Paste Function</B> dialog box, browse through the functions by clicking in the <B>Function category</B> menu on the left and select the function from the <B>Function name</B> choices on the right. As each function name is highlighted a description and example of use is provided below the two boxes.
+<BR><IMG height=295 alt="[Paste Function window]" src="http://www.fgcu.edu/support/office2000/excel/images/pastefunction.gif" width=387 vspace=5 border=1> 
+<LI>Click <B>OK</B> to select a function. 
+<LI>The next window allows you to choose the cells that will be included in the function. In the example below, cells B4 and C4 were automatically selected for the sum function by Excel. The cell values {2, 3} are located to the right of the <B>Number 1</B> field where the cell addresses are listed. If another set of cells, such as B5 and C5, needed to be added to the function, those cells would be added in the format "B5:C5" to the <B>Number 2</B> field.
+<BR><IMG height=182 alt="[Paste Function options]" src="http://www.fgcu.edu/support/office2000/excel/images/pastefunction2.gif" width=468 vspace=5 border=1> 
+<LI>Click <B>OK</B> when all the cells for the function have been selected. 
+</OL>
+<P><B> Autosum </B> <IMG height=15 alt=[autosum] src="http://www.fgcu.edu/support/office2000/excel/images/autosum.gif" width=18 align=absMiddle border=1>
+<P>Use the Autosum function to add the contents of a cluster of adjacent cells.
+<OL>
+<LI>Select the cell that the sum will appear in that is outside the cluster of cells whose values will be added. Cell C2 was used in this example. 
+<LI>Click the <B>Autosum</B> button (Greek letter sigma) on the standard toolbar. 
+<LI>Highlight the group of cells that will be summed (cells A2 through B2 in this example). 
+<LI>Press the <B>ENTER</B> key on the keyboard or click the green check mark button on the formula bar <IMG height=15 alt="[check mark]" src="http://www.fgcu.edu/support/office2000/excel/images/greencheck.gif" width=15 border=1>.
+<BR><IMG height=127 alt="[Autosum example]" src="http://www.fgcu.edu/support/office2000/excel/images/autosum2.gif" width=295 vspace=5 border=1>
+</OL>

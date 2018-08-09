@@ -1,0 +1,65 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="145" name="BroadcastNews" alias="bcn" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="14501" name="BroadcastNewsID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="14502" name="BroadcastID" type="number" source="entity"/>
+		<WTATTRIBUTE id="14503" name="NewsID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="14505" name="Title" type="text" length="150" source="join">
+			<WTJOIN entity="News" name="Title" />
+		</WTATTRIBUTE>
+
+		<WTINDEX name="BroadcastID">
+			<WTATTRIBUTE name="BroadcastID"/>
+		</WTINDEX>
+		<WTINDEX name="NewsID">
+			<WTATTRIBUTE name="NewsID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="BroadcastNews" entity="BroadcastNews" alias="bcn"/>
+			<WTRELATIONSHIP name="Common" entity="BroadcastNews" alias="bcn">
+				<WTENTITY name="News" entity="News" alias="nw">
+					<WTATTRIBUTE alias="bcn" name="NewsID" relalias="nw" relname="NewsID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--===================================================================================-->
+		<WTPROCEDURE name="Add" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(BroadcastID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(NewsID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(BroadcastNews.BroadcastNewsID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(BroadcastID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(BroadcastNews.BroadcastNewsID)"/>
+					<WTATTRIBUTE value="ATTR(BroadcastNews.NewsID)"/>
+					<WTATTRIBUTE value="ATTR(News.Title)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(BroadcastID)" oper="equal" value="PARAM(BroadcastID)"/>
+					<WTORDER name="ATTR(News.ActiveDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+	</WTWEBPAGES>
+
+</WTROOT>

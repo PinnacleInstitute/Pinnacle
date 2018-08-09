@@ -1,0 +1,357 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="128" name="Domain" alias="dom" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="12801" name="DomainID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="12802" name="CompanyID" type="number" source="entity"/>
+		<WTATTRIBUTE id="12803" name="MemberID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="12805" name="DomainName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+		<WTINDEX name="DomainName">
+			<WTATTRIBUTE name="DomainName"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Domain" entity="Domain" alias="dom"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompany" enumname="EnumUserCompany" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(Domain.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Domain.MemberID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompany" style="GenerateDataProc.xsl" column="DomainName" template="new" passthru="true">
+			<WTPARAM name="ATTR(Domain.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Domain.MemberID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(Domain.DomainID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(Domain.DomainName)"/>
+					<WTJOIN name="Domain"/>
+					<WTCONDITION expr="ATTR(Domain.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)" connector="or" paren="end"/>
+					<WTORDER name="ATTR(Domain.DomainName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchDomain" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(DomainName)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ATTR(DomainID)" direction="output"/>
+			<WTPARAM name="ATTR(CompanyID)" direction="output"/>
+			<WTDECLARE name="DomainID" datatype="number"/>
+			<WTDECLARE name="CompanyID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="DomainID" value="ATTR(Domain.DomainID)"/>
+					<WTATTRIBUTE name="CompanyID" value="ATTR(Domain.CompanyID)"/>
+					<WTJOIN name="Domain" lock="false"/>
+					<WTCONDITION expr="ATTR(DomainName)" oper="equal" value="PARAM(DomainName)"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(DomainID)" value="DomainID" null="0"/>
+				<WTSETVALUE name="PARAM(CompanyID)" value="CompanyID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Domain.DomainID)"/>
+					<WTATTRIBUTE value="ATTR(Domain.CompanyID)"/>
+					<WTATTRIBUTE value="ATTR(Domain.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Domain.DomainName)"/>
+					<WTJOIN name="Domain"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(Domain.DomainName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12802" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="152">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Domain" project="ptsDomainUser" class="CDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DomainID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Domain" project="ptsDomainUser" class="CDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DomainID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="DomainID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewDomain" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW height="24">
+					<WTSTATIC col="1" tag="CompanyID"/>
+					<WTSTATIC col="2" value="ATTR(Domain.CompanyID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTTEXT col="2" value="ATTR(Domain.MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="DomainName"/>
+					<WTTEXT col="2" value="ATTR(Domain.DomainName)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12803" header="false" footer="false" navbar="false" wrapper="wrapper600" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="152" >
+			<!--============================================================================================-->
+			<WTPARAM name="DomainID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Domain" project="ptsDomainUser" class="CDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DomainID" direction="input" value="PARAM(DomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Domain" project="ptsDomainUser" class="CDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DomainID" direction="input" value="PARAM(DomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Domain" project="ptsDomainUser" class="CDomain">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="DomainID" direction="input" value="PARAM(DomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Domain" project="ptsDomainUser" class="CDomain">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="DomainID" direction="input" value="PARAM(DomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Domain" value="ATTR(Domain.DomainID)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW height="24">
+					<WTSTATIC col="1" tag="CompanyID"/>
+					<WTSTATIC col="2" value="ATTR(Domain.CompanyID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTTEXT col="2" value="ATTR(Domain.MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="DomainName"/>
+					<WTTEXT col="2" value="ATTR(Domain.DomainName)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12811" caption="List" header="false" footer="false" navbar="false" wrapper="wrapper600" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="152" >
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Domains" project="ptsDomainUser" class="CDomains">
+					<WTMETHOD name="List">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDomains" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Domains" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewDomain" space="1">
+							<WTLINK name="12802">
+								<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Domain">
+						<WTCOLUMN width="15" align="center" valign="top" label="DomainID"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="MemberID"/>
+						<WTCOLUMN width="70" align="left" valign="top" label="DomainName"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(DomainID)"/>
+							<WTSTATIC col="2" value="DATA(MemberID)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(DomainName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="12803">
+											<WTPARAM name="DomainID" value="DATA(Domain.DomainID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

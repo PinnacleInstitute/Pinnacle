@@ -1,0 +1,76 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="79" name="ForumModerator" alias="fmod" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="7901" name="ForumModeratorID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="7902" name="ForumID" type="number" source="entity"/>
+		<WTATTRIBUTE id="7903" name="BoardUserID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		
+		<!-- Non-Persist Attributes -->
+		
+		<!--Indexes-->
+		<WTINDEX name="ForumModerator">
+			<WTATTRIBUTE name="ForumID"/>
+			<WTATTRIBUTE name="BoardUserID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="ForumModerator" entity="ForumModerator" alias="fmod"/>
+			<WTRELATIONSHIP name="Common" entity="ForumModerator" alias="fmod">
+				<WTENTITY name="BoardUser" entity="BoardUser" alias="mbu">
+					<WTATTRIBUTE alias="fmod" name="BoardUserID" relalias="mbu" relname="BoardUserID"/>
+				</WTENTITY>
+				<WTENTITY name="Forum" entity="Forum" alias="mbf">
+					<WTATTRIBUTE alias="fmod" name="ForumID" relalias="mbf" relname="ForumID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" />
+		<!--==================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetForumModerator" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(ForumID)" direction="input"/>
+			<WTPARAM name="ATTR(BoardUserID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ForumModeratorID" direction="output" datatype="number"/>
+			<WTDECLARE name="ForumModeratorID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="ForumModeratorID" value="ATTR(ForumModerator.ForumModeratorID)"/>
+					<WTJOIN name="ForumModerator"/>
+					<WTCONDITION expr="ATTR(ForumModerator.ForumID)" oper="equal" value="PARAM(ForumID)"/>
+					<WTCONDITION expr="ATTR(ForumModerator.BoardUserID)" oper="equal" value="PARAM(BoardUserID)" connector="and"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(ForumModeratorID)" value="ForumModeratorID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		
+	</WTWEBPAGES>
+</WTROOT>

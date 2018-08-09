@@ -1,0 +1,514 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="163" name="Statement" alias="stm">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="16301" name="StatementID" type="number" identity="true" min="1" required="true" source="entity" title="true"/>
+		<WTATTRIBUTE id="16302" name="CompanyID" type="number" min="1" source="entity"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="16303" name="MerchantID" type="number" min="1" source="entity"/>
+		
+		<!--Foreign Table Fields-->
+    <WTATTRIBUTE id="16304" name="MerchantName" type="text" length="80" source="join">
+      <WTJOIN entity="Merchant" name="MerchantName"/>
+    </WTATTRIBUTE>
+
+    <!--Attributes-->
+		<WTATTRIBUTE id="16310" name="StatementDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="16311" name="PaidDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="16312" name="Amount" type="currency" source="entity"/>
+		<WTATTRIBUTE id="16313" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Submitted"/>
+      <WTENUM id="2" name="Pending"/>
+      <WTENUM id="3" name="Paid"/>
+      <WTENUM id="4" name="Declined"/>
+      <WTENUM id="5" name="Cancelled"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16314" name="PayType" type="number" source="entity">
+      <WTENUM id="0" name="Unknown"/>
+      <WTENUM id="1" name="ACH"/>
+      <WTENUM id="2" name="Other"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16315" name="Reference" type="text" length="30" min="1" max="30" source="entity" language="false"/>
+    <WTATTRIBUTE id="16316" name="Notes" type="text" length="500" min="1" max="500" source="entity" language="false"/>
+
+		<!-- Non Persist Fields -->
+    <WTATTRIBUTE id="16391" name="FromDate" type="date" source="entity" xml="false" persist="false"/>
+    <WTATTRIBUTE id="16392" name="ToDate" type="date" source="entity" xml="false" persist="false"/>
+
+		<!--Indexes-->
+    <WTINDEX name="MerchantID">
+      <WTATTRIBUTE name="MerchantID"/>
+    </WTINDEX>
+
+    <!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Statement" entity="Statement" alias="stm"/>
+			<WTRELATIONSHIP name="Common" entity="Statement" alias="stm">
+        <WTENTITY name="Merchant" entity="Merchant" alias="mer">
+          <WTATTRIBUTE alias="stm" name="MerchantID" relalias="mer" relname="MerchantID"/>
+        </WTENTITY>
+      </WTRELATIONSHIP>
+    </WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="StatementDate" default="true"/>
+      <WTATTRIBUTE name="StatementID"/>
+      <WTATTRIBUTE name="PaidDate"/>
+      <WTATTRIBUTE name="Amount"/>
+    </WTENUM>
+
+    <!-- System Constants -->
+    <WTSYSCONS>
+      <WTSYSCON name="PAYTYPE-CASH" value="1"/>
+      <WTSYSCON name="PAYTYPE-CREDIT" value="2"/>
+      <WTSYSCON name="STATUS-SUBMITTED" value="1"/>
+      <WTSYSCON name="STATUS-PENDING" value="2"/>
+      <WTSYSCON name="STATUS-PAID" value="3"/>
+      <WTSYSCON name="STATUS-DECLINED" value="4"/>
+      <WTSYSCON name="STATUS-CANCELLED" value="5"/>
+    </WTSYSCONS>
+  </WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindStatus" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTCONDITION expr="ATTR(Statement.Status)" oper="equal" value="PARAM(Status)" connector="and"/>
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindMerchant" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(MerchantID)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTCONDITION expr="ATTR(Statement.MerchantID)" oper="equal" value="PARAM(MerchantID)" connector="and"/>
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindMerchantStatus" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(MerchantID)" direction="input" required="false"/>
+      <WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTCONDITION expr="ATTR(Statement.MerchantID)" oper="equal" value="PARAM(MerchantID)" connector="and"/>
+      <WTCONDITION expr="ATTR(Statement.Status)" oper="equal" value="PARAM(Status)" connector="and"/>
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="List" name="ListStatement" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+      <WTPARAM name="ATTR(CompanyID)" direction="input"/>
+      <WTPARAM name="ATTR(Status)" direction="input"/>
+      <WTPARAM name="ATTR(PayType)" direction="input"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(Statement.StatementID)"/>
+          <WTATTRIBUTE value="ATTR(Statement.CompanyID)"/>
+          <WTATTRIBUTE value="ATTR(Statement.MerchantID)"/>
+          <WTATTRIBUTE value="ATTR(Statement.StatementDate)"/>
+          <WTATTRIBUTE value="ATTR(Statement.PaidDate)"/>
+          <WTATTRIBUTE value="ATTR(Statement.Amount)"/>
+          <WTATTRIBUTE value="ATTR(Statement.Status)"/>
+          <WTATTRIBUTE value="ATTR(Statement.PayType)"/>
+          <WTATTRIBUTE value="ATTR(Statement.Reference)"/>
+          <WTATTRIBUTE value="ATTR(Statement.Notes)"/>
+          <WTJOIN name="Statement"/>
+          <WTCONDITION expr="ATTR(Statement.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+          <WTCONDITION expr="ATTR(Statement.Status)" oper="equal" value="PARAM(Status)" connector="and"/>
+          <WTCONDITION expr="ATTR(Statement.PayType)" oper="equal" value="PARAM(PayType)" connector="and"/>
+          <WTCONDITION expr="ATTR(Statement.Notes)" oper="not-equal" value="CONST('')" connector="and"/>
+          <WTORDER name="ATTR(Statement.StatementDate)" descend="true"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="SetPending" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(CompanyID)" direction="input"/>
+      <WTPARAM name="ATTR(PayType)" direction="input"/>
+      <WTPARAM name="Count" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+    <!--==========================================================================================-->
+    <WTPROCEDURE name="ProcessStatement" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+      <WTPARAM name="ATTR(StatementID)" direction="input"/>
+      <WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+      <WTPARAM name="Result" direction="output" datatype="text" length="100"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+    <!--==================================================================================================================-->
+    <WTWEBPAGE name="16301" caption="My Invoices" action="5" header="false" footer="false" navbar="false" wrapper="wrapper1000"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+      <!--==================================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MerchantID" datatype="number"/>
+      <WTPARAM name="Status" datatype="number"/>
+      <WTPARAM name="Title" datatype="text"/>
+
+      <WTINCLUDE name="2FA.asp"/>
+      <WTCODEGROUP><WTCALLSUB name="Check2FAMerchant reqMerchantID"/></WTCODEGROUP>
+
+      <WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(StatementDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Statements" project="ptsStatementUser" class="CStatements">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlStatements" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+        <WTOBJECT name="Merchant" project="ptsMerchantUser" class="CMerchant">
+          <WTCONDITION expr="PARAM(MerchantID)" oper="not-equal" value="CONST(0)"/>
+          <WTCONDITION expr="PARAM(Title)" oper="equal" value="CONST(&quot;&quot;)" connector="and"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MerchantID" direction="input" value="PARAM(MerchantID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Title)" value="CONST(CleanXML(.MerchantName))"/>
+        </WTOBJECT>
+      </WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Statements" project="ptsStatementUser" class="CStatements">
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(MerchantID)" oper="equal" value="CONST(0)"/>
+          <WTMETHOD name="Find">
+            <WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+            <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+            <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+            <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+            <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+            <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="FindStatus">
+            <WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)"/>
+            <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+            <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+            <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+            <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+            <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+            <WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(MerchantID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="FindMerchant">
+            <WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+            <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+            <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+            <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+            <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+            <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+            <WTPARAM name="MerchantID" direction="input" value="PARAM(MerchantID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="FindMerchantStatus">
+            <WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)"/>
+            <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+            <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+            <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+            <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+            <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+            <WTPARAM name="MerchantID" direction="input" value="PARAM(MerchantID)"/>
+            <WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTCODEGROUP>
+        <WTMETHOD name="XML">
+					<WTPARAM name="xmlStatements" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="1000" align="left"/>
+
+        <WTROW>
+          <WTHIDDEN name="MerchantID" value="PARAM(MerchantID)"/>
+          <WTHIDDEN name="Title" value="PARAM(Title)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" tag="Statements" value="PARAM(Title)" class="PageHeading"/>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Statements.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+          <WTSTATIC col="1" tag="Status" class="ColumnHeader"/>
+          <WTCOMBO col="1" value="PARAM(Status)">
+            <WTOPTION id="0" label="All"/>
+            <WTOPTION id="1" label="Submitted"/>
+            <WTOPTION id="2" label="Pending"/>
+            <WTOPTION id="3" label="Paid"/>
+            <WTOPTION id="4" label="Declined"/>
+            <WTOPTION id="5" label="Cancelled"/>
+          </WTCOMBO>
+          <WTBUTTON col="1" action="5" value="CONST(View)"/>
+          <WTBUTTON col="1" value="CONST(Close)">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Statement">
+						<WTCOLUMN width="10" align="left" valign="top" label="StatementDate"/>
+            <WTCOLUMN width="10" align="center" valign="top" label="StatementID"/>
+            <WTCOLUMN width="10" align="left" valign="top" label="Amount"/>
+						<WTCOLUMN width="10" align="left" valign="top" label="Status"/>
+            <WTCOLUMN width="10" align="left" valign="top" label="PaidDate"/>
+            <WTCOLUMN width="10" align="left" valign="top" label="PayType"/>
+            <WTCOLUMN width="25" align="left" valign="top" label="Reference"/>
+						<WTCOLUMN width="15" align="left" valign="top"/>
+						
+						<WTROW height="24">
+							<WTSTATIC col="1" value="DATA(StatementDate)"/>
+              <WTSTATIC col="2" value="DATA(StatementID)"/>
+              <WTSTATIC col="3">
+                <WTSTATIC value="DATA(Amount)"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="IsEmployee"/>
+                  <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+                    <WTLINK name="16303"><WTPARAM name="StatementID" value="DATA(StatementID)"/></WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+							<WTSTATIC col="4">
+                <WTSTATIC label="Submitted" fontcolor="green">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/>
+                </WTSTATIC>
+                <WTSTATIC label="Pending" fontcolor="orange">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+                </WTSTATIC>
+                <WTSTATIC label="Paid">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+                </WTSTATIC>
+                <WTSTATIC label="Declined" fontcolor="red">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(4)"/>
+                </WTSTATIC>
+                <WTSTATIC label="Cancelled" fontcolor="gray">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(5)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="5" value="DATA(PaidDate)"/>
+              <WTSTATIC col="6" value="DATA(PayType)"/>
+              <WTSTATIC col="7" value="DATA(Reference)"/>
+							<WTSTATIC col="8">
+							</WTSTATIC>
+						</WTROW>
+            <WTROW>
+              <WTCONDITION expr="PARAM(MerchantID)" oper="equal" value="CONST(0)"/>
+              <WTSTATIC col="1" merge="8" fontcolor="gray">
+                <WTSTATIC value="DATA(MerchantName)" space="2"/>
+                <WTSTATIC value="DATA(Notes)" space="2" fontcolor="blue"/>
+              </WTSTATIC>
+            </WTROW>
+          </WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--==================================================================================================================-->
+    <WTWEBPAGE name="16303" caption="Statement" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="1251">
+		<!--==================================================================-->
+      <WTPARAM name="StatementID" datatype="number"/>
+
+      <WTSUB name="LoadStatement">
+        <WTOBJECT name="Statement" project="ptsStatementUser" class="CStatement">
+          <WTMETHOD name="Load">
+            <WTPARAM name="StatementID" direction="input" value="PARAM(StatementID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NotEmployee"/>
+            <WTCONDITION expr="ATTR(CompanyID)" oper="not-equal" value="CONST(CSTR(reqSysCompanyID))" connector="and"/>
+            <WTCUSTOM>AbortUser()</WTCUSTOM>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlStatement" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="UpdateStatement">
+        <WTOBJECT name="Statement" project="ptsStatementUser" class="CStatement">
+          <WTMETHOD name="Load">
+            <WTPARAM name="StatementID" direction="input" value="PARAM(StatementID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(oldStatus)" value="ATTR(Status)"/>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Save">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NoErrors"/>
+            <!-- Process paid Statement -->
+            <WTCODEGROUP>
+              <WTCONDITION expr="CONST(oldStatus)" oper="not-equal" value="SYSCON(STATUS-PAID)"/>
+              <WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(STATUS-PAID)" connector="and"/>
+              <WTMETHOD name="ProcessStatement">
+                <WTPARAM name="StatementID" direction="input" value="PARAM(StatementID)"/>
+                <WTPARAM name="Status" direction="input" value="CONST(0)"/>
+                <WTPARAM name="Result" direction="return" datatype="text"/>
+              </WTMETHOD>
+            </WTCODEGROUP>
+            <!-- Process undo paid Statement -->
+<!--
+            <WTCODEGROUP>
+              <WTCONDITION expr="CONST(oldStatus)" oper="equal" value="SYSCON(STATUS-PAID)"/>
+              <WTCONDITION expr="ATTR(Status)" oper="not-equal" value="SYSCON(STATUS-PAID)" connector="and"/>
+              <WTSETATTRIBUTE name="CONST(tmpStatementID)" value="CONST(CInt(reqStatementID)*-1)"/>
+              <WTMETHOD name="ProcessStatement">
+                <WTPARAM name="StatementID" direction="input" value="CONST(tmpStatementID)"/>
+                <WTPARAM name="Status" direction="input" value="CONST(0)"/>
+                <WTPARAM name="Result" direction="return" datatype="text"/>
+              </WTMETHOD>
+            </WTCODEGROUP>
+-->
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlStatement" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCALLSUB name="LoadStatement"/>
+      </WTACTION>
+
+      <WTACTION id="1" name="Update" type="Update">
+        <WTCALLSUB name="UpdateStatement"/>
+        <WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+      <WTACTION id="4" name="Delete" type="Delete">
+        <WTOBJECT name="Statement" project="ptsStatementUser" class="CStatement">
+  				<WTCONDITION expr="IsSysAdmin"/>
+          <WTMETHOD name="Delete">
+            <WTPARAM name="StatementID" direction="input" value="PARAM(StatementID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Statement" value="ATTR(Statement.StatementID)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="StatementDate"/>
+					<WTTEXT col="2" value="ATTR(Statement.StatementDate)"/>
+				</WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="PaidDate"/>
+					<WTTEXT col="2" value="ATTR(Statement.PaidDate)"/>
+				</WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(Statement.Amount)"/>
+				</WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(Statement.Status)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="PayType"/>
+          <WTCOMBO col="2" value="ATTR(Statement.PayType)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Reference"/>
+          <WTTEXT col="2" value="ATTR(Statement.Reference)"/>
+        </WTROW>
+        <WTROW>
+					<WTSTATIC col="1" merge="2" tag="Notes" align="left"/>
+				</WTROW>
+        <WTROW margin-bottom="3">
+          <WTMEMO col="1" merge="2" align="left" value="ATTR(Statement.Notes)" cols="72" rows="6"/>
+				</WTROW>
+			
+				<WTROW margin-top="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsSysAdmin"/>
+          </WTBUTTON>
+				</WTROW>
+        
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+  </WTWEBPAGES>
+</WTROOT>

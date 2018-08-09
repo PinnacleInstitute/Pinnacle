@@ -1,0 +1,18 @@
+EXEC [dbo].pts_CheckTable 'CourseFT'
+ GO
+
+CREATE TABLE [dbo].[CourseFT] (
+   [CourseID] int NOT NULL ,
+   [FT] nvarchar (1200) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[CourseFT] WITH NOCHECK ADD
+   CONSTRAINT [DF_Course_FT] DEFAULT ('') FOR [FT] 
+GO
+
+ALTER TABLE [dbo].[CourseFT] WITH NOCHECK ADD
+   CONSTRAINT [PK_CourseFT] PRIMARY KEY NONCLUSTERED
+   ([CourseID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

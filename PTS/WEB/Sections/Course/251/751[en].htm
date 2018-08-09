@@ -1,0 +1,266 @@
+<H4 align=center><FONT size=4>Using Field Properties</FONT></H4>
+<P><FONT size=3>Each field has a set of properties that control the way it stores, handles, and displays data. Setting field properties saves time in the later stages of building a database because they are used for forms and reports you create. Therefore, you will have less design work to do in later stages if you set field properties before you create forms and reports.</FONT> 
+<P><FONT size=3>You normally set properties when you create a table in <B>Design</B> view. If you saved the table using the default properties, you can display it in <B>Design</B> view to change the property settings.</FONT> 
+<P><FONT size=3>The field properties available in the <B>Field Properties</B> pane of the Design view window depend on the data type selected in the design grid. Some of the property types you can set are listed in the following table:</FONT> 
+<TABLE cellSpacing=0 cellPadding=5 border=1>
+<TBODY>
+<TR>
+<TD width="16%" bgColor=#f3eef3 height=19><I><B><FONT size=3>Property type</FONT></B></I></TD>
+<TD width="84%" bgColor=#f3eef3 height=19>
+<P align=center><I><B><FONT size=3>Description</FONT></B></I></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Field Size</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Limits a <B>Text</B> field to a specific number of characters or a <B>Number</B> field to the range of numbers it can store. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Format</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Controls the way data appears in <B>Datasheet</B> view. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Decimal places</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Displays a set number of decimal places. This property type has no effect on <B>Number</B> fields using the <B>General</B> format and is available for <B>Number</B> and <B>Currency</B> fields only. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Input Mask</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Sets a pattern that determines the input format of data, such as the hyphens in a telephone number. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Caption</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Specifies a label other than the field name that appears in the table and on forms and reports. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Default Value</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Displays a specified value for a field in new records. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Validation Rule</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Limits the data entered to meet a certain requirement. For example, you can specify that the <B>Credit Limit</B> field cannot be over $10,000. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Validation Text</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Specifies the text you want to appear in an error message if the data entered violates the validation rule. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Required</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Specifies that the field cannot be left empty when entering data into a record. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Allow Zero Length</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Determines whether or not you can enter adjacent quotation marks (" ") in a field to indicate that there is no data for that field in the record. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><B><FONT size=3>Indexed</FONT></B></TD>
+<TD width="84%" height=19><FONT size=3>Speeds up retrieval of data in a field. All primary key fields are automatically indexed.</FONT></TD>
+</TR></TBODY></TABLE>
+<P>&nbsp;<H4 align=center><FONT size=4>Limiting Field Size</FONT></H4>
+<P><FONT size=3>When you set a much data into the field as allowed within the set parameters. After typing the maximum number of characters allowed, further keystrokes are not permitted.</FONT> 
+<P><FONT size=3>You can only set the Field Size property for Text, Number, and AutoNumber fields. All the other field data types have default widths that are set automatically. For a Text field, you simply type the maximum number of characters you want to allow in the field up to a maximum number of 255 characters allowed by Access. 
+<BR>
+<BR><IMG style="WIDTH: 483px; HEIGHT: 347px" height=347 alt=Limiti2.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Limiti2.gif" width=483 border=0>&nbsp; 
+<BR></FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the Workshop List Table in Design View. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the field for which you want to set a field size. 
+<BR></FONT><I><FONT size=3>Select the Workshop Field from the list of Field Names. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the Field Size property on the General page in the Field Properties pane. 
+<BR></FONT><I><FONT size=3>Highlight and Delete the current Field Size Property. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the Field Size list or enter the desired value. 
+<BR></FONT><I><FONT size=3>Type 10 to limit the field size to ten characters. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Save and Close the Workshop List Table.</FONT>
+</OL><H4 align=center><FONT size=4>Setting Number Formats</FONT></H4>
+<P><FONT size=3>The <B>Format</B> property affects how data appears on the screen in <B>Datasheet</B> view, not how it is stored in the table or used in calculations.</FONT> 
+<P><FONT size=3>The available formats for fields with <B>Number</B> data types are listed in the following table:</FONT> 
+<P>
+<TABLE cellSpacing=0 cellPadding=5 border=1>
+<TBODY>
+<TR>
+<TD width="16%" height=19><FONT size=3><B>General</B></FONT></TD>
+<TD width="65%" height=19><FONT size=3>Displays a number the way it was entered. This is the default format. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3><B>Currency</B></FONT></TD>
+<TD width="65%" height=19><FONT size=3>Uses a comma as a thousands separator and displays a currency symbol. Negative numbers display in parentheses. The default number of decimal places is 2 </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3><B>Fixed</B></FONT></TD>
+<TD width="65%" height=19><FONT size=3>Displays at least one digit. The default number of decimal places is 2. The number in the field is rounded to the set number of decimal places. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3><B>Standard</B></FONT></TD>
+<TD width="65%" height=19><FONT size=3>Uses a comma as a thousands separator. The default number of decimal places is 2. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3><B>Percent</B></FONT></TD>
+<TD width="65%" height=19><FONT size=3>Multiplies the number entered by 100 and places a percent symbol at the end. The default number of decimal places is 2. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3><B>Scientific</B></FONT></TD>
+<TD width="65%" height=19><FONT size=3>Expresses numbers as multiples of exponents of 10 in standard scientific notation. </FONT></TD>
+</TR></TBODY></TABLE>
+<P><A href="http://www.jmu.edu/computing/tutorials/microsoft/access/University%20Employees%20(Reports).mdb"><FONT color=#450084 size=3></FONT></A>&nbsp;<H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the <I>Workshop Registration Table</I> in Design View. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the field for which you want to set a number format. 
+<BR></FONT><I><FONT size=3>Select the Cost field under the list of Field Names. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the Format property on the General page in the Field Property pane. 
+<BR></FONT><I><FONT size=3>Place your cursor in the cell to the right of the Format option. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the Format list and choose the desired format. 
+<BR></FONT><I><FONT size=3>Click on the right end of the Format cell and use the drop down arrow to select Currency. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Save and close the Workshop Registration Table. 
+<BR><B>Note:</B> <I>You may also change the Number format to Currency by changing the Data Type to Currency.</I></FONT>
+</OL><H4 align=center><FONT size=4>Setting Date/Time Formats</FONT></H4>
+<P><FONT size=3>You can change the format of a field with a <B>Date/Time</B> data type to change the way the date or time appears in a table. The available formats for fields with <B>Date/Time</B> data types are listed in the following table:</FONT> 
+<P>
+<TABLE cellSpacing=0 cellPadding=5 border=1>
+<TBODY>
+<TR>
+<TD vAlign=top align=middle width="19%" height=42><B><FONT size=3>General Date</FONT></B></TD>
+<TD width="81%" height=42><FONT size=3>If the value is only a date, no time appears. If the value is only a time, no date appears. This format is the default. </FONT></TD>
+</TR><TR>
+<TD vAlign=top align=middle width="19%" height=28><B><FONT size=3>Long Date</FONT></B></TD>
+<TD width="81%" height=28><FONT size=3>The day and month names are spelled out, such as, Tuesday, July 4, 1995. </FONT></TD>
+</TR><TR>
+<TD vAlign=top align=middle width="19%" height=25><B><FONT size=3>Medium Date</FONT></B></TD>
+<TD width="81%" height=25><FONT size=3>The month name is abbreviated and the name of the day is omitted, such as, 04-Jul-95. </FONT></TD>
+</TR><TR>
+<TD vAlign=top align=middle width="19%" height=28><B><FONT size=3>Short Date</FONT></B></TD>
+<TD width="81%" height=28><FONT size=3>The date appears as numbers separated by slashes, such as, 7/4/95. </FONT></TD>
+</TR><TR>
+<TD vAlign=top align=middle width="19%" height=45><B><FONT size=3>Long Time</FONT></B></TD>
+<TD width="81%" height=45><FONT size=3>Times appear with hours, minutes, and seconds, separated by colons and followed by an AM or PM indicator, such as, 6:30:15 PM. </FONT></TD>
+</TR><TR>
+<TD vAlign=top align=middle width="19%" height=44><B><FONT size=3>Medium Time</FONT></B></TD>
+<TD width="81%" height=44><FONT size=3>This format is the same as the <B>Long Time</B> format except that no seconds appear, such as, 06:15 PM. </FONT></TD>
+</TR><TR>
+<TD vAlign=top align=middle width="19%" height=30><B><FONT size=3>Short Time</FONT></B></TD>
+<TD width="81%" height=30><FONT size=3>The time appears in the 24-hour clock format with no seconds, such as, 18:30. </FONT></TD>
+</TR></TBODY></TABLE>
+<P><FONT size=3><IMG style="WIDTH: 529px; HEIGHT: 390px" height=390 alt=Settin1.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Settin1.gif" width=529 border=0>&nbsp; 
+<BR>
+<BR></FONT>
+<P>&nbsp;<H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the Workshop Registration table in Design view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Add a new field called Date to the list of Field Names. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Use the drop-down arrow to select the Date/Time for a Data Type. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Place your cursor in the Format field in the Field Properties window. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Use the drop-down arrow to select a Date format. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Save and Close the Workshop Registration table.</FONT>
+</OL><H4 align=center><FONT size=4>Setting Yes/No Formats</FONT></H4>
+<P><FONT size=3>Fields with <B>Yes/No</B> data types can display yes or no, true or false, or on or off. You can specify which format to display in the field. If you specify <B>True/False</B> as the format and a user enters <B>Yes</B> , Access automatically converts it to <B>True</B> . 
+<BR>
+<BR><IMG style="WIDTH: 532px; HEIGHT: 385px" height=385 alt=Settin6.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Settin6.gif" width=532 border=0>&nbsp; 
+<BR>
+<BR></FONT>
+<P>&nbsp;<H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the Workshop Registration Table in Design View. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Create a new field called Application in the list of Field Names. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Use the drop-down arrow to select the Yes/No Data Type. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Save and Close the Workshop Registration Table.</FONT>
+</OL><H4 align=center><FONT size=4>Setting Default Values</FONT></H4>
+<P><FONT size=3>You can set a default value for a field using the <B>Default Value </B>property. The default value is automatically entered in the field when you create a new record. Changes will not be added to previous entries. You can then change the value if it is not appropriate for the record you are entering. A default value saves time in data entry. For example, if your table contains the names and addresses of clients, and most of your clients are in New York state, you can set the default value in the state field to NY. If a client resides in Connecticut, you can change the entry for that individual record.</FONT> 
+<P><FONT size=3>To set a default value, you enter an expression for the <B>Default Value</B> property. An expression consists of operators (i.e. =, +, -, *, /) and/or values. You can enter an expression directly into the <B>Default Value</B> text box, or you can use the <B>Expression Builder</B> . The Expression Builder button appears to the right of the <B>Default Value</B> text box when you select it. 
+<BR>
+<BR><IMG style="WIDTH: 481px; HEIGHT: 347px" height=347 alt=Settin2.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Settin2.gif" width=481 border=0>&nbsp; 
+<BR>
+<BR></FONT>
+<P>&nbsp;<H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the Workshop List table in Design view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the Cost field from the list of Field Names. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Place your cursor in the Default Value field in the Field Properties pane. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type in 25.00. 
+<BR><I>In Datasheet view, this field will now automatically format </I><I>to $25.00.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Save and Close the Workshop List table.</FONT>
+</OL><H4 align=center><FONT size=4>Setting Validation Rules</FONT></H4>
+<P><FONT size=3>You can set a validation rule for a field using the <B>Validation Rule</B> property. Access checks the validation rule when you enter data into a field of a new record. If the value you enter does not meet the conditions of the validation rule, Access displays a warning box to indicate the error. You specify the text you want to appear in the warning message in the <B>Validation Text</B> property.</FONT> 
+<P><FONT size=3>A validation rule allows you to set specific conditions so that only certain types of data can be entered. For example, you can create a validation rule so that numbers entered in a particular field must be between 500 and 1000.</FONT> 
+<P><FONT size=3>To set a validation rule, you enter an expression for the <B>Validation Rule </B>property. You can enter an expression directly into the <B>Validation Rule</B> property, or you can use the <B>Expression Builder</B> . The Expression Builder button appears to the right of the <B>Validation Rule</B> property when you select it. The Expression Builder dialog box contains the available functions, operators, and constants you can use to create an expression. 
+<BR>
+<BR><IMG style="WIDTH: 532px; HEIGHT: 386px" height=386 alt=Settin3.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Settin3.gif" width=532 border=0>&nbsp; 
+<BR>
+<BR></FONT>
+<P>&nbsp;<H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the Workshop Registration table in Design view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Create a new field called RegistrationDate under the list of Field Names. 
+<BR><I>Use the drop-down arrow under Data Type to select the Date/Time Data Type.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Place your cursor in the field for Validation Rule in the Field Properties pane. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Create a Validation Rule that will only allow entries Greater Than or Equal To September 1, 2000. 
+<BR><B>Type:&nbsp; </B><I>&gt;=9/01/2000</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Place your cursor in the field for Validation Text in the Field Properties pane. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Create a warning that states the Validation Rule. 
+<BR><B>Type:&nbsp; </B><I>Date must be later than 9/01/2000.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Save the Workshop Registration table and switch to Datasheet view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type a date before 9/01/2000 into the RegistrationDate field and hit the Enter key. 
+<BR><I>You should see the text you created for the Validation Warning. Hit the Esc key twice to delete the entry and the record.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Save and Close the Workshop Registration Table.</FONT>
+</OL><H4 align=center><FONT size=4>Creating an Input Mask</FONT></H4>
+<P><FONT size=3>To ensure data is entered in a specific manner, you can create an input mask. An input mask allows you to define how the data is entered into the field. Since the input mask controls what values users can enter in a field, it often makes data entry easier in addition to controlling the entries. You can create an input mask by entering the criteria directly into the field property. However, it is often easier to use the Input Mask Wizard to set the property for you.</FONT> 
+<P><FONT size=3>The Input Mask Wizard offers several predefined input masks for items such as dates, ZIP codes, telephone numbers, times, etc. The wizard allows you to modify the predefined input mask to meet your needs and define how the data may be saved. 
+<BR>
+<BR><IMG style="WIDTH: 392px; HEIGHT: 331px" height=331 alt=Creati89.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati89.gif" width=392 border=0>&nbsp; 
+<BR>
+<BR></FONT>
+<P>&nbsp;<H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the University Employees Table in Design view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Create a new field called Phone under the list of Field Names. 
+<BR><I><B>Reminder: </B>The Data Type for phone numbers should be Text.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Place your cursor in the field for Input Mask in the Field Properties pane. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the Build Button <IMG style="WIDTH: 16px; HEIGHT: 15px" height=15 alt=Creati88.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati88.gif" width=16 border=0> to open the Input Mask Wizard. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the desired Format for Phone Number and click Finish. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Save and Close the University Employees table.</FONT>
+</OL>

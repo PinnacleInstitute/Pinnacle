@@ -1,0 +1,559 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="46" name="Favorite" alias="fav" language="false" audit="false">
+		<!--Identity-->
+		<WTATTRIBUTE id="4601" name="FavoriteID" type="number" identity="true" min="1" required="true" title="true" source="entity" />
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="4602" name="MemberID" type="number" source="entity" />
+		<!--Foreign Table Fields-->
+		<!--Attributes-->
+		<WTATTRIBUTE id="4610" name="RefType" type="number" source="entity">
+			<WTENUM id="1" name="Category" />
+			<WTENUM id="2" name="Org" />
+			<WTENUM id="3" name="Chat" />
+			<WTENUM id="4" name="Forum" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4611" name="RefID" type="number" source="entity" />
+		<WTATTRIBUTE id="4612" name="FavoriteDate" type="date" source="entity" required="true" />
+		<!-- Non-Persist Attributes -->
+		<WTATTRIBUTE id="4620" name="CourseCategoryName" type="text" length="60" min="1" max="60" source="entity" persist="false" />
+		<WTATTRIBUTE id="4621" name="OrgName" type="text" length="60" min="1" max="60" source="entity" persist="false" />
+		<WTATTRIBUTE id="4622" name="ForumName" type="text" length="60" min="1" max="60" source="entity" persist="false" />
+		<!--Indexes-->
+		<WTINDEX name="Member">
+			<WTATTRIBUTE name="MemberID" />
+			<WTATTRIBUTE name="RefType" />
+		</WTINDEX>
+		<WTINDEX name="Reference">
+			<WTATTRIBUTE name="RefType" />
+			<WTATTRIBUTE name="RefID" />
+		</WTINDEX>
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Favorite" entity="Favorite" alias="fav" />
+			<WTRELATIONSHIP name="Common" entity="Favorite" alias="fav">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="fav" name="MemberID" relalias="me" relname="MemberID" />
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="FavCourseCategory" entity="Favorite" alias="fav">
+				<WTENTITY name="CourseCategory" entity="CourseCategory" alias="cc">
+					<WTATTRIBUTE alias="fav" name="RefID" relalias="cc" relname="CourseCategoryID" />
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="FavOrg" entity="Favorite" alias="fav">
+				<WTENTITY name="Org" entity="Org" alias="org">
+					<WTATTRIBUTE alias="fav" name="RefID" relalias="org" relname="OrgID" />
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="FavForum" entity="Favorite" alias="fav">
+				<WTENTITY name="Forum" entity="Forum" alias="mbf">
+					<WTATTRIBUTE alias="fav" name="RefID" relalias="mbf" relname="ForumID" />
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+		<!--Parent-->
+		<!--List-->
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="FAVORITE-CATEGORY" value="1"/>
+			<WTSYSCON name="FAVORITE-ORG" value="2"/>
+			<WTSYSCON name="FAVORITE-CHAT" value="3"/>
+			<WTSYSCON name="FAVORITE-FORUM" value="4"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+	<WTPROCEDURES>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" />
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl" />
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" />
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common" />
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="CheckNumFavType" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<!--==================================================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="ATTR(RefType)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTPARAM name="Count" direction="output" datatype="number" />
+			<WTDECLARE name="Count" datatype="number" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="Count" value="CONST(COUNT(*))" />
+					<WTJOIN name="Favorite" />
+					<WTCONDITION expr="ATTR(Favorite.MemberID)" oper="equal" value="PARAM(MemberID)" />
+					<WTCONDITION expr="ATTR(Favorite.RefType)" oper="equal" value="PARAM(RefType)" connector="and" />
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(Count)" value="Count" null="0" />
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="CheckFavorite" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<!--==================================================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="ATTR(RefType)" direction="input" />
+			<WTPARAM name="ATTR(RefID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTPARAM name="FavoriteID" direction="output" datatype="number" />
+			<WTDECLARE name="FavoriteID" datatype="number" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="FavoriteID" value="ATTR(Favorite.FavoriteID)" />
+					<WTJOIN name="Favorite" />
+					<WTCONDITION expr="ATTR(Favorite.MemberID)" oper="equal" value="PARAM(MemberID)" />
+					<WTCONDITION expr="ATTR(Favorite.RefType)" oper="equal" value="PARAM(RefType)" connector="and" />
+					<WTCONDITION expr="ATTR(Favorite.RefID)" oper="equal" value="PARAM(RefID)" connector="and" />
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(FavoriteID)" value="FavoriteID" null="0" />
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListFavCourseCategory" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.MemberID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefType)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteDate)" />
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryName)" />
+					<WTJOIN name="FavCourseCategory" />
+					<WTCONDITION expr="ATTR(Favorite.RefType)" oper="equal" value="CONST(1)" />
+					<WTCONDITION expr="ATTR(Favorite.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListFavOrg" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.MemberID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefType)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteDate)" />
+					<WTATTRIBUTE value="ATTR(Org.OrgName)" />
+					<WTJOIN name="FavOrg" />
+					<WTCONDITION expr="ATTR(Favorite.RefType)" oper="equal" value="CONST(2)" />
+					<WTCONDITION expr="ATTR(Favorite.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListFavChat" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.MemberID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefType)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteDate)" />
+					<WTATTRIBUTE value="ATTR(Forum.ForumName)" />
+					<WTJOIN name="FavForum" />
+					<WTCONDITION expr="ATTR(Favorite.RefType)" oper="equal" value="CONST(3)" />
+					<WTCONDITION expr="ATTR(Favorite.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListFavForum" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.MemberID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefType)" />
+					<WTATTRIBUTE value="ATTR(Favorite.RefID)" />
+					<WTATTRIBUTE value="ATTR(Favorite.FavoriteDate)" />
+					<WTATTRIBUTE value="ATTR(Forum.ForumName)" />
+					<WTJOIN name="FavForum" />
+					<WTCONDITION expr="ATTR(Favorite.RefType)" oper="equal" value="CONST(4)" />
+					<WTCONDITION expr="ATTR(Favorite.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4611" caption="Favorite" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61">
+			<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number" />
+			<WTPARAM name="RefType" datatype="number" />
+			<WTPARAM name="RemoveID" datatype="number" />
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Favorites" project="ptsFavoriteUser" class="CFavorites">
+					<WTMETHOD name="ListFavCourseCategory">
+						<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(1)" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="ListFavOrg">
+						<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(2)" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="ListFavChat">
+						<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(3)" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="ListFavForum">
+						<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(4)" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFavorites" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			<!-- Remove the selected favorite record (User clicks remove link) -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(RemoveID)" oper="greater" value="CONST(0)" />
+				<WTOBJECT name="Favorite" project="ptsFavoriteUser" class="CFavorite">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="FavoriteID" direction="input" value="PARAM(RemoveID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<!-- Clear the response buffer after removing -->
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors" />
+					<WTLINK name="4611">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)" />
+						<WTPARAM name="RefType" value="PARAM(RefType)" />
+						<WTPARAM name="RemoveID" value="CONST(0)" />
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN />
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left" />
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="left" label="FavoritesText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Favorite">
+						<WTCOLUMN width="70" align="left" valign="top" label="Favorite" />
+						<WTCOLUMN width="15" align="left" valign="top" label="Date" />
+						<WTCOLUMN width="15" align="left" valign="top" />
+						<WTROW>
+							<WTCODEGROUP>
+								<WTSTATIC col="1">
+									<WTSTATIC value="DATA(CourseCategoryName)">
+										<WTCONDITION expr="DATA(RefType)" oper="equal" value="CONST(1)" />
+										<WTLINK name="1114" target="">
+											<WTPARAM name="CategoryID" value="DATA(RefID)" />
+											<WTPARAM name="contentpage" value="CONST(1)" />
+											<WTPARAM name="MemberID" value="DATA(MemberID)" />
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(OrgName)">
+										<WTCONDITION expr="DATA(RefType)" oper="equal" value="CONST(2)" />
+										<WTLINK name="1114" target="">
+											<WTPARAM name="CategoryID" value="CONST(-&lt;xsl:value-of select=&quot;/DATA/TXN/PTSFAVORITES/PTSFAVORITE/@refid&quot;/&gt;)" />
+											<WTPARAM name="contentpage" value="CONST(1)" />
+											<WTPARAM name="MemberID" value="DATA(MemberID)" />
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(ForumName)">
+										<WTCONDITION expr="DATA(RefType)" oper="equal" value="CONST(3)" />
+										<WTLINK name="8420" target="">
+											<WTPARAM name="ForumID" value="DATA(RefID)" />
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(ForumName)">
+										<WTCONDITION expr="DATA(RefType)" oper="equal" value="CONST(4)" />
+										<WTLINK name="8411" target="">
+											<WTPARAM name="ForumID" value="DATA(RefID)" />
+										</WTLINK>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="2" value="DATA(FavoriteDate)" />
+								<WTSTATIC value="CONST(Remove)" col="3" bold="true">
+									<WTLINK name="4611" skipreturn="true">
+										<WTPARAM name="MemberID" value="DATA(MemberID)" />
+										<WTPARAM name="RefType" value="DATA(RefType)" />
+										<WTPARAM name="RemoveID" value="DATA(FavoriteID)" />
+									</WTLINK>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center" />
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4612" caption="Favorite" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61">
+			<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="MemberID" datatype="number" />
+			<WTPARAM name="RefType" datatype="number" />
+			<WTPARAM name="Mode" datatype="number" />
+			<WTPARAM name="VisitDate" datatype="text" />
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="CourseCategorys" project="ptsCourseCategoryUser" class="CCourseCategorys">
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(1)" />
+					<WTMETHOD name="ListFavorite">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="CourseDate" direction="input" value="PARAM(VisitDate)" />
+						<WTPARAM name="Seq" direction="input" value="PARAM(Mode)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(2)" />
+					<WTMETHOD name="ListFavorite">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="CourseDate" direction="input" value="PARAM(VisitDate)" />
+						<WTPARAM name="Status" direction="input" value="PARAM(Mode)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Forums" project="ptsForumUser" class="CForums">
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(3)" />
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(4)" connector="or"/>
+					<WTMETHOD name="ListTB">
+						<WTPARAM name="BoardUserID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="MessageDate" direction="input" value="PARAM(VisitDate)" />
+						<WTPARAM name="Seq" direction="input" value="PARAM(Mode)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlForums" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN />
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left" />
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(1)" />
+					<WTSTATIC col="1" align="left" label="PublicFavoritesText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(2)" />
+					<WTSTATIC col="1" align="left" label="CompanyFavoritesText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(3)" />
+					<WTSTATIC col="1" align="left" label="ChatFavoritesText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(4)" />
+					<WTSTATIC col="1" align="left" label="MessageFavoritesText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(1)" />
+					<WTRECORDSET col="1" graybar="true" entity="CourseCategory">
+						<WTCOLUMN width="20" align="center" valign="top" label="NewCourses" />
+						<WTCOLUMN width="80" align="left" valign="top" label="CourseCategoryName" />
+						<WTROW>
+							<WTCODEGROUP>
+								<WTSTATIC col="1" value="DATA(CourseCount)" />
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(CourseCategoryName)">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(29)" />
+										<WTLINK name="1114" target="Course">
+											<WTPARAM name="CategoryID" value="DATA(CourseCategoryID)" />
+											<WTPARAM name="MemberID" value="PARAM(MemberID)" />
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(CourseCategoryName)">
+										<WTCONDITION expr="PARAM(Mode)" oper="not-equal" value="CONST(29)" />
+										<WTLINK name="1118" target="Course">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)" />
+											<WTPARAM name="MemberID" value="PARAM(MemberID)" />
+											<WTPARAM name="CourseDate" value="PARAM(VisitDate)" />
+											<WTPARAM name="Mode" value="PARAM(Mode)" />
+										</WTLINK>
+									</WTSTATIC>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(2)" />
+					<WTRECORDSET col="1" graybar="true" entity="Org">
+						<WTCOLUMN width="20" align="center" valign="top" label="NewCourses" />
+						<WTCOLUMN width="80" align="left" valign="top" label="OrgName" />
+						<WTROW>
+							<WTCODEGROUP>
+								<WTSTATIC col="1" value="DATA(CourseCount)" />
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(OrgName)">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(28)" />
+										<WTLINK name="1114" target="Course">
+											<WTPARAM name="CategoryID" value="CONST(-&lt;xsl:value-of select=&quot;@orgid&quot;/&gt;)"/>
+											<WTPARAM name="MemberID" value="PARAM(MemberID)" />
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(OrgName)">
+										<WTCONDITION expr="PARAM(Mode)" oper="not-equal" value="CONST(28)" />
+										<WTLINK name="1118" target="Course">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)" />
+											<WTPARAM name="MemberID" value="PARAM(MemberID)" />
+											<WTPARAM name="CourseDate" value="PARAM(VisitDate)" />
+											<WTPARAM name="Mode" value="PARAM(Mode)" />
+										</WTLINK>
+									</WTSTATIC>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(3)" />
+					<WTRECORDSET col="1" graybar="true" entity="Forum">
+						<WTCOLUMN width="100" align="left" valign="top" label="ChatName" />
+						<WTROW>
+							<WTCODEGROUP>
+								<WTSTATIC col="1" value="DATA(ForumName)">
+									<WTLINK name="8420" target="Forum">
+										<WTPARAM name="ForumID" value="DATA(ForumID)" />
+									</WTLINK>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(RefType)" oper="equal" value="CONST(4)" />
+					<WTRECORDSET col="1" graybar="true" entity="Forum">
+						<WTCOLUMN width="20" align="center" valign="top" label="NewMessages" />
+						<WTCOLUMN width="80" align="left" valign="top" label="ForumName" />
+						<WTROW>
+							<WTCODEGROUP>
+								<WTSTATIC col="1" value="DATA(Seq)" />
+								<WTSTATIC col="2" value="DATA(ForumName)">
+									<WTLINK name="8411" target="Forum">
+										<WTPARAM name="ForumID" value="DATA(ForumID)" />
+									</WTLINK>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center" />
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="4620" caption="Favorite" focus="false" navbar="false" header="ReportHeader" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61" footer="false">
+			<!--=============================================================================================-->
+			<WTPARAM name="ExistFavoriteID" datatype="number" />
+			<WTPARAM name="FavoriteID" datatype="number" />
+			<WTPARAM name="MemberID" datatype="number" />
+			<WTPARAM name="RefType" datatype="number" />
+			<WTPARAM name="RefID" datatype="number" />
+			<WTPARAM name="Name" datatype="text" />
+			<WTSUB name="AddFavorite">
+				<WTOBJECT name="Favorite" project="ptsFavoriteUser" class="CFavorite">
+					<WTMETHOD name="Load">
+						<WTPARAM name="FavoriteID" direction="input" value="CONST(0)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)" />
+					<WTSETATTRIBUTE name="ATTR(RefType)" value="PARAM(RefType)" />
+					<WTSETATTRIBUTE name="ATTR(RefID)" value="PARAM(RefID)" />
+					<WTSETATTRIBUTE name="ATTR(FavoriteDate)" value="SYS(Date)" />
+					<WTMETHOD name="Add">
+						<WTPARAM name="reqFavoriteID" direction="return" datatype="number" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors" />
+						<WTPARAM name="xmlFavorite" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Favorite" project="ptsFavoriteUser" class="CFavorite">
+					<WTCONDITION expr="PARAM(MemberID)" oper="greater" value="CONST(0)" />
+					<WTMETHOD name="CheckFavorite">
+						<WTPARAM name="reqExistFavoriteID" direction="return" datatype="number" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="RefType" direction="input" value="PARAM(RefType)" />
+						<WTPARAM name="RefID" direction="input" value="PARAM(RefID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ExistFavoriteID)" oper="equal" value="CONST(0)" />
+					<WTCALLSUB name="AddFavorite" />
+				</WTCODEGROUP>
+			</WTACTION>
+			<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="25" align="left" />
+				<WTCOLUMN width="625" align="left" />
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" />
+					<WTSTATIC col="2" bold="true" align="center" class="PageHeading">
+						<WTSTATIC value="PARAM(Name)" newline="2" />
+						<WTSTATIC label="Exisits">
+							<WTCONDITION expr="PARAM(ExistFavoriteID)" oper="greater" value="CONST(0)" />
+						</WTSTATIC>
+						<WTSTATIC label="Success">
+							<WTCONDITION expr="PARAM(ExistFavoriteID)" oper="equal" value="CONST(0)" />
+							<WTCONDITION expr="PARAM(FavoriteID)" oper="greater" value="CONST(0)" connector="and" />
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="24">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1" />
+					<WTBUTTON col="2" align="center" value="CONST(Close)">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

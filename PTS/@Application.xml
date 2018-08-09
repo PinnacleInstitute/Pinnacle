@@ -1,0 +1,1934 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITIES>
+		<WTENTITY number="143" alias="adv" name="Ad" identity="AdID" title="AdID" file="_Ad.xml"/>
+		<WTENTITY number="37" alias="ad" name="Address" identity="AddressID" title="AddressName" file="_Address.xml"/>
+		<WTENTITY number="147" alias="adk" name="AdTrack" identity="AdTrackID" title="AdTrackID" file="_AdTrack.xml"/>
+		<WTENTITY number="103" alias="av" name="Advance" identity="AdvanceID" title="AdvanceID" file="_Advance.xml"/>
+		<WTENTITY number="06" alias="af"  name="Affiliate" identity="AffiliateID" title="AffiliateName" file="_Affiliate.xml"/>
+		<WTENTITY number="48" alias="app" name="Appt" identity="ApptID" title="ApptName" file="_Appt.xml"/>
+		<WTENTITY number="31" alias="asm" name="Assessment" identity="AssessmentID" title="AssessmentName" file="_Assessment.xml"/>
+		<WTENTITY number="32" alias="asq" name="AssessQuestion" identity="AssessQuestionID" title="AssessQuestionName" file="_AssessQuestion.xml"/>
+		<WTENTITY number="33" alias="asmc" name="AssessChoice" identity="AssessChoiceID" title="AssessChoiceName" file="_AssessChoice.xml"/>
+		<WTENTITY number="35" alias="asa" name="AssessAnswer" identity="AssessAnswerID" title="AssessAnswerName" file="_AssessAnswer.xml"/>
+		<WTENTITY number="80" alias="att" name="Attachment" identity="AttachmentID" title="AttachName" file="_Attachment.xml"/>
+		<WTENTITY number="180" alias="atd" name="Attendee" identity="AttendeeID" title="Attendee" file="_Attendee.xml"/>	
+		<WTENTITY number="99" alias="adt" name="Audit" identity="AuditID" title="AuditID" file="_Audit.xml"/>
+		<WTENTITY number="71" alias="aul" name="AuthLog" identity="AuthLogID" title="IP" file="_AuthLog.xml"/>
+		<WTENTITY number="01" alias="au"  name="AuthUser" identity="AuthUserID" title="AuthUserName" file="_AuthUser.xml"/>
+		<WTENTITY number="153" alias="awa" name="Award" identity="AwardID" title="AwardID" file="_Award.xml"/>
+    <WTENTITY number="172" alias="bad" name="BarterAd" identity="BarterAdID" title="BarterAdID" file="_BarterAd.xml"/>
+    <WTENTITY number="170" alias="bar" name="BarterArea" identity="BarterAreaID" title="BarterAreaName" file="_BarterArea.xml"/>
+    <WTENTITY number="175" alias="bcp" name="BarterCampaign" identity="BarterCampaignID" title="BarterCampaignID" file="_BarterCampaign.xml"/>
+    <WTENTITY number="171" alias="bca" name="BarterCategory" identity="BarterCategoryID" title="BarterCategoryName" file="_BarterCategory.xml"/>
+    <WTENTITY number="174" alias="bac" name="BarterCredit" identity="BarterCreditID" title="BarterCreditID" file="_BarterCredit.xml"/>
+    <WTENTITY number="173" alias="bai" name="BarterImage" identity="BarterImageID" title="BarterImageID" file="_BarterImage.xml"/>
+    <WTENTITY number="176" alias="bal" name="BarterLog" identity="BarterLogID" title="BarterLogID" file="_BarterLog.xml"/>
+    <WTENTITY number="29" alias="bil" name="Billing" identity="BillingID" title="BillingID" file="_Billing.xml"/>
+		<WTENTITY number="106" alias="bs" name="BinarySale" identity="BinarySaleID" title="BinarySaleID" file="_BinarySale.xml"/>
+		<WTENTITY number="155" alias="blo" name="Block" identity="BlockID" title="BlockID" file="_Block.xml"/>
+		<WTENTITY number="83" alias="mbu" name="BoardUser" identity="BoardUserID" title="BoardUserName" file="_BoardUser.xml"/>
+		<WTENTITY number="62" alias="bo"  name="Bonus" identity="BonusID" title="BonusID" file="_Bonus.xml"/>
+		<WTENTITY number="63" alias="bi"  name="BonusItem" identity="BonusItemID" title="BonusItemID" file="_BonusItem.xml"/>
+		<WTENTITY number="144" alias="bc" name="Broadcast" identity="BroadcastID" title="BroadcastID" file="_Broadcast.xml"/>
+		<WTENTITY number="145" alias="bcn" name="BroadcastNews" identity="BroadcastNewsID" title="BroadcastNewsID" file="_BroadcastNews.xml"/>
+		<WTENTITY number="00" alias="bu"  name="Business" identity="BusinessID" title="BusinessName" file="_Business.xml"/>
+		<WTENTITY number="47" alias="cal" name="Calendar" identity="CalendarID" title="CalendarName" file="_Calendar.xml"/>
+		<WTENTITY number="112" alias="cas" name="Cash" identity="CashID" title="CashID" file="_Cash.xml"/>
+		<WTENTITY number="69" alias="ch"  name="Channel" identity="ChannelID" title="ChannelName" file="_Channel.xml"/>
+		<WTENTITY number="134" alias="cis" name="CIS" identity="CISID" title="CISID" file="_CIS.xml"/>
+		<WTENTITY number="108" alias="cz" name="CloudZow" identity="CloudZowID" title="CloudZowID" file="_CloudZow.xml"/>
+		<WTENTITY number="157" alias="coi" name="Coin" identity="CoinID" title="CoinID" file="_Coin.xml"/>
+    <WTENTITY number="164" alias="ca" name="CoinAddress" identity="CoinAddressID" title="CoinAddressID" file="_CoinAddress.xml"/>
+    <WTENTITY number="166" alias="cpr" name="CoinPrice" identity="CoinPriceID" title="CoinPriceID" file="_CoinPrice.xml"/>
+    <WTENTITY number="146" alias="cmt" name="Comment" identity="CommentID" title="CommentID" file="_Comment.xml"/>
+		<WTENTITY number="09" alias="co"  name="Commission" identity="CommissionID" title="CommissionID" file="_Commission.xml"/>
+		<WTENTITY number="58" alias="cp"  name="CommPlan" identity="CommPlanID" title="CommPlanName" file="_CommPlan.xml"/>
+		<WTENTITY number="60" alias="ct"  name="CommType" identity="CommTypeID" title="CommTypeName" file="_CommType.xml"/>
+		<WTENTITY number="38" alias="com" name="Company" identity="CompanyID" title="CompanyName" file="_Company.xml"/>
+		<WTENTITY number="151" alias="csm" name="Consumer" identity="ConsumerID" title="ConsumerID" file="_Consumer.xml"/>
+		<WTENTITY number="126" alias="con" name="Contest" identity="ContestID" title="ContestName" file="_Contest.xml"/>
+		<WTENTITY number="49" alias="cop" name="Coption" identity="CoptionID" title="CoptionID" file="_Coption.xml"/>	
+		<WTENTITY number="39" alias="cou" name="Country" identity="CountryID" title="CountryName" file="_Country.xml"/>	
+		<WTENTITY number="11" alias="cs"  name="Course" identity="CourseID" title="CourseName" file="_Course.xml"/>
+		<WTENTITY number="12" alias="cc"  name="CourseCategory" identity="CourseCategoryID" title="CourseCategoryName" file="_CourseCategory.xml"/>
+		<WTENTITY number="110" alias="cr" name="Credit" identity="CreditID" title="CreditID" file="_Credit.xml"/>
+		<WTENTITY number="102" alias="de" name="Debt" identity="DebtID" title="DebtID" file="_Debt.xml"/>
+		<WTENTITY number="128" alias="dom" name="Domain" identity="DomainID" title="DomainName" file="_Domain.xml"/>
+		<WTENTITY number="54" alias="dl"  name="Downline" identity="false" title="false" file="_Downline.xml"/>
+		<WTENTITY number="55" alias="dt"  name="DownTitle" identity="DownTitleID" title="false" file="_DownTitle.xml"/>
+		<WTENTITY number="114" alias="dec" name="DripCampaign" identity="DripCampaignID" title="DripCampaignID" file="_DripCampaign.xml"/>
+		<WTENTITY number="115" alias="dep" name="DripPage" identity="DripPageID" title="DripPageID" file="_DripPage.xml"/>
+		<WTENTITY number="116" alias="det" name="DripTarget" identity="DripTargetID" title="DripTargetID" file="_DripTarget.xml"/>
+		<WTENTITY number="88" alias="ema" name="Email" identity="EmailID" title="EmailName" file="_Email.xml"/>
+		<WTENTITY number="87" alias="eme" name="Emailee" identity="EmaileeID" title="Email" file="_Emailee.xml"/>
+		<WTENTITY number="89" alias="eml" name="EmailList" identity="EmailListID" title="EmailListName" file="_EmailList.xml"/>
+		<WTENTITY number="86" alias="ems" name="EmailSource" identity="EmailSourceID" title="EmailSourceName" file="_EmailSource.xml"/>
+		<WTENTITY number="02" alias="em"  name="Employee" identity="EmployeeID" title="EmployeeName" file="_Employee.xml"/>
+    <WTENTITY number="160" alias="xc" name="Exchange" identity="ExchangeID" title="ExchangeID" file="_Exchange.xml"/>
+    <WTENTITY number="161" alias="xa" name="ExchangeArea" identity="ExchangeAreaID" title="ExchangeAreaID" file="_ExchangeArea.xml"/>
+    <WTENTITY number="64" alias="ex"  name="Expense" identity="ExpenseID" title="ExpenseID" file="_Expense.xml"/>
+		<WTENTITY number="65" alias="ext" name="ExpenseType" identity="ExpenseTypeID" title="ExpenseTypeID" file="_ExpenseType.xml"/>
+		<WTENTITY number="96" alias="ev"  name="Event" identity="EventID" title="EventName" file="_Event.xml"/>
+		<WTENTITY number="46" alias="fav" name="Favorite" identity="FavoriteID" title="FavoriteName" file="_Favorite.xml"/>
+		<WTENTITY number="101" alias="fi" name="Finance" identity="FinanceID" title="FinanceID" file="_Finance.xml"/>
+		<WTENTITY number="124" alias="fo" name="Folder" identity="FolderID" title="FolderName" file="_Folder.xml"/>
+		<WTENTITY number="125" alias="foi" name="FolderItem" identity="FolderItemID" title="FolderItemID" file="_FolderItem.xml"/>
+		<WTENTITY number="84" alias="mbf" name="Forum" identity="ForumID" title="ForumName" file="_Forum.xml"/>
+		<WTENTITY number="79" alias="fmod" name="ForumModerator" identity="ForumModeratorID" title="ForumModeratorID" file="_ForumModerator.xml"/>
+		<WTENTITY number="148" alias="frl" name="FreeLoyalty" identity="FreeLoyaltyID" title="FreeLoyaltyID" file="_FreeLoyalty.xml"/>
+		<WTENTITY number="141" alias="fr" name="Friend" identity="FriendID" title="FriendID" file="_Friend.xml"/>
+		<WTENTITY number="142" alias="frg" name="FriendGroup" identity="FriendGroupID" title="FriendGroupID" file="_FriendGroup.xml"/>
+		<WTENTITY number="59" alias="ge"  name="Genealogy" identity="GenealogyID" title="GenealogyName" file="_Genealogy.xml"/>
+		<WTENTITY number="138" alias="gcr" name="GCR" identity="GCRID" title="GCRID" file="_GCR.xml"/>
+		<WTENTITY number="133" alias="gg" name="GFTG" identity="GFTGID" title="GFTGID" file="_GFTG.xml"/>
+    <WTENTITY number="159" alias="gc" name="Gift" identity="GiftID" title="GiftID" file="_Gift.xml"/>
+    <WTENTITY number="70" alias="go"  name="Goal" identity="GoalID" title="GoalName" file="_Goal.xml"/>
+		<WTENTITY number="109" alias="gi" name="Govid" identity="GovidID" title="GNumber" file="_Govid.xml"/>
+		<WTENTITY number="26" alias="gu"  name="Guest" identity="GuestID" title="GuestID" file="_Guest.xml"/>
+		<WTENTITY number="104" alias="ht" name="HomeTax" identity="HomeTaxID" title="MemberID" file="_HomeTax.xml"/>
+		<WTENTITY number="68" alias="hw"  name="Homework" identity="HomeworkID" title="Name" file="_Homework.xml"/>
+		<WTENTITY number="105" alias="iv" name="Inventory" identity="InventoryID" title="ProductID" file="_Inventory.xml"/>
+		<WTENTITY number="95" alias="zis" name="Issue" identity="IssueID" title="IssueName" file="_Issue.xml"/>
+		<WTENTITY number="94" alias="zic" name="IssueCategory" identity="IssueCategoryID" title="IssueCategoryName" file="_IssueCategory.xml"/>
+		<WTENTITY number="22" alias="ld"  name="Lead" identity="LeadID" title="LeadID" file="_Lead.xml"/>
+    <WTENTITY number="156" alias="la" name="LeadAd" identity="LeadAdID" title="LeadAdName" file="_LeadAd.xml"/>
+    <WTENTITY number="14" alias="lc"  name="LeadCampaign" identity="LeadCampaignID" title="LeadCampaignName" file="_LeadCampaign.xml"/>
+		<WTENTITY number="16" alias="ll"  name="LeadLog" identity="LeadLogID" title="LeadLogID" file="_LeadLog.xml"/>
+		<WTENTITY number="15" alias="lp"  name="LeadPage" identity="LeadPageID" title="LeadPageName" file="_LeadPage.xml"/>
+		<WTENTITY number="135" alias="leg" name="Legacy" identity="LegacyID" title="LegacyID" file="_Legacy.xml"/>
+		<WTENTITY number="23" alias="le"  name="Lesson" identity="LessonID" title="LessonName" file="_Lesson.xml"/>
+		<WTENTITY number="120" alias="lt" name="LifeTime" identity="LifeTimeID" title="LifeTimeID" file="_LifeTime.xml"/>
+		<WTENTITY number="107" alias="mc" name="Machine" identity="MachineID" title="MachineID" file="_Machine.xml"/>
+		<WTENTITY number="05" alias="ml"  name="Mail" identity="MailID" title="MailID" file="_Mail.xml"/>
+    <WTENTITY number="182" alias="mar" name="Market" identity="MarketID" title="MarketName" file="_Market.xml"/>
+    <WTENTITY number="179" alias="mtg" name="Meeting" identity="MeetingID" title="MeetingID" file="_Meeting.xml"/>	
+		<WTENTITY number="04" alias="me"  name="Member" identity="MemberID" title="MemberName" file="_Member.xml"/>
+		<WTENTITY number="34" alias="ma"  name="MemberAssess" identity="MemberAssessID" title="MemberAssessName" file="_MemberAssess.xml"/>
+		<WTENTITY number="127" alias="mcn" name="MemberContest" identity="MemberContestID" title="MemberContestID" file="_MemberContest.xml"/>
+		<WTENTITY number="129" alias="med" name="MemberDomain" identity="MemberDomainID" title="MemberDomainID" file="_MemberDomain.xml"/>
+		<WTENTITY number="36" alias="mn"  name="MemberNews" identity="MemberNewsID" title="MemberNewsID" file="_MemberNews.xml"/>
+		<WTENTITY number="44" alias="ms"  name="MemberSales" identity="MemberSalesID" title="MemberSalesID" file="_MemberSales.xml"/>
+		<WTENTITY number="67" alias="mtx" name="MemberTax" identity="MemberTaxID" title="MemberTaxID" file="_MemberTax.xml"/>
+		<WTENTITY number="57" alias="mt"  name="MemberTitle" identity="MemberTitleID" title="MemberTitleID" file="_MemberTitle.xml"/>
+		<WTENTITY number="150" alias="mer" name="Merchant" identity="MerchantID" title="MerchantID" file="_Merchant.xml"/>
+		<WTENTITY number="85" alias="mbm" name="Message" identity="MessageID" title="MessageName" file="_Message.xml"/>
+		<WTENTITY number="117" alias="met" name="Metric" identity="MetricID" title="MetricID" file="_Metric.xml"/>
+		<WTENTITY number="118" alias="mtt" name="MetricType" identity="MetricTypeID" title="MetricTypeName" file="_MetricType.xml"/>
+		<WTENTITY number="123" alias="mop" name="Moption" identity="MoptionID" title="MoptionID" file="_Moption.xml"/>
+		<WTENTITY number="97" alias="mg"  name="Msg" identity="MsgID" title="Subject" file="_Msg.xml"/>
+		<WTENTITY number="98" alias="nw"  name="News" identity="NewsID" title="Subject" file="_News.xml"/>
+		<WTENTITY number="18" alias="nl"  name="NewsLetter" identity="NewsletterID" title="NewsletterName" file="_Newsletter.xml"/>
+		<WTENTITY number="140" alias="nwt" name="NewsTopic" identity="NewsTopicID" title="NewsTopicName" file="_NewsTopic.xml"/>
+    <WTENTITY number="158" alias="nx" name="Nexxus" identity="NexxusID" title="NexxusID" file="_Nexxus.xml"/>
+    <WTENTITY number="90" alias="nt"  name="Note" identity="NoteID" title="NoteDate" file="_Note.xml"/>
+		<WTENTITY number="28" alias="org" name="Org" identity="OrgID" title="OrgName" file="_Org.xml"/>
+		<WTENTITY number="30" alias="oco" name="OrgCourse" identity="OrgCourseID" title="OrgCourseID" file="_OrgCourse.xml"/>
+		<WTENTITY number="93" alias="pg"  name="Page" identity="PageID" title="PageName" file="_Page.xml"/>
+		<WTENTITY number="91" alias="ps"  name="PageSection" identity="PageSectionID" title="PageSectionName" file="_PageSection.xml"/>
+		<WTENTITY number="25" alias="py"  name="Party" identity="PartyID" title="PartyID" file="_Party.xml"/>
+		<WTENTITY number="10" alias="pa"  name="Payment" identity="PaymentID" title="PaymentID" file="_Payment.xml"/>
+    <WTENTITY number="165" alias="pa2" name="Payment2" identity="Payment2ID" title="Payment2ID" file="_Payment2.xml"/>
+    <WTENTITY number="08" alias="po"  name="Payout" identity="PayoutID" title="PayoutID" file="_Payout.xml"/>
+		<WTENTITY number="131" alias="pb" name="PB" identity="PBID" title="PBID" file="_PB.xml"/>
+		<WTENTITY number="136" alias="peo" name="PeopleEdge" identity="PeopleEdgeID" title="PeopleEdgeID" file="_PeopleEdge.xml"/>
+		<WTENTITY number="113" alias="poo" name="Pool" identity="PoolID" title="PoolID" file="_Pool.xml"/>
+		<WTENTITY number="111" alias="pre" name="Prepaid" identity="PrepaidID" title="PrepaidID" file="_Prepaid.xml"/>
+		<WTENTITY number="50" alias="pd"  name="Product" identity="ProductID" title="ProductName" file="_Product.xml"/>
+		<WTENTITY number="51" alias="pdt" name="ProductType" identity="ProductTypeID" title="ProductTypeName" file="_ProductType.xml"/>
+		<WTENTITY number="137" alias="pro" name="Profile" identity="ProfileID" title="ProfileID" file="_Profile.xml"/>
+		<WTENTITY number="75" alias="pj"  name="Project" identity="ProjectID" title="ProjectName" file="_Project.xml"/>
+		<WTENTITY number="76" alias="pjm" name="ProjectMember" identity="ProjectMemberID" title="ProjectMemberID" file="_ProjectMember.xml"/>
+		<WTENTITY number="73" alias="pjt" name="ProjectType" identity="ProjectTypeID" title="ProjectTypeName" file="_ProjectType.xml"/>
+		<WTENTITY number="154" alias="prm" name="Promo" identity="PromoID" title="PromoID" file="_Promo.xml"/>
+		<WTENTITY number="07" alias="pm"  name="Promotion" identity="PromotionID" title="PromotionID" file="_Promotion.xml"/>
+		<WTENTITY number="81" alias="pr"  name="Prospect" identity="ProspectID" title="ProspectName" file="_Prospect.xml"/>
+		<WTENTITY number="82" alias="pt"  name="ProspectType" identity="ProspectTypeID" title="ProspectTypeName" file="_ProspectType.xml"/>
+		<WTENTITY number="17" alias="qu"  name="Question" identity="QuestionID" title="QuestionVerbiage" file="_Question.xml"/>
+		<WTENTITY number="27" alias="qtl" name="QuestionType" identity="QuestionTypeID" title="QuestionTypeName" file="_QuestionType.xml"/>
+		<WTENTITY number="19" alias="qa"  name="QuizAnswer" identity="QuizAnswerID" title="QuizAnswerName" file="_QuizAnswer.xml"/>
+		<WTENTITY number="20" alias="qc"  name="QuizChoice" identity="QuizChoiceID" title="QuizChoiceName" file="_QuizChoice.xml"/>
+		<WTENTITY number="21" alias="qq"  name="QuizQuestion" identity="QuizQuestionID" title="QuizQuestionName" file="_QuizQuestion.xml"/>
+		<WTENTITY number="132" alias="ri" name="R180" identity="R180ID" title="R180ID" file="_R180.xml"/>
+		<WTENTITY number="119" alias="rs" name="Resource" identity="ResourceID" title="ResourceID" file="_Resource.xml"/>
+		<WTENTITY number="152" alias="rew" name="Reward" identity="RewardID" title="RewardID" file="_Reward.xml"/>
+		<WTENTITY number="77" alias="slc" name="SalesCampaign" identity="SalesCampaignID" title="SalesCampaignName" file="_SalesCampaign.xml"/>
+    <WTENTITY number="167" alias="sla" name="SalesArea" identity="SalesAreaID" title="SalesAreaName" file="_SalesArea.xml"/>
+    <WTENTITY number="53" alias="si"  name="SalesItem" identity="SalesItemID" title="SalesItemID" file="_SalesItem.xml"/>
+    <WTENTITY number="169" alias="slm" name="SalesMember" identity="SalesMemberID" title="SalesMemberID" file="_SalesMember.xml"/>
+    <WTENTITY number="52" alias="so"  name="SalesOrder" identity="SalesOrderID" title="SalesOrderID" file="_SalesOrder.xml"/>
+		<WTENTITY number="78" alias="sls" name="SalesStep" identity="SalesStepID" title="SalesStepName" file="_SalesStep.xml"/>
+    <WTENTITY number="168" alias="slz" name="SalesZip" identity="SalesZipID" title="ZipCode" file="_SalesZip.xml"/>
+		<WTENTITY number="177" alias="sem" name="Seminar" identity="SeminarID" title="SeminarName" file="_Seminar.xml"/>
+    <WTENTITY number="181" alias="sel" name="SeminarLog" identity="SeminarLogID" title="SeminarLogID" file="_SeminarLog.xml"/>
+    <WTENTITY number="13" alias="se"  name="Session" identity="SessionID" title="SessionName" file="_Session.xml"/>
+		<WTENTITY number="24" alias="sl"  name="SessionLesson" identity="SessionLessonID" title="SessionLessonID" file="_SessionLesson.xml"/>
+		<WTENTITY number="92" alias="sh"  name="Shortcut" identity="ShortcutID" title="ShortcutName" file="_Shortcut.xml"/>
+		<WTENTITY number="61" alias="sr"  name="Signature" identity="SignatureID" title="SignatureID" file="_Signature.xml"/>
+		<WTENTITY number="130" alias="sil" name="Silver" identity="SilverID" title="SilverID" file="_Silver.xml"/>
+		<WTENTITY number="139" alias="shf" name="SilverHeart" identity="SilverHeartID" title="SilverHeartID" file="_SilverHeart.xml"/>	
+		<WTENTITY number="122" alias="sim" name="Sims" identity="SimsID" title="SimsID" file="_Sims.xml"/>
+		<WTENTITY number="162" alias="st" name="Staff" identity="StaffID" title="StaffID" file="_Staff.xml"/>
+    <WTENTITY number="163" alias="stm" name="Statement" identity="StatementID" title="StatementID" file="_Statement.xml"/>
+    <WTENTITY number="45" alias="sg"  name="Suggestion" identity="SuggestionID" title="SuggestionName" file="_Suggestion.xml"/>
+		<WTENTITY number="40" alias="su"  name="Survey" identity="SurveyID" title="SurveyName" file="_Survey.xml"/>
+		<WTENTITY number="43" alias="sa"  name="SurveyAnswer" identity="SurveyAnswerID" title="SurveyAnswerName" file="_SurveyAnswer.xml"/>
+		<WTENTITY number="42" alias="sc"  name="SurveyChoice" identity="SurveyChoiceID" title="SurveyChoiceName" file="_SurveyChoice.xml"/>
+		<WTENTITY number="41" alias="sq"  name="SurveyQuestion" identity="SurveyQuestionID" title="SurveyQuestionName" file="_SurveyQuestion.xml"/>
+		<WTENTITY number="74" alias="ta"  name="Task" identity="TaskID" title="TaskName" file="_Task.xml"/>
+		<WTENTITY number="66" alias="tx"  name="TaxRate" identity="TaxRateID" title="TaxRateID" file="_TaxRate.xml"/>
+		<WTENTITY number="149" alias="tam" name="TellAll" identity="TellAllID" title="TellAllID" file="_TellAll.xml"/>
+		<WTENTITY number="56" alias="ti"  name="Title" identity="TitleID" title="TitleName" file="_Title.xml"/>
+		<WTENTITY number="03" alias="tr"  name="Trainer" identity="TrainerID" title="TrainerName" file="_Trainer.xml"/>
+		<WTENTITY number="178" alias="ven" name="Venue" identity="VenueID" title="VenueName" file="_Venue.xml"/>	
+		<WTENTITY number="121" alias="zz" name="Zazzed" identity="ZazzedID" title="ZazzedID" file="_Zazzed.xml"/>
+		<!-- ENTITES BY NUMBER ***************************************************************************************************
+		<WTENTITY number="00" alias="bu"  name="Business" identity="BusinessID" title="BusinessName" file="_Business.xml"/>
+		<WTENTITY number="01" alias="au"  name="AuthUser" identity="AuthUserID" title="AuthUserName" file="_AuthUser.xml"/>
+		<WTENTITY number="02" alias="em"  name="Employee" identity="EmployeeID" title="EmployeeName" file="_Employee.xml"/>
+		<WTENTITY number="03" alias="tr"  name="Trainer" identity="TrainerID" title="TrainerName" file="_Trainer.xml"/>
+		<WTENTITY number="04" alias="me"  name="Member" identity="MemberID" title="MemberName" file="_Member.xml"/>
+		<WTENTITY number="05" alias="ml"  name="Mail" identity="MailID" title="Subject" file="_Mail.xml"/>
+		<WTENTITY number="06" alias="af"  name="Affiliate" identity="AffiliateID" title="AffiliateName" file="_Affiliate.xml"/>
+		<WTENTITY number="07" alias="po"  name="Promotion" identity="PromotionID" title="PromotionID" file="_Promotion.xml"/>
+		<WTENTITY number="08" alias="po"  name="Payout" identity="PayoutID" title="PayoutID" file="_Payout.xml"/>
+		<WTENTITY number="09" alias="co"  name="Commission" identity="CommissionID" title="CommissionID" file="_Commission.xml"/>
+		<WTENTITY number="10" alias="pa"  name="Payment" identity="PaymentID" title="PaymentID" file="_Payment.xml"/>
+		<WTENTITY number="11" alias="cs"  name="Course" identity="CourseID" title="CourseName" file="_Course.xml"/>
+		<WTENTITY number="12" alias="cc"  name="CourseCategory" identity="CourseCategoryID" title="CourseCategoryName" file="_CourseCategory.xml"/>
+		<WTENTITY number="13" alias="se"  name="Session" identity="SessionID" title="SessionName" file="_Session.xml"/>
+		<WTENTITY number="14" alias="lc"  name="LeadCampaign" identity="LeadCampaignID" title="LeadCampaignName" file="_LeadCampaign.xml"/>
+		<WTENTITY number="15" alias="lp"  name="LeadPage" identity="LeadPageID" title="LeadPageName" file="_LeadPage.xml"/>
+		<WTENTITY number="16" alias="ll"  name="LeadLog" identity="LeadLogID" title="LeadLogID" file="_LeadLog.xml"/>
+		<WTENTITY number="17" alias="qu"  name="Question" identity="QuestionID" title="QuestionVerbiage" file="_Question.xml"/>
+		<WTENTITY number="18" alias="nl"  name="NewsLetter" identity="NewsletterID" title="NewsletterName" file="_Newsletter.xml"/>
+		<WTENTITY number="19" alias="qa"  name="QuizAnswer" identity="QuizAnswerID" title="QuizAnswerName" file="_QuizAnswer.xml"/>
+		<WTENTITY number="20" alias="qc"  name="QuizChoice" identity="QuizChoiceID" title="QuizChoiceName" file="_QuizChoice.xml"/>
+		<WTENTITY number="21" alias="qq"  name="QuizQuestion" identity="QuizQuestionID" title="QuizQuestionName" file="_QuizQuestion.xml"/>	
+		<WTENTITY number="22" alias="ld"  name="Lead" identity="LeadID" title="LeadID" file="_Lead.xml"/>
+		<WTENTITY number="23" alias="le"  name="Lesson" identity="LessonID" title="LessonName" file="_Lesson.xml"/>
+		<WTENTITY number="24" alias="sl"  name="SessionLesson" identity="SessionLessonID" title="SessionLessonID" file="_SessionLesson.xml"/>
+		<WTENTITY number="25" alias="py"  name="Party" identity="PartyID" title="PartyID" file="_Party.xml"/>
+		<WTENTITY number="26" alias="gu"  name="Guest" identity="GuestID" title="GuestID" file="_Guest.xml"/>
+		<WTENTITY number="27" alias="qtl" name="QuestionType" identity="QuestionTypeID" title="QuestionTypeName" file="_QuestionType.xml"/>
+		<WTENTITY number="28" alias="org" name="Org" identity="OrgID" title="OrgName" file="_Org.xml"/>
+		<WTENTITY number="29" alias="bil" name="Billing" identity="BillingID" title="BillingID" file="_Billing.xml"/>
+		<WTENTITY number="30" alias="oco" name="OrgCourse" identity="OrgCourseID" title="OrgCourseID" file="_OrgCourse.xml"/>
+		<WTENTITY number="31" alias="asm" name="Assessment" identity="AssessmentID" title="AssessmentName" file="_Assessment.xml"/>
+		<WTENTITY number="32" alias="asq" name="AssessQuestion" identity="AssessQuestionID" title="AssessQuestionName" file="_AssessQuestion.xml"/>
+		<WTENTITY number="33" alias="asmc" name="AssessChoice" identity="AssessChoiceID" title="AssessChoiceName" file="_AssessChoice.xml"/>
+		<WTENTITY number="34" alias="ma"  name="MemberAssess" identity="MemberAssessID" title="MemberAssessName" file="_MemberAssess.xml"/>
+		<WTENTITY number="35" alias="asa" name="AssessAnswer" identity="AssessAnswerID" title="AssessAnswerName" file="_AssessAnswer.xml"/>
+		<WTENTITY number="36" alias="mn"  name="MemberNews" identity="MemberNewsID" title="MemberNewsID" file="_MemberNews.xml"/>
+		<WTENTITY number="37" alias="ad"  name="Address" identity="AddressID" title="AddressName" file="_Address.xml"/>	
+		<WTENTITY number="38" alias="com" name="Company" identity="CompanyID" title="CompanyName" file="_Company.xml"/>	
+		<WTENTITY number="39" alias="cou" name="Country" identity="CountryID" title="CountryName" file="_Country.xml"/>	
+		<WTENTITY number="40" alias="su"  name="Survey" identity="SurveyID" title="SurveyName" file="_Survey.xml"/>
+		<WTENTITY number="41" alias="sq"  name="SurveyQuestion" identity="SurveyQuestionID" title="SurveyQuestionName" file="_SurveyQuestion.xml"/>	
+		<WTENTITY number="42" alias="sc"  name="SurveyChoice" identity="SurveyChoiceID" title="SurveyChoiceName" file="_SurveyChoice.xml"/>
+		<WTENTITY number="43" alias="sa"  name="SurveyAnswer" identity="SurveyAnswerID" title="SurveyAnswerName" file="_SurveyAnswer.xml"/>
+		<WTENTITY number="44" alias="ms"  name="MemberSales" identity="MemberSalesID" title="MemberSalesID" file="_MemberSales.xml"/>
+		<WTENTITY number="45" alias="sg"  name="Suggestion" identity="SuggestionID" title="SuggestionName" file="_Suggestion.xml"/>
+		<WTENTITY number="46" alias="fav" name="Favorite" identity="FavoriteID" title="FavoriteName" file="_Favorite.xml"/>
+		<WTENTITY number="47" alias="cal" name="Calendar" identity="CalendarID" title="CalendarName" file="_Calendar.xml"/>
+		<WTENTITY number="48" alias="app" name="Appt" identity="ApptID" title="ApptName" file="_Appt.xml"/>
+		<WTENTITY number="49" alias="cop" name="Coption" identity="CoptionID" title="CoptionID" file="_Coption.xml"/>	
+		<WTENTITY number="50" alias="pd"  name="Product" identity="ProductID" title="ProductName" file="_Product.xml"/>
+		<WTENTITY number="51" alias="pdt" name="ProductType" identity="ProductTypeID" title="ProductTypeName" file="_ProductType.xml"/>
+		<WTENTITY number="52" alias="so"  name="SalesOrder" identity="SalesOrderID" title="SalesOrderID" file="_SalesOrder.xml"/>
+		<WTENTITY number="53" alias="si"  name="SalesItem" identity="SalesItemID" title="SalesItemID" file="_SalesItem.xml"/>
+		<WTENTITY number="54" alias="dl"  name="Downline" identity="false" title="false" file="_Downline.xml"/>
+		<WTENTITY number="55" alias="dt"  name="DownTitle" identity="DownTitleID" title="false" file="_DownTitle.xml"/>
+		<WTENTITY number="56" alias="ti"  name="Title" identity="TitleID" title="TitleName" file="_Title.xml"/>
+		<WTENTITY number="57" alias="mt"  name="MemberTitle" identity="MemberTitleID" title="MemberTitleID" file="_MemberTitle.xml"/>
+		<WTENTITY number="58" alias="cp"  name="CommPlan" identity="CommPlanID" title="CommPlanName" file="_CommPlan.xml"/>
+		<WTENTITY number="59" alias="ge"  name="Genealogy" identity="GenealogyID" title="GenealogyName" file="_Genealogy.xml"/>
+		<WTENTITY number="60" alias="ct"  name="CommType" identity="CommTypeID" title="CommTypeName" file="_CommType.xml"/>
+		<WTENTITY number="61" alias="sr"  name="Signature" identity="SignatureID" title="SignatureID" file="_Signature.xml"/>
+		<WTENTITY number="62" alias="bo"  name="Bonus" identity="BonusID" title="BonusID" file="_Bonus.xml"/>
+		<WTENTITY number="63" alias="bi"  name="BonusItem" identity="BonusItemID" title="BonusItemID" file="_BonusItem.xml"/>
+		<WTENTITY number="64" alias="ex"  name="Expense" identity="ExpenseID" title="ExpenseID" file="_Expense.xml"/>
+		<WTENTITY number="65" alias="ext" name="ExpenseType" identity="ExpenseTypeID" title="ExpenseTypeID" file="_ExpenseType.xml"/>
+		<WTENTITY number="66" alias="tx"  name="TaxRate" identity="TaxRateID" title="TaxRateID" file="_TaxRate.xml"/>
+		<WTENTITY number="67" alias="mtx" name="MemberTax" identity="MemberTaxID" title="MemberTaxID" file="_MemberTax.xml"/>
+		<WTENTITY number="68" alias="hw"  name="Homework" identity="HomeworkID" title="Name" file="_Homework.xml"/>
+		<WTENTITY number="69" alias="ch"  name="Channel" identity="ChannelID" title="ChannelName" file="_Channel.xml"/>
+		<WTENTITY number="70" alias="go"  name="Goal" identity="GoalID" title="GoalName" file="_Goal.xml"/>
+		<WTENTITY number="71" alias="aul" name="AuthLog" identity="AuthLogID" title="IP" file="_AuthLog.xml"/>
+		<WTENTITY number="73" alias="pjt" name="ProjectType" identity="ProjectTypeID" title="ProjectTypeName" file="_ProjectType.xml"/>
+		<WTENTITY number="74" alias="ta"  name="Task" identity="TaskID" title="TaskName" file="_Task.xml"/>
+		<WTENTITY number="75" alias="pj"  name="Project" identity="ProjectID" title="ProjectName" file="_Project.xml"/>
+		<WTENTITY number="76" alias="pjm"  name="ProjectMember" identity="ProjectMemberID" title="ProjectMemberID" file="_ProjectMember.xml"/>
+		<WTENTITY number="77" alias="slc"  name="SalesCampaign" identity="SalesCampaignID" title="SalesCampaignName" file="_SalesCampaign.xml"/>
+		<WTENTITY number="78" alias="sls"  name="SalesStep" identity="SalesStepID" title="SalesStepName" file="_SalesStep.xml"/>
+		<WTENTITY number="79" alias="fmod" name="ForumModerator" identity="ForumModeratorID" title="ForumModeratorID" file="_ForumModerator.xml"/>
+		<WTENTITY number="80" alias="att" name="Attachment" identity="AttachmentID" title="AttachName" file="_Attachment.xml"/>
+		<WTENTITY number="81" alias="pr"  name="Prospect" identity="ProspectID" title="ProspectName" file="_Prospect.xml"/>
+		<WTENTITY number="82" alias="pt"  name="ProspectType" identity="ProspectTypeID" title="ProspectTypeName" file="_ProspectType.xml"/>
+		<WTENTITY number="83" alias="mbu" name="BoardUser" identity="BoardUserID" title="BoardUserName" file="_BoardUser.xml"/>
+		<WTENTITY number="84" alias="mbf" name="Forum" identity="ForumID" title="ForumName" file="_Forum.xml"/>
+		<WTENTITY number="85" alias="mbm" name="Message" identity="MessageID" title="MessageName" file="_Message.xml"/>
+		<WTENTITY number="86" alias="ems" name="EmailSource" identity="EmailSourceID" title="EmailSourceName" file="_EmailSource.xml"/>
+		<WTENTITY number="87" alias="eme" name="Emailee" identity="EmaileeID" title="Email" file="_Emailee.xml"/>
+		<WTENTITY number="88" alias="ema" name="Email" identity="EmailID" title="EmailName" file="_Email.xml"/>
+		<WTENTITY number="89" alias="eml" name="EmailList" identity="EmailListID" title="EmailListName" file="_EmailList.xml"/>
+		<WTENTITY number="90" alias="nt"  name="Note" identity="NoteID" title="NoteDate" file="_Note.xml"/>
+		<WTENTITY number="91" alias="ps"  name="PageSection" identity="PageSectionID" title="PageSectionName" file="_PageSection.xml"/>
+		<WTENTITY number="92" alias="sh"  name="Shortcut" identity="ShortcutID" title="ShortcutName" file="_Shortcut.xml"/>
+		<WTENTITY number="93" alias="pg"  name="Page" identity="PageID" title="PageName" file="_Page.xml"/>
+		<WTENTITY number="94" alias="zic" name="IssueCategory" identity="IssueCategoryID" title="IssueCategoryName" file="_IssueCategory.xml"/>
+		<WTENTITY number="95" alias="zis" name="Issue" identity="IssueID" title="IssueName" file="_Issue.xml"/>
+		<WTENTITY number="96" alias="ev"  name="Event" identity="EventID" title="EventName" file="_Event.xml"/>
+		<WTENTITY number="97" alias="mg"  name="Msg" identity="MsgID" title="Subject" file="_Msg.xml"/>
+		<WTENTITY number="98" alias="nw"  name="News" identity="NewsID" title="Subject" file="_News.xml"/>
+		<WTENTITY number="99" alias="adt" name="Audit" identity="AuditID" title="AuditID" file="_Audit.xml"/>
+		<WTENTITY number="101" alias="fi" name="Finance" identity="FinanceID" title="FinanceID" file="_Finance.xml"/>
+		<WTENTITY number="102" alias="de" name="Debt" identity="DebtID" title="DebtID" file="_Debt.xml"/>
+		<WTENTITY number="103" alias="av" name="Advance" identity="AdvanceID" title="AdvanceID" file="_Advance.xml"/>
+		<WTENTITY number="104" alias="ht" name="HomeTax" identity="HomeTaxID" title="MemberID" file="_HomeTax.xml"/>
+		<WTENTITY number="105" alias="iv" name="Inventory" identity="InventoryID" title="ProductID" file="_Inventory.xml"/>
+		<WTENTITY number="106" alias="bs" name="BinarySale" identity="BinarySaleID" title="BinarySaleID" file="_BinarySale.xml"/>
+		<WTENTITY number="107" alias="mc" name="Machine" identity="MachineID" title="MachineID" file="_Machine.xml"/>
+		<WTENTITY number="108" alias="cz" name="CloudZow" identity="CloudZowID" title="CloudZowID" file="_CloudZow.xml"/>
+		<WTENTITY number="109" alias="gi" name="Govid" identity="GovidID" title="GNumber" file="_Govid.xml"/>
+		<WTENTITY number="110" alias="cr" name="Credit" identity="CreditID" title="CreditID" file="_Credit.xml"/>
+		<WTENTITY number="111" alias="pre" name="Prepaid" identity="PrepaidID" title="PrepaidID" file="_Prepaid.xml"/>
+		<WTENTITY number="112" alias="cas" name="Cash" identity="CashID" title="CashID" file="_Cash.xml"/>
+		<WTENTITY number="113" alias="poo" name="Pool" identity="PoolID" title="PoolID" file="_Pool.xml"/>
+		<WTENTITY number="114" alias="dec" name="DripCampaign" identity="DripCampaignID" title="DripCampaignID" file="_DripCampaign.xml"/>
+		<WTENTITY number="115" alias="dep" name="DripPage" identity="DripPageID" title="DripPageID" file="_DripPage.xml"/>
+		<WTENTITY number="116" alias="det" name="DripTarget" identity="DripTargetID" title="DripTargetID" file="_DripTarget.xml"/>
+		<WTENTITY number="117" alias="met" name="Metric" identity="MetricID" title="MetricID" file="_Metric.xml"/>
+		<WTENTITY number="118" alias="mtt" name="MetricType" identity="MetricTypeID" title="MetricTypeID" file="_MetricType.xml"/>
+		<WTENTITY number="119" alias="rs" name="Resource" identity="ResourceID" title="ResourceID" file="_Resource.xml"/>
+		<WTENTITY number="120" alias="lt" name="LifeTime" identity="LifeTimeID" title="LifeTimeID" file="_LifeTime.xml"/>
+		<WTENTITY number="121" alias="zz" name="Zazzed" identity="ZazzedID" title="ZazzedID" file="_Zazzed.xml"/>
+		<WTENTITY number="122" alias="sim" name="Sims" identity="SimsID" title="SimsID" file="_Sims.xml"/>
+		<WTENTITY number="123" alias="mop" name="Moption" identity="MoptionID" title="MoptionID" file="_Moption.xml"/>	
+		<WTENTITY number="124" alias="fo" name="Folder" identity="FolderID" title="FolderName" file="_Folder.xml"/>	
+		<WTENTITY number="125" alias="foi" name="FolderItem" identity="FolderItemID" title="FolderItemID" file="_FolderItem.xml"/>	
+		<WTENTITY number="126" alias="con" name="Contest" identity="ContestID" title="ContestName" file="_Contest.xml"/>	
+		<WTENTITY number="127" alias="mcn" name="MemberContest" identity="MemberContestID" title="MemberContestID" file="_MemberContest.xml"/>	
+		<WTENTITY number="128" alias="dom" name="Domain" identity="DomainID" title="DomainName" file="_Domain.xml"/>	
+		<WTENTITY number="129" alias="med" name="MemberDomain" identity="MemberDomainID" title="MemberDomainID" file="_MemberDomain.xml"/>	
+		<WTENTITY number="130" alias="sil" name="Silver" identity="SilverID" title="SilverID" file="_Silver.xml"/>	
+		<WTENTITY number="131" alias="pb" name="PB" identity="PBID" title="PBID" file="_PB.xml"/>	
+		<WTENTITY number="132" alias="ri" name="R180" identity="R180ID" title="R180ID" file="_R180.xml"/>	
+		<WTENTITY number="133" alias="gg" name="GFTG" identity="GFTGID" title="GFTGID" file="_GFTG.xml"/>	
+		<WTENTITY number="134" alias="cis" name="CIS" identity="CISID" title="CISID" file="_CIS.xml"/>	
+		<WTENTITY number="135" alias="leg" name="Legacy" identity="LegacyID" title="LegacyID" file="_Legacy.xml"/>	
+		<WTENTITY number="136" alias="peo" name="PeopleEdge" identity="PeopleEdgeID" title="PeopleEdgeID" file="_PeopleEdge.xml"/>	
+		<WTENTITY number="137" alias="pro" name="Profile" identity="ProfileID" title="ProfileID" file="_Profile.xml"/>	
+		<WTENTITY number="138" alias="gcr" name="GCR" identity="GCRID" title="GCRID" file="_GCR.xml"/>	
+		<WTENTITY number="139" alias="shf" name="SilverHeart" identity="SilverHeartID" title="SilverHeartID" file="_SilverHeart.xml"/>	
+		<WTENTITY number="140" alias="nwt" name="NewsTopic" identity="NewsTopicID" title="NewsTopicName" file="_NewsTopic.xml"/>	
+		<WTENTITY number="141" alias="fr" name="Friend" identity="FriendID" title="FriendID" file="_Friend.xml"/>	
+		<WTENTITY number="142" alias="frg" name="FriendGroup" identity="FriendGroupID" title="FriendGroupID" file="_FriendGroup.xml"/>	
+		<WTENTITY number="143" alias="adv" name="Ad" identity="AdID" title="AdID" file="_Ad.xml"/>	
+		<WTENTITY number="144" alias="bc" name="Broadcast" identity="BroadcastID" title="BroadcastID" file="_Broadcast.xml"/>	
+		<WTENTITY number="145" alias="bcn" name="BroadcastNews" identity="BroadcastNewsID" title="BroadcastNewsID" file="_BroadcastNews.xml"/>	
+		<WTENTITY number="146" alias="cmt" name="Comment" identity="CommentID" title="CommentID" file="_Comment.xml"/>	
+		<WTENTITY number="147" alias="adk" name="AdTrack" identity="AdTrackID" title="AdTrackID" file="_AdTrack.xml"/>
+		<WTENTITY number="148" alias="frl" name="FreeLoyalty" identity="FreeLoyaltyID" title="FreeLoyaltyID" file="_FreeLoyalty.xml"/>
+		<WTENTITY number="149" alias="tam" name="TellAll" identity="TellAllID" title="TellAllID" file="_TellAll.xml"/>
+		<WTENTITY number="150" alias="mer" name="Merchant" identity="MerchantID" title="MerchantID" file="_Merchant.xml"/>	
+		<WTENTITY number="151" alias="csm" name="Consumer" identity="ConsumerID" title="ConsumerID" file="_Consumer.xml"/>	
+		<WTENTITY number="152" alias="rew" name="Reward" identity="RewardID" title="RewardID" file="_Reward.xml"/>	
+		<WTENTITY number="153" alias="awa" name="Award" identity="AwardID" title="AwardID" file="_Award.xml"/>	
+		<WTENTITY number="154" alias="prm" name="Promo" identity="PromoID" title="PromoID" file="_Promo.xml"/>	
+		<WTENTITY number="155" alias="blo" name="Block" identity="BlockID" title="BlockID" file="_Block.xml"/>
+		<WTENTITY number="156" alias="la" name="LeadAd" identity="LeadAdID" title="LeadAdName" file="_LeadAd.xml"/>
+		<WTENTITY number="157" alias="coi" name="Coin" identity="CoinID" title="CoinID" file="_Coin.xml"/>
+		<WTENTITY number="158" alias="nx" name="Nexxus" identity="NexxusID" title="NexxusID" file="_Nexxus.xml"/>	
+		<WTENTITY number="159" alias="gc" name="Gift" identity="GiftID" title="GiftID" file="_Gift.xml"/>	
+		<WTENTITY number="160" alias="ex" name="Exchange" identity="ExchangeID" title="ExchangeID" file="_Exchange.xml"/>	
+		<WTENTITY number="161" alias="xa" name="ExchangeArea" identity="ExchangeAreaID" title="ExchangeAreaID" file="_ExchangeArea.xml"/>	
+		<WTENTITY number="162" alias="st" name="Staff" identity="StaffID" title="StaffID" file="_Staff.xml"/>	
+		<WTENTITY number="163" alias="stm" name="Statement" identity="StatementID" title="StatementID" file="_Statement.xml"/>	
+		<WTENTITY number="164" alias="ca" name="CoinAddress" identity="CoinAddressID" title="CoinAddressID" file="_CoinAddress.xml"/>	
+		<WTENTITY number="165" alias="pa2" name="Payment2" identity="Payment2ID" title="Payment2ID" file="_Payment2.xml"/>	
+		<WTENTITY number="166" alias="cpr" name="CoinPrice" identity="CoinPriceID" title="CoinPriceID" file="_CoinPrice.xml"/>	
+		<WTENTITY number="167" alias="sla" name="SalesArea" identity="SalesAreaID" title="SalesAreaName" file="_SalesArea.xml"/>	
+		<WTENTITY number="168" alias="slz" name="SalesZip" identity="SalesZipID" title="ZipCode" file="_SalesZip.xml"/>	
+		<WTENTITY number="169" alias="slm" name="SalesMember" identity="SalesMemberID" title="SalesMemberID" file="_SalesMember.xml"/>	
+		<WTENTITY number="170" alias="bar" name="BarterArea" identity="BarterAreaID" title="BarterAreaName" file="_BarterArea.xml"/>	
+		<WTENTITY number="171" alias="bca" name="BarterCategory" identity="BarterCategoryID" title="BarterCategoryName" file="_BarterCategory.xml"/>	
+		<WTENTITY number="172" alias="bad" name="BarterAd" identity="BarterAdID" title="BarterAdID" file="_BarterAd.xml"/>	
+		<WTENTITY number="173" alias="bai" name="BarterImage" identity="BarterImageID" title="BarterImageID" file="_BarterImage.xml"/>	
+		<WTENTITY number="174" alias="bac" name="BarterCredit" identity="BarterCreditID" title="BarterCreditID" file="_BarterCredit.xml"/>	
+		<WTENTITY number="175" alias="bcp" name="BarterCampaign" identity="BarterCampaignID" title="BarterCampaignID" file="_BarterCampaign.xml"/>	
+		<WTENTITY number="176" alias="bal" name="BarterLog" identity="BarterLogID" title="BarterLogID" file="_BarterLog.xml"/>	
+		<WTENTITY number="177" alias="sem" name="Seminar" identity="SeminarID" title="SeminarName" file="_Seminar.xml"/>	
+		<WTENTITY number="178" alias="ven" name="Venue" identity="VenueID" title="VenueName" file="_Venue.xml"/>	
+		<WTENTITY number="179" alias="mtg" name="Meeting" identity="MeetingID" title="MeetingID" file="_Meeting.xml"/>	
+		<WTENTITY number="180" alias="atd" name="Attendee" identity="AttendeeID" title="Attendee" file="_Attendee.xml"/>	
+		<WTENTITY number="181" alias="sel" name="SeminarLog" identity="SeminarLogID" title="SeminarLogID" file="_SeminarLog.xml"/>	
+		<WTENTITY number="182" alias="mar" name="Market" identity="MarketID" title="MarketName" file="_Market.xml"/>	
+*** ENTITIES BY NUMBER *************************************************************************** -->
+	</WTENTITIES>
+	<WTPAGE page-left="10" wrapper="wrapper" menubar="MenuBar" htmleditor="ckeditor" navbar="false" header="false" log="Google" translate="google">
+		<!--	<WTPAGE page-left="10" system-board="true" system-navbarimage="true" menubar="MenuBar" log="Googlex" align="center" page-color="#EDEDEB" inside-color="#FFFFFF">-->
+		<!--	<WTPAGE page-left="10" system-board="true" system-navbarimage="true"> -->
+		<WTSYSVAR name="CompanyID" type="number"/>
+		<WTSYSVAR name="TrainerID" type="number"/>
+		<WTSYSVAR name="MemberID" type="number"/>
+		<WTSYSVAR name="OrgID" type="number"/>
+		<WTSYSVAR name="UserMode" type="number"/>
+		<WTSYSVAR name="UserOptions" type="text"/>
+		<WTSYSVAR name="GA_ACCTID" type="text"/>
+		<WTSYSVAR name="GA_DOMAIN" type="text"/>
+	</WTPAGE>
+	<!-- System Constants -->
+	<WTSYSCONS>
+		<WTSYSCON name="CLOUDZOW" value="5"/>
+		<WTSYSCON name="MYTRACKERPRO" value="7"/>
+		<WTSYSCON name="LIFETIME" value="8"/>
+		<WTSYSCON name="ZAZZED" value="9"/>
+		<WTSYSCON name="ZAZZEDSILVER" value="10"/>
+		<WTSYSCON name="PB49" value="11"/>
+		<WTSYSCON name="RIGHT180" value="12"/>
+		<WTSYSCON name="GFTGLOBAL" value="13"/>
+		<WTSYSCON name="LEGACYMAX" value="14"/>
+		<WTSYSCON name="COOPINCOME" value="15"/>
+		<WTSYSCON name="PEOPLEEDGE" value="16"/>
+		<WTSYSCON name="GCR" value="17"/>
+		<WTSYSCON name="FREELOYALTY" value="18"/>
+    <WTSYSCON name="TELLALLMOBILE" value="19"/>
+    <WTSYSCON name="SILVERHEART" value="20"/>
+		<WTSYSCON name="NEXXUS" value="21"/>
+
+    <WTSYSCON name="YES" value="1"/>
+		<WTSYSCON name="NO" value="0"/>
+		<WTSYSCON name="TRUE" value="1"/>
+		<WTSYSCON name="FALSE" value="0"/>
+		<WTSYSCON name="NEW" value="0"/>
+		<WTSYSCON name="NOSTR" value="&quot;&quot;"/>
+		<WTSYSCON name="MEMBER-PAID" value="1"/>
+		<WTSYSCON name="MEMBER-TRIAL" value="2"/>
+		<WTSYSCON name="MEMBER-FREE" value="3"/>
+		<WTSYSCON name="MEMBER-SUSPENDED" value="4"/>
+		<WTSYSCON name="MEMBER-INACTIVE" value="5"/>
+		<WTSYSCON name="MEMBER-BUSINESS" value="10"/>
+		<WTSYSCON name="MEMBER-BILL" value="3"/>
+		<WTSYSCON name="COMPANY-SETUP" value="1"/>
+		<WTSYSCON name="COMPANY-ACTIVE" value="2"/>
+		<WTSYSCON name="COMPANY-DEMO" value="3"/>
+		<WTSYSCON name="COMPANY-INACTIVE" value="4"/>
+		<WTSYSCON name="MEMBER-SUPPORT-NONE" value="1"/>
+		<WTSYSCON name="MEMBER-SUPPORT-DOCS" value="2"/>
+		<WTSYSCON name="MEMBER-SUPPORT-QA" value="3"/>
+		<WTSYSCON name="MEMBER-SUPPORT-BOTH" value="4"/>
+		<WTSYSCON name="NOTIFYMENTOR-CLASS" value="1"/>
+		<WTSYSCON name="NOTIFYMENTOR-ASSESS" value="2"/>
+		<WTSYSCON name="NOTIFYMENTOR-CERTIFY" value="3"/>
+		<WTSYSCON name="NOTIFYMENTOR-GOAL" value="4"/>
+		<WTSYSCON name="NOTIFYMENTOR-PROJECT" value="5"/>
+		<WTSYSCON name="NOTIFYMENTOR-SALES" value="6"/>
+		<WTSYSCON name="NOTIFYMENTOR-SIGNIN" value="7"/>
+		<WTSYSCON name="NOTIFYMENTOR-ACTIVITY" value="8"/>
+		<WTSYSCON name="NOTIFYMENTOR-RESULT" value="9"/>
+		<WTSYSCON name="PAYMENT_VISA" value="A"/>
+		<WTSYSCON name="PAYMENT_MC" value="B"/>
+		<WTSYSCON name="PAYMENT_DISCOVER" value="C"/>
+		<WTSYSCON name="PAYMENT_AMEX" value="D"/>
+		<WTSYSCON name="PAYMENT_CHECK" value="E"/>
+		<WTSYSCON name="PAYMENT_PAYPAL" value="F"/>
+		<WTSYSCON name="PAYMENT_CASH" value="G"/>
+		<WTSYSCON name="PAYMENT_PO" value="H"/>
+		<WTSYSCON name="PAYMENT_MISC1" value="I"/>
+		<WTSYSCON name="PAYMENT_MISC2" value="J"/>
+    <WTSYSCON name="PAYMENT_MISC3" value="K"/>
+    <WTSYSCON name="PAYOUT_STATUS_COMPLETE" value="1"/>
+    <WTSYSCON name="PAYOUT_STATUS_RECONCILLED" value="2"/>
+    <WTSYSCON name="PAYOUT_STATUS_PENDING" value="4"/>
+    <WTSYSCON name="PAYOUT_STATUS_REQUEST" value="5"/>
+    <WTSYSCON name="PAYOUT_IPAYOUT" value="11"/>
+    <WTSYSCON name="PAYOUT_PAYQUICKER" value="12"/>
+    <WTSYSCON name="PAYOUT_SOLIDTRUST" value="13"/>
+    <WTSYSCON name="PAYOUT_BITCOIN" value="14"/>
+    <WTSYSCON name="PAYOUT_BITCOINCASH" value="15"/>
+    <WTSYSCON name="PAYOUT_NEXXUS" value="16"/>
+    <WTSYSCON name="PAYOUT_ETHER" value="17"/>
+    <WTSYSCON name="USER-MEMBER" value="41"/>
+		<WTSYSCON name="USER-ACTIVE" value="1"/>
+		<WTSYSCON name="USERSTATUS-INACTIVE" value="2"/>
+		<WTSYSCON name="SIGNATURE-LEADPAGE" value="2"/>
+		<WTSYSCON name="SIGNATURE-PRESENTATION" value="3"/>
+		<WTSYSCON name="SIGNATURE-EMAIL-LEAD" value="4"/>
+		<WTSYSCON name="SIGNATURE-EMAIL-PROSPECT" value="5"/>
+		<WTSYSCON name="SIGNATURE-EMAIL-CUSTOMER" value="6"/>
+		<WTSYSCON name="ADDRESS-TYPE-BILLING" value="1"/>
+		<WTSYSCON name="ADDRESS-TYPE-MAILING" value="2"/>
+		<WTSYSCON name="ADDRESS-TYPE-SHIPPING" value="3"/>
+		<WTSYSCON name="ADDRESS-TYPE-OTHER" value="4"/>
+		<WTSYSCON name="GENEALOGY-ENROLLER" value="1"/>
+		<WTSYSCON name="GENEALOGY-SPONSOR" value="2"/>
+		<WTSYSCON name="GENEALOGY-MENTOR" value="3"/>
+		<WTSYSCON name="GENEALOGY-SPONSOR2" value="4"/>
+		<WTSYSCON name="GENEALOGY-SPONSOR3" value="5"/>
+		<WTSYSCON name="GENEALOGY-BINARY" value="5"/>
+
+		<WTSYSCON name="TUTORIAL-INTRO" value="1"/>
+		<WTSYSCON name="TUTORIAL-HOME" value="2"/>
+		<WTSYSCON name="TUTORIAL-ICONS" value="3"/>
+		<WTSYSCON name="TUTORIAL-SHORTCUTS" value="4"/>
+		<WTSYSCON name="TUTORIAL-PROFILE" value="5"/>
+		<WTSYSCON name="TUTORIAL-SIGNATURES" value="6"/>
+		<WTSYSCON name="TUTORIAL-MENTOREE" value="7"/>
+		<WTSYSCON name="TUTORIAL-MENTORING" value="8"/>
+		<WTSYSCON name="TUTORIAL-GOALS" value="9"/>
+		<WTSYSCON name="TUTORIAL-TRACKS" value="10"/>
+		<WTSYSCON name="TUTORIAL-CALENDAR" value="11"/>
+		<WTSYSCON name="TUTORIAL-PLANNER" value="12"/>
+		<WTSYSCON name="TUTORIAL-TRAINING" value="13"/>
+		<WTSYSCON name="TUTORIAL-CATALOG" value="114"/>
+		<WTSYSCON name="TUTORIAL-ASSESSMENTS" value="15"/>
+		<WTSYSCON name="TUTORIAL-CONTACTS" value="16"/>
+		<WTSYSCON name="TUTORIAL-LEADPAGES" value="17"/>
+		<WTSYSCON name="TUTORIAL-PRESENTATIONS" value="18"/>
+		<WTSYSCON name="TUTORIAL-SALES" value="19"/>
+		<WTSYSCON name="TUTORIAL-SALESREPORTS" value="20"/>
+		<WTSYSCON name="TUTORIAL-CUSTOMER" value="21"/>
+		<WTSYSCON name="TUTORIAL-CUSTOMREPORTS" value="22"/>
+		<WTSYSCON name="TUTORIAL-EXPENSEMANAGER" value="23"/>
+		<WTSYSCON name="TUTORIAL-AFFILIATE" value="24"/>
+		<WTSYSCON name="TUTORIAL-NEWSLETTER" value="25"/>
+		<WTSYSCON name="TUTORIAL-FAQ" value="26"/>
+		<WTSYSCON name="TUTORIAL-DOCUMENTS" value="27"/>
+		<WTSYSCON name="TUTORIAL-CHAT" value="28"/>
+		<WTSYSCON name="TUTORIAL-BOARDS" value="29"/>
+		<WTSYSCON name="TUTORIAL-SUGGESTIONS" value="30"/>
+		<WTSYSCON name="TUTORIAL-SURVEYS" value="31"/>
+		<WTSYSCON name="TUTORIAL-TICKETS" value="32"/>
+		<WTSYSCON name="TUTORIAL-CUSTOMTRACKS" value="33"/>
+		<WTSYSCON name="TUTORIAL-CUSTOMEMAIL" value="34"/>
+		<WTSYSCON name="TUTORIAL-CUSTOMPAGES" value="35"/>
+		<WTSYSCON name="TUTORIAL-CUSTOMDOCUMENTS" value="36"/>
+		<WTSYSCON name="TUTORIAL-PROJECTS" value="37"/>
+		<WTSYSCON name="TUTORIAL-GRPMEMBERS" value="38"/>
+		<WTSYSCON name="TUTORIAL-GRPOPTIONS" value="39"/>
+		<WTSYSCON name="TUTORIAL-GRPLEADPAGES" value="40"/>
+		<WTSYSCON name="TUTORIAL-GRPPRESENTATIONS" value="41"/>
+		<WTSYSCON name="TUTORIAL-GRPSALESCAMPAIGNS" value="42"/>
+		<WTSYSCON name="TUTORIAL-PUBLISHNEWSLETTERS" value="43"/>
+
+		<WTSYSCON name="PAYTYPE-VISA" value="1"/>
+		<WTSYSCON name="PAYTYPE-CREDITCARD" value="4"/>
+		<WTSYSCON name="PAYTYPE-CHECK" value="5"/>
+		<WTSYSCON name="PAYTYPE-CASH" value="7"/>
+		<WTSYSCON name="PAYTYPE-WALLET" value="11"/>
+		<WTSYSCON name="BILL-PAYTYPE-CREDITCARD" value="1"/>
+		<WTSYSCON name="BILL-PAYTYPE-CHECK" value="2"/>
+		<WTSYSCON name="BILL-PAYTYPE-CASH" value="3"/>
+		<WTSYSCON name="BILL-PAYTYPE-WALLET" value="4"/>
+    <WTSYSCON name="BILL-PAYTYPE-WALLET-WALLET" value="10"/>
+    <WTSYSCON name="BILL-PAYTYPE-WALLET-BITCOIN" value="14"/>
+    <WTSYSCON name="BILL-PAYTYPE-WALLET-BITCOINCASH" value="15"/>
+    <WTSYSCON name="BILL-PAYTYPE-WALLET-NEXXUS" value="16"/>
+    <WTSYSCON name="BILL-COMMTYPE-ECHECK" value="2"/>
+		<WTSYSCON name="BILL-COMMTYPE-CHECK" value="3"/>
+		<WTSYSCON name="BILL-COMMTYPE-WALLET" value="4"/>
+    <WTSYSCON name="BILL-COMMTYPE-WALLET-WALLET" value="10"/>
+    <WTSYSCON name="BILL-COMMTYPE-WALLET-IPAYOUT" value="11"/>
+    <WTSYSCON name="BILL-COMMTYPE-WALLET-PAYQUICKER" value="12"/>
+		<WTSYSCON name="BILL-COMMTYPE-WALLET-SOLIDTRUST" value="13"/>
+		<WTSYSCON name="BILL-COMMTYPE-WALLET-BITCOIN" value="14"/>
+    <WTSYSCON name="BILL-COMMTYPE-WALLET-BITCOINCASH" value="15"/>
+    <WTSYSCON name="BILL-COMMTYPE-WALLET-NEXXUS" value="16"/>
+    <WTSYSCON name="BILL-COMMTYPE-WALLET-ETHER" value="17"/>
+
+    <WTSYSCON name="MACHINE-STATUS-SETUP" value="1"/>
+		<WTSYSCON name="MACHINE-STATUS-ACTIVE" value="2"/>
+		<WTSYSCON name="MACHINE-STATUS-CANCELLED" value="3"/>
+		<WTSYSCON name="MACHINE-STATUS-REMOVED" value="4"/>
+		<WTSYSCON name="MACHINE-SERVICE-BACKUP" value="1"/>
+		<WTSYSCON name="MACHINE-SERVICE-BRIEFCASE" value="2"/>
+
+    <WTSYSCON name="USERTYPE-CUSTOM2" value="-2"/>
+    <WTSYSCON name="USERTYPE-CUSTOM1" value="-1"/>
+    <WTSYSCON name="USERTYPE-PUBLIC" value="1"/>
+    <WTSYSCON name="USERTYPE-FREE" value="2"/>
+    <WTSYSCON name="USERTYPE-GENERAL" value="3"/>
+		<WTSYSCON name="USERTYPE-ADMIN" value="4"/>
+    <WTSYSCON name="USERTYPE-PRIVATE" value="5"/>
+
+    <WTSYSCON name="RESOURCE-USING" value="0"/>
+		<WTSYSCON name="RESOURCE-SHARING" value="1"/>
+		<WTSYSCON name="RESOURCE-ALL" value="0"/>
+		<WTSYSCON name="RESOURCE-ACTIVITY" value="1"/>
+		<WTSYSCON name="RESOURCE-LEADPAGE" value="2"/>
+		<WTSYSCON name="RESOURCE-PRESENTATION" value="3"/>
+		<WTSYSCON name="RESOURCE-COURSE" value="4"/>
+		<WTSYSCON name="RESOURCE-ASSESSMENT" value="5"/>
+		<WTSYSCON name="RESOURCE-DRIP" value="6"/>
+		<WTSYSCON name="RESOURCE-MEMBERTRACKS" value="7"/>
+		<WTSYSCON name="RESOURCE-CUSTOMERTRACKS" value="8"/>
+		<WTSYSCON name="RESOURCE-CONTACTEMAIL" value="9"/>
+		<WTSYSCON name="RESOURCE-PROSPECTEMAIL" value="10"/>
+		<WTSYSCON name="RESOURCE-CUSTOMEREMAIL" value="11"/>
+		<WTSYSCON name="RESOURCE-LEADEMAIL" value="12"/>
+		<WTSYSCON name="RESOURCE-PRESENTATIONEMAIL" value="13"/>
+		<WTSYSCON name="RESOURCE-INFOPAGES" value="14"/>
+		<WTSYSCON name="RESOURCE-UPLOADEDDOCS" value="15"/>
+		<WTSYSCON name="RESOURCE-TRAINING" value="16"/>
+
+		<WTSYSCON name="PAGETYPE-EMAIL-LEAD" value="1"/>
+		<WTSYSCON name="PAGETYPE-EMAIL-PRESENTATION" value="2"/>
+		<WTSYSCON name="PAGETYPE-EMAIL-PROSPECT" value="3"/>
+		<WTSYSCON name="PAGETYPE-EMAIL-CONTACT" value="4"/>
+		<WTSYSCON name="PAGETYPE-EMAIL-CUSTOMER" value="5"/>
+		<WTSYSCON name="PAGETYPE-INFO" value="6"/>
+		<WTSYSCON name="PAGETYPE-TRAINING" value="7"/>
+
+		<WTSYSCON name="ACTIVITY-AUTOADD-INVITE" value="1"/>
+		<WTSYSCON name="ACTIVITY-AUTOADD-PRESENT" value="2"/>
+		<WTSYSCON name="ACTIVITY-AUTOADD-CLOSE" value="3"/>
+
+    <WTSYSCON name="BILLING-VERIFIED-LOCKED" value="3"/>
+
+    <WTSYSCON name="MERCHANT-STATUS-PRELAUNCH" value="1"/>
+    <WTSYSCON name="MERCHANT-STATUS-SETUP" value="2"/>
+    <WTSYSCON name="MERCHANT-STATUS-ACTIVE" value="3"/>
+    <WTSYSCON name="MERCHANT-STATUS-CANCELLED" value="4"/>
+    <WTSYSCON name="MERCHANT-STATUS-REMOVED" value="5"/>
+    <WTSYSCON name="MERCHANT-STATUS-DEMO" value="6"/>
+
+  </WTSYSCONS>
+	<WTUSERGROUPS>
+		<WTUSERGROUP id="1" name="SysAdmin"/>
+		<WTUSERGROUP id="21" name="Manager" entity="Employee"/>
+		<WTUSERGROUP id="22" name="Admin" entity="Employee"/>
+		<WTUSERGROUP id="23" name="Employee" entity="Employee"/>
+		<WTUSERGROUP id="31" name="Trainer" entity="Trainer"/>
+		<WTUSERGROUP id="41" name="Member" entity="Member"/>
+		<WTUSERGROUP id="51" name="OrgAdmin" entity="Org"/>
+		<WTUSERGROUP id="52" name="OrgManager" entity="Org"/>
+		<WTUSERGROUP id="61" name="Affiliate" entity="Affiliate"/>
+	</WTUSERGROUPS>
+	<WTCOLORS>
+		<WTCOLOR name="light" value="C0C0FF"/>
+		<WTCOLOR name="medium" value="8080FF"/>
+		<WTCOLOR name="dark" value="0011470"/>
+		<WTCOLOR name="gold" value="FAEFD4"/>
+		<WTCOLOR name="graybar" value="F0F0F0"/>
+		<WTCOLOR name="divider" value="004080"/>
+		<WTCOLOR name="headerdivider" value="000000"/>
+		<WTCOLOR name="pageheading" value="000070"/>
+		<WTCOLOR name="box" value="5084A2"/>
+		<WTCOLOR name="box1" value="62B462"/>
+		<WTCOLOR name="gray" value="CCCCCC"/>
+	</WTCOLORS>
+	<WTLANGUAGES>
+		<WTLANGUAGE name="English" code="en" default="true"/>
+		<WTLABELS type="dynamic">
+			<LABEL entity="Question" attribute="Question" entityid="17" attributeid="1705"/>
+			<LABEL entity="Question" attribute="Answer" entityid="17" attributeid="1706"/>
+			<LABEL entity="Promotion" attribute="PromotionName" entityid="39" attributeid="3902"/>
+			<LABEL entity="Promotion" attribute="Description" entityid="39" attributeid="3904"/>
+			<LABEL entity="Promotion" attribute="Promo" entityid="39" attributeid="3908"/>
+		</WTLABELS>
+		<WTCOMMONLABELS>
+			<LABEL name="NoScript"/>
+			<LABEL name="Shortcuts"/>
+			<LABEL name="SearchBy"/>
+			<LABEL name="SearchFor"/>
+			<LABEL name="Search"/>
+      <LABEL name="Go"/>
+      <LABEL name="View"/>
+      <LABEL name="NextPage"/>
+			<LABEL name="PreviousPage"/>
+			<LABEL name="NoItems"/>
+			<LABEL name="ItemCount"/>
+			<LABEL name="EndOfList"/>
+			<LABEL name="New"/>
+			<LABEL name="Add"/>
+			<LABEL name="Delete"/>
+			<LABEL name="Update"/>
+			<LABEL name="Cancel"/>
+			<LABEL name="Close"/>
+      <LABEL name="Return"/>
+      <LABEL name="Home"/>
+      <LABEL name="Continue"/>
+			<LABEL name="Modify"/>
+			<LABEL name="Select"/>
+			<LABEL name="Copyright"/>
+			<LABEL name="RequiredField"/>
+			<LABEL name="ConfirmDelete"/>
+		</WTCOMMONLABELS>
+	</WTLANGUAGES>
+	<WTCONDITIONS>
+		<WTCONDITION name="CanChangeLogon"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(1)"/></WTCONDITION>
+		<WTCONDITION name="IsAnonymous"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(99)"/>	</WTCONDITION>
+		<WTCONDITION name="NotAnonymous"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(99)"/></WTCONDITION>
+		<WTCONDITION name="IsSysAdmin"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(1)"/></WTCONDITION>
+		<WTCONDITION name="NotSysAdmin"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(1)"/></WTCONDITION>
+		<WTCONDITION name="IsSysAdminOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(1)"/></WTCONDITION>
+		<WTCONDITION name="IsManager"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(21)"/></WTCONDITION>
+		<WTCONDITION name="NotManager"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(21)"/></WTCONDITION>
+		<WTCONDITION name="IsManagerOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(21)"/></WTCONDITION>
+		<WTCONDITION name="IsAdmin"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(22)"/></WTCONDITION>
+		<WTCONDITION name="NotAdmin"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(22)"/></WTCONDITION>
+		<WTCONDITION name="IsAdminOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(22)"/></WTCONDITION>
+    <WTCONDITION name="NotAdminOnly"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(23)"/></WTCONDITION>
+    <WTCONDITION name="IsEmployee"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(23)"/></WTCONDITION>
+		<WTCONDITION name="NotEmployee"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(23)"/></WTCONDITION>
+		<WTCONDITION name="IsEmployeeOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(23)"/></WTCONDITION>
+    <WTCONDITION name="NotEmployeeOnly"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(23)"/></WTCONDITION>
+    <WTCONDITION name="IsTranslator"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(24)"/></WTCONDITION>
+		<WTCONDITION name="NotTranslator"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(24)"/></WTCONDITION>
+		<WTCONDITION name="IsTranslatorOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(24)"/></WTCONDITION>
+		<WTCONDITION name="IsTrainer"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(31)"/></WTCONDITION>
+		<WTCONDITION name="NotTrainer"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(31)"/></WTCONDITION>
+		<WTCONDITION name="IsTrainerOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(31)"/></WTCONDITION>
+		<WTCONDITION name="IsMember"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(41)"/></WTCONDITION>
+		<WTCONDITION name="NotMember"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(41)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(41)"/></WTCONDITION>
+		<WTCONDITION name="NotMemberOnly"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(41)"/></WTCONDITION>
+		<WTCONDITION name="IsOrgAdmin"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(51)"/></WTCONDITION>
+		<WTCONDITION name="NotOrgAdmin"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(51)"/></WTCONDITION>
+		<WTCONDITION name="IsOrgAdminOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(51)"/></WTCONDITION>
+		<WTCONDITION name="NotOrgAdminOnly"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(51)"/></WTCONDITION>
+		<WTCONDITION name="IsOrgManager"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(52)"/></WTCONDITION>
+		<WTCONDITION name="NotOrgManager"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(52)"/></WTCONDITION>
+		<WTCONDITION name="IsOrgManagerOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(52)"/></WTCONDITION>
+		<WTCONDITION name="NotOrgManagerOnly"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(52)"/></WTCONDITION>
+		<WTCONDITION name="NotOrgOnly"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(51)"/></WTCONDITION>
+		<WTCONDITION name="IsAffiliate"><WTCONDITION expr="SYS(usergroup)" oper="less-equal" value="CONST(61)"/></WTCONDITION>
+		<WTCONDITION name="NotAffiliate"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(61)"/></WTCONDITION>
+		<WTCONDITION name="IsAffiliateOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(61)"/></WTCONDITION>
+		<WTCONDITION name="NotAffiliateOnly"><WTCONDITION expr="SYS(usergroup)" oper="not-equal" value="CONST(61)"/></WTCONDITION>
+		<WTCONDITION name="IsSalesOnly"><WTCONDITION expr="SYS(usergroup)" oper="equal" value="CONST(40)"/></WTCONDITION>
+		<WTCONDITION name="NotSalesOnly"><WTCONDITION expr="SYS(usergroup)" oper="greater" value="CONST(40)"/></WTCONDITION>
+		<WTCONDITION name="NotActive"><WTCONDITION expr="SYS(userstatus)" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsActive"><WTCONDITION expr="SYS(userstatus)" oper="equal" value="CONST(1)"/></WTCONDITION>
+		<WTCONDITION name="IsLoggedOn"><WTCONDITION expr="SYS(userid)" oper="not-equal" value="CONST(99)"/></WTCONDITION>
+		<WTCONDITION name="NoErrors"><WTCONDITION expr="SYS(errormsg)" oper="equal" value="CONST(&quot;&quot;)"/></WTCONDITION>
+		<WTCONDITION name="IsErrors"><WTCONDITION expr="SYS(errormsg)" oper="not-equal" value="CONST(&quot;&quot;)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberPaid"><WTCONDITION expr="SYS(UserMode)" oper="equal" value="SYSCON(MEMBER-PAID)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberTrial"><WTCONDITION expr="SYS(UserMode)" oper="equal" value="SYSCON(MEMBER-TRIAL)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberFree"><WTCONDITION expr="SYS(UserMode)" oper="equal" value="SYSCON(MEMBER-FREE)"/></WTCONDITION>
+		<WTCONDITION name="NotMemberFree"><WTCONDITION expr="SYS(UserMode)" oper="not-equal" value="SYSCON(MEMBER-FREE)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberBusiness"><WTCONDITION expr="SYS(UserMode)" oper="equal" value="SYSCON(MEMBER-BUSINESS)"/></WTCONDITION>
+		<WTCONDITION name="NotMemberBusiness"><WTCONDITION expr="SYS(UserMode)" oper="not-equal" value="SYSCON(MEMBER-BUSINESS)"/></WTCONDITION>
+
+    <WTCONDITION name="IsUser2FA"><WTCONDITION expr="PARAM(User2FA)" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="NotUser2FA"><WTCONDITION expr="PARAM(User2FA)" oper="equal" value="CONST(0)"/></WTCONDITION>
+
+    <!--
+		<WTCONDITION name="IsUpgrade"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;u&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="_IsUpgrade"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'u'))"/></WTCONDITION>
+-->
+		<!-- Company Options for ASP Pages -->
+		<WTCONDITION name="IsMarketing"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;A&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPersonal"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;n&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsTraining"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;B&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsCommunication"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;C&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSupport"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;D&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSales"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;E&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsProjects"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;F&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSecureProjects"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;f&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsMentoring"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;G&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsMentor"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;g&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGoals"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;H&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsInfo"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;I&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsCustomerOrders"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;J&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsClasses"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;K&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsAssessments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;L&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsCatalog"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;M&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSalesSummary"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;N&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsDiscussion"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;O&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSuggestion"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;P&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSurvey"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Q&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSupportDocs"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;R&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSupportFAQ"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;S&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsShortcuts"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;s&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPinnacleFAQ"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;T&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPinnacleTutorial"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;U&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPayments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;V&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNewsLetter"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;W&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsAffiliates"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;X&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsLeadAds"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Y&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsLeadPrograms"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Z&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPresentations"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;z&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsContestCreater"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;0&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSalesLookup"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;1&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsCalendar"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;2&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGrpTraining"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;4&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsDripCampaigns"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;5&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsService"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;6&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPartyPlan"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;7&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsShopping"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;8&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsResources"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;a&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSuccessTracks"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;b&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsEmailTemplates"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;c&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsDocuments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;d&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsInfoPages"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;e&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSuspect"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;h&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsDashboard"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;i&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSalesOrders"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;j&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsDuplicateEmail"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;k&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsActivityTracker"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;l&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSupportTicket"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;m&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGenealogy"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;o&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsCommissions"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;p&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberExtra"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;q&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsProspectExtra"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;r&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberForms"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;t&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsProspectForms"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;u&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsTitles"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;v&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsFinances"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;w&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPayouts"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;x&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsMsgs"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;@&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+
+		<WTCONDITION name="IsActivityReports"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;#&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsActivityContest"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;*&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsAutoShip"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;%&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSocNetPublic"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;(&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsCredit"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;)&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGrpMembers"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;|&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGrpOptions"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;\&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGrpSalesCampaign"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;_&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGrpLeadPage"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;+&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGrpPresentation"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;=&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsReports"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;.&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsExpenseManager"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;/&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsCompanyWebsite"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;,&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNews"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;,&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPerformance"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;[&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsGroupReports"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;]&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPersonalize"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;{&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPublishNewsletter"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;}&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+
+		<WTCONDITION name="NotSales"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;E&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotProjects"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;F&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSecureProjects"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;f&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotMentoring"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;G&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotMentor"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;g&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotGoals"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;H&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotInfo"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;I&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotBuddy"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;J&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotClasses"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;K&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotAssessments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;L&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotCatalog"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;M&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotConference"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;N&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotDiscussion"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;O&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSuggestion"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;P&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSurvey"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Q&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSupportDocs"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;R&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSupportFAQ"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;S&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotShortcuts"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;s&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPinnacleFAQ"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;T&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPinnacleTutorial"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;U&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPayments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;V&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotNewsLetter"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;W&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotAffiliates"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;X&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotStrategy"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Y&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotLeadPrograms"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Z&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPresentations"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;z&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSalesLookup"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;1&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotCalendar"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;2&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotGrpTraining"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;4&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotDripCampaigns"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;5&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotService"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;6&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPartyPlan"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;7&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotShopping"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;8&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotResources"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;a&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSuccessTracks"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;b&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotEmailTemplates"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;c&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotDocuments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;d&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotInfoPages"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;e&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSuspect"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;h&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotDashboard"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;i&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotSalesOrders"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;j&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotDuplicateEmail"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;k&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+<!--		<WTCONDITION name="IsIconBar"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~0&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>-->
+		<WTCONDITION name="IsSalesReports"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~3&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNewAssessment"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~9&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsLogon"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~!&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsChangeLogon"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~y&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsSearch"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~$&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsEditGrp"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~:&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsReferralProgram"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;;&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsAds"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;;&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsMemberHomePage"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~^&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotEditGrp"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~:&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotReferralProgram"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;;&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotMemberHomePage"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~^&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotChangeMentor"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~G&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsChangeMentor"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;~G&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<!-- Company Options for XSL Pages -->
+		<WTCONDITION name="_IsMarketing"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'A'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPersonal"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'n'))"/></WTCONDITION>
+		<WTCONDITION name="_IsTraining"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'B'))"/></WTCONDITION>
+		<WTCONDITION name="_IsCommunication"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'C'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSupport"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'D'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSales"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'E'))"/></WTCONDITION>
+		<WTCONDITION name="_IsProjects"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'F'))"/></WTCONDITION>
+		<WTCONDITION name="_IsMentoring"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'G'))"/></WTCONDITION>
+		<WTCONDITION name="_IsMentor"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'g'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGoals"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'H'))"/></WTCONDITION>
+		<WTCONDITION name="_IsInfo"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'I'))"/></WTCONDITION>
+		<WTCONDITION name="_IsCustomerOrders"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'J'))"/></WTCONDITION>
+		<WTCONDITION name="_IsClasses"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'K'))"/></WTCONDITION>
+		<WTCONDITION name="_IsAssessments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'L'))"/></WTCONDITION>
+		<WTCONDITION name="_IsCatalog"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'M'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSalesSummary"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'N'))"/></WTCONDITION>
+		<WTCONDITION name="_IsDiscussion"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'O'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSuggestion"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'P'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSurvey"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'Q'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSupportDocs"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'R'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSupportFAQ"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'S'))"/>	</WTCONDITION>
+		<WTCONDITION name="_IsShortcuts"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 's'))"/>	</WTCONDITION>
+		<WTCONDITION name="_IsPinnacleFAQ"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'T'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPinnacleTutorial"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'U'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'V'))"/></WTCONDITION>
+		<WTCONDITION name="_IsNewsLetter"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'W'))"/></WTCONDITION>
+		<WTCONDITION name="_IsAffiliates"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'X'))"/></WTCONDITION>
+		<WTCONDITION name="_IsLeadAds"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'Y'))"/></WTCONDITION>
+		<WTCONDITION name="_IsLeadPrograms"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'Z'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPresentations"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'z'))"/></WTCONDITION>
+		<WTCONDITION name="_IsContestCreater"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '0'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSalesLookup"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '1'))"/></WTCONDITION>
+		<WTCONDITION name="_IsCalendar"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '2'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGrpTraining"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '4'))"/></WTCONDITION>
+		<WTCONDITION name="_IsDripCampaigns"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '5'))"/></WTCONDITION>
+		<WTCONDITION name="_IsService"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '6'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPartyPlan"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '7'))"/></WTCONDITION>
+		<WTCONDITION name="_IsShopping"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '8'))"/></WTCONDITION>
+		<WTCONDITION name="_IsResources"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'a'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSuccessTracks"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'b'))"/></WTCONDITION>
+		<WTCONDITION name="_IsEmailTemplates"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'c'))"/></WTCONDITION>
+		<WTCONDITION name="_IsDocuments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'd'))"/></WTCONDITION>
+		<WTCONDITION name="_IsInfoPages"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'e'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSuspect"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'h'))"/></WTCONDITION>
+		<WTCONDITION name="_IsDashboard"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'i'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSalesOrders"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'j'))"/></WTCONDITION>
+		<WTCONDITION name="_IsDuplicateEmail"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'k'))"/></WTCONDITION>
+		<WTCONDITION name="_IsActivityTracker"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'l'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSupportTicket"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'm'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGenealogy"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'o'))"/></WTCONDITION>
+		<WTCONDITION name="_IsCommissions"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'p'))"/></WTCONDITION>
+		<WTCONDITION name="_IsMemberExtra"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'q'))"/></WTCONDITION>
+		<WTCONDITION name="_IsProspectExtra"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'r'))"/></WTCONDITION>
+		<WTCONDITION name="_IsMemberForms"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 't'))"/></WTCONDITION>
+		<WTCONDITION name="_IsProspectForms"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'u'))"/></WTCONDITION>
+		<WTCONDITION name="_IsTitles"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'v'))"/></WTCONDITION>
+		<WTCONDITION name="_IsFinances"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'w'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayouts"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'x'))"/></WTCONDITION>
+		<WTCONDITION name="_IsMsgs"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '@'))"/></WTCONDITION>
+
+<!--		<WTCONDITION name="_IsIconBar"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~0')))"/></WTCONDITION>-->
+		<WTCONDITION name="_IsSalesReports"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~3')))"/></WTCONDITION>
+		<WTCONDITION name="_IsNewAssessment"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~9')))"/></WTCONDITION>
+		<WTCONDITION name="_IsLogon"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~!')))"/></WTCONDITION>
+		<WTCONDITION name="_IsChangeLogon"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~y')))"/></WTCONDITION>
+		<WTCONDITION name="_IsSearch"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~$')))"/></WTCONDITION>
+		<WTCONDITION name="_IsEditGrp"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~:')))"/></WTCONDITION>
+		<WTCONDITION name="_IsReferralProgram"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, ';'))"/></WTCONDITION>
+<!--		<WTCONDITION name="_IsMemberHomePage"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~;')))"/></WTCONDITION>-->
+		<WTCONDITION name="_NotEditGrp"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~^'))"/></WTCONDITION>
+		<WTCONDITION name="_NotUpgrade"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~;'))"/></WTCONDITION>
+		<WTCONDITION name="_NotMemberHomePage"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~^'))"/></WTCONDITION>
+		<WTCONDITION name="_NotChangeMentor"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~G'))"/></WTCONDITION>
+		<WTCONDITION name="_IsChangeMentor"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '~G')))"/></WTCONDITION>
+
+		<WTCONDITION name="_NotSales"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'E')))"/></WTCONDITION>
+		<WTCONDITION name="_NotProjects"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'F')))"/></WTCONDITION>
+		<WTCONDITION name="_NotSecureProjects"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'f')))"/></WTCONDITION>
+		<WTCONDITION name="_NotMentor"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'g')))"/></WTCONDITION>
+		<WTCONDITION name="_NotPayments"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'V')))"/></WTCONDITION>
+
+		<WTCONDITION name="_IsActivityReports"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '#'))"/></WTCONDITION>
+		<WTCONDITION name="_IsActivityContest"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '*'))"/></WTCONDITION>
+ 		<WTCONDITION name="_IsAutoShip"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '%'))"/></WTCONDITION>
+		<WTCONDITION name="_IsSocNetPublic"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '('))"/></WTCONDITION>
+		<WTCONDITION name="_IsCredit"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, ')'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGrpMembers"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '|'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGrpOptions"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '\'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGrpSalesCampaign"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '_'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGrpLeadPage"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '+'))"/></WTCONDITION>
+		<WTCONDITION name="_IsGrpPresentation"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '='))"/></WTCONDITION>
+		<WTCONDITION name="_IsReports"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '.'))"/></WTCONDITION>
+		<WTCONDITION name="_IsExpenseManager"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '/'))"/></WTCONDITION>
+		<WTCONDITION name="_IsCompanyWebsite"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, ','))"/></WTCONDITION>
+		<WTCONDITION name="_IsPerformance"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '['))"/></WTCONDITION>
+		<WTCONDITION name="_IsGroupReports"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, ']'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPersonalize"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '{'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPublishNewsletter"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '}'))"/></WTCONDITION>
+
+		<!-- Notify Mentor Options -->
+		<WTCONDITION name="IsNotifyMentorClass"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;A&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorAssess"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;B&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorCertify"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;C&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorGoal"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;D&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorProject"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;E&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorSales"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;F&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorSignIn"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;G&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorActivity"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;H&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsNotifyMentorResult"><WTCONDITION expr="CONST(InStr(reqNotifyMentor,&quot;I&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<!-- Payment Options -->
+		<WTCONDITION name="IsPaymentVisa"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;A&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentMC"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;B&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentDiscover"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;C&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentAmex"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;D&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentCheck"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;E&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentPayPal"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;F&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentCash"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;G&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentPO"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;H&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentMisc1"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;I&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentMisc2"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;J&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="IsPaymentMisc3"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;K&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentVisa"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;A&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentMC"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;B&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentDiscover"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;C&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentAmex"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;D&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentCheck"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;E&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentPayPal"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;F&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentCash"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;G&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentPO"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;H&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentMisc1"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;I&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentMisc2"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;J&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="NotPaymentMisc3"><WTCONDITION expr="CONST(InStr(reqPaymentOptions,&quot;K&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentVisa"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'A'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentMC"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'B'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentDiscover"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'C'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentAmex"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'D'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentCheck"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'E'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymenteWallet"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'F'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentCash"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'G'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentPO"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'H'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentMisc1"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'I'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentMisc2"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'J'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentMisc3"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'K'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentiPayout"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'L'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentPayQuicker"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'M'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentSolidTrust"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'N'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentBitCoin"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'O'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPaymentWallet"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'P'))"/></WTCONDITION>
+    <WTCONDITION name="_IsPaymentBitCoinCash"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'Q'))"/></WTCONDITION>
+    <WTCONDITION name="_IsPaymentNexxus"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, 'R'))"/></WTCONDITION>
+    <WTCONDITION name="_IsPayoutDeposit"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '1'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutCheck"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '2'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutWallet"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '3'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutiPayout"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '4'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutPayQuicker"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '5'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutSolidTrust"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '6'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutBitCoin"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '7'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutBitCoinCash"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '8'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutNexxus"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '9'))"/></WTCONDITION>
+		<WTCONDITION name="_IsPayoutEther"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@paymentoptions, '0'))"/></WTCONDITION>
+
+		<!-- Employee Options for ASP Pages -->
+		<WTCONDITION name="emCustomers"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;A&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emTraining"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;B&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emTools"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;C&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emSetup"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;D&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCompanies"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;E&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emMembers"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;F&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emTrainers"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;G&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCourses"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;H&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emAssessments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;I&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emReports"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;J&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emAccounting"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;K&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emEmailManager"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;L&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emPayments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;M&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCommissions"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;N&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emPayouts"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;O&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emIssues"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;P&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emPages"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Q&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emFAQ"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;R&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emEmployees"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;S&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emBusiness"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;T&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emLanguageManager"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;U&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emAddCompany"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;V&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCompanyOptions"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;W&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoSales"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;X&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoService"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Y&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoMembers"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;Z&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoProjects"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;a&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoResources"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;b&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoCalendar"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;c&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoNewsletters"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;d&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoEmailManager"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;e&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoSuggestions"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;f&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoSurveys"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;g&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoPayments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;h&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoProducts"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;i&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoSalesOrders"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;j&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoPromotions"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;k&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoCourses"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;l&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoAssessments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;m&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoReports"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;n&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoFolders"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;o&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoPages"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;p&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoDocuments"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;q&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoQuestions"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;r&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoGenealogy"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;s&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoTitles"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;t&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoCommission"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;u&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emExpenseManager"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;v&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoRSSNews"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;y&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoMsgs"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;z&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoSupportTickets"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;1&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+		<WTCONDITION name="emCoDripCampaigns"><WTCONDITION expr="CONST(InStr(reqSysUserOptions,&quot;2&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+
+		<!-- Employee Options for XSL Pages -->
+		<WTCONDITION name="_emCustomers"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'A'))"/></WTCONDITION>
+		<WTCONDITION name="_emTraining"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'B'))"/></WTCONDITION>
+		<WTCONDITION name="_emTools"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'C'))"/></WTCONDITION>
+		<WTCONDITION name="_emSetup"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'D'))"/></WTCONDITION>
+		<WTCONDITION name="_emCompanies"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'E'))"/></WTCONDITION>
+		<WTCONDITION name="_emMembers"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'F'))"/></WTCONDITION>
+		<WTCONDITION name="_emTrainers"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'G'))"/></WTCONDITION>
+		<WTCONDITION name="_emCourses"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'H'))"/></WTCONDITION>
+		<WTCONDITION name="_emAssessments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'I'))"/></WTCONDITION>
+		<WTCONDITION name="_emReports"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'J'))"/></WTCONDITION>
+		<WTCONDITION name="_emAccounting"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'K'))"/></WTCONDITION>
+		<WTCONDITION name="_emEmailManager"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'L'))"/></WTCONDITION>
+		<WTCONDITION name="_emPayments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'M'))"/></WTCONDITION>
+		<WTCONDITION name="_emCommissions"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'N'))"/></WTCONDITION>
+		<WTCONDITION name="_emPayouts"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'O'))"/></WTCONDITION>
+		<WTCONDITION name="_emIssues"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'P'))"/></WTCONDITION>
+		<WTCONDITION name="_emPages"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'Q'))"/></WTCONDITION>
+		<WTCONDITION name="_emFAQ"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'R'))"/></WTCONDITION>
+		<WTCONDITION name="_emEmployees"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'S'))"/></WTCONDITION>
+		<WTCONDITION name="_emBusiness"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'T'))"/></WTCONDITION>
+		<WTCONDITION name="_emLanguageManager"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'U'))"/></WTCONDITION>
+		<WTCONDITION name="_emAddCompany"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'V'))"/></WTCONDITION>
+		<WTCONDITION name="_emCompanyOptions"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'W'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoSales"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'X'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoService"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'Y'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoMembers"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'Z'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoProjects"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'a'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoResources"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'b'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoCalendar"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'c'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoNewsletters"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'd'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoEmailManager"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'e'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoSuggestions"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'f'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoSurveys"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'g'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoPayments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'h'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoProducts"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'i'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoSalesOrders"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'j'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoPromotions"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'k'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoCourses"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'l'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoAssessments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'm'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoReports"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'n'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoFolders"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'o'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoPages"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'p'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoDocuments"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'q'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoQuestions"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'r'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoGenealogy"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 's'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoTitles"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 't'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoCommission"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'u'))"/></WTCONDITION>
+		<WTCONDITION name="_emExpenseManager"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'v'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoRSSNews"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'y'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoMsgs"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, 'z'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoSupportTickets"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '1'))"/></WTCONDITION>
+		<WTCONDITION name="_emCoDripCampaigns"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/SYSTEM/@useroptions, '2'))"/></WTCONDITION>
+
+    <!-- BARTER AD OPTIONS-->
+  	<WTCONDITION name="IsBarterOptions_NoPrice"><WTCONDITION expr="CONST(InStr(.Options,&quot;A&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_NoPrice"><WTCONDITION expr="CONST(InStr(.Options,&quot;A&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterOptions_NoCondition"><WTCONDITION expr="CONST(InStr(.Options,&quot;B&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_NoCondition"><WTCONDITION expr="CONST(InStr(.Options,&quot;B&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterOptions_Title"><WTCONDITION expr="CONST(InStr(.Options,&quot;C&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_Title"><WTCONDITION expr="CONST(InStr(.Options,&quot;C&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterOptions_Images"><WTCONDITION expr="CONST(InStr(.Options,&quot;d&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_Images"><WTCONDITION expr="CONST(InStr(.Options,&quot;d&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterOptions_Images+"><WTCONDITION expr="CONST(InStr(.Options,&quot;D&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_Images+"><WTCONDITION expr="CONST(InStr(.Options,&quot;D&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterOptions_Editor"><WTCONDITION expr="CONST(InStr(.Options,&quot;E&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_Editor"><WTCONDITION expr="CONST(InStr(.Options,&quot;E&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterOptions_Long"><WTCONDITION expr="CONST(InStr(.Options,&quot;F&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_Long"><WTCONDITION expr="CONST(InStr(.Options,&quot;F&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterOptions_Listing"><WTCONDITION expr="CONST(InStr(.Options,&quot;G&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="NotBarterOptions_Listing"><WTCONDITION expr="CONST(InStr(.Options,&quot;G&quot;))" oper="equal" value="CONST(0)"/></WTCONDITION>
+    
+    <WTCONDITION name="_IsBarterOption_NoPrice"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'A'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_NoPrice"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'A')))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterOption_NoCondition"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'B'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_NoCondition"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'B')))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterOption_Title"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'C'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_Title"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'C')))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterOption_Images"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'd'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_Images"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'd')))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterOption_Images+"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'D'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_Images+"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'D')))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterOption_Editor"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'E'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_Editor"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'E')))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterOption_Long"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'F'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_Long"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'F')))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterOption_Listing"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'G'))"/></WTCONDITION>
+    <WTCONDITION name="_NotBarterOption_Listing"><WTCONDITION expr="CONST(not(contains)" value="CONST((/DATA/TXN/PTSBARTERAD/@options, 'G')))"/></WTCONDITION>
+    
+    <WTCONDITION name="__IsBarterOption_NoPrice"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'A'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_NoPrice"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'A')))"/></WTCONDITION>
+    <WTCONDITION name="__IsBarterOption_NoCondition"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'B'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_NoCondition"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'B')))"/></WTCONDITION>
+    <WTCONDITION name="__IsBarterOption_Title"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'C'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_Title"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'C')))"/></WTCONDITION>
+    <WTCONDITION name="__IsBarterOption_Images"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'd'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_Images"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'd')))"/></WTCONDITION>
+    <WTCONDITION name="__IsBarterOption_Images+"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'D'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_Images+"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'D')))"/></WTCONDITION>
+    <WTCONDITION name="__IsBarterOption_Editor"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'E'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_Editor"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'E')))"/></WTCONDITION>
+    <WTCONDITION name="__IsBarterOption_Long"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'F'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_Long"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'F')))"/></WTCONDITION>
+    <WTCONDITION name="__IsBarterOption_Listing"><WTCONDITION expr="CONST(contains)" value="CONST((@options, 'G'))"/></WTCONDITION>
+    <WTCONDITION name="__NotBarterOption_Listing"><WTCONDITION expr="CONST(not(contains)" value="CONST((@options, 'G')))"/></WTCONDITION>
+
+  </WTCONDITIONS>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="PageHeader">
+		<WTCONTENT mode="template">
+			<WTCOLUMN width="750"/>
+			<WTVARIABLE name="tmpHeader">
+				<WTVALUE value="CONST(Header[)"/>
+				<WTVALUE value="SYS(language)"/>
+				<WTVALUE value="CONST(].jpg)"/>
+			</WTVARIABLE>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(headerimage)" oper="equal" value="CONST('')"/>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+				</WTROW>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(headerimage)" oper="not-equal" value="CONST('')"/>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+				</WTROW>
+			</WTCODEGROUP>
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="PageHeader600">
+		<WTCONTENT mode="template">
+			<WTCOLUMN width="600"/>
+			<WTROW>
+				<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+			</WTROW>
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="PageFooter">
+		<WTCONTENT mode="template" firstrow="false">
+			<WTCOLUMN width="750"/>
+			<WTROW>
+				<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+			</WTROW>
+			<WTROW>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTSTATIC col="1" height="36" label="Copyright" class="Copyright" align="center" valign="center"/>
+				<WTIMAGE col="1" align="left" valign="top" value="CONST(Required.gif)"/>
+				<WTSTATIC col="1" label="RequiredField"/>
+			</WTROW>
+			<WTROW>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(6)"/>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(7)" connector="or"/>
+				<WTSTATIC col="1" align="center" italic="true" bold="true">
+					<WTSTATIC label="PrivacyStatement" space="5">
+						<WTLINK name="CONST(http://www.pinnaclep.com/Sections/PrivacyStatement.pdf)" type="anchor" target="new"/>
+					</WTSTATIC>
+					<WTSTATIC label="TermsOfUse">
+						<WTLINK name="CONST(http://www.pinnaclep.com/Sections/TermsOfUse.pdf)" type="anchor" target="new"/>
+					</WTSTATIC>
+				</WTSTATIC>
+			</WTROW>
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="PageHeader1000">
+		<WTCONTENT mode="template">
+			<WTCOLUMN width="1000"/>
+			<WTVARIABLE name="tmpHeader">
+				<WTVALUE value="CONST(Header[)"/>
+				<WTVALUE value="SYS(language)"/>
+				<WTVALUE value="CONST(].jpg)"/>
+			</WTVARIABLE>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(headerimage)" oper="equal" value="CONST('')"/>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+				</WTROW>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(headerimage)" oper="not-equal" value="CONST('')"/>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+					<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+				</WTROW>
+			</WTCODEGROUP>
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="PageHeaderPublic">
+		<WTCONTENT mode="template">
+			<WTCOLUMN width="750"/>
+			<WTVARIABLE name="tmpHeader">
+				<WTVALUE value="CONST(Header[)"/>
+				<WTVALUE value="SYS(language)"/>
+				<WTVALUE value="CONST(].png)"/>
+			</WTVARIABLE>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTROW>
+					<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)"/>
+				</WTROW>
+				<!--
+				<WTROW height="18">
+					<WTLINKGROUP col="1" align="center" valign="middle">
+						<WTLINK name="0000" label="Home"/>
+						<WTLINK name="0011" label="Training"/>
+						<WTLINK name="1212" label="Courses" target="courses"/>
+						<WTLINK name="0012" label="About"/>
+						<WTLINK name="0013" label="Management"/>
+						<WTLINK name="0101" label="MemberSignIn"/>
+					</WTLINKGROUP>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(dark)"/>
+				</WTROW>
+-->
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+				<WTROW>
+					<WTCONDITION expr="SYS(headerimage)" oper="equal" value="CONST('')"/>
+					<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="SYS(headerimage)" oper="not-equal" value="CONST('')"/>
+					<WTROW>
+						<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+						<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+						<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+					</WTROW>
+				</WTCODEGROUP>
+			</WTCODEGROUP>
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="PageFooterPublic">
+		<WTCONTENT mode="template" firstrow="false">
+			<WTCOLUMN width="750"/>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+				<!--
+				<WTROW margin-top="10" height="18">
+					<WTLINKGROUP col="1" align="center" valign="middle" backcolor="SYS(graybar)">
+						<WTLINK name="0000" label="Home"/>
+						<WTLINK name="1712" label="FAQ"/> 
+						<WTLINK name="00114" label="ContactUs"/>
+						<WTLINK name="0101" label="MemberSignIn"/>
+					</WTLINKGROUP>
+				</WTROW>
+-->
+				<WTROW margin-bottom="24">
+					<WTSTATIC col="1" label="Copyright" class="Copyright" align="center" valign="center"/>
+					<WTIMAGE col="1" align="left" valign="top" value="CONST(Required.gif)"/>
+					<WTSTATIC col="1" label="RequiredField"/>
+				</WTROW>
+			</WTCODEGROUP>
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="ReportHeader">
+		<WTCONTENT mode="template">
+			<WTCOLUMN width="650"/>
+			<WTVARIABLE name="tmpHeader">
+				<WTVALUE value="CONST(Header[)"/>
+				<WTVALUE value="SYS(language)"/>
+				<WTVALUE value="CONST(].gif)"/>
+			</WTVARIABLE>
+			<WTROW>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)"/>
+			</WTROW>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+				<WTROW>
+					<WTCONDITION expr="SYS(headerimage)" oper="equal" value="CONST('')"/>
+					<WTIMAGE col="1" align="center" valign="top" value="VALUE($tmpHeader)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="SYS(headerimage)" oper="not-equal" value="CONST('')"/>
+					<WTROW>
+						<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+						<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="SYS(CompanyID)" oper="greater" value="CONST(0)"/>
+						<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/SYSTEM/@companyid&quot;/&gt;)"/>
+					</WTROW>
+				</WTCODEGROUP>
+			</WTCODEGROUP>
+
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="ReportFooter">
+		<WTCONTENT mode="template">
+			<WTCOLUMN width="650"/>
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTROW margin-top="6" margin-bottom="2">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" label="Copyright" align="center" class="Copyright"/>
+				</WTROW>
+			</WTCODEGROUP>
+		</WTCONTENT>
+	</WTTEMPLATE>
+	<!-- ******************************************************************************************************** -->
+	<WTTEMPLATE name="MenuBar" type="menu">
+		<WTMENU name="MenuBar" type="xpbar" bgcolor="SYS(NavBarImage)">
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsAffiliateOnly"/>
+				<WTITEM value="CONST(CleanXML(reqSysUserName))">
+					<WTITEM label="Home">
+						<WTIMAGE name="Home.gif"/>
+						<WTLINK name="0604"/>
+					</WTITEM>
+					<!--
+					<WTITEM label="Shortcuts"><WTIMAGE name="Shortcut.gif" width="11" height="11"/><WTLINK name="9211"/></WTITEM>
+-->
+				</WTITEM>
+				<WTITEM label="MyInfo">
+					<WTLINK name="0603"><WTPARAM name="AffiliateID" value="SYS(affiliateid)"/></WTLINK>
+				</WTITEM>
+				<!--				<WTITEM label="FAQs"><WTLINK name="1713" target="FAQ"/></WTITEM>-->
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTITEM value="CONST(CleanXML(reqSysUserName))">
+					<WTITEM label="Home">
+						<WTIMAGE name="Home.gif"/>
+						<WTLINK name="0404"/>
+					</WTITEM>
+<!--					
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsEasy"/>
+						<WTITEM label="EasyMode">
+							<WTCONDITION expr="IsExpertMode"/>
+							<WTIMAGE name="EasyMode.gif"/>
+							<WTLINK name="0429"/>
+						</WTITEM>
+						<WTITEM label="ExpertMode">
+							<WTCONDITION expr="IsEasyMode"/>
+							<WTIMAGE name="ExpertMode.gif"/>
+							<WTLINK name="0429"/>
+						</WTITEM>
+					</WTCODEGROUP>
+-->					
+					<WTITEM label="Shortcuts">
+						<WTCONDITION expr="IsShortcuts"/>
+						<WTIMAGE name="Shortcut.gif" width="11" height="11"/>
+						<WTLINK name="9211"/>
+					</WTITEM>
+					<WTITEM label="ReturnEmployee">
+						<WTCONDITION expr="SYS(EmployeeID)" oper="greater" value="CONST(0)"/>
+						<WTIMAGE name="Affiliate.gif"/>
+						<WTLINK name="0204" return="false"><WTPARAM name="EmployeeID" value="SYS(EmployeeID)"/><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="Marketing">
+					<WTCONDITION expr="IsMarketing"/>
+					<WTITEM label="MySuspects">
+						<WTCONDITION expr="IsSuspect"/>
+						<WTIMAGE name="Suspect.gif"/>
+						<WTLINK name="2201" target="blank"><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MySales">
+						<WTCONDITION expr="IsSales"/>
+						<WTIMAGE name="Prospect.gif"/>
+						<WTLINK name="8101"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyService">
+						<WTCONDITION expr="IsService"/>
+						<WTIMAGE name="Customer.gif"/>
+						<WTLINK name="8151"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyPartyPlans">
+						<WTCONDITION expr="IsPartyPlan"/>
+						<WTIMAGE name="Plan.gif"/>
+						<WTLINK name="2511"><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="NewsLetters">
+						<WTCONDITION expr="IsNewsLetter"/>
+						<WTIMAGE name="NewsLetter.gif"/>
+						<WTLINK name="1813"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="Personal">
+					<WTCONDITION expr="IsPersonal"/>
+					<WTITEM label="MyInfo">
+						<WTCONDITION expr="IsInfo"/>
+						<WTIMAGE name="MyInfo.gif"/>
+						<WTLINK name="0463" target="MyInfo" secure="true"><WTPARAM name="MemberID" value="SYS(memberid)"/><WTPARAM name="ContentPage" value="CONST(3)"/><WTPARAM name="Popup" value="CONST(1)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Performance">
+						<WTCONDITION expr="IsPerformance"/>
+						<WTIMAGE name="Performance.gif"/>
+						<WTLINK name="0445" target="blank"><WTPARAM name="MemberID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Mentoring">
+						<WTCONDITION expr="IsMentoring"/>
+						<WTIMAGE name="Mentor.gif"/>
+						<WTLINK name="0410"><WTPARAM name="MemberID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyGenealogy">
+						<WTCONDITION expr="IsGenealogy"/>
+						<WTIMAGE name="Genealogy.gif"/>
+						<WTLINK name="0470" target="Genealogy"><WTPARAM name="MemberID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyGoals">
+						<WTCONDITION expr="IsGoals"/>
+						<WTIMAGE name="Goal.gif"/>
+						<WTLINK name="7001"><WTPARAM name="MemberID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyCalendar">
+						<WTCONDITION expr="IsCalendar"/>
+						<WTIMAGE name="Calendar.gif"/>
+						<WTLINK name="Calendar" target="blank"><WTPARAM name="MemberID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyFinances">
+						<WTCONDITION expr="IsFinances"/>
+						<WTIMAGE name="Finance.gif"/>
+						<WTLINK name="0475" nodata="true" target="Finances"><WTPARAM name="MemberID" value="SYS(memberid)"/><WTPARAM name="ContentPage" value="CONST(3)"/><WTPARAM name="Popup" value="CONST(1)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyExpenses">
+						<WTCONDITION expr="IsExpenseManager"/>
+						<WTIMAGE name="Calculator.gif"/>
+						<WTLINK name="6401"><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyProjects">
+						<WTCONDITION expr="IsProjects"/>
+						<WTCONDITION expr="IsSecureProjects" connector="or"/>
+						<WTIMAGE name="Project.gif"/>
+						<WTLINK name="7501"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyReports">
+						<WTCONDITION expr="IsReports"/>
+						<WTIMAGE name="Report.gif"/>
+						<WTLINK name="Reports" target="Reports"/>
+					</WTITEM>
+					<WTITEM label="MyResources">
+						<WTCONDITION expr="IsResources"/>
+						<WTIMAGE name="Resource.gif"/>
+						<WTLINK name="9304"><WTPARAM name="MemberID" value="SYS(memberid)"/><WTPARAM name="GrpCompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="TrainingCaption">
+					<WTCONDITION expr="IsTraining"/>
+					<WTITEM label="Sessions">
+						<WTCONDITION expr="IsClasses"/>
+						<WTIMAGE name="Class.gif"/>
+						<WTLINK name="1311"><WTPARAM name="MemberID" value="SYS(memberid)"/><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyAssessments">
+						<WTCONDITION expr="IsAssessments"/>
+						<WTIMAGE name="Assessment.gif"/>
+						<WTLINK name="3411"><WTPARAM name="MemberID" value="SYS(memberid)"/><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="CourseCategorys">
+						<WTCONDITION expr="IsCatalog"/>
+						<WTIMAGE name="Catalog.gif"/>
+						<WTLINK name="1212" return="false"><WTPARAM name="Mode" value="CONST(2)"/><WTPARAM name="MemberID" value="SYS(memberid)"/><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+<!--					
+					<WTITEM label="TrainingBuddy">
+						<WTCONDITION expr="IsBuddy"/>
+						<WTIMAGE name="Buddy.gif"/>
+						<WTLINK name="0440"><WTPARAM name="MemberID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+-->
+				</WTITEM>
+				<WTITEM label="CommunicationCaption">
+					<WTCONDITION expr="IsCommunication"/>
+<!--
+					<WTITEM label="Conferencing">
+						<WTCONDITION expr="IsConferencing"/>
+						<WTIMAGE name="Mentor.gif"/>
+						<WTLINK name="0416"/>
+					</WTITEM>
+-->					
+					<WTITEM label="MsgBoards">
+						<WTCONDITION expr="IsDiscussion"/>
+						<WTIMAGE name="Mentor.gif"/>
+						<WTLINK name="84114"/>
+					</WTITEM>
+<!--
+					<WTITEM label="Chats">
+						<WTCONDITION expr="IsConference"/>
+						<WTIMAGE name="Mentor.gif"/>
+						<WTLINK name="8413"/>
+					</WTITEM>
+-->
+					<WTITEM label="Suggestions">
+						<WTCONDITION expr="IsSuggestion"/>
+						<WTIMAGE name="suggestion.gif"/>
+						<WTLINK name="4511"/>
+					</WTITEM>
+					<WTITEM label="Surveys">
+						<WTCONDITION expr="IsSurvey"/>
+						<WTIMAGE name="suggestion.gif"/>
+						<WTLINK name="4011"/>
+					</WTITEM>
+				</WTITEM>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberBusiness"/>
+					<WTITEM label="Members">
+						<WTLINK name="0411"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/><WTPARAM name="MasterID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+				</WTCODEGROUP>
+				<WTITEM label="SupportCaption">
+					<WTCONDITION expr="IsSupport"/>
+					<WTCONDITION expr="IsSupportDocs" connector="and" paren="start"/>
+					<WTCONDITION expr="IsSupportFAQ" connector="or"/>
+					<WTCONDITION expr="IsPinnacleFAQ" connector="or"/>
+					<WTCONDITION expr="IsPinnacleTutorial" connector="or" paren="end"/>
+					<WTITEM label="Attachments">
+						<WTCONDITION expr="IsSupportDocs"/>
+						<WTIMAGE name="Help.gif"/>
+						<WTLINK name="8013" target="Attachments"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="CompanyFAQs">
+						<WTCONDITION expr="IsSupportFAQ"/>
+						<WTIMAGE name="Help.gif"/>
+						<WTLINK name="1713" target="FAQ"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="PinnacleFAQs">
+						<WTCONDITION expr="IsPinnacleFAQ"/>
+						<WTIMAGE name="Help.gif"/>
+						<WTLINK name="1713" target="FAQ"/>
+					</WTITEM>
+					<WTITEM label="PinnacleTutorials">
+						<WTCONDITION expr="IsPinnacleTutorial"/>
+						<WTIMAGE name="Catalog.gif"/>
+						<WTLINK name="Tutorial" target="Tutorial">
+							<WTPARAM name="contentpage" value="CONST(3)"/>
+							<WTPARAM name="popup" value="CONST(1)"/>
+						</WTLINK>
+					</WTITEM>
+					<WTITEM label="SupportTickets">
+						<WTCONDITION expr="IsSupportTicket"/>
+						<WTIMAGE name="SupportTicket.gif"/>
+						<WTLINK name="9506" target="SupportTickets"/>
+					</WTITEM>
+<!--
+					<WTITEM label="Payments">
+						<WTCONDITION expr="IsMemberPaid"/>
+						<WTCONDITION expr="IsPayments" connector="and"/>
+						<WTIMAGE name="Sales.gif"/>
+						<WTLINK name="1011"><WTPARAM name="OwnerType" value="CONST(4)"/><WTPARAM name="OwnerID" value="SYS(memberid)"/></WTLINK>
+					</WTITEM>
+-->
+				</WTITEM>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsOrgAdminOnly"/>
+				<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+				<WTITEM value="CONST(CleanXML(reqSysUserName))">
+					<WTITEM label="Home">
+						<WTIMAGE name="Home.gif"/>
+						<WTLINK name="3804"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Shortcuts">
+						<WTCONDITION expr="IsShortcuts"/>
+						<WTIMAGE name="Shortcut.gif" width="11" height="11"/>
+						<WTLINK name="9211"/>
+					</WTITEM>
+				</WTITEM>
+<!--
+				<WTITEM label="BusinessCaption">
+					<WTCONDITION expr="IsOrgAdminOnly"/>
+					<WTITEM label="ManagingBuddy">
+						<WTCONDITION expr="IsBuddy"/>
+						<WTIMAGE name="Buddy.gif"/>
+						<WTLINK name="3830"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Sales">
+						<WTCONDITION expr="IsSales"/>
+						<WTIMAGE name="Prospect.gif"/>
+						<WTLINK name="8101"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="MyService">
+						<WTCONDITION expr="IsService"/>
+						<WTIMAGE name="Customer.gif"/>
+						<WTLINK name="8151"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Projects">
+						<WTCONDITION expr="IsProjects"/>
+						<WTCONDITION expr="IsSecureProjects" connector="or"/>
+						<WTIMAGE name="Project.gif"/>
+						<WTLINK name="7501"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Reports">
+						<WTIMAGE name="goal.gif"/>
+						<WTLINK name="0060"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="EmailManager">
+						<WTIMAGE name="email.gif"/>
+						<WTLINK name="8801"/>
+					</WTITEM>
+					<WTITEM label="NewsLetters">
+						<WTCONDITION expr="IsNewsLetter"/>
+						<WTIMAGE name="NewsLetter.gif"/>
+						<WTLINK name="1811" nodata="true"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="FAQs">
+						<WTCONDITION expr="IsSupportFAQ"/>
+						<WTIMAGE name="Help.gif"/>
+						<WTLINK name="1713" target="FAQ"/>
+					</WTITEM>
+					<WTITEM label="SalesOrders">
+						<WTIMAGE name="goal.gif"/>
+						<WTLINK name="5201" nodata="true"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Promotions">
+						<WTIMAGE name="goal.gif"/>
+						<WTLINK name="0701" nodata="true"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="CommunicationCaption">
+					<WTCONDITION expr="IsOrgAdminOnly"/>
+					<WTITEM label="Suggestions">
+						<WTCONDITION expr="IsSuggestion"/>
+						<WTIMAGE name="suggestion.gif"/>
+						<WTLINK name="4501"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Surveys">
+						<WTCONDITION expr="IsSurvey"/>
+						<WTIMAGE name="suggestion.gif"/>
+						<WTLINK name="4001"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="SetupCaption">
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsOrgManagerOnly"/>
+						<WTITEM label="Folders">
+							<WTIMAGE name="MyInfo.gif"/>
+							<WTLINK name="2809"><WTPARAM name="OrgID" value="SYS(orgid)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="CompanyFAQs">
+							<WTIMAGE name="Help.gif"/>
+							<WTLINK name="1701" target="EditQuestions"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+					</WTCODEGROUP>
+					
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsOrgAdminOnly"/>
+						<WTITEM label="MyInfo">
+							<WTIMAGE name="MyInfo.gif"/>
+							<WTLINK name="3803"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="Folders">
+							<WTIMAGE name="MyInfo.gif"/>
+							<WTLINK name="2809"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="AllMembers">
+							<WTIMAGE name="Mentor.gif"/>
+							<WTLINK name="0401"><WTPARAM name="Mode" value="CONST(1)"/><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="MyResources">
+							<WTIMAGE name="Resource.gif"/>
+							<WTLINK name="9304" nodata="true"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="MyCalendar">
+							<WTCONDITION expr="IsCalendar"/>
+							<WTIMAGE name="Calendar.gif"/>
+							<WTLINK name="Calendar" nodata="true" target="blank"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="PrivateCourses">
+							<WTCONDITION expr="IsClasses"/>
+							<WTIMAGE name="Catalog.gif"/>
+							<WTLINK name="1101"><WTPARAM name="Mode" value="CONST(1)"/><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="Assessments">
+							<WTCONDITION expr="IsAssessments"/>
+							<WTIMAGE name="Assessment.gif"/>
+							<WTLINK name="3110"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="CompanyFAQs">
+							<WTIMAGE name="Help.gif"/>
+							<WTLINK name="1701" target="EditQuestions"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="Attachments">
+							<WTIMAGE name="goal.gif"/>
+							<WTLINK name="8001" target="EditAttachments"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="PageSections">
+							<WTIMAGE name="goal.gif"/>
+							<WTLINK name="9101"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+						<WTITEM label="Products">
+							<WTIMAGE name="goal.gif"/>
+							<WTLINK name="5001" nodata="true"><WTPARAM name="CompanyID" value="SYS(CompanyID)"/></WTLINK>
+						</WTITEM>
+					</WTCODEGROUP>
+				</WTITEM>
+-->				
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsTrainerOnly"/>
+				<WTITEM value="CONST(CleanXML(reqSysUserName))">
+					<WTITEM label="Home">
+						<WTIMAGE name="Home.gif"/>
+						<WTLINK name="0305"/>
+					</WTITEM>
+					<WTITEM label="Shortcuts">
+						<WTIMAGE name="Shortcut.gif" width="11" height="11"/>
+						<WTLINK name="9211"/>
+					</WTITEM>
+				</WTITEM>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsEmployee"/>
+				<WTITEM value="CONST(CleanXML(reqSysUserName))">
+					<WTITEM label="Home">
+						<WTIMAGE name="Home.gif"/>
+						<WTLINK name="0204"/>
+					</WTITEM>
+					<WTITEM label="Shortcuts">
+						<WTIMAGE name="Shortcut.gif" width="11" height="11"/>
+						<WTLINK name="9211"/>
+					</WTITEM>
+					<WTITEM label="ReturnMember">
+						<WTCONDITION expr="SYS(MemberID)" oper="greater" value="CONST(0)"/>
+						<WTIMAGE name="MyInfo.gif"/>
+						<WTLINK name="0404" return="false"><WTPARAM name="EmployeeID" value="SYS(Employeeid)"/><WTPARAM name="MemberID" value="SYS(MemberID)"/></WTLINK>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="CustomerCaption">
+					<WTCONDITION expr="emCustomers"/>
+					<WTITEM label="Companies">
+						<WTCONDITION expr="emCompanies"/>
+						<WTLINK name="3801"/>
+					</WTITEM>
+					<WTITEM label="Members">
+						<WTCONDITION expr="emMembers"/>
+						<WTLINK name="0401"/>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="TrainerCaption">
+					<WTCONDITION expr="emTraining"/>
+					<WTITEM label="Trainers">
+						<WTCONDITION expr="emTrainers"/>
+						<WTLINK name="0301"/>
+					</WTITEM>
+					<WTITEM label="Courses">
+						<WTCONDITION expr="emCourses"/>
+						<WTLINK name="1101"/>
+					</WTITEM>
+					<WTITEM label="Assessments">
+						<WTCONDITION expr="emAssessments"/>
+						<WTLINK name="3101"/>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="BusinessCaption">
+					<WTCONDITION expr="emTools"/>
+					<WTITEM label="Reports">
+						<WTCONDITION expr="emReports"/>
+						<WTLINK name="0060"/>
+					</WTITEM>
+					<WTITEM label="Reports">
+						<WTIMAGE name="Report.gif"/>
+						<WTLINK name="Reports" target="Reports"><WTPARAM name="RptType" value="CONST(system)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Accounting">
+						<WTCONDITION expr="emAccounting"/>
+						<WTLINK name="1020"/>
+					</WTITEM>
+					<WTITEM label="EmailManager">
+						<WTCONDITION expr="emEmailManager"/>
+						<WTLINK name="8801"/>
+					</WTITEM>
+					<WTITEM label="Billing">
+						<WTCONDITION expr="emPayments"/>
+						<WTLINK name="1001"><WTPARAM name="CompanyID" value="CONST(-1)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="Commissions">
+						<WTCONDITION expr="emCommissions"/>
+						<WTLINK name="0901"/>
+					</WTITEM>
+					<WTITEM label="Payouts">
+						<WTCONDITION expr="emPayouts"/>
+						<WTLINK name="0801"/>
+					</WTITEM>
+					<WTITEM label="Issues">
+						<WTCONDITION expr="emIssues"/>
+						<WTLINK name="9501" target="Issue"/>
+					</WTITEM>
+				</WTITEM>
+				<WTITEM label="SetupCaption">
+					<WTCONDITION expr="emSetup"/>
+					<WTITEM label="PageSections">
+						<WTCONDITION expr="emPages"/>
+						<WTLINK name="9101"/>
+					</WTITEM>
+					<WTITEM label="PinnacleFAQs">
+						<WTCONDITION expr="emFAQ"/>
+						<WTLINK name="1701" target="EditQuestions"/>
+					</WTITEM>
+					<WTITEM label="Employees">
+						<WTCONDITION expr="emEmployees"/>
+						<WTLINK name="0201"/>
+					</WTITEM>
+					<WTITEM label="Business">
+						<WTCONDITION expr="emBusiness"/>
+						<WTLINK name="0003"><WTPARAM name="BusinessID" value="CONST(1)"/></WTLINK>
+					</WTITEM>
+					<WTITEM label="ExpenseManager">
+						<WTCONDITION expr="emExpenseManager"/>
+						<WTLINK name="6511"/>
+					</WTITEM>
+				</WTITEM>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsLoggedOn"/>
+				<WTCONDITION expr="IsLogon" connector="and"/>
+				<WTITEM label="LogonPassword">
+					<WTITEM label="ChangeLogon">
+						<WTCONDITION expr="CanChangeLogon"/>
+						<WTCONDITION expr="IsChangeLogon" connector="and"/>
+						<WTIMAGE name="logon.gif"/>
+						<WTLINK name="0103"/>
+					</WTITEM>
+					<WTITEM label="ChangePassword">
+						<WTIMAGE name="logon.gif"/>
+						<WTLINK name="0106"/>
+					</WTITEM>
+					<WTITEM label="SignOut">
+						<WTIMAGE name="close.gif"/>
+						<WTLINK name="0101"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK>
+					</WTITEM>
+				</WTITEM>
+			</WTCODEGROUP>
+		</WTMENU>
+	</WTTEMPLATE>
+</WTROOT>

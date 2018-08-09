@@ -1,0 +1,222 @@
+var MenuBarDef = {
+	type:"bar",
+	style:{
+		css:"top",
+		bgcolor:"black",
+		size:[120,20],
+		imgspace:5,
+		direction:"h",
+		itemoffset:{x:2,y:2},
+		shadow:{color:"silver",width:2},
+		border:{color:"#ACA899",width:1}
+	},
+	itemover:{color:"black",bgcolor:"#B0BBD4"},
+	separator:{style:{size:[120,1],bgcolor:"silver"}},
+	position:{pos:[0,0],absolute:false},
+	items:[
+	{
+		text:"Shortcuts",
+		style:{
+			color:"white",bgcolor:"black",
+			imgitem:{src:"img/Shortcut.gif", width:16, height:16},
+			align:"center",
+			itemoffset:{x:2,y:2}
+		},
+		action : {url:"9211.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+	},
+	{
+		text:"Home",
+		style:{
+			color:"white",bgcolor:"black",
+			align:"center",
+			itemoffset:{x:2,y:2}
+		},
+		action : {url:"0204.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+	},
+	{
+		text:"Manage Customer",
+		style:{
+			color:"white",bgcolor:"black",
+			align:"center",
+			itemoffset:{x:2,y:2}
+		},
+		menu:
+		{
+			style:{size:[120,20],bgcolor:"#F3F5F6",
+				imgendoff:{src:"img/arr_off.gif",width:7,height:7},
+				imgendon:{src:"img/arr_on.gif",width:7,height:7},
+				direction:"v",
+				itemoffset:{x:2,y:2},
+				opacity:90
+			},
+			position:{anchor:"sw",anchor_side:"nw"},
+			items:[
+			{
+				text:"Companies",
+				action : {url:"3801.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Members",
+				action : {url:"0401.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			}
+			]
+		}
+	},
+	{
+		text:"Manage Content",
+		style:{
+			color:"white",bgcolor:"black",
+			align:"center",
+			itemoffset:{x:2,y:2}
+		},
+		menu:
+		{
+			style:{size:[120,20],bgcolor:"#F3F5F6",
+				imgendoff:{src:"img/arr_off.gif",width:7,height:7},
+				imgendon:{src:"img/arr_on.gif",width:7,height:7},
+				direction:"v",
+				itemoffset:{x:2,y:2},
+				opacity:90
+			},
+			position:{anchor:"sw",anchor_side:"nw"},
+			items:[
+			{
+				text:"Trainers",
+				action : {url:"0301.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Courses",
+				action : {url:"1101.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Assessments",
+				action : {url:"3101.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			}
+			]
+		}
+	},
+	{
+		text:"Manage Business",
+		style:{
+			color:"white",bgcolor:"black",
+			align:"center",
+			itemoffset:{x:2,y:2}
+		},
+		menu:
+		{
+			style:{size:[120,20],bgcolor:"#F3F5F6",
+				imgendoff:{src:"img/arr_off.gif",width:7,height:7},
+				imgendon:{src:"img/arr_on.gif",width:7,height:7},
+				direction:"v",
+				itemoffset:{x:2,y:2},
+				opacity:90
+			},
+			position:{anchor:"sw",anchor_side:"nw"},
+			items:[
+			{
+				text:"Affiliates",
+				action : {url:"0601.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Reports",
+				action : {url:"0060.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Accounting",
+				action : {url:"1020.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Email Manager",
+				action : {url:"8801.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Payments",
+				action : {url:"1001.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Commissions",
+				action : {url:"0901.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Payouts",
+				action : {url:"0801.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			}
+			]
+		}
+	},
+	{
+		text:"Setup",
+		style:{
+			color:"white",bgcolor:"black",
+			align:"center",
+			itemoffset:{x:2,y:2}
+		},
+		menu:
+		{
+			style:{size:[120,20],bgcolor:"#F3F5F6",
+				imgendoff:{src:"img/arr_off.gif",width:7,height:7},
+				imgendon:{src:"img/arr_on.gif",width:7,height:7},
+				direction:"v",
+				itemoffset:{x:2,y:2},
+				opacity:90
+			},
+			position:{anchor:"sw",anchor_side:"nw"},
+			items:[
+			{
+				text:"Pages",
+				action : {url:"9101.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"User Q&amp;A",
+				action : {url:"1701.asp",target:"EditQuestions"}
+			},
+			{
+				text:"Employees",
+				action : {url:"0201.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Business",
+				action : {url:"0003.asp?BusinessID=1&ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Issues",
+				action : {url:"9501.asp",target:"Issue"}
+			},
+			{
+				text:"Issue Categories",
+				action : {url:"9411.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			}
+			]
+		}
+	},
+	{
+		text:"Logon / Password",
+		style:{
+			color:"white",bgcolor:"black",
+			align:"center",
+			itemoffset:{x:2,y:2}
+		},
+		menu:
+		{
+			style:{size:[120,20],bgcolor:"#F3F5F6",
+				imgendoff:{src:"img/arr_off.gif",width:7,height:7},
+				imgendon:{src:"img/arr_on.gif",width:7,height:7},
+				direction:"v",
+				itemoffset:{x:2,y:2},
+				opacity:90
+			},
+			position:{anchor:"sw",anchor_side:"nw"},
+			items:[
+			{
+				text:"Change Password",
+				action : {url:"0106.asp?ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			},
+			{
+				text:"Sign Out",
+				action : {url:"0101.asp?ActionCode=9&ReturnURL=http://localhost/PTS/@menu.asp?SysTestFile=d:\TestFile.xml&ReturnData="}
+			}
+			]
+		}
+	}
+	]
+};

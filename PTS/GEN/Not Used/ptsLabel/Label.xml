@@ -1,0 +1,899 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="99" name="Label" alias="zla" language="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="9901" name="LabelID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+
+		<!--Foreign Table Fields-->
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="9902" name="EntityID" type="number" min="1" required="true" source="entity">
+			<WTLOOKUP entity="LabEnty" class="LabEntys" method="EnumEntity">
+				<WTPARAM name="UserID" direction="input" value="SYS(userid)"/>
+			</WTLOOKUP>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9903" name="AttributeID" type="number" min="1" required="true" source="entity">
+			<WTLOOKUP entity="LabAttr" class="LabAttrs" method="EnumAttribute">
+				<WTPARAM name="UserID" direction="input" value="SYS(userid)"/>
+			</WTLOOKUP>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9904" name="ItemID" type="number" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="9905" name="LanguageCode" type="text" length="5" min="1" max="5" required="true" source="entity">
+			<WTLOOKUP entity="LabLang" class="LabLangs" method="EnumLanguage">
+				<WTPARAM name="UserID" direction="input" value="SYS(userid)"/>
+			</WTLOOKUP>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9906" name="Text" type="text" length="2000" min="1" max="2000" source="entity"/>
+		<WTATTRIBUTE id="9907" name="EntityName" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="LabEnty" name="EntityName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9908" name="AttributeName" type="text" length="30" min="1" max="30" title="true" source="join">
+			<WTJOIN entity="LabAttr" name="AttributeName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9909" name="LanguageName" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="LabLang" name="LanguageName"/>
+		</WTATTRIBUTE>
+
+		<!--Indexes-->
+		<WTINDEX name="Label">
+			<WTATTRIBUTE name="EntityID"/>
+			<WTATTRIBUTE name="LanguageCode"/>
+			<WTATTRIBUTE name="AttributeID"/>
+			<WTATTRIBUTE name="ItemID"/>
+		</WTINDEX>
+		<WTINDEX name="Attribute">
+			<WTATTRIBUTE name="EntityID"/>
+			<WTATTRIBUTE name="LanguageCode"/>
+			<WTATTRIBUTE name="ItemID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Label" entity="Label" alias="zla"/>
+			<WTRELATIONSHIP name="LabelLang" entity="Label" alias="zla">
+				<WTENTITY name="LabLang" entity="LabLang" alias="zlg">
+					<WTATTRIBUTE alias="zla" name="LanguageCode" relalias="zlg" relname="LanguageCode"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Common" entity="Label" alias="zla">
+				<WTENTITY name="LabEnty" entity="LabEnty" alias="zen">
+					<WTATTRIBUTE alias="zla" name="EntityID" relalias="zen" relname="EntityID"/>
+				</WTENTITY>
+				<WTENTITY name="LabAttr" entity="LabAttr" alias="zat">
+					<WTATTRIBUTE alias="zla" name="AttributeID" relalias="zat" relname="AttributeID"/>
+				</WTENTITY>
+				<WTENTITY name="LabLang" entity="LabLang" alias="zlg">
+					<WTATTRIBUTE alias="zla" name="LanguageCode" relalias="zlg" relname="LanguageCode"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="AttributeName" default="true"/>
+			<WTATTRIBUTE name="EntityName"/>
+			<WTATTRIBUTE name="LanguageName"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Search" name="SearchAttributeID" search="AttributeID" style="GenerateDataProc.xsl" nodata="true"/>
+		<WTPROCEDURE type="Search" name="SearchItemID" search="ItemID" style="GenerateDataProc.xsl" nodata="true"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListAttribute" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(Label.EntityID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.ItemID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.LanguageCode)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Label.LabelID)"/>
+					<WTATTRIBUTE value="ATTR(Label.AttributeID)"/>
+					<WTATTRIBUTE value="ATTR(Label.Text)"/>
+					<WTJOIN name="Label"/>
+					<WTCONDITION expr="ATTR(Label.EntityID)" oper="equal" value="PARAM(EntityID)"/>
+					<WTCONDITION expr="ATTR(Label.ItemID)" oper="equal" value="PARAM(ItemID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Label.LanguageCode)" oper="equal" value="PARAM(LanguageCode)" connector="and"/>
+					<WTORDER name="ATTR(Label.LanguageCode)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListItems" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(Label.EntityID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.AttributeID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.LanguageCode)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Label.LabelID)"/>
+					<WTATTRIBUTE value="ATTR(Label.ItemID)"/>
+					<WTATTRIBUTE value="ATTR(Label.Text)"/>
+					<WTJOIN name="Label"/>
+					<WTCONDITION expr="ATTR(Label.EntityID)" oper="equal" value="PARAM(EntityID)"/>
+					<WTCONDITION expr="ATTR(Label.AttributeID)" oper="equal" value="PARAM(AttributeID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Label.LanguageCode)" oper="equal" value="PARAM(LanguageCode)" connector="and"/>
+					<WTORDER name="ATTR(Label.LanguageCode)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListLabel" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(Label.EntityID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.AttributeID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.ItemID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.LanguageCode)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Label.LabelID)"/>
+					<WTATTRIBUTE value="ATTR(Label.AttributeID)"/>
+					<WTATTRIBUTE value="ATTR(Label.Text)"/>
+					<WTJOIN name="Label"/>
+					<WTCONDITION expr="ATTR(Label.EntityID)" oper="equal" value="PARAM(EntityID)"/>
+					<WTCONDITION expr="ATTR(Label.AttributeID)" oper="equal" value="PARAM(AttributeID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Label.ItemID)" oper="equal" value="PARAM(ItemID)" connector="and"/>
+					<WTORDER name="ATTR(Label.LanguageCode)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListItem" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(Label.EntityID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.AttributeID)" direction="input"/>
+			<WTPARAM name="ATTR(Label.ItemID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Label.LabelID)"/>
+					<WTATTRIBUTE value="ATTR(Label.LanguageCode)"/>
+					<WTATTRIBUTE value="ATTR(LabLang.LanguageName)"/>
+					<WTATTRIBUTE value="ATTR(Label.Text)"/>
+					<WTJOIN name="LabelLang"/>
+					<WTCONDITION expr="ATTR(Label.EntityID)" oper="equal" value="PARAM(EntityID)"/>
+					<WTCONDITION expr="ATTR(Label.AttributeID)" oper="equal" value="PARAM(AttributeID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Label.ItemID)" oper="equal" value="PARAM(ItemID)" connector="and"/>
+					<WTORDER name="ATTR(Label.LanguageCode)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListEntity" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(Label.EntityID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Label.LabelID)"/>
+					<WTATTRIBUTE value="ATTR(Label.EntityID)"/>
+					<WTATTRIBUTE value="ATTR(Label.AttributeID)"/>
+					<WTATTRIBUTE value="ATTR(Label.ItemID)"/>
+					<WTATTRIBUTE value="ATTR(LabAttr.AttributeName)"/>
+					<WTATTRIBUTE value="ATTR(Label.LanguageCode)"/>
+					<WTATTRIBUTE value="ATTR(LabLang.LanguageName)"/>
+					<WTATTRIBUTE value="ATTR(Label.Text)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Label.EntityID)" oper="equal" value="PARAM(EntityID)"/>
+					<WTORDER name="ATTR(Label.EntityID)"/>
+					<WTORDER name="ATTR(Label.AttributeID)"/>
+					<WTORDER name="ATTR(Label.ItemID)"/>
+					<WTORDER name="ATTR(Label.LanguageCode)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================-->
+		<WTPROCEDURE type="XML" name="XMLLabel" element="Label" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true">
+		<!--==================================================================-->
+		  <WTATTRIBUTE name="Name" value="AttributeID"/>
+		  <WTVALUE value="Text"/>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="9901" caption="Find" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="31">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(AttributeName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Labels" project="ptsLabelUser" class="CLabels"/>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Labels" project="ptsLabelUser" class="CLabels" language="false">
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="SYS(usergroup)" oper="less" value="CONST(31)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlLabels" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="FindLabel" class="PageHeading"/>
+							<WTLINKGROUP  col="2" align="right" >
+								<WTLINK name="9902" label="NewLabel" class="PageHeadingLink"/>
+							</WTLINKGROUP>
+						</WTROW>
+						</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="12">
+					<WTDIVIDER col="1" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Labels.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Label">
+						<WTCOLUMN width="25" align="left" valign="top" label="EntityName" />
+						<WTCOLUMN width="25" align="left" valign="top" label="AttributeName" />
+						<WTCOLUMN width="25" align="left" valign="top" label="LanguageName" />
+						<WTCOLUMN width="25" align="left" valign="top" label="ItemID" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Label.EntityName)">
+								<WTLINK name="9903" class="ColumnHeader">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Label.AttributeName)">
+								<WTLINK name="9903">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Label.LanguageName)">
+								<WTLINK name="9903">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Label.ItemID)">
+								<WTLINK name="9903">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="4" value="DATA(Label.Text)">
+								<WTLINK name="9903">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="9902" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--===============================================================================-->
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="LabelID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+	 					<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewLabel" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="EntityID"/>
+					<WTCOMBO col="2" value="ATTR(Label.EntityID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AttributeID"/>
+					<WTCOMBO col="2" value="ATTR(Label.AttributeID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageCode"/>
+					<WTCOMBO col="2" value="ATTR(Label.LanguageCode)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ItemID"/>
+					<WTTEXT col="2" value="ATTR(Label.ItemID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Text" valign="top"/>
+					<WTMEMO col="2" value="ATTR(Label.Text)" rows="6"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)"/>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="9903" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="22">
+		<!--=============================================================================================-->
+			<WTPARAM name="LabelID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+	 					<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Label" value="ATTR(Label.LabelID)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="EntityID"/>
+					<WTCOMBO col="2" value="ATTR(Label.EntityID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AttributeID"/>
+					<WTCOMBO col="2" value="ATTR(Label.AttributeID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageCode"/>
+					<WTCOMBO col="2" value="ATTR(Label.LanguageCode)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ItemID"/>
+					<WTTEXT col="2" value="ATTR(Label.ItemID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Text" valign="top"/>
+					<WTMEMO col="2" value="ATTR(Label.Text)" rows="6"/>
+				</WTROW>
+
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)"/>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="9904" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="EntityID" datatype="number"/>
+			<WTPARAM name="AttributeID" datatype="number"/>
+			<WTPARAM name="ItemID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Label.EntityID)" value="PARAM(EntityID)"/>
+					<WTSETATTRIBUTE name="ATTR(Label.AttributeID)" value="PARAM(AttributeID)"/>
+					<WTSETATTRIBUTE name="ATTR(Label.ItemID)" value="PARAM(ItemID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Label.EntityID)" value="PARAM(EntityID)"/>
+					<WTSETATTRIBUTE name="ATTR(Label.AttributeID)" value="PARAM(AttributeID)"/>
+					<WTSETATTRIBUTE name="ATTR(Label.ItemID)" value="PARAM(ItemID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Add">
+						<WTPARAM name="LabelID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewLabel" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="EntityID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Label.EntityName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AttributeID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Label.AttributeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ItemID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Label.ItemID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageCode"/>
+					<WTCOMBO col="2" value="ATTR(Label.LanguageCode)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Text" valign="top"/>
+					<WTMEMO col="2" value="ATTR(Label.Text)" rows="6"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)"/>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="9905" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="22">
+		<!--=============================================================================================-->
+			<WTPARAM name="LabelID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Label" project="ptsLabelUser" class="CLabel" language="false">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabelID" direction="input" value="PARAM(LabelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Label" value="ATTR(Label.LabelID)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="EntityID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Label.EntityName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AttributeID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Label.AttributeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ItemID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Label.ItemID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageCode" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Label.LanguageName)"/>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Text" valign="top"/>
+					<WTMEMO col="2" value="ATTR(Label.Text)" rows="6"/>
+				</WTROW>
+
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)"/>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="9911" caption="ListItem" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="22">
+		<!--===============================================================================-->
+			<WTPARAM name="EntityID" datatype="number"/>
+			<WTPARAM name="AttributeID" datatype="number"/>
+			<WTPARAM name="ItemID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Labels" project="ptsLabelUser" class="CLabels" language="false">
+					<WTMETHOD name="ListItem">
+						<WTPARAM name="EntityID" direction="input" value="PARAM(EntityID)"/>
+						<WTPARAM name="AttributeID" direction="input" value="PARAM(AttributeID)"/>
+						<WTPARAM name="ItemID" direction="input" value="PARAM(ItemID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabels" direction="return" concat="true" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Labels" class="PageHeading"/>
+					<WTLINKGROUP col="2" align="right">
+						<WTCONDITION expr="IsActive"/>
+<!--						
+						<WTLINK name="9904" label="NewLabel">
+						  <WTPARAM name="EntityID" value="PARAM(EntityID)"/>
+						  <WTPARAM name="AttributeID" value="PARAM(AttributeID)"/>
+						  <WTPARAM name="ItemID" value="PARAM(ItemID)"/>
+						</WTLINK>
+-->						
+						<WTLINK name="9912" label="AllLabels">
+						  <WTPARAM name="EntityID" value="PARAM(EntityID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Label">
+						<WTCOLUMN width="15" align="left" valign="top" label="LanguageName"/>
+						<WTCOLUMN width="85" align="left" valign="top" label="Text"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Label.LanguageName)">
+								<WTLINK name="9905">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Label.Text)">
+								<WTLINK name="9905">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===================================================================================-->
+		<WTWEBPAGE name="9912" caption="ListEntity" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===================================================================================-->
+			<WTPARAM name="EntityID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Labels" project="ptsLabelUser" class="CLabels" language="false">
+					<WTMETHOD name="ListEntity">
+						<WTPARAM name="EntityID" direction="input" value="PARAM(EntityID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabels" direction="return" concat="true" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Labels" class="PageHeading" align="left"/>
+					<WTSTATIC col="2"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Label">
+						<WTCOLUMN width="15" align="left" valign="top" label="AttributeName"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="ItemID"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="LanguageName"/>
+						<WTCOLUMN width="55" align="left" valign="top" label="Text"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Label.AttributeName)">
+								<WTLINK name="9905">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="1" value="DATA(Label.ItemID)">
+								<WTLINK name="9905">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="1" value="DATA(Label.LanguageName)">
+								<WTLINK name="9905">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Label.Text)">
+								<WTLINK name="9905">
+									<WTPARAM name="LabelID" value="DATA(Label.LabelID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

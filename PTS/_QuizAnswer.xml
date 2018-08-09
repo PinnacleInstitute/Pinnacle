@@ -1,0 +1,193 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="19" name="QuizAnswer" alias="qa" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="1901" name="QuizAnswerID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="1902" name="SessionLessonID" type="number" source="entity"/>
+		<WTATTRIBUTE id="1903" name="QuizQuestionID" type="number" source="entity"/>
+		<WTATTRIBUTE id="1904" name="QuizChoiceID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="1905" name="Question" type="text" length="2000" min="1" max="2000" source="join">
+			<WTJOIN entity="QuizQuestion" name="Question"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="1906" name="Explain" type="text" length="1000" min="1" max="1000" source="join">
+			<WTJOIN entity="QuizQuestion" name="Explain"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="1907" name="QuizChoiceText" type="text" length="1000" min="1" max="1000" source="join">
+			<WTJOIN entity="QuizChoice" name="QuizChoiceText"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="1910" name="IsCorrect" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="1911" name="CreateDate" type="date" source="entity"/>
+		
+		<!-- Non-Persist Attributes -->
+		
+		<!--Indexes-->
+		<WTINDEX name="SessionQuestion">
+			<WTATTRIBUTE name="SessionLessonID"/>
+			<WTATTRIBUTE name="QuizQuestionID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="QuizAnswer" entity="QuizAnswer" alias="qa"/>
+			<WTRELATIONSHIP name="Common" entity="QuizAnswer" alias="qa">
+				<WTENTITY name="QuizQuestion" entity="QuizQuestion" alias="qq">
+					<WTATTRIBUTE alias="qa" name="QuizQuestionID" relalias="qq" relname="QuizQuestionID"/>
+				</WTENTITY>
+				<WTENTITY name="QuizChoice" entity="QuizChoice" alias="qc">
+					<WTATTRIBUTE alias="qa" name="QuizChoiceID" relalias="qc" relname="QuizChoiceID"/>
+				</WTENTITY>
+<!--				
+				<WTENTITY name="SessionLesson" entity="SessionLesson" alias="sl">
+					<WTATTRIBUTE alias="qa" name="SessionLessonID" relalias="sl" relname="SessionLessonID"/>
+				</WTENTITY>
+-->	
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListQuizAnswer" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(SessionLessonID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(QuizAnswer.QuizAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(QuizAnswer.QuizQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(QuizAnswer.QuizChoiceID)"/>				
+					<WTATTRIBUTE value="ATTR(QuizAnswer.IsCorrect)"/>
+					<WTATTRIBUTE value="ATTR(QuizQuestion.Question)"/>
+					<WTATTRIBUTE value="ATTR(QuizQuestion.Explain)"/>
+					<WTATTRIBUTE value="ATTR(QuizChoice.QuizChoiceText)"/>
+					
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(QuizAnswer.SessionLessonID)" oper="equal" value="PARAM(SessionLessonID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListQuizQuestion" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(SessionLessonID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(QuizAnswer.QuizAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(QuizAnswer.QuizQuestionID)"/>
+					<WTJOIN name="QuizAnswer"/>
+					<WTCONDITION expr="ATTR(QuizAnswer.SessionLessonID)" oper="equal" value="PARAM(SessionLessonID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Grade" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(SessionLessonID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="QuizAnswerID" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="XML" name="ChoiceXML" style="GenerateDataProc.xsl" nodata="true">
+			<WTATTRIBUTE value="QuizChoiceID"/>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1911" caption="QuizAnswers" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="SessionLessonID" datatype="number"/> 
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="SessionLesson" project="ptsSessionLessonUser" class="CSessionLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SessionLessonID" direction="input" value="PARAM(SessionLessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSessionLesson" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="QuizAnswers" project="ptsQuizAnswerUser" class="CQuizAnswers">
+					<WTMETHOD name="ListQuizAnswer">
+						<WTPARAM name="SessionLessonID" direction="input" value="PARAM(SessionLessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlQuizAnswers" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Grade" value="ATTR(SessionLesson.QuizScore)" class="PageHeading"/>
+				</WTROW>
+<!-- TODO: status needs to display the label, not the id -->
+				<WTROW>
+					<WTSTATIC col="1" tag="Status" value="ATTR(SessionLesson.Status)" class="PageHeading"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+<!-- TODO: List the questions, answers, and explaination for the correct answer -->				
+				
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="QuizAnswer">
+						<WTCOLUMN width="5" align="left" valign="top" label="IsCorrect"/>
+						<WTCOLUMN width="95" align="left" valign="top" label="QuestionAnswer"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(QuizAnswer.IsCorrect)"/>
+							<WTSTATIC col="2" value="DATA(QuizAnswer.Question)"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="DATA(QuizAnswer.IsCorrect)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC col="1" merge="2" tag="YourAnswer" value="DATA(QuizAnswer.QuizChoiceText)"/>
+						</WTROW>
+<!-- not sure how to implement this yet: needs to also pull back the correct answer if the users answer was incorrect.
+		maybe link to a quiz question detail page to display the Explain field along with the correct answer?						
+						<WTROW>
+							<WTSTATIC col="1" merge="2" tag="CorrectAnswer" value="DATA(QuizAnswer.QuizChoiceText)"/>
+						</WTROW>
+-->						
+						<WTROW>
+							<WTSTATIC col="1" merge="2" tag="Explain" value="DATA(QuizAnswer.Explain)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>				
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

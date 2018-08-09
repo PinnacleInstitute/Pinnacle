@@ -1,0 +1,295 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="106" name="BinarySale" alias="bs" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="10601" name="BinarySaleID" type="number" identity="true" title="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="10602" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="10603" name="RefID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="10604" name="SaleDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="10605" name="SaleType" type="number" source="entity">
+			<WTENUM id="1" name="Sale"/>
+			<WTENUM id="2" name="Bonus"/>
+			<WTENUM id="3" name="Refund"/>
+			<WTENUM id="4" name="Expired"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="10606" name="Amount" type="currency" source="entity"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="SaleDate"/>
+		</WTINDEX>
+		<WTINDEX name="RefID">
+			<WTATTRIBUTE name="RefID"/>
+			<WTATTRIBUTE name="SaleType"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="BinarySale" entity="BinarySale" alias="bs"/>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="SaleDate" default="true"/>
+			<WTATTRIBUTE name="SaleType"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTINSERT/>
+			</WTCODEGROUP>
+			<WTSETVALUE name="NewID" value="CONST(@@IDENTITY)"/>
+			<WTSETVALUE name="PARAM(BinarySaleID)" value="NewID"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="BinarySale_AddCustom">
+					<WTPARAM name="ATTR(MemberID)" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="ATTR(SaleType)" direction="input" value="PARAM(SaleType)"/>
+					<WTPARAM name="ATTR(Amount)" direction="input" value="PARAM(Amount)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Contest.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+			<WTJOIN name="BinarySale"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===================================================================================-->
+		<WTWEBPAGE name="10601" page-width="580" action="5" page-left="0" margin-width="0" navbar="false" header="false" footer="false"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(SaleDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="BinarySales" project="ptsBinarySaleUser" class="CBinarySales">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBinarySales" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="BinarySales" project="ptsBinarySaleUser" class="CBinarySales">
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBinarySales" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="FindBinarySale" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="left"/>
+					<WTCOMBO col="1" value="ATTR(BinarySales.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="BinarySale">
+						<WTCOLUMN width="25" align="center" valign="top" label="SaleDate"/>
+						<WTCOLUMN width="25" align="center" valign="top" label="SaleType"/>
+						<WTCOLUMN width="25" align="center" valign="top" label="Amount"/>
+						<WTCOLUMN width="25" align="center" valign="top" label="RefID"/>
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(SaleDate)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="10603">
+											<WTPARAM name="BinarySaleID" value="DATA(BinarySaleID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(SaleType)"/>
+							<WTSTATIC col="3" value="DATA(Amount)"/>
+							<WTSTATIC col="4" value="DATA(RefID)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10603" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="BinarySaleID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="BinarySale" project="ptsBinarySaleUser" class="CBinarySale">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BinarySaleID" direction="input" value="PARAM(BinarySaleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBinarySale" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="BinarySale" project="ptsBinarySaleUser" class="CBinarySale">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BinarySaleID" direction="input" value="PARAM(BinarySaleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlBinarySale" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="BinarySale" project="ptsBinarySaleUser" class="CBinarySale">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="BinarySaleID" direction="input" value="PARAM(BinarySaleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="BinarySale" project="ptsBinarySaleUser" class="CBinarySale">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="BinarySaleID" direction="input" value="PARAM(BinarySaleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBinarySale" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="200" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="BinarySale" value="ATTR(BinarySale.BinarySaleID)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTTEXT col="2" value="ATTR(BinarySale.MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="RefID"/>
+					<WTTEXT col="2" value="ATTR(BinarySale.RefID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SaleDate"/>
+					<WTCOMBO col="2" value="ATTR(BinarySale.SaleDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SaleType"/>
+					<WTTEXT col="2" value="ATTR(BinarySale.SaleType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(BinarySale.Amount)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,105 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="43" name="SurveyAnswer" alias="sa" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="4301" name="SurveyAnswerID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="4302" name="SurveyQuestionID" type="number" source="entity"/>
+		<WTATTRIBUTE id="4303" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="4304" name="SurveyChoiceID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="4310" name="Answer" type="text" length="500" min="1" max="500" source="entity"/>
+		<WTATTRIBUTE id="4311" name="AnswerDate" type="date" source="entity"/>
+		
+		<!-- Non-Persist Attributes -->
+		<WTATTRIBUTE id="4315" name="SurveyID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="SurveyQuestionID">
+			<WTATTRIBUTE name="SurveyQuestionID"/>
+		</WTINDEX>
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="SurveyAnswer" entity="SurveyAnswer" alias="sa"/>
+			<WTRELATIONSHIP name="Common" entity="SurveyAnswer" alias="sa"/>
+			<WTRELATIONSHIP name="SurveyQuestion" entity="SurveyAnswer" alias="sa">
+				<WTENTITY name="SurveyQuestion" entity="SurveyQuestion" alias="sq">
+					<WTATTRIBUTE alias="sa" name="SurveyQuestionID" relalias="sq" relname="SurveyQuestionID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListSurvey" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(SurveyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.SurveyAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.SurveyQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.SurveyChoiceID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.Answer)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.AnswerDate)"/>
+					<WTJOIN name="SurveyQuestion"/>
+					<WTCONDITION expr="ATTR(SurveyQuestion.SurveyID)" oper="equal" value="PARAM(SurveyID)"/>
+					<WTCONDITION expr="ATTR(SurveyAnswer.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListComments" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(SurveyQuestionID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.SurveyAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.Answer)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.AnswerDate)"/>
+					<WTJOIN name="SurveyAnswer"/>
+					<WTCONDITION expr="ATTR(SurveyAnswer.SurveyQuestionID)" oper="equal" value="PARAM(SurveyQuestionID)"/>
+					<WTCONDITION expr="ATTR(SurveyAnswer.Answer)" oper="not-equal" value="CONST('')" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListComments_SurveyID" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(SurveyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.SurveyAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.SurveyQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.SurveyChoiceID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.Answer)"/>
+					<WTATTRIBUTE value="ATTR(SurveyAnswer.AnswerDate)"/>
+					<WTJOIN name="SurveyQuestion"/>
+					<WTCONDITION expr="ATTR(SurveyQuestion.SurveyID)" oper="equal" value="PARAM(SurveyID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+	</WTWEBPAGES>
+
+</WTROOT>

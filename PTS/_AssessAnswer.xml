@@ -1,0 +1,130 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="35" name="AssessAnswer" alias="asa" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="3501" name="AssessAnswerID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="3502" name="MemberAssessID" type="number" source="entity" required="true"/>
+		<WTATTRIBUTE id="3503" name="AssessQuestionID" type="number" source="entity" required="true"/>
+		<WTATTRIBUTE id="3504" name="AssessChoiceID" type="number" source="entity"/>
+		
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="3505" name="Discrimination" type="decimal" precision="8" length="10" source="join">
+			<WTJOIN entity="AssessQuestion" name="Discrimination"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3506" name="Difficulty" type="decimal" precision="8" length="10" source="join">
+			<WTJOIN entity="AssessQuestion" name="Difficulty"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3507" name="Guessing" type="decimal" precision="8" length="10" source="join">
+			<WTJOIN entity="AssessQuestion" name="Guessing"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3508" name="UseCount" type="number" source="join">
+			<WTJOIN entity="AssessQuestion" name="UseCount"/>
+		</WTATTRIBUTE>	
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="3510" name="Answer" type="number" source="entity"/>
+		<WTATTRIBUTE id="3511" name="AnswerDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="3512" name="AnswerText" type="text" length="500" min="1" max="500" source="entity"/>
+
+		<!-- Non-Persist Attributes -->
+		<WTATTRIBUTE id="3590" name="MemberID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="3591" name="AssessmentID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="3592" name="Grp" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="3593" name="Questions" type="text" length="50" min="1" max="50" source="entity" language="false" persist="false"/>
+		
+		<!--Indexes-->
+		<WTINDEX name="MemberAssessID">
+			<WTATTRIBUTE name="MemberAssessID"/>
+			<WTATTRIBUTE name="AssessQuestionID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="AssessAnswer" entity="AssessAnswer" alias="asa"/>
+			<WTRELATIONSHIP name="Common" entity="AssessAnswer" alias="asa">
+				<WTENTITY name="MemberAssess" entity="MemberAssess" alias="ma">
+					<WTATTRIBUTE alias="asa" name="MemberAssessID" relalias="ma" relname="MemberAssessID"/>
+				</WTENTITY>
+				<WTENTITY name="AssessQuestion" entity="AssessQuestion" alias="asq">
+					<WTATTRIBUTE alias="asa" name="AssessQuestionID" relalias="asq" relname="AssessQuestionID"/>
+				</WTENTITY>	
+			</WTRELATIONSHIP>			
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListGroup" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberAssessID)" direction="input"/>
+			<WTPARAM name="ATTR(AssessmentID)" direction="input"/>
+			<WTPARAM name="ATTR(Grp)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessChoiceID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.Answer)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AnswerDate)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AnswerText)"/>
+					<WTATTRIBUTE value="ATTR(AssessQuestion.Discrimination)"/>
+					<WTATTRIBUTE value="ATTR(AssessQuestion.Difficulty)"/>
+					<WTATTRIBUTE value="ATTR(AssessQuestion.Guessing)"/>
+					<WTATTRIBUTE value="ATTR(AssessQuestion.UseCount)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(AssessAnswer.MemberAssessID)" oper="equal" value="PARAM(MemberAssessID)"/>
+					<WTCONDITION expr="ATTR(AssessQuestion.AssessmentID)" oper="equal" value="PARAM(AssessmentID)" connector="and"/>
+					<WTCONDITION expr="ATTR(AssessQuestion.Grp)" oper="equal" value="PARAM(Grp)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListAnswers" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberAssessID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessChoiceID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.Answer)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AnswerDate)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AnswerText)"/>
+					<WTJOIN name="AssessAnswer"/>
+					<WTCONDITION expr="ATTR(AssessAnswer.MemberAssessID)" oper="equal" value="PARAM(MemberAssessID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListQuestionText" style="GenerateDataProc.xsl" template="new" nodata="true" passthru="true">
+			<WTPARAM name="ATTR(Questions)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessAnswerID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AssessChoiceID)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.Answer)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AnswerDate)"/>
+					<WTATTRIBUTE value="ATTR(AssessAnswer.AnswerText)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+	
+	
+	
+	</WTWEBPAGES>
+
+</WTROOT>

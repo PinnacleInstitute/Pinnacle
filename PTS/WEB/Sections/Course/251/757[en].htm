@@ -1,0 +1,133 @@
+<H4 align=center><FONT size=4>Using Related Tables</FONT></H4>
+<P><FONT size=3>Tables can be joined, or related, in order to access and coordinate information in all the fields of the related tables. Joining tables is a useful way to avoid the need to enter duplicate information in various, related tables. In addition, it allows you to create reports, forms, and queries from the related data tables and save them in the database file. Relating tables allows you to create smaller, more efficient tables that can be related when you need access to the data. </FONT>
+<P><FONT size=3>When you relate tables, the table from which you select the first join field is the primary table and the table to which you drag the join field is the related table. The tables must have some common fields that contain the same type of data. One of the fields in the primary table must be the primary key so that Access does not allow duplicate entries. The common fields in both tables must have the same or equivalent data types and; if they are <B>Number</B> fields, they must have the same field size. </FONT>
+<P><FONT size=3>For example, you can create a table consisting of customer names, addresses, and telephone numbers. You can also include a unique identification number for each customer, which would be the primary key in the table. You can create this number or allow Access to create it for you. You could then create a separate table consisting only of orders placed by customers. This table would also contain the field for the unique customer identification number, but not the customers' names, addresses, and telephone numbers. By relating the two tables through the common customer identification number field, the customers' names, addresses, and telephone numbers do not have to be entered for every order. </FONT>
+<P><FONT size=3>Access includes two basic types of relationships: one-to-many and one-to-one. A one-to-many relationship occurs when one record from the primary table matches many records from the related table; for example, one customer record matches many order records. A one-to-one relationship occurs when one record from the primary table matches one record from the related table. Access determines the relationship type automatically when you create the relationship.</FONT><H4 align=center><FONT size=4>Creating a Relationship</FONT></H4>
+<P><FONT size=3>You create relationships between tables or queries in the Relationships window. The Relationships window displays a graphic representation of the relationships in the database. </FONT>
+<P><FONT size=3>When you are working in the Relationships window, you can reposition the field lists so that you can view the relationships more easily. In addition, the field name representing the primary key appears in bold in the tables. All tables must be closed before you can create relationships. 
+<BR>
+<BR><IMG style="WIDTH: 329px; HEIGHT: 177px" height=177 alt=Creati99.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati99.gif" width=329 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>From the Database window, click the Relationships button 
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Creati98.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati98.gif" width=33 border=0> 
+<BR>on the Database toolbar. 
+<BR><I>The Relationships window opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the Show Table button <IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Creati97.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati97.gif" width=33 border=0> on the Relationships toolbar. 
+<BR><I>The Show Table dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the first table you want to relate. 
+<BR></FONT><I><FONT size=3>Select the "Workshop List" table. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Add. 
+<BR><I>The field list for the "Workshop List" table appears in the Relationships window.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the second table you want to relate. 
+<BR></FONT><I><FONT size=3>Select the "Workshop Registration" table 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Add. 
+<BR><I>The field list for the "Workshop Registration" table appears in the Relationships window.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Close to close the Show Table dialog box. 
+<BR><I>The Show Table dialog box closes.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the join field in the field list for the first table. 
+<BR><I>Select "WorkshopID" from the Workshop List table.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Drag the field on top of the matching field in the field list for the second table. 
+<BR>Use the Left mouse button to <I>Drag the WorkshopID field from the Workshop List table and drop it on top of the WorkshopID in the Workshop Registration table.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Create. 
+<BR><I>The Edit Relationships dialog box closes and a join line appears between the field lists.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the Close button in the Relationships window. 
+<BR><I>A Microsoft Access message box opens, asking if you want to save the changes to the layout.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Yes to save the changes. 
+<BR><I>The Relationships window closes and the tables are related.</I></FONT>
+</OL><H4 align=center><FONT size=4>Setting Referential Integrity</FONT></H4>
+<P><FONT size=3>When you create a relationship between two tables, you can set referential integrity. Referential integrity is a built-in set of rules Access uses to make sure that the relationship is valid. Referential integrity can also prevent accidental deletion or editing of data. In order to use referential integrity, the following conditions must be true: the related field in the primary table is the primary key, the related fields in both tables have the same data type, and both tables belong to the same database. </FONT>
+<P><FONT size=3>When you set referential integrity, you must observe the following three rules. First, you cannot enter data in the join field in the related table that does not have a match in the join field in the primary table. Second, you cannot delete records from the primary table if there are matching records in the related table. Third, you cannot edit primary key values in the primary table if related records exist. </FONT>
+<P><FONT size=3>However, if you want to perform the changes listed above and still maintain referential integrity, you can select the <B>Cascade Update Related Fields</B> and <B>Cascade Delete Related Records</B> options in the Edit Relationships dialog box. When either or both of these options are selected, Access makes the necessary changes to the related tables automatically to maintain referential integrity. It is recommended that these two options be used after careful consideration since the changes cannot be undone. </FONT>
+<P><FONT size=3>When the referential integrity option is activated, Access displays symbols above the join line in the Relationships window to indicate the type of relationship: one-to-one or one-to-many. The number 1 above the join line next to a field list indicates "one", while the mathematical symbol for infinity (which resembles a horizontal 8) indicates "many". 
+<BR>
+<BR><IMG style="WIDTH: 411px; HEIGHT: 440px" height=440 alt=Settin4.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Settin4.gif" width=411 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>From the Database window, click the Relationships button <IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Creati98.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati98.gif" width=33 border=0> on the Database toolbar. 
+<BR><I>The Relationships window opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the Show Table button <IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Creati97.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati97.gif" width=33 border=0> on the Relationships toolbar. 
+<BR><I>The Show Table dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the first table you want to relate. 
+<BR></FONT><I><FONT size=3>Select the "Workshop List" table. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Add. 
+<BR><I>The field list for the "Workshop List" table appears in the Relationships window.</I></FONT>
+<LI><FONT size=3>Select the second table you want to relate. 
+<BR></FONT><I><FONT size=3>Select the "Workshop Registration" table 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Add. 
+<BR><I>The field list for the "Workshop Registration" table appears in the Relationships window.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Close to close the Show Table dialog box. 
+<BR><I>The Show Table dialog box closes.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the join field in the field list for the first table. 
+<BR><I>Select "WorkshopID" from the Workshop List table.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Drag the field on top of the matching field in the field list for the second table. 
+<BR>Use the Left mouse button to <I>Drag the WorkshopID field from the Workshop List table and drop it on top of the WorkshopID in the Workshop Registration table.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the Enforce Referential Integrity option. 
+<BR><I>Click "Enforce Referential Integrity."</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Create. 
+<BR><I>The Edit Relationships dialog box closes and a join line appears between the field lists.</I></FONT>
+<LI><FONT size=3>Click the Close button in the Relationships window. 
+<BR><I>A Microsoft Access message box opens, asking if you want to save the changes to the layout.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Yes to save the changes. 
+<BR><I>The Relationships window closes and the tables are related.</I></FONT>
+</OL><H4 align=center><FONT size=4>Adding a Table in the Relationships Window</FONT></H4>
+<P><FONT size=3>You can add additional tables to the Relationships window. For example, if you have two related tables and then decide you need to access information from a third table, you can easily add the required table to the Relationships window. 
+<BR>
+<BR><IMG style="WIDTH: 441px; HEIGHT: 263px" height=263 alt=Adding5.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Adding5.gif" width=441 border=0></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Click the Show Table button on the Relationship toolbar. 
+<BR><I>The Show Table dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the table you want to add. 
+<BR><I>The table name is selected</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Add. 
+<BR><I>The table appears in the Relationships window.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select Close to close the Show Table dialog box. 
+<BR><I>The Show Table dialog box closes.</I></FONT>
+</OL>

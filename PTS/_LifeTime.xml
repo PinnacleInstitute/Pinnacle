@@ -1,0 +1,1914 @@
+<WTROOT prefix="pts" system="Pinnacle">
+
+	<WTENTITY id="120" name="LifeTime" alias="lt">
+		<!--Identity-->
+		<WTATTRIBUTE id="12001" name="LifeTimeID" type="number" identity="true" title="true" min="1" required="true" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="12095" name="Result" type="text" length="1000" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12096" name="Status" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12097" name="czDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12098" name="Quantity" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12099" name="Amount" type="number" source="entity" persist="false"/>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="LifeTime" entity="LifeTime" alias="lt"/>
+		</WTRELATIONSHIPS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Custom" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(Status)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(czDate)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(Quantity)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(Amount)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="text" length="1000"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE name="CustomList" type="List" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(Status)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(czDate)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(Quantity)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(Amount)" direction="input" required="false" passthru="true"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(LifeTime.LifeTimeID)"/>
+					<WTATTRIBUTE value="ATTR(LifeTime.Result)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+<!-- Processing - Admin Page -->
+		<!--==================================================================-->
+		<WTWEBPAGE name="12000" caption="Lifetime Processing" header="false" footer="false" navbar="false" wrapper="wrapper800"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" langfile="12000" secured="125">
+			<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Process" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Option" datatype="number"/>
+			<WTPARAM name="Result" datatype="text"/>
+
+			<WTDATATXN name="Members"/>
+			<WTDATATXN name="Lifetimes"/>
+
+			<WTINCLUDE name="Note.asp"/>
+			<WTINCLUDE name="Payout.asp"/>
+			<WTINCLUDE name="Billing.asp"/>
+			<WTINCLUDE name="Payment.asp"/>
+			<WTINCLUDE name="Wallet.asp"/>
+			<WTINCLUDE name="PaymentFile.asp"/>
+			<WTINCLUDE name="Orders.asp"/>
+
+			<WTINCLUDE name="Comm.asp"/>
+			<WTINCLUDE name="CommissionEmail.asp"/>
+			<WTINCLUDE name="DeclineEmail.asp"/>
+
+			<WTCODEGROUP>
+				<!-- ************************************************************************** -->
+				<!-- ************************************************************************** -->
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="CONST(8)"/>
+				<!-- ************************************************************************** -->
+				<!-- ************************************************************************** -->
+				<!-- Set this page to not timeout for 4 hours -->
+				<WTCUSTOM>Server.ScriptTimeout = 14400</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<!-- Disable Certain Features based on User Type -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsManagerOnly"/>
+					<WTCUSTOM>If InStr( ",2,3,5,6,11,12,13,21,22,23,24,25,26,27,29,30,31,33,34,35,37,39,40,41,42,43,44,45,46,47,48,49,", CSTR(reqProcess)+"," ) = 0 Then reqProcess = 0</WTCUSTOM>
+				</WTCODEGROUP>
+				<WTCUSTOM>
+					'Set date range to previous month
+					If reqOption = 0 Then
+					reqFromDate = CSTR(Month(reqSysDate)) + "/1/" + CSTR(Year(reqSysDate))
+					reqToDate = DateAdd( "d", -1, reqFromDate )
+					reqFromDate = DateAdd( "m", -1, reqFromDate )
+					End If
+					'Set date range to current date
+					If reqOption = 1 Then
+					reqToDate = reqSysDate
+					reqFromDate = reqSysDate
+					End If
+					'Set date range to previous month
+					If reqOption = 2 Then
+					reqToDate = CSTR(Month(reqSysDate)) + "/1/" + CSTR(Year(reqSysDate))
+					reqFromDate = DateAdd( "m", -1, reqToDate )
+					reqToDate = DateAdd( "d", -1, reqToDate )
+					End If
+					'Set date range to one month back from last Sunday
+					If reqOption = 3 Then
+					reqToDate = DateAdd( "d", -5, reqSysDate )
+					reqFromDate = DateAdd( "m", -1, reqToDate )
+					End If
+					'Set date range to 1 week back
+					If reqOption = 4 Then
+					reqToDate = DateAdd( "d", -1, reqSysDate )
+					reqFromDate = DateAdd( "d", -7, reqToDate )
+					End If
+					'Set date range to yesterday
+					If reqOption = 5 Then
+					reqFromDate = DateAdd( "d", -1, reqSysDate )
+					reqToDate = reqFromDate
+					End If
+					'Set date range to 2 days ago
+					If reqOption = 6 Then
+					reqFromDate = DateAdd( "d", -2, reqSysDate )
+					reqToDate = reqFromDate
+					End If
+					'Set date range to 3 days ago
+					If reqOption = 7 Then
+					reqFromDate = DateAdd( "d", -3, reqSysDate )
+					reqToDate = reqFromDate
+					End If
+					'Set date range to 4 days ago
+					If reqOption = 8 Then
+					reqFromDate = DateAdd( "d", -4, reqSysDate )
+					reqToDate = reqFromDate
+					End If
+					'Set date range to 5 days ago
+					If reqOption = 9 Then
+					reqFromDate = DateAdd( "d", -5, reqSysDate )
+					reqToDate = reqFromDate
+					End If
+					'Set todate to 1 week back
+					If reqOption = 11 Then
+					reqToDate = DateAdd( "d", -7, reqSysDate )
+					End If
+					'Set todate to 2 weeks back
+					If reqOption = 12 Then
+					reqToDate = DateAdd( "d", -14, reqSysDate )
+					End If
+					'Set todate to 3 weeks back
+					If reqOption = 13 Then
+					reqToDate = DateAdd( "d", -21, reqSysDate )
+					End If
+					'Set todate to 4 weeks back
+					If reqOption = 14 Then
+					reqToDate = DateAdd( "d", -28, reqSysDate )
+					End If
+					If reqOption = 15 Then
+					reqFromDate = "1/1/2013"
+					reqToDate = reqSysDate
+					End If
+				</WTCUSTOM>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(39)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(47)" connector="or"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FromDate)" oper="equal" value="CONST(&quot;&quot;)"/>
+						<WTCONDITION expr="PARAM(ToDate)" oper="equal" value="CONST(&quot;&quot;)" connector="or"/>
+						<WTERROR number="10115" message="Oops, Specify the date range to process." />
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(35)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(48)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(49)" connector="or"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ToDate)" oper="equal" value="CONST(&quot;&quot;)"/>
+						<WTERROR number="10115" message="Oops, Specify the date range to process." />
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+
+					<!-- Create Billing Tokens -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(1)"/>
+						<WTCUSTOM>
+							Result = BillingTokens()
+							aResult = Split(Result, "|")
+							reqResult = aResult(0) + " New Billing Tokens Successfully Created! (" + aResult(1) + " bad)"
+						</WTCUSTOM>
+					</WTCODEGROUP>
+
+					<!-- Create Payments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(200)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New Payments Successfully Created!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Process Order Payments for Sales Orders and email bonus recipients -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(3)"/>
+						<WTCUSTOM>
+							PaymentOwnerType = 4
+							PostProcess = 1
+							Result = ProcessPayments( reqCompanyID, PaymentOwnerType, reqSysDate, PostProcess )
+							aResult = Split(Result, "|")
+							reqResult = aResult(0) + " Payments Successfully Processed! (" + aResult(1) + " bad)"
+						</WTCUSTOM>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, reqResult">
+							<WTCONDITION expr="CONST(aResult(0))" oper="not-equal" value="CONST(0)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+
+					<!-- List Declined Token -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(4)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(101)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Declined Tokens!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List Declined Payments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(5)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(100)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(4)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Declined Payments!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Update Declined Payments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(6)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(201)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Declined Payments Updated!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Verify Bonus Qualified -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(3)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Members Qualified to Earn Bonuses!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Calculate Bonuses -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+						<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+							<WTMETHOD name="CustomCommissions">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="CommType" direction="input" value="CONST(1)"/>
+								<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+								<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTMETHOD name="TotalCommissions">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="FromDate" direction="input" value="SYS(Date)"/>
+								<WTPARAM name="Amount" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New Bonuses Created! (&quot; &amp; FormatCurrency(Amount,2) &amp; &quot;)&quot;)"/>
+						</WTOBJECT>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, reqResult">
+							<WTCONDITION expr="CONST(Count)" oper="not-equal" value="CONST(0)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+
+					<!-- Display Hidden Bonuses -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(13)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(202)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;All Hidden Bonuses Displayed!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Create Payouts -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)"/>
+						<WTOBJECT name="Payout" project="ptsPayoutUser" class="CPayout">
+							<WTMETHOD name="CompanyPayouts">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="PayDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New Payouts Created!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Payout Credits -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(22)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(4)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Payment Credits Created!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Verify Payout Qualified -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(23)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(6)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Members Qualified to Receive a Bonus Check!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Create Payout Files -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(0)"/>
+						<WTCALLSUB name="ExportWallet reqCompanyID, 12, reqToDate, -1, tmpTotal, tmpFile, tmpAmount"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(Total + tmpTotal)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/payout/&quot; + CStr(reqCompanyID) + &quot;/&quot; + tmpFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(tmpTotal) + &quot; PayQuicker eWallets (&quot; &amp; FormatCurrency(tmpAmount,2) &amp; &quot;)  &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="ExportCheck reqCompanyID, reqToDate, -1, tmpTotal, tmpFile, tmpAmount"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(Total + tmpTotal)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/payout/&quot; + CStr(reqCompanyID) + &quot;/&quot; + tmpFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(tmpTotal) + &quot; Checks (&quot; &amp; FormatCurrency(tmpAmount,2) &amp; &quot;)  &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(Total)" oper="equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;No Payouts to Export!&quot;)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, NOTE">
+							<WTCONDITION expr="CONST(Total)" oper="not-equal" value="CONST(0)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+
+					<!-- Mark Payouts Paid -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)"/>
+						<WTOBJECT name="Payout" project="ptsPayoutUser" class="CPayout">
+							<WTMETHOD name="CompanyStatus2">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="PayDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="PaidDate" direction="input" value="SYS(Date)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(-1)"/>
+								<WTPARAM name="Reference" direction="input" value="CONST(&quot;23&quot;)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Pending Payouts Marked Paid!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Display Hidden Payouts -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(26)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(203)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;All Hidden Payouts Displayed!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Recalculate Group Sales Volume and Promotions -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(27)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(1)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Group Sales Totals Recalculated!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Post sales summary -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(2)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Sales Summary Postings!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List Orphan Affiliates -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(29)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(3)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Orphaned Affiliates!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List All New eWallets to be Created -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(30)"/>
+						<WTOBJECT name="Lifetimes" project="ptsLifetimeUser" class="CLifetimes">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="Status" direction="input" value="CONST(3)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlLifetimes" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;New eWallets to be imported to iPayout in a .CSV file!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Assign New eWallets to Payout Method -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(31)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(105)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New eWallets Assigned!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Mark GCC Payment Orders Pending (in process)-->
+					<!--					
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(32)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(106)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;All New Global Cash Card orders marked pending!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+-->
+					<!-- Set All Member Alerts-->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(33)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(11)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Member Alerts Set!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Clean up Data -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(34)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(12)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Data Cleaned Up!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Export Submitted Orders -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(35)"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(0)"/>
+						<!-- Export Green Fuel Tab Orders -->
+						<WTCALLSUB name="ExportOrder reqCompanyID, 101, reqToDate, 1, tmpFile, tmpTotal, tmpAmount"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(Total + tmpTotal)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/orders/&quot; + CStr(reqCompanyID) + &quot;/&quot; + tmpFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(tmpTotal) + &quot; GFT Submitted Orders (&quot; &amp; FormatCurrency(tmpAmount,2) &amp; &quot;)  &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, NOTE">
+							<WTCONDITION expr="CONST(Total)" oper="not-equal" value="CONST(0)"/>
+						</WTCALLSUB>
+						<!-- Update These Submitted Orders to InProcess -->
+						<WTOBJECT name="SalesOrder" project="ptsSalesOrderUser" class="CSalesOrder">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(101)"/>
+								<WTPARAM name="SalesOrderID" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Export Inprocess Orders -->
+					<!--
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(36)"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(0)"/>
+						<WTCALLSUB name="ExportOrder reqCompanyID, 102, 1, tmpFile, tmpTotal, tmpAmount"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(Total + tmpTotal)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/orders/&quot; + CStr(reqCompanyID) + &quot;/&quot; + tmpFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(tmpTotal) + &quot; GFT Inprocess Orders (&quot; &amp; FormatCurrency(tmpAmount,2) &amp; &quot;)  &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="ExportOrder reqCompanyID, 102, 2, tmpFile, tmpTotal, tmpAmount"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(Total + tmpTotal)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/orders/&quot; + CStr(reqCompanyID) + &quot;/&quot; + tmpFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(tmpTotal) + &quot; Lifetime Inprocess Orders (&quot; &amp; FormatCurrency(tmpAmount,2) &amp; &quot;)  &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, NOTE">
+							<WTCONDITION expr="CONST(Total)" oper="not-equal" value="CONST(0)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+-->
+
+					<!-- Update Inprocess Orders to Complete -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(37)"/>
+						<WTOBJECT name="SalesOrder" project="ptsSalesOrderUser" class="CSalesOrder">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(102)"/>
+								<WTPARAM name="SalesOrderID" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Order Status Updated to Complete!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Update Inprocess Orders to Complete -->
+					<!--
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(38)"/>
+						<WTOBJECT name="SalesOrder" project="ptsSalesOrderUser" class="CSalesOrder">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(102)"/>
+								<WTPARAM name="SalesOrderID" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Order Status Updated to Complete!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+-->
+					<!-- Email Commissions -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(39)"/>
+						<WTCALLSUB name="CommissionEmail reqCompanyID, 0, reqFromDate, reqToDate, tmpTotal"/>
+						<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(tmpTotal &amp; &quot; Commission Emails Sent&quot;)"/>
+					</WTCODEGROUP>
+
+					<!-- Recalculate All Title Advancements -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(40)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(15)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;All Title Advancements Calculated!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+
+					<!-- Export Payment to process -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(41)"/>
+						<WTSETATTRIBUTE name="CONST(PaymentOwnerType)" value="CONST(52)"/>
+						<WTCALLSUB name="ExportPayments reqCompanyID, PaymentOwnerType, reqSysDate, CCTotal, CKTotal, CCFile, CKFile, ErrorMsg"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(ErrorMsg)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+							<WTCUSTOM>
+								response.write ErrorMsg
+								response.end
+							</WTCUSTOM>
+						</WTCODEGROUP>
+						<!-- Exported CC Payments -->
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(CCTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/Billing/&quot; + CStr(reqCompanyID) + &quot;/&quot; + CCFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(CCTotal) + &quot; CC Payments &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<!-- Exported ACH Payments -->
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(CKTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/billing/&quot; + CStr(reqCompanyID) + &quot;/&quot; + CKFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(CKTotal) + &quot; ACH Payments &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, NOTE">
+							<WTCONDITION expr="CONST(CCTotal + CKTotal)" oper="not-equal" value="CONST(0)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+
+					<!-- Update Binary Sales -->
+					<!--
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(42)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(201)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Payments Updated in the Binary Sales Volume!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+-->
+					<!-- Update Binary Counts -->
+					<!--					
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(43)"/>
+						<WTOBJECT name="Lifetime" project="ptsLifetimeUser" class="CLifetime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(301)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Binary Downline member counts Updated!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+-->
+					<!-- List Top Recruiters -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(44)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(99)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Top Recruiters!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List Top Earners -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(45)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(98)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Top Earners!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List Top Countries -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(46)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(97)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Top Countries!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Email Members with Declined Payments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(47)"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(0)"/>
+						<WTCALLSUB name="DeclineEmail reqCompanyID, 0, 0, reqFromDate, reqToDate, tmpTotal"/>
+						<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(tmpTotal &amp; &quot; Declined Payments Emailed!&quot;)"/>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<!-- Suspend Payments -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(48)"/>
+					<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+						<WTMETHOD name="Custom">
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="Status" direction="input" value="CONST(207)"/>
+							<WTPARAM name="EnrollDate" direction="input" value="PARAM(ToDate)"/>
+							<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+							<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+							<WTPARAM name="Count" direction="return" datatype="number"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Members Suspended with Declined Payments!&quot;)"/>
+					</WTOBJECT>
+				</WTCODEGROUP>
+
+				<!-- Cancel Suspended Payments -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(49)"/>
+					<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+						<WTMETHOD name="Custom">
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="Status" direction="input" value="CONST(208)"/>
+							<WTPARAM name="EnrollDate" direction="input" value="PARAM(ToDate)"/>
+							<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+							<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+							<WTPARAM name="Count" direction="return" datatype="number"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Suspended Members Cancelled with Declined Payments!&quot;)"/>
+					</WTOBJECT>
+				</WTCODEGROUP>
+
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="800" align="center"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Result)" oper="not-equal" value="CONST('')"/>
+					<WTROW margin-top="12" margin-bottom="6">
+						<WTSTATIC col="1" value="PARAM(Result)" class="PageHeading" fontcolor="blue"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="24">
+					<WTSTATIC col="1" class="PageHeading">
+						<WTSTATIC label="NotAvailable">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTSTATIC label="BillingTokens">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CreatePayments">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PaymentFile">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclinedTokens">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclinedPayments">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateDeclined">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(6)"/>
+						</WTSTATIC>
+						<WTSTATIC label="BonusQualified">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CalcBonuses">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DisplayBonuses">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(13)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CreatePayouts">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PaymentCredits">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(22)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PayoutQualified">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(23)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PayoutFile">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PayoutPaid">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DisplayPayouts">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(26)"/>
+						</WTSTATIC>
+						<WTSTATIC label="MaintainSales">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(27)"/>
+						</WTSTATIC>
+						<WTSTATIC label="MaintainSummary">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ListOrphans">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(29)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CreateWallets">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(30)"/>
+						</WTSTATIC>
+						<WTSTATIC label="AssignWallets">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(31)"/>
+						</WTSTATIC>
+						<!--
+						<WTSTATIC label="MarkGCC">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(32)"/>
+						</WTSTATIC>
+-->
+						<WTSTATIC label="SetAlerts">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(33)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CleanupData">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(34)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ExportOrdersSubmitted">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(35)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ExportOrdersInprocess">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(36)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateOrdersSubmitted">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(37)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateOrdersInprocess">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(38)"/>
+						</WTSTATIC>
+						<WTSTATIC label="EmailCommissions">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(39)"/>
+						</WTSTATIC>
+						<WTSTATIC label="TitleAdvancements">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(40)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ExportPayments">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(41)"/>
+						</WTSTATIC>
+						<!--						
+						<WTSTATIC label="UpdateBinarySales">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(42)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateBinaryCount">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(43)"/>
+						</WTSTATIC>
+-->
+						<WTSTATIC label="TopRecruiters">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(44)"/>
+						</WTSTATIC>
+						<WTSTATIC label="TopEarners">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(45)"/>
+						</WTSTATIC>
+						<WTSTATIC label="TopCountries">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(46)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclineEmail">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(47)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclineSuspend">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(48)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclineCancel">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(49)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12">
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(39)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(47)" connector="or"/>
+					<WTSTATIC col="1" label="From" align="center" />
+					<WTTEXT col="1" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true"/>
+					<WTSTATIC col="1" label="To" />
+					<WTTEXT col="1" value="PARAM(ToDate)" name="ToDate" type="date" size="8" />
+				</WTROW>
+				<WTROW margin-top="12">
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(35)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(48)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(49)" connector="or"/>
+					<WTTEXT col="1" align="center" value="PARAM(ToDate)" name="ToDate" type="date" size="8" />
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Result)" oper="not-equal" value="CONST('')"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(4)"/>
+						<WTROW margin-top="12"/>
+						<WTREPEAT entity="Member">
+							<WTROW>
+								<WTSTATIC col="1" align="left">
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Status&lt;xsl:value-of select=&quot;@status&quot;/&gt;.gif)" imgalign="absmiddle"/>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="0403" target="Member">
+												<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(financesm.gif)" alt="finances" imgalign="absmiddle">
+											<WTLINK name="0475" return="false" target="Finances">
+												<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												<WTPARAM name="Code" value="CONST(2)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;SIGNATURE/comment()&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+								</WTSTATIC>
+							</WTROW>
+						</WTREPEAT>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(5)"/>
+						<WTROW margin-top="12"/>
+						<WTREPEAT entity="Member">
+							<WTROW>
+								<WTSTATIC col="1" align="left">
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Status&lt;xsl:value-of select=&quot;@status&quot;/&gt;.gif)" imgalign="absmiddle"/>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(cashregister.gif)" alt="finances" imgalign="absmiddle">
+											<WTLINK name="0436d" return="false" target="Declines">
+												<WTPARAM name="MemberID" value="DATA(Level)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="0403" target="Member">
+												<WTPARAM name="MemberID" value="DATA(Level)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(financesm.gif)" alt="finances" imgalign="absmiddle">
+											<WTLINK name="0475" return="false" target="Finances">
+												<WTPARAM name="MemberID" value="DATA(Level)"/>
+												<WTPARAM name="Code" value="CONST(2)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;SIGNATURE/comment()&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+								</WTSTATIC>
+							</WTROW>
+						</WTREPEAT>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(29)"/>
+						<WTROW margin-top="12"/>
+						<WTREPEAT entity="Member">
+							<WTROW>
+								<WTSTATIC col="1" align="left">
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;SIGNATURE/comment()&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="0403" target="Member">
+												<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+						</WTREPEAT>
+					</WTCODEGROUP>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(44)"/>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(45)" connector="or"/>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(46)" connector="or"/>
+						<WTROW margin-top="12"/>
+						<WTREPEAT entity="Member">
+							<WTROW>
+								<WTSTATIC col="1" align="left">
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;position()&quot;/&gt;)" space="3"/>
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;SIGNATURE/comment()&quot; disable-output-escaping=&quot;yes&quot;/&gt;)" space="3"/>
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;@status&quot;/&gt;)" space="3"/>
+									<!--
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="0403" target="Member">
+												<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+-->
+								</WTSTATIC>
+							</WTROW>
+						</WTREPEAT>
+					</WTCODEGROUP>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(30)"/>
+						<WTROW margin-top="12">
+							<WTSTATIC col="1" label="eWalletHdr" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTREPEAT entity="Lifetime">
+								<WTROW>
+									<WTSTATIC col="1" value="DATA(Result)" align="left"/>
+								</WTROW>
+							</WTREPEAT>
+						</WTROW>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTBUTTON col="1" action="1" value="CONST(Process)" align="center">
+						<WTCONDITION expr="PARAM(Process)" oper="not-equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+
+
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="12000a" caption="LifeTime Processing" header="false" footer="false" navbar="false" wrapper="wrapper800"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" langfile="12000a">
+			<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Process" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Option" datatype="number"/>
+			<WTPARAM name="Result" datatype="text"/>
+
+			<WTDATATXN name="Members"/>
+			<WTDATATXN name="LifeTimes"/>
+
+			<WTINCLUDE name="Note.asp"/>
+			<WTINCLUDE name="Payout.asp"/>
+			<WTINCLUDE name="Payment.asp"/>
+			<!--			<WTINCLUDE name="Wallet.asp"/>-->
+
+			<WTCODEGROUP>
+				<!-- ************************************************************************** -->
+				<!-- ************************************************************************** -->
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="CONST(8)"/>
+				<!-- ************************************************************************** -->
+				<!-- ************************************************************************** -->
+				<!-- Set this page to not timeout for 4 hours -->
+				<WTCUSTOM>Server.ScriptTimeout = 14400</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<!-- Disable Certain Features based on User Type -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsManagerOnly"/>
+					<WTCUSTOM>If InStr( "2,3,5,6,11,12,13,21,23,24,25,26,29,33,34,41,47,48,49", CSTR(reqProcess)+"," ) = 0 Then reqProcess = 0</WTCUSTOM>
+				</WTCODEGROUP>
+				<WTCUSTOM>
+					'Set date range to previous month
+					If reqOption = 0 Then
+					reqFromDate = CSTR(Month(reqSysDate)) + "/1/" + CSTR(Year(reqSysDate))
+					reqToDate = DateAdd( "d", -1, reqFromDate )
+					reqFromDate = DateAdd( "m", -1, reqFromDate )
+					End If
+					'Set date range to current date
+					If reqOption = 1 Then
+					reqToDate = reqSysDate
+					reqFromDate = DateAdd( "m", -1, reqSysDate )
+					End If
+					'Set date range to previous month
+					If reqOption = 2 Then
+					reqToDate = CSTR(Month(reqSysDate)) + "/1/" + CSTR(Year(reqSysDate))
+					reqFromDate = DateAdd( "m", -1, reqToDate )
+					reqToDate = DateAdd( "d", -1, reqToDate )
+					End If
+					'Set date range to one month back from last Sunday
+					If reqOption = 3 Then
+					reqToDate = DateAdd( "d", -5, reqSysDate )
+					reqFromDate = DateAdd( "m", -1, reqToDate )
+					End If
+					'Set date range to one week back
+					If reqOption = 4 Then
+					reqToDate = DateAdd( "d", -1, reqSysDate )
+					reqFromDate = DateAdd( "d", -7, reqToDate )
+					End If
+				</WTCUSTOM>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(39)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(47)" connector="or"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FromDate)" oper="equal" value="CONST(&quot;&quot;)"/>
+						<WTCONDITION expr="PARAM(ToDate)" oper="equal" value="CONST(&quot;&quot;)" connector="or"/>
+						<WTERROR number="10115" message="Oops, Specify the date range to process." />
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(35)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(48)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(49)" connector="or"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ToDate)" oper="equal" value="CONST(&quot;&quot;)"/>
+						<WTERROR number="10115" message="Oops, Specify the date range to process." />
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+
+					<!-- Create Billing Tokens -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(1)"/>
+						<WTCUSTOM>
+							Result = BillingTokens()
+							aResult = Split(Result, "|")
+							reqResult = aResult(0) + " New Billing Tokens Successfully Created! (" + aResult(1) + " bad)"
+						</WTCUSTOM>
+					</WTCODEGROUP>
+
+					<!-- Create Payments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(200)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New Payments Successfully Created!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Process Payments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(3)"/>
+						<WTCUSTOM>
+							Result = ProcessPayments()
+							aResult = Split(Result, "|")
+							reqResult = aResult(0) + " Payments Successfully Processed! (" + aResult(1) + " bad)"
+						</WTCUSTOM>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, reqResult"/>
+					</WTCODEGROUP>
+
+					<!-- List Declined Token -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(4)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(101)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Declined Tokens!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List Declined Paments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(5)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(100)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(4)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Declined Payments!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Update Declined Payments -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(6)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(201)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Declined Payments Updated!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Verify Bonus Qualified -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(3)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Members Qualified to Earn Bonuses!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Calculate Bonuses -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+						<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+							<WTMETHOD name="CustomCommissions">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="CommType" direction="input" value="CONST(1)"/>
+								<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+								<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTMETHOD name="TotalCommissions">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="FromDate" direction="input" value="SYS(Date)"/>
+								<WTPARAM name="Amount" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New Bonuses Created! (&quot; &amp; FormatCurrency(Amount,2) &amp; &quot;)&quot;)"/>
+						</WTOBJECT>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, reqResult"/>
+					</WTCODEGROUP>
+
+					<!-- Display Hidden Bonuses -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(13)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(202)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;All Hidden Bonuses Displayed!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Create Payouts -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)"/>
+						<WTOBJECT name="Payout" project="ptsPayoutUser" class="CPayout">
+							<WTMETHOD name="CompanyPayouts">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="PayDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New Payouts Created!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Payout Credits -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(22)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(4)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Payment Credits Created!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Verify Payout Qualified -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(23)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(6)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Members Qualified to Receive a Bonus Check!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Create Payout Files -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(0)"/>
+						<WTCALLSUB name="ExportWallet reqCompanyID, reqToDate, 0, tmpTotal, tmpFile, tmpAmount"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(Total + tmpTotal)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/payout/&quot; + CStr(reqCompanyID) + &quot;/&quot; + tmpFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(tmpTotal) + &quot; eWallets (&quot; &amp; FormatCurrency(tmpAmount,2) &amp; &quot;)  &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="ExportCheck reqCompanyID, reqToDate, 0, tmpTotal, tmpFile, tmpAmount"/>
+						<WTSETATTRIBUTE name="CONST(Total)" value="CONST(Total + tmpTotal)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpTotal)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="CONST(URL)" value="CONST(&quot;http://www.pinnaclep.com/payout/&quot; + CStr(reqCompanyID) + &quot;/&quot; + tmpFile)"/>
+							<WTSETATTRIBUTE name="CONST(LINK)" value="CONST(&quot;&lt;a href=&quot;&quot;&quot; + URL + &quot;&quot;&quot; target=&quot;&quot;_blank&quot;&quot;&gt;&quot; + URL + &quot;&lt;/a&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(MSG)" value="CONST(CSTR(tmpTotal) + &quot; Checks (&quot; &amp; FormatCurrency(tmpAmount,2) &amp; &quot;)  &quot;)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(reqResult + MSG + LINK + &quot;&lt;br&gt;&quot;)"/>
+							<WTSETATTRIBUTE name="CONST(NOTE)" value="CONST(NOTE + MSG + URL + &quot;  &quot; + VBLF)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(Total)" oper="equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;No Payouts to Export!&quot;)"/>
+						</WTCODEGROUP>
+						<WTCALLSUB name="LogNote 38, reqCompanyID, NOTE">
+							<WTCONDITION expr="CONST(Total)" oper="not-equal" value="CONST(0)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+
+					<!-- Mark Payous Paid -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)"/>
+						<WTOBJECT name="Payout" project="ptsPayoutUser" class="CPayout">
+							<WTMETHOD name="CompanyStatus2">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="PayDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="PaidDate" direction="input" value="SYS(Date)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Reference" direction="input" value="CONST(&quot;23&quot;)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Pending Payouts Marked Paid!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Display Hidden Payouts -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(26)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(203)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;All Hidden Payouts Displayed!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Recalculate Group Sales Volume and Promotions -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(27)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(1)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Group Sales Volumes and Promotions Recalculated!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Post sales summary -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(2)"/>
+								<WTPARAM name="czDate" direction="input" value="PARAM(ToDate)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Sales Summary Postings!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List Orphan Affiliates -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(29)"/>
+						<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(3)"/>
+								<WTPARAM name="Level" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Orphaned Affiliates!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- List All New eWallets to be Created -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(30)"/>
+						<WTOBJECT name="LifeTimes" project="ptsLifeTimeUser" class="CLifeTimes">
+							<WTMETHOD name="CustomList">
+								<WTPARAM name="Status" direction="input" value="CONST(3)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlLifeTimes" direction="return" datatype="text"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;New eWallets to be imported to iPayout in a .CSV file!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Assign New eWallets to Payout Method -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(31)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(105)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; New eWallets Assigned!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Mark GCC Payment Orders Pending (in process)-->
+					<!--					
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(32)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(106)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;All New Global Cash Card orders marked pending!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+-->
+					<!-- Set All Member Alerts-->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(33)"/>
+						<WTOBJECT name="LifeTime" project="ptsLifeTimeUser" class="CLifeTime">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="Status" direction="input" value="CONST(11)"/>
+								<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(Count &amp; &quot; Member Alerts Set!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+					<!-- Clean up Data -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(34)"/>
+						<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+							<WTMETHOD name="Custom">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(12)"/>
+								<WTPARAM name="EnrollDate" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Quantity" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+								<WTPARAM name="Count" direction="return" datatype="number"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Result)" value="CONST(&quot;Data Cleaned Up!&quot;)"/>
+						</WTOBJECT>
+					</WTCODEGROUP>
+
+				</WTCODEGROUP>
+
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="800" align="center"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Result)" oper="not-equal" value="CONST('')"/>
+					<WTROW margin-top="12" margin-bottom="6">
+						<WTSTATIC col="1" value="PARAM(Result)" class="PageHeading" fontcolor="blue"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="24">
+					<WTSTATIC col="1" class="PageHeading">
+						<WTSTATIC label="NotAvailable">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTSTATIC label="BillingTokens">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CreatePayments">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PaymentFile">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclinedTokens">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclinedPayments">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateDeclined">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(6)"/>
+						</WTSTATIC>
+						<WTSTATIC label="BonusQualified">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CalcBonuses">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DisplayBonuses">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(13)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CreatePayouts">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PaymentCredits">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(22)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PayoutQualified">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(23)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PayoutFile">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PayoutPaid">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DisplayPayouts">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(26)"/>
+						</WTSTATIC>
+						<WTSTATIC label="MaintainSales">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(27)"/>
+						</WTSTATIC>
+						<WTSTATIC label="MaintainSummary">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ListOrphans">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(29)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CreateWallets">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(30)"/>
+						</WTSTATIC>
+						<WTSTATIC label="AssignWallets">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(31)"/>
+						</WTSTATIC>
+						<!--
+						<WTSTATIC label="MarkGCC">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(32)"/>
+						</WTSTATIC>
+-->
+						<WTSTATIC label="SetAlerts">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(33)"/>
+						</WTSTATIC>
+						<WTSTATIC label="CleanupData">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(34)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ExportOrdersSubmitted">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(35)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ExportOrdersInprocess">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(36)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateOrdersSubmitted">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(37)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateOrdersInprocess">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(38)"/>
+						</WTSTATIC>
+						<WTSTATIC label="EmailCommissions">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(39)"/>
+						</WTSTATIC>
+						<WTSTATIC label="TitleAdvancements">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(40)"/>
+						</WTSTATIC>
+						<WTSTATIC label="ExportPayments">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(41)"/>
+						</WTSTATIC>
+						<!--						
+						<WTSTATIC label="UpdateBinarySales">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(42)"/>
+						</WTSTATIC>
+						<WTSTATIC label="UpdateBinaryCount">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(43)"/>
+						</WTSTATIC>
+-->
+						<WTSTATIC label="TopRecruiters">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(44)"/>
+						</WTSTATIC>
+						<WTSTATIC label="TopEarners">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(45)"/>
+						</WTSTATIC>
+						<WTSTATIC label="TopCountries">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(46)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclineEmail">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(47)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclineSuspend">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(48)"/>
+						</WTSTATIC>
+						<WTSTATIC label="DeclineCancel">
+							<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(49)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12">
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(12)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(39)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(47)" connector="or"/>
+					<WTSTATIC col="1" label="From" align="center" />
+					<WTTEXT col="1" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true"/>
+					<WTSTATIC col="1" label="To" />
+					<WTTEXT col="1" value="PARAM(ToDate)" name="ToDate" type="date" size="8" />
+				</WTROW>
+				<WTROW margin-top="12">
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(11)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(21)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(24)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(25)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(35)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(28)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(48)" connector="or"/>
+					<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(49)" connector="or"/>
+					<WTTEXT col="1" align="center" value="PARAM(ToDate)" name="ToDate" type="date" size="8" />
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Result)" oper="not-equal" value="CONST('')"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(4)"/>
+						<WTROW margin-top="12"/>
+						<WTREPEAT entity="Member">
+							<WTROW>
+								<WTSTATIC col="1" align="left">
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Status&lt;xsl:value-of select=&quot;@status&quot;/&gt;.gif)" imgalign="absmiddle"/>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="0403" target="Member">
+												<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(financesm.gif)" alt="finances" imgalign="absmiddle">
+											<WTLINK name="0475" return="false" target="Finances">
+												<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												<WTPARAM name="Code" value="CONST(2)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;SIGNATURE/comment()&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+								</WTSTATIC>
+							</WTROW>
+						</WTREPEAT>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(5)"/>
+						<WTROW margin-top="12"/>
+						<WTREPEAT entity="Member">
+							<WTROW>
+								<WTSTATIC col="1" align="left">
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Status&lt;xsl:value-of select=&quot;@status&quot;/&gt;.gif)" imgalign="absmiddle"/>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="0403" target="Member">
+												<WTPARAM name="MemberID" value="DATA(Level)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(financesm.gif)" alt="finances" imgalign="absmiddle">
+											<WTLINK name="0475" return="false" target="Finances">
+												<WTPARAM name="MemberID" value="DATA(Level)"/>
+												<WTPARAM name="Code" value="CONST(2)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;SIGNATURE/comment()&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+								</WTSTATIC>
+							</WTROW>
+						</WTREPEAT>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(29)"/>
+						<WTROW margin-top="12"/>
+						<WTREPEAT entity="Member">
+							<WTROW>
+								<WTSTATIC col="1" align="left">
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;SIGNATURE/comment()&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="0403" target="Member">
+												<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Popup" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+						</WTREPEAT>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Process)" oper="equal" value="CONST(30)"/>
+						<WTROW margin-top="12">
+							<WTSTATIC col="1" label="eWalletHdr" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTREPEAT entity="LifeTime">
+								<WTROW>
+									<WTSTATIC col="1" value="DATA(Result)" align="left"/>
+								</WTROW>
+							</WTREPEAT>
+						</WTROW>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTBUTTON col="1" action="1" value="CONST(Process)" align="center">
+						<WTCONDITION expr="PARAM(Process)" oper="not-equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+
+	</WTWEBPAGES>
+</WTROOT>

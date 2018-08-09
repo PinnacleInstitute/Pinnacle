@@ -1,0 +1,40 @@
+Sorting and filtering allow you to view records in a table in a different way either by reordering all of the records in the table or view only those records in a table that meet certain criteria that you specify.
+<P><B> Sorting</B>  <IMG height=20 alt="[sort buttons]" src="http://www.fgcu.edu/support/office2000/access/images/sortbuttons.gif" width=43 align=absMiddle border=1>
+<P>You may want to view the records in a table in a different order than they appear such as sorting by a date or in alphabetical order, for example. Follow these steps to execute a simple sort of records in a table based on the values of one field:
+<OL>
+<LI>In table view, place the cursor in the column that you want to sort by. 
+<LI>Select <B>Records|Sort|Sort Ascending</B> or <B>Records|Sort|Sort Descending</B> from the menu bar or click the <B>Sort Ascending</B> or <B>Sort Descending</B> buttons on the toolbar. 
+</OL>
+<P>To sort by more than one column (such as sorting by date and then sorting records with the same date alphabetically), highlight the columns by clicking and dragging the mouse over the field labels and select one of the sort methods stated above.
+<P><B> Filter by Selection</B>  <IMG height=20 alt="[Filter by Selection button]" src="http://www.fgcu.edu/support/office2000/access/images/filterbyselectionicon.gif" width=21 align=absMiddle border=1>
+<P>This feature will filter records that contain identical data values in a given field such as filtering out all of the records that have the value "Smith" in a name field. To Filter by Selection, place the cursor in the field that you want to filter the other records by and click the <B>Filter by Selection</B> button on the toolbar or select <B>Records|Filter|Filter By Selection</B> from the menu bar. In the example below, the cursor is placed in the City field of the second record that displays the value "Ft. Myers" so the filtered table will show only the records where the city is Ft. Myers.
+<P align=center><IMG height=224 alt="[sample datasheet]" src="http://www.fgcu.edu/support/office2000/access/images/datasheetsample.gif" width=523 border=1>
+<P><B> Filter by Form</B>  <IMG height=20 alt="[Filter by Form button]" src="http://www.fgcu.edu/support/office2000/access/images/filterbyformicon.gif" width=22 align=absMiddle border=1>
+<P>If the table is large, it may be difficult to find the record that contains the value you would like to filter by so using Filter by Form may be advantageous instead. This method creates a blank version of the table with drop-down menus for each field that each contain the values found in the records of that field. Under the default <B>Look for</B> tab of the Filter by Form window, click in the field to enter the filter criteria. To specify an alternate criteria if records may contain one of two specified values, click the <B>Or</B> tab at the bottom of the window and select another criteria from the drop-down menu. More <B>Or</B> tabs will appear after one criteria is set to allow you to add more alternate criteria for the filter. After you have selected all of the criteria you want to filter, click the <B>Apply Filter</B> button <IMG height=20 alt="[Apply Filter button]" src="http://www.fgcu.edu/support/office2000/access/images/applyfiltericon.gif" width=21 align=textTop border=1> on the toolbar.
+<P align=center><IMG height=170 alt="[Filter by Form]" src="http://www.fgcu.edu/support/office2000/access/images/filterbyform.gif" width=503 border=1>
+<P>The following methods can be used to select records based on the record selected by that do not have exactly the same value. Type these formats into the field where the drop-down menu appears instead of selecting an absolute value.
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" align=center border=1>
+<TBODY>
+<TR align=middle bgColor=#d7dfee>
+<TD colSpan=2><B>Filter by Form</B></TD>
+</TR><TR align=middle>
+<TD><B>Format</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR vAlign=top>
+<TD bgColor=#ffffff><B>Like "*Street"</B></TD>
+<TD bgColor=#ffffff>Selects all records that end with "Street"</TD>
+</TR><TR vAlign=top>
+<TD bgColor=#ffffff><B>&lt;="G"</B></TD>
+<TD bgColor=#ffffff>Selects all records that begin with the letters A through G</TD>
+</TR><TR vAlign=top>
+<TD bgColor=#ffffff><B>&gt;1/1/00</B></TD>
+<TD bgColor=#ffffff>Selects all dates since 1/1/00</TD>
+</TR><TR vAlign=top>
+<TD bgColor=#ffffff><B>&lt;&gt; 0</B></TD>
+<TD bgColor=#ffffff>Selects all records not equal to zero</TD>
+</TR></TBODY></TABLE>
+<P><B> Saving A Filter</B>
+<P>The filtered contents of a table can be saved as a query by selecting <B>File|Save As Query</B> from the menu bar. Enter a name for the query and click <B>OK</B>. The query is now saved within the database.
+<P align=center><IMG height=187 alt="[Save As Query window]" src="http://www.fgcu.edu/support/office2000/access/images/filterbyformsave.gif" width=523>
+<P><B> Remove a Filter</B>  <IMG height=24 alt="[Remove a Filter button]" src="http://www.fgcu.edu/support/office2000/access/images/removefiltericon.gif" width=27 align=absMiddle>
+<P>To view all records in a table again, click the depressed <B>Apply Filter</B> toggle button on the toolbar.

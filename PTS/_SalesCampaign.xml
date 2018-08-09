@@ -1,0 +1,1205 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="77" name="SalesCampaign" alias="slc" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="7701" name="SalesCampaignID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="7702" name="CompanyID" type="number" required="true" source="entity"/>
+		<WTATTRIBUTE id="7703" name="GroupID" type="number" source="entity" />
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="7705" name="SalesCampaignName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="7706" name="Seq" type="number" source="entity"/>
+		<WTATTRIBUTE id="7707" name="IsCopyURL" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="7708" name="CopyURL" type="text" length="500" source="entity" language="false"/>				
+		<WTATTRIBUTE id="7709" name="Result" type="text" length="20" source="entity"/>				
+
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="Seq"/>
+		</WTINDEX>
+		<WTINDEX name="GroupID">
+			<WTATTRIBUTE name="GroupID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="SalesCampaign" entity="SalesCampaign" alias="slc"/>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="SalesCampaignName" contains="true" default="true"/>
+			<WTATTRIBUTE name="SalesCampaignID"/>
+			<WTATTRIBUTE name="GroupID"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Copy"  type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(SalesCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>   <!-- Copy SalesCampaignID-->
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTCODEGROUP>
+				<WTPROCEDURE name="SalesStep_DeleteSalesCampaign">
+					<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)" />
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="SalesCampaign" lock="true" />
+					<WTCONDITION expr="ATTR(SalesCampaignID)" oper="equal" value="PARAM(SalesCampaignID)" />
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name="" />
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="LeadCampaign"/>
+			<WTCONDITION expr="ATTR(SalesCampaign.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and" />
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompany" enumname="EnumUserCompany" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>	
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompany" style="GenerateDataProc.xsl" column="SalesCampaignName" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>	
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(SalesCampaign.SalesCampaignID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(SalesCampaign.SalesCampaignName)"/>
+					<WTJOIN name="SalesCampaign"/>
+					<WTCONDITION expr="ATTR(SalesCampaign.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(SalesCampaign.Seq)" oper="greater-equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)" connector="or" paren="end"/>
+					<WTORDER name="ATTR(SalesCampaign.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompanyResult" enumname="EnumUserCompanyResult" style="GenerateDataProc.xsl" blankrow="false" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>	
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompanyResult" style="GenerateDataProc.xsl" column="Result" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>	
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(SalesCampaign.SalesCampaignID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(SalesCampaign.Result)"/>
+					<WTJOIN name="SalesCampaign"/>
+					<WTCONDITION expr="ATTR(SalesCampaign.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(SalesCampaign.Seq)" oper="greater-equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="ATTR(SalesCampaign.Result)" oper="not-equal" value="CONST('')" connector="and"/>
+					<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)" connector="and" paren="end"/>
+					<WTORDER name="ATTR(SalesCampaign.Result)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.SalesCampaignID)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.SalesCampaignName)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.Seq)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.IsCopyURL)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.CopyURL)"/>
+					<WTJOIN name="SalesCampaign"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(SalesCampaign.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListGroup" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(GroupID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.SalesCampaignID)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.SalesCampaignName)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.Seq)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.IsCopyURL)"/>
+					<WTATTRIBUTE value="ATTR(SalesCampaign.CopyURL)"/>
+					<WTJOIN name="SalesCampaign"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)"/>
+					<WTORDER name="ATTR(SalesCampaign.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7701" caption="Find" header="false" footer="false" navbar="false" action="5" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61">
+		<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+			</WTSETATTRIBUTE>
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(SalesCampaignName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)" />
+			</WTSETATTRIBUTE>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)" />
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)" />
+				<WTOBJECT name="SalesCampaigns" project="ptsSalesCampaignUser" class="CSalesCampaigns">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesCampaigns" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(14)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark" />
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="8101" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)" />
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)" />
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)" />
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)" />
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)" />
+			</WTACTION>
+
+			<WTOBJECT name="SalesCampaigns" project="ptsSalesCampaignUser" class="CSalesCampaigns">
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text" />
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)" />
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)" />
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)" />
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)" />
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlSalesCampaigns" direction="return" datatype="text" />
+					<WTPARAM name="Option" direction="input" value="CONST(15)" />
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)" />
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text" />
+				</WTMETHOD>
+			</WTOBJECT>
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left" />
+
+				<WTSTATIC label="Traffic"/>
+				<WTSTATIC label="Usage"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left" />
+						<WTCOLUMN width="300" align="right" />
+						<WTROW>
+							<WTSTATIC col="1" label="SalesCampaigns" class="PageHeading" align="left"/>
+							<WTSTATIC col="2" bold="true" align="right">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="NewSalesCampaign">
+										<WTLINK name="7702">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(SalesCampaigns.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+<!--					<WTBUTTON col="1" action="3" value="CONST(Return)" btnclass="smbutton"/>-->
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="SalesCampaign">
+						<WTCOLUMN width="10" align="center" valign="top" label="Seq" />
+						<WTCOLUMN width="70" align="left" valign="top" label="SalesCampaignName" />
+						<WTCOLUMN width="20" align="center" valign="top" label="GroupID" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(SalesCampaign.Seq)" />
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(SalesCampaign.SalesCampaignName)" space="1"/>
+								<WTSTATIC value="CONST((#&lt;xsl:value-of select=&quot;@salescampaignid&quot;/&gt;))" fontcolor="purple"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="7703">
+											<WTPARAM name="SalesCampaignID" value="DATA(SalesCampaignID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(SalesCampaign.GroupID)" />
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7702" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+			<WTPARAM name="CopySalesCampaignID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTSUB name="LoadList">
+				<WTGETCACHE name="CONST(tmpGroupID)" value="GROUPID"/>
+				<WTOBJECT name="SalesCampaigns" project="ptsSalesCampaignUser" class="CSalesCampaigns">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlSalesCampaigns" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="GroupID" direction="input" value="PARAM(GroupID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesCampaign" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(GroupID)" value="PARAM(GroupID)">
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="SalesCampaignID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Copy">
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="PARAM(CopySalesCampaignID)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTPARAM name="SalesCampaignID" direction="input" value="CONST(SalesCampaignID)"/>
+						<WTPARAM name="CompanyID" direction="input"  value="PARAM(CopySalesCampaignID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSalesCampaign" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqCopySalesCampaignID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\SalesCampaign&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(SalesCampaignID &amp; &quot;.htm&quot;)"/>
+					<WTMETHOD name="Save"/>
+				</WTOBJECT>
+
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="SetCampaign()">
+				var obj = document.getElementById('FromSalesCampaign');
+				var idx = obj.selectedIndex;
+				document.getElementById('CopySalesCampaignID').value = obj.options[idx].value;
+			    </WTFUNCTION>  
+				<WTFUNCTION name="ViewCampaign()">
+				var id = document.getElementById('CopySalesCampaignID').value;
+				if( id != 0 )
+				{
+					var url, win;
+					url = "7705.asp?SalesCampaignID=" + id;
+					win = window.open(url,'Preview');
+					win.focus();
+				}
+			    </WTFUNCTION>  
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewSalesCampaign" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="left" label="NewSalesCampaignText" class="prompt" />
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesCampaignName"/>
+					<WTTEXT col="2" value="ATTR(SalesCampaign.SalesCampaignName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(SalesCampaign.Seq)" size="2" class="prompt"/>
+					<WTSTATIC col="2" label="InactiveSeq" class="prompt"/>
+				</WTROW>
+<!--				
+				<WTROW>
+					<WTSTATIC col="1" tag="Result"/>
+					<WTTEXT col="2" value="ATTR(SalesCampaign.Result)"/>
+				</WTROW>
+-->				
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="CopyHelp" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CopySalesCampaign" align="center"/>
+					<WTTEXT col="1" value="PARAM(CopySalesCampaignID)" size="3"/>
+					<WTSTATIC col="1" label="from"/>
+					<WTCOMBO col="1" name="FromSalesCampaign" datapath="/DATA/TXN/PTSSALESCAMPAIGNS/ENUM">
+						<WTCHANGE>SetCampaign()</WTCHANGE>
+					</WTCOMBO>
+					<WTBUTTON col="1" value="CONST(Preview)" btnclass="smbutton">
+						<WTCLICK>ViewCampaign()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7703" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="SalesCampaignID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesCampaign" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="SalesSteps" project="ptsSalesStepUser" class="CSalesSteps">
+					<WTMETHOD name="List">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesSteps" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqSalesCampaignID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\SalesCampaign&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTSUB name="UpdateSalesCampaign">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSalesCampaign" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateSalesCampaign"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesCampaign" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="EditPage" type="Update">
+				<WTCALLSUB name="UpdateSalesCampaign"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="7704" nolocaldata="true">
+						<WTPARAM name="SalesCampaignID" value="PARAM(SalesCampaignID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="MailTemplates" type="Update">
+				<WTCALLSUB name="UpdateSalesCampaign"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="9301" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Category" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="PageType" value="CONST(3)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTSTATIC label="IsBoardFalse"/>
+				<WTSTATIC label="IsBoardTrue"/>
+				<WTSTATIC label="EmailProspect"/>
+				<WTSTATIC label="EmailMember"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="SalesCampaign" value="ATTR(SalesCampaign.SalesCampaignName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+<!--				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="left" label="SalesCampaignText" class="prompt" />
+				</WTROW>
+-->
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesCampaignID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(SalesCampaign.SalesCampaignID)" bold="true"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="CompanyID"/>
+						<WTTEXT col="2" value="ATTR(SalesCampaign.CompanyID)" size="3"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="GroupID"/>
+						<WTTEXT col="2" value="ATTR(SalesCampaign.GroupID)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(SalesCampaign.CompanyID)"/>
+					<WTHIDDEN value="ATTR(SalesCampaign.GroupID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesCampaignName"/>
+					<WTTEXT col="2" value="ATTR(SalesCampaign.SalesCampaignName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(SalesCampaign.Seq)" size="2" class="prompt"/>
+					<WTSTATIC col="2" label="InactiveSeq" class="prompt"/>
+				</WTROW>
+<!--				
+				<WTROW>
+					<WTSTATIC col="1" tag="Result"/>
+					<WTTEXT col="2" value="ATTR(SalesCampaign.Result)"/>
+				</WTROW>
+-->				
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" align="left" label="CopyURLText" class="prompt" />
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTCHECK col="1" merge="2" value="ATTR(SalesCampaign.IsCopyURL)" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTMEMO col="1" merge="2" align="left" value="ATTR(SalesCampaign.CopyURL)" cols="72" rows="4"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" align="center" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" align="center" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" align="center" action="5" value="CONST(EditDescription)">
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" align="center" action="6" value="CONST(MailTemplates)">
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" align="center" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" label="SalesSteps" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" bold="true" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewSalesStep">
+								<WTLINK name="7802">
+									<WTPARAM name="SalesCampaignID" value="PARAM(SalesCampaignID)"/>
+									<WTPARAM name="CompanyID" value="ATTR(SalesCampaign.CompanyID)"/>
+									<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="SalesStep">
+						<WTCOLUMN width="5" align="center" valign="top" label="#"/>
+						<WTCOLUMN width="30" align="left" valign="top" label="SalesStepName"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Length"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Milestone"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Board"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Rate"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Auto"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Delay"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Next"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(SalesStep.Seq)"/>
+							<WTSTATIC col="2" value="DATA(SalesStep.SalesStepName)">
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="7803">
+											<WTPARAM name="SalesStepID" value="DATA(SalesStep.SalesStepID)"/>
+											<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(SalesStep.Length)"/>
+							<WTSTATIC col="4" value="DATA(SalesStep.DateNo)"/>
+							<WTSTATIC col="5" value="DATA(SalesStep.IsBoard)" type="yesno"/>
+							<WTSTATIC col="6" value="DATA(SalesStep.BoardRate)"/>
+							<WTSTATIC col="7" value="DATA(SalesStep.AutoStep)" enum="true"/>
+							<WTSTATIC col="8" value="DATA(SalesStep.Delay)"/>
+							<WTSTATIC col="9" value="DATA(SalesStep.NextStep)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="8" value="DATA(SalesStep.Description)" align="left" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="SalesStep">
+						<WTCOLUMN width="5" align="center" valign="top" label="#"/>
+						<WTCOLUMN width="35" align="left" valign="top" label="SalesStepName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Length"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Milestone"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Board"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Rate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(SalesStep.Seq)"/>
+							<WTSTATIC col="2" value="DATA(SalesStep.SalesStepName)">
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="7803">
+											<WTPARAM name="SalesStepID" value="DATA(SalesStep.SalesStepID)"/>
+											<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(SalesStep.Length)"/>
+							<WTSTATIC col="4" value="DATA(SalesStep.DateNo)"/>
+							<WTSTATIC col="5" value="DATA(SalesStep.IsBoard)" type="yesno"/>
+							<WTSTATIC col="6" value="DATA(SalesStep.BoardRate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="5" value="DATA(SalesStep.Description)" align="left" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					<WTSTATIC col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="7704" caption="Sales Campaign Description" header="false" footer="false" navbar="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="SalesCampaignID" datatype="number"/>
+
+			<WTSUB name="LoadSalesCampaign">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesCampaign" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqSalesCampaignID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\SalesCampaign&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateSalesCampaign">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqSalesCampaignID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\SalesCampaign&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadSalesCampaign"/>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateSalesCampaign"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" value="ATTR(SalesCampaign.SalesCampaignName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="72" rows="30" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="7705" caption="Sales Campaign Description" header="false " navbar="false" footer="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="SalesCampaignID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="SYS(CompanyID)" value="PARAM(CompanyID)">
+					<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+			
+			<WTSUB name="LoadSalesCampaign">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesCampaign" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="SalesSteps" project="ptsSalesStepUser" class="CSalesSteps">
+					<WTMETHOD name="List">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesSteps" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqSalesCampaignID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\SalesCampaign&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadSalesCampaign"/>
+			</WTACTION>
+			
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="200" align="right"/>
+				<WTCOLUMN width="450" align="left"/>
+				
+				<WTSTATIC label="IsBoardFalse"/>
+				<WTSTATIC label="IsBoardTrue"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="PreviewSalesCampaign" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesCampaignID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(SalesCampaign.SalesCampaignID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesCampaignName" height="18"/>
+					<WTSTATIC col="2" value="ATTR(SalesCampaign.SalesCampaignName)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq" height="18"/>
+					<WTSTATIC col="2" value="ATTR(SalesCampaign.Seq)" bold="true"/>
+				</WTROW>
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" merge="2" label="SalesSteps" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="SalesStep">
+						<WTCOLUMN width="5" align="center" valign="top" label="#"/>
+						<WTCOLUMN width="35" align="left" valign="top" label="SalesStepName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Length"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Milestone"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Board"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Rate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(SalesStep.Seq)"/>
+							<WTSTATIC col="2" value="DATA(SalesStep.SalesStepName)"/>
+							<WTSTATIC col="3" value="DATA(SalesStep.Length)"/>
+							<WTSTATIC col="4" value="DATA(SalesStep.DateNo)"/>
+							<WTSTATIC col="5" value="DATA(SalesStep.IsBoard)" type="yesno"/>
+							<WTSTATIC col="6" value="DATA(SalesStep.BoardRate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="5" value="DATA(SalesStep.Description)" align="left" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="7706" caption="Marketing Strategy" header="false" footer="false" navbar="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSUB name="LoadSalesCampaign">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;MarketingStrategy.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; &amp; reqCompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(Len(Trim(.Data)))" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company&quot;)"/>
+						<WTMETHOD name="Load"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateSalesCampaign">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;MarketingStrategy.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; &amp; reqCompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadSalesCampaign"/>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateSalesCampaign"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="90" rows="30" htmleditor="editor_simple" embedhtml="true"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="7707" caption="Marketing Strategy" header="false" footer="false" navbar="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotStrategy" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadSalesCampaign">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;MarketingStrategy.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; &amp; reqCompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadSalesCampaign"/>
+			</WTACTION>
+			
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7711" caption="Sales Campaigns" header="false" footer="false" navbar="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="SalesCampaigns" project="ptsSalesCampaignUser" class="CSalesCampaigns">
+					<WTMETHOD name="ListGroup">
+						<WTPARAM name="GroupID" direction="input" value="PARAM(GroupID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesCampaigns" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" class="PageHeading" align="left">
+						<WTSTATIC label="SalesCampaigns"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-GRPSALESCAMPAIGNS)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+					<WTSTATIC col="2" bold="true" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewSalesCampaign">
+								<WTLINK name="7702">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="SalesCampaignsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="SalesCampaign">
+						<WTCOLUMN width="15" align="center" valign="top" label="Seq"/>
+						<WTCOLUMN width="85" align="left" valign="top" label="SalesCampaignName"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(SalesCampaign.Seq)"/>
+							<WTSTATIC col="2" value="DATA(SalesCampaign.SalesCampaignName)">
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="7703">
+											<WTPARAM name="SalesCampaignID" value="DATA(SalesCampaignID)"/>
+											<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="2" action="3" value="CONST(Return)"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

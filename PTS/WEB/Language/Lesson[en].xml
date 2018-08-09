@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="Lesson">Lesson</LABEL>
+	<LABEL name="Lessons">Lessons</LABEL>
+	<LABEL name="NewLesson">Add New Lesson</LABEL>
+	<LABEL name="FindLesson">Lessons</LABEL>
+	<LABEL name="LessonID">Lesson</LABEL>
+	<LABEL name="CourseID">Course #</LABEL>
+	<LABEL name="CourseName">Course</LABEL>
+	<LABEL name="LessonName">Lesson Name</LABEL>
+	<LABEL name="Description">Description</LABEL>
+	<LABEL name="Status">Status</LABEL>
+	<LABEL name="LessonLength">Length</LABEL>
+	<LABEL name="Seq">Lesson Order</LABEL>
+	<LABEL name="MediaURL">Media URL</LABEL>
+	<LABEL name="MediaType">Media Type</LABEL>
+	<LABEL name="MediaLength">Media Length</LABEL>
+	<LABEL name="MediaWidth">Media Width</LABEL>
+	<LABEL name="MediaHeight">Media Height</LABEL>
+	<LABEL name="Content">Content Layout</LABEL>
+	<LABEL name="Quiz">Quiz</LABEL>
+	<LABEL name="QuizLimit">Quiz Limitations</LABEL>
+	<LABEL name="QuizLength">Number of Questions</LABEL>
+	<LABEL name="PassingGrade">Passing Grade</LABEL>
+	<LABEL name="QuizWeight">Quiz Weight</LABEL>
+	<LABEL name="IsPassQuiz">This lesson is only available if the previous lesson quiz was passed.</LABEL>
+	<LABEL name="InActive">Inactive</LABEL>
+	<LABEL name="Active">Active</LABEL>
+	<LABEL name="Video">Video</LABEL>
+	<LABEL name="Audio">Audio</LABEL>
+	<LABEL name="Link">Link</LABEL>
+	<LABEL name="Embed">Embed</LABEL>
+	<LABEL name="NoContent">Don't Display Lesson Content</LABEL>
+	<LABEL name="ContentAbove">Place Lesson Content Above Additional Content</LABEL>
+	<LABEL name="ContentBelow">Place Lesson Content Below Additional Content</LABEL>
+	<LABEL name="ContentBoth">Place Lesson Content Above and Below Additional Content</LABEL>
+	<LABEL name="NoQuiz">No Quiz for this Lesson</LABEL>
+	<LABEL name="HasQuiz">This lesson has a Quiz</LABEL>
+	<LABEL name="AutoQuiz">Automatically go to the Quiz</LABEL>
+	<LABEL name="NoRetake">No Retakes</LABEL>
+	<LABEL name="NoAnswer">No Answers</LABEL>
+	<LABEL name="IsPassQuizTrue">Yes</LABEL>
+	<LABEL name="IsPassQuizFalse">No</LABEL>
+	<LABEL name="EditLessonText">LESSON NAME AND DESCRIPTION:</LABEL>
+	<LABEL name="InMinutes">(in minutes)</LABEL>
+	<LABEL name="ZeroMinutes">(0 = NO lesson content)</LABEL>
+	<LABEL name="HasContentText">CONTENT LAYOUT: Select how the Lesson Content and Additional Content are displayed.</LABEL>
+	<LABEL name="LessonText">LESSON CONTENT: can be professionally formatted with the editor below that has functionality similar to Microsoft Word.
+	For Help -- see Frequently Asked Questions or click help in the editor.</LABEL>
+	<LABEL name="LessonMediaText">ADDITIONAL CONTENT: This Lesson may include additional multimedia content -- select video, audio or a link to a web page.
+	If the Lesson is a link to a web page, select the "Link" media type and specify the full URL including HTTP://.
+	To include video and audio content -- contact Pinnacle for file conversion and uploading.</LABEL>
+	<LABEL name="MediaWidthText">Specify an optional width and height for the embedded media. Leave width and height to zero for default width and height.</LABEL>
+	<LABEL name="LessonQuizText">OPTIONAL LESSON QUIZ: If this Lesson includes a Quiz -- select the quiz option below, specify the passing grade percentage, and the weight of this quiz grade on the final course grade.
+	Set the Quiz weight to zero if the quiz does not apply towards the final course grade.</LABEL>
+	<LABEL name="Percent">%</LABEL>
+	<LABEL name="MyAttachmentsText">Click the Document name to edit or click the "Add New Document" link on the right to attach a file to this lesson.</LABEL>
+	<LABEL name="NoAttachments">Click the "Add New Document" link on the right to attach a file to this lesson.</LABEL>
+	<LABEL name="NewAttachment">Add New Document</LABEL>
+	<LABEL name="AttachName">Name</LABEL>
+	<LABEL name="File">Attached File</LABEL>
+	<LABEL name="AttachSize">Size</LABEL>
+	<LABEL name="AttachDate">Date</LABEL>
+	<LABEL name="Attachments">Attachments</LABEL>
+	<LABEL name="NewHomework">Add New Homework</LABEL>
+	<LABEL name="Homework">Homework Assignments</LABEL>
+	<LABEL name="HomeworkSeq">Order</LABEL>
+	<LABEL name="Weight">Weight</LABEL>
+	<LABEL name="IsGrade">Grade?</LABEL>
+	<LABEL name="No">No</LABEL>
+	<LABEL name="Yes">Yes</LABEL>
+	<LABEL name="FAQ">FAQ</LABEL>
+	<LABEL name="LessonContentText">The Lesson Web Page can be professionally formatted with the editor below that has functionality similar to Microsoft Word.
+	Select the "Image Manager" or "File Manager" buttons below to view or upload images or files to be used in the Lesson Web Page.
+	Select the "Quiz Questions" button below to view or edit the quiz for this lesson. View the Course details, Lesson details, or the Frequently Asked Questions with the links above. Click the "Update" button to save your lesson web page.</LABEL>
+	<LABEL name="ImageManager">Image Manager</LABEL>
+	<LABEL name="ReturnToLesson">Return To Lesson Web Page</LABEL>
+	<LABEL name="ReturnToLessons">Return To Lessons</LABEL>
+	<LABEL name="UploadImagesText">To include graphics in your lessons -- click "Browse" to select an image
+	 file from your computer, then click "Submit". See Frequently Asked Questions for help on how to include graphics in the Lesson Editor. The files must have a "jpg" or "gif" file extension and are limited to 50K in file size, although the file size should be minimized to prevent users from having to wait for long file downloads.</LABEL>
+	<LABEL name="UploadedImages">The following image files have already been uploaded. Click on the filename to preview the image or delete to remove the image.  The link to the uploaded image for your lesson content is displayed above.</LABEL>
+	<LABEL name="FileManager">File Manager</LABEL>
+	<LABEL name="UploadLibraryText">To attach downloadable reference materials to your lessons -- click "Browse" to select a file from your computer, then click "Submit".  
+	See Frequently Asked Questions for help on how to include links to downloadable files in the Lesson Editor.
+	Please use the Image Manager to upload graphic files.
+	  The files can have any extension and are unlimited in file size, although the file size should be minimized to 
+	  prevent users from having to wait for long file downloads.</LABEL>
+	<LABEL name="UploadedLibrary">The following files have already been uploaded. Click on delete to remove the file.</LABEL>
+	<LABEL name="MyLessonsText">To edit lesson -- click lesson name.  To edit quiz -- click "quiz".</LABEL>
+	<LABEL name="NoLessons">To add a Lesson select the "Add New Lesson" link in the upper right hand corner of this page.</LABEL>
+	<LABEL name="Order">Order</LABEL>
+	<LABEL name="ImageManagerText">If you would like to include graphics in your lessons -- they must be uploaded with the Image Manager.  You can insert the uploaded graphics with the Lesson Editor.</LABEL>
+	<LABEL name="Name">Name</LABEL>
+	<LABEL name="Course">Course</LABEL>
+	<LABEL name="Preview">Preview Lesson</LABEL>
+	<LABEL name="EditQuiz">Edit Quiz</LABEL>
+	<LABEL name="QuizQuestions">Quiz Questions</LABEL>
+	<LABEL name="Submit">Submit</LABEL>
+</LANGUAGE>

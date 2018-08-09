@@ -1,0 +1,436 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="27" name="QuestionType" alias="qtl" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="2701" name="QuestionTypeID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="2702" name="CompanyID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="2703" name="QuestionTypeName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="2704" name="Seq" type="number" min="1" source="entity" seq="10"/>
+		<WTATTRIBUTE id="2705" name="UserType" type="number" source="entity">
+      <WTENUM id="-2" name="UserTypeCustom2"/>
+      <WTENUM id="-1" name="UserTypeCustom1"/>
+      <WTENUM id="1" name="UserTypePublic"/>
+      <WTENUM id="2" name="UserTypeFree"/>
+      <WTENUM id="3" name="UserTypeGeneral"/>
+			<WTENUM id="4" name="UserTypeAdmin"/>
+			<WTENUM id="5" name="UserTypePrivate"/>
+    </WTATTRIBUTE>
+		<WTATTRIBUTE id="2706" name="Secure" type="number" source="entity"/>
+
+		<WTINDEX name="QuestionTypeName">
+			<WTATTRIBUTE name="QuestionTypeName"/>
+		</WTINDEX>
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="UserType"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="QuestionType" entity="QuestionType" alias="qtl"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumAll" enumname="EnumUserAll" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(QuestionType.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(QuestionType.Secure)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumOnly" enumname="EnumUserOnly" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(QuestionType.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(QuestionType.UserType)" direction="input"/>
+			<WTPARAM name="ATTR(QuestionType.Secure)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserAll" style="GenerateDataProc.xsl" column="QuestionTypeName" template="new" passthru="true">
+		<!--===================================================================================-->
+			<WTPARAM name="ATTR(QuestionType.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(QuestionType.Secure)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(QuestionType.QuestionTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(QuestionType.QuestionTypeName)"/>
+					<WTJOIN name="QuestionType"/>
+					<WTCONDITION expr="ATTR(QuestionType.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(QuestionType.Secure)" oper="less-equal" value="PARAM(Secure)" connector="and"/>
+					<WTORDER name="ATTR(QuestionType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserOnly" style="GenerateDataProc.xsl" column="QuestionTypeName" template="new" passthru="true">
+		<!--===================================================================================-->
+			<WTPARAM name="ATTR(QuestionType.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(QuestionType.UserType)" direction="input"/>
+			<WTPARAM name="ATTR(QuestionType.Secure)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(QuestionType.QuestionTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(QuestionType.QuestionTypeName)"/>
+					<WTJOIN name="QuestionType"/>
+					<WTCONDITION expr="ATTR(QuestionType.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(QuestionType.UserType)" oper="less-equal" value="PARAM(UserType)" connector="and"/>
+					<WTCONDITION expr="ATTR(QuestionType.Secure)" oper="less-equal" value="PARAM(Secure)" connector="and"/>
+					<WTORDER name="ATTR(QuestionType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="FirstAll" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(QuestionType.CompanyID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(QuestionType.Secure)" direction="input" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="FirstOnly" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(QuestionType.CompanyID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(QuestionType.UserType)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(QuestionType.Secure)" direction="input" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(QuestionType.QuestionTypeID)"/>
+					<WTATTRIBUTE value="ATTR(QuestionType.QuestionTypeName)"/>
+					<WTATTRIBUTE value="ATTR(QuestionType.Seq)"/>
+					<WTATTRIBUTE value="ATTR(QuestionType.UserType)"/>
+					<WTATTRIBUTE value="ATTR(QuestionType.Secure)"/>
+					<WTJOIN name="QuestionType"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+          <WTORDER name="ATTR(QuestionType.UserType)"/>
+          <WTORDER name="ATTR(QuestionType.Seq)"/>
+        </WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2702" contentpage="true" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="QuestionType" project="ptsQuestionTypeUser" class="CQuestionType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="QuestionTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlQuestionType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="QuestionType" project="ptsQuestionTypeUser" class="CQuestionType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="QuestionTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="QuestionTypeID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlQuestionType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewQuestionType" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="QuestionTypeName"/>
+					<WTTEXT col="2" value="ATTR(QuestionType.QuestionTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(QuestionType.Seq)" size="2"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="UserType"/>
+					<WTCOMBO col="2" value="ATTR(QuestionType.UserType)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="SecurityLevelText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Secure"/>
+					<WTTEXT col="2" value="ATTR(QuestionType.Secure)" size="2"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2703" contentpage="true" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="QuestionTypeID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="QuestionType" project="ptsQuestionTypeUser" class="CQuestionType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="QuestionTypeID" direction="input" value="PARAM(QuestionTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlQuestionType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="QuestionType" project="ptsQuestionTypeUser" class="CQuestionType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="QuestionTypeID" direction="input" value="PARAM(QuestionTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlQuestionType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="QuestionType" project="ptsQuestionTypeUser" class="CQuestionType">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="QuestionTypeID" direction="input" value="PARAM(QuestionTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="QuestionType" project="ptsQuestionTypeUser" class="CQuestionType">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="QuestionTypeID" direction="input" value="PARAM(QuestionTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlQuestionType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="QuestionType" value="ATTR(QuestionType.QuestionTypeName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="QuestionTypeName"/>
+					<WTTEXT col="2" value="ATTR(QuestionType.QuestionTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(QuestionType.Seq)" size="2"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="UserType"/>
+					<WTCOMBO col="2" value="ATTR(QuestionType.UserType)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="SecurityLevelText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Secure"/>
+					<WTTEXT col="2" value="ATTR(QuestionType.Secure)" size="2"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2711" caption="List" contentpage="true"  wrapper="wrapper600"
+               aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="QuestionTypes" project="ptsQuestionTypeUser" class="CQuestionTypes">
+					<WTMETHOD name="List">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlQuestionTypes" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="1701">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+						<WTPARAM name="Popup" value="PARAM(Popup)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="QuestionTypes" class="PageHeading" align="left"/>
+					<WTLINKGROUP col="2" align="right" class="PageHeader">
+						<WTCONDITION expr="IsActive"/>
+						<WTLINK name="2702" label="NewQuestionType">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="QuestionType">
+            <WTCOLUMN width="15" align="center" valign="top" label="UserType"/>
+            <WTCOLUMN width="10" align="left" valign="top" label="Seq"/>
+						<WTCOLUMN width="40" align="left" valign="top" label="QuestionTypeName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Secure"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="QuestionTypeID"/>
+						<WTROW>
+              <WTSTATIC col="1" value="DATA(QuestionType.UserType)"/>
+              <WTSTATIC col="2" value="DATA(QuestionType.Seq)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(QuestionType.QuestionTypeName)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="2703">
+											<WTPARAM name="QuestionTypeID" value="DATA(QuestionType.QuestionTypeID)"/>
+											<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(QuestionType.Secure)"/>
+							<WTSTATIC col="5" value="DATA(QuestionType.QuestionTypeID)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="2" action="3" value="CONST(Return)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

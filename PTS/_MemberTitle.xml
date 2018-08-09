@@ -1,0 +1,244 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="57" name="MemberTitle" alias="mt">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="5701" name="MemberTitleID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="5702" name="MemberID" type="number" source="entity"/>
+
+		<WTATTRIBUTE id="5704" name="TitleName" type="text" length="40" source="join">
+			<WTJOIN entity="Title" name="TitleName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="5705" name="TitleDate" type="date" title="true" source="entity">
+			<WTFORMAT value="m-d-yy h:mm am/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="5706" name="Title" type="number" source="entity"/>
+		<WTATTRIBUTE id="5707" name="IsEarned" type="yesno" source="entity"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="TitleDate"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="MemberTitle" entity="MemberTitle" alias="mt"/>
+			<WTRELATIONSHIP name="Common" entity="MemberTitle" alias="mt">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="mt" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+				<WTENTITY name="Title" entity="Title" alias="ti">
+					<WTATTRIBUTE alias="me" name="CompanyID" relalias="ti" relname="CompanyID"/>
+					<WTATTRIBUTE alias="mt" name="Title" relalias="ti" relname="TitleNo" connector="AND"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberTitle.MemberTitleID)"/>
+					<WTATTRIBUTE value="ATTR(MemberTitle.TitleDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberTitle.Title)"/>
+					<WTATTRIBUTE value="ATTR(Title.TitleName)"/>
+					<WTATTRIBUTE value="ATTR(MemberTitle.IsEarned)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(MemberTitle.TitleDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!-- Custom XML -->
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="XML" name="XMLGenealogy" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true">
+			<WTATTRIBUTE value="MemberTitleID" />
+			<WTATTRIBUTE value="TitleDate" />
+			<WTATTRIBUTE value="Title" />
+			<WTATTRIBUTE value="TitleName" />
+			<WTATTRIBUTE value="IsEarned" />
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="5703" caption="Member Title" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberTitleID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="MemberTitle" project="ptsMemberTitleUser" class="CMemberTitle">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberTitleID" direction="input" value="PARAM(MemberTitleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberTitle" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="MemberTitle" project="ptsMemberTitleUser" class="CMemberTitle">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberTitleID" direction="input" value="PARAM(MemberTitleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMemberTitle" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="MemberTitle" project="ptsMemberTitleUser" class="CMemberTitle">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MemberTitleID" direction="input" value="PARAM(MemberTitleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberTitle" project="ptsMemberTitleUser" class="CMemberTitle">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberTitleID" direction="input" value="PARAM(MemberTitleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberTitle" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="200" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="MemberTitle" value="ATTR(MemberTitle.TitleName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="TitleDate"/>
+					<WTTEXT col="2" value="ATTR(MemberTitle.TitleDate)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Title"/>
+					<WTTEXT col="2" value="ATTR(MemberTitle.Title)" size="2"/>
+					<WTCHECK col="2" value="ATTR(MemberTitle.IsEarned)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="5711" caption="Member Titles" page-width="400" page-left="10" margin-width="0" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+				<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="MemberTitles" project="ptsMemberTitleUser" class="CMemberTitles">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberTitles" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="380" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="MemberTitles" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="MemberTitle">
+						<WTCOLUMN width="40" align="left" valign="top" label="TitleDate"/>
+						<WTCOLUMN width="60" align="left" valign="top" label="TitleName"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Earned"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(MemberTitle.TitleDate)"/>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(MemberTitle.TitleName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="5703">
+											<WTPARAM name="MemberTitleID" value="DATA(MemberTitleID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(MemberTitle.IsEarned)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

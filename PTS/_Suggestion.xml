@@ -1,0 +1,809 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="45" name="Suggestion" alias="sg" language="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="4501" name="SuggestionID" type="number" identity="true" min="1" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="4502" name="OrgID" type="number" source="entity"/>
+		<WTATTRIBUTE id="4503" name="MemberID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="4504" name="OrgName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Org" name="OrgName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4505" name="CompanyID" type="number" source="join">
+			<WTJOIN entity="Org" name="CompanyID"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4506" name="NameLast" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="Member" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4507" name="NameFirst" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="Member" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4508" name="MemberName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameLast"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="NameFirst"/>
+		</WTATTRIBUTE>
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="4510" name="Subject" type="text" length="60" min="1" max="60" source="entity" title="true" required="true"/>
+		<WTATTRIBUTE id="4511" name="Description" type="text" length="2000" min="1" max="2000" source="entity"/>
+		<WTATTRIBUTE id="4512" name="Status" type="number" required="true" source="entity">
+			<WTENUM id="1" name="Unread"/>
+			<WTENUM id="2" name="Read"/>
+			<WTENUM id="3" name="Accept"/>
+			<WTENUM id="4" name="Reward"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4513" name="SuggestionDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="4514" name="Response" type="text" length="1000" min="1" max="1000" source="entity"/>
+		<WTATTRIBUTE id="4515" name="ChangeDate" type="date" source="entity"/>
+	   
+	   <!-- Non-Persist Attributes -->
+
+		<!--Indexes-->
+		<WTINDEX name="OrgID">
+			<WTATTRIBUTE name="OrgID"/>
+		</WTINDEX>
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Suggestion" entity="Suggestion" alias="sg"/>
+			<WTRELATIONSHIP name="Common" entity="Suggestion" alias="sg">
+				<WTENTITY name="Org" entity="Org" alias="og">
+					<WTATTRIBUTE alias="sg" name="OrgID" relalias="og" relname="OrgID"/>
+				</WTENTITY>
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="sg" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Org" entity="Suggestion" alias="sg">
+				<WTENTITY name="Org" entity="Org" alias="og">
+					<WTATTRIBUTE alias="sg" name="OrgID" relalias="og" relname="OrgID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--List-->
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="SuggestionDate" default="true"/>
+			<WTATTRIBUTE name="SuggestionID"/>
+			<WTATTRIBUTE name="Subject" contains="true"/>
+			<WTATTRIBUTE name="Response" contains="true"/>
+		</WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="SUGGESTION-UNREAD" value="1"/>
+			<WTSYSCON name="SUGGESTION-READ" value="2"/>
+			<WTSYSCON name="SUGGESTION-ACCEPT" value="3"/>
+			<WTSYSCON name="SUGGESTION-REWARD" value="4"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Find" name="FindOrg" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(OrgID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(OrgID)" oper="equal" value="PARAM(OrgID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Find" name="FindCompany" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Find" name="FindOrgStatus" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(OrgID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(OrgID)" oper="equal" value="PARAM(OrgID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Status)" oper="equal" value="PARAM(Status)" connector="and"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Find" name="FindCompanyStatus" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Status)" oper="equal" value="PARAM(Status)" connector="and"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListSubmitted" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Suggestion.SuggestionID)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.SuggestionDate)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.ChangeDate)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Subject)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Description)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Response)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTJOIN name="Org"/>
+					<WTCONDITION expr="ATTR(Suggestion.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListReplied" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Suggestion.SuggestionID)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.SuggestionDate)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.ChangeDate)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Subject)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Description)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Response)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTJOIN name="Org"/>
+					<WTCONDITION expr="ATTR(Suggestion.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Suggestion.Status)" oper="greater" value="CONST(1)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListDate" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(SuggestionDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Suggestion.SuggestionID)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.SuggestionDate)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.ChangeDate)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Subject)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Description)"/>
+					<WTATTRIBUTE value="ATTR(Suggestion.Response)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTJOIN name="Org"/>
+					<WTCONDITION expr="ATTR(Suggestion.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Suggestion.Status)" oper="greater" value="CONST(1)" connector="and" />
+					<WTCONDITION expr="ATTR(Suggestion.ChangeDate)" oper="greater" value="PARAM(SuggestionDate)" connector="and" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="4501" caption="Find" action="5" contentpage="true" wrapper="wrapper800" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(SuggestionDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Status)" value="CONST(1)"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Suggestions" project="ptsSuggestionUser" class="CSuggestions">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSuggestions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTOBJECT name="Suggestions" project="ptsSuggestionUser" class="CSuggestions">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)" connector="or"/>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="or"/>
+				<WTMETHOD name="FindOrg">
+					<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindCompany">
+					<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindOrgStatus">
+					<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+					<WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindCompanyStatus">
+					<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlSuggestions" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="800" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="400" align="left"/>
+						<WTCOLUMN width="400" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="FindSuggestion" class="PageHeading"/>
+<!--
+							<WTLINKGROUP  col="2" align="right" >
+								<WTCONDITION expr="IsEmployee"/>
+								<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="and"/>
+								<WTLINK name="3803" label="Company" class="PageHeadingLink">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								</WTLINK>
+								<WTLINK name="2809" label="Folders" class="PageHeadingLink">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								</WTLINK>
+							</WTLINKGROUP>
+-->							
+						</WTROW>
+						</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Suggestions.FindTypeID)" translate="true" prespace="false"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+					<WTSTATIC col="1" tag="Status" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="PARAM(Status)" prespace="false">
+						<WTOPTION id="0" label="All"/>
+						<WTOPTION id="1" label="Unread"/>
+						<WTOPTION id="2" label="Read"/>
+						<WTOPTION id="3" label="Accept"/>
+						<WTOPTION id="4" label="Reward"/>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)" connector="or"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="or"/>
+
+
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Suggestion">
+						<WTCOLUMN width="12" align="left" valign="top" label="Date" />
+						<WTCOLUMN width="50" align="left" valign="top" label="Subject" />
+						<WTCOLUMN width="30" align="left" valign="top" label="OrgName" />
+						<WTCOLUMN width="8" align="left" valign="top" label="Status" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Suggestion.SuggestionDate)"/>
+							<WTSTATIC col="2" value="DATA(Suggestion.Subject)" bold="true">
+								<WTLINK name="4503">
+									<WTPARAM name="SuggestionID" value="DATA(Suggestion.SuggestionID)"/>
+									<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Suggestion.OrgName)" valign="top"/>
+							<WTSTATIC col="4" value="DATA(Suggestion.Status)" valign="top"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="IsEmployee"/>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="4" value="DATA(Suggestion.MemberName)">
+								<WTLINK name="0403">
+									<WTPARAM name="MemberID" value="DATA(Suggestion.MemberID)"/>
+									<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="CONST(#&lt;xsl:value-of select=&quot;@suggestionid&quot;/&gt;)" valign="top" fontcolor="gray"/>
+							<WTSTATIC col="2" merge="3" value="DATA(Suggestion.Description)" fontcolor="gray"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="DATA(Suggestion.Status)" oper="greater" value="CONST(1)"/>
+							<WTSTATIC col="1" value="DATA(Suggestion.ChangeDate)" valign="top" fontcolor="purple"/>
+							<WTSTATIC col="2" merge="3" value="DATA(Suggestion.Response)" fontcolor="purple"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">				
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4502" caption="New Suggestion" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Suggestion" project="ptsSuggestionUser" class="CSuggestion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SuggestionID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Suggestion.Status)" value="CONST(1)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSuggestion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Suggestion" project="ptsSuggestionUser" class="CSuggestion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SuggestionID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Suggestion.OrgID)" value="PARAM(OrgID)"/>
+					<WTSETATTRIBUTE name="ATTR(Suggestion.MemberID)" value="SYS(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(Suggestion.SuggestionDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(Suggestion.Status)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Suggestion.ChangeDate)" value="SYS(Now)"/>
+					<WTSETATTRIBUTES/>
+					
+					<WTMETHOD name="Add">
+						<WTPARAM name="SuggestionID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSuggestion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Suggestion" value="ATTR(Org.OrgName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="AnonymousText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW >
+					<WTSTATIC col="1" tag="Subject"/>
+					<WTTEXT col="2" value="ATTR(Suggestion.Subject)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Suggestion.Description)" cols="72" rows="10"/>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4503" caption="Suggestion" contentpage="true"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="SuggestionID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Suggestion" project="ptsSuggestionUser" class="CSuggestion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SuggestionID" direction="input" value="PARAM(SuggestionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSuggestion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTOBJECT name="Suggestion" project="ptsSuggestionUser" class="CSuggestion">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SuggestionID" direction="input" value="PARAM(SuggestionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Suggestion.ChangeDate)" value="SYS(Now)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSuggestion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION name="Delete" type="Delete" id="2">
+				<WTOBJECT name="Suggestion" project="ptsSuggestionUser" class="CSuggestion">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SuggestionID" direction="input" value="PARAM(SuggestionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Suggestion" project="ptsSuggestionUser" class="CSuggestion">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SuggestionID" direction="input" value="PARAM(SuggestionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSuggestion" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="125" align="right"/>
+				<WTCOLUMN width="475" align="left"/>
+
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTSTATIC tag="Suggestion"/>
+						<WTSTATIC value="ATTR(Suggestion.MemberName)">
+							<WTLINK name="0403">
+								<WTPARAM name="MemberID" value="ATTR(Member.MemberID)"/>
+								<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTSTATIC col="1" merge="2" label="Suggestion" class="PageHeading" align="left"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="SuggestionID" class="BoldText" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Suggestion.SuggestionID)" class="BoldText"/>
+				</WTROW>
+
+				<WTROW >
+					<WTSTATIC col="1" tag="Subject"/>
+					<WTTEXT col="2" value="ATTR(Suggestion.Subject)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Suggestion.Description)" cols="72" rows="10"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Response" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Suggestion.Response)" cols="72" rows="5"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Suggestion.Status)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SuggestionDate"/>
+					<WTTEXT col="2" value="ATTR(Suggestion.SuggestionDate)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Delete)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4511" caption="Suggestion Boxes" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="ListMemberHierarchy">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="3" label="Suggestions" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="3" align="left" label="AddSuggestionText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="false" entity="Org">
+						<WTCOLUMN width="100" align="left" valign="top" label="OrgName"/>
+						<WTROW>
+							<WTCONDITION expr="DATA(IsSuggestion)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC col="2" value="DATA(Org.OrgName)">
+								<WTLINK name="4502">
+									<WTPARAM name="OrgID" value="DATA(Org.OrgID)"/>
+									<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="3" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+-->				
+			</WTCONTENT>
+		</WTWEBPAGE>
+	
+		<!--==================================================================-->
+		<WTWEBPAGE name="4512" caption="List" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61">
+		<!--==================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="SuggestionDate" datatype="date"/>
+			<WTPARAM name="Mode" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Suggestions" project="ptsSuggestionUser" class="CSuggestions">
+					<WTMETHOD name="ListSubmitted">
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListReplied">
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListDate">
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)"/>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(4)" connector="or"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SuggestionDate" direction="input" value="PARAM(SuggestionDate)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSuggestions" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+			
+				<WTROW>
+				  <WTSTATIC col="1" align="left" class="pageheading">
+						<WTSTATIC label="Submitted">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/> 
+						</WTSTATIC>
+						<WTSTATIC label="Replied">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/> 
+						</WTSTATIC>
+						<WTSTATIC label="RepliedLastVisit">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)"/> 
+						</WTSTATIC>
+						<WTSTATIC label="RepliedThirtyDays">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(4)"/> 
+						</WTSTATIC>
+					</WTSTATIC>	
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true"  entity="Suggestion">
+						<WTCOLUMN width="12" align="left" valign="top" label="Date" />
+						<WTCOLUMN width="58" align="left" valign="top" label="Subject" />
+						<WTCOLUMN width="30" align="left" valign="top" label="OrgName" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Suggestion.SuggestionDate)"/>
+							<WTSTATIC col="2" value="DATA(Suggestion.Subject)" bold="true"/>
+							<WTSTATIC col="3" value="DATA(Suggestion.OrgName)" valign="top"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="CONST(#&lt;xsl:value-of select=&quot;@suggestionid&quot;/&gt;)" fontcolor="gray"/>
+							<WTSTATIC col="2" merge="2" value="DATA(Suggestion.Description)" fontcolor="gray"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="PARAM(Mode)" oper="greater" value="CONST(1)"/>
+							<WTSTATIC col="1" value="DATA(Suggestion.ChangeDate)" fontcolor="purple"/>
+							<WTSTATIC col="2" merge="2" value="DATA(Suggestion.Response)" fontcolor="purple"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">				
+					<WTBUTTON col="1"  action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

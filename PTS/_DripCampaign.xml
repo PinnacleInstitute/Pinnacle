@@ -1,0 +1,949 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="114" name="DripCampaign" alias="dec" audit="false">
+		<!--Identity-->
+		<WTATTRIBUTE id="11401" name="DripCampaignID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="11402" name="CompanyID" type="number" required="true" source="entity"/>
+		<WTATTRIBUTE id="11403" name="GroupID" type="number" source="entity"/>
+		<!--Attributes-->
+		<WTATTRIBUTE id="11410" name="DripCampaignName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity" />
+		<WTATTRIBUTE id="11411" name="Description" type="text" length="200" source="entity" language="false" />
+		<WTATTRIBUTE id="11412" name="Target" type="number" source="entity">
+			<WTENUM id="1" name="Lead"/>
+			<WTENUM id="2" name="Prospect"/>
+			<WTENUM id="3" name="Customer"/>
+			<WTENUM id="4" name="Member"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11413" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending" />
+			<WTENUM id="2" name="Active" />
+			<WTENUM id="3" name="InActive" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11414" name="IsShare" type="yesno" source="entity" />
+<!--		
+		<WTATTRIBUTE id="11415" name="MemberStatus" type="number" source="entity"/>
+		<WTATTRIBUTE id="11416" name="MemberLevel" type="number" source="entity"/>
+-->		
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="11491" name="GroupID1" type="number" source="entity" persist="false" />
+		<WTATTRIBUTE id="11492" name="GroupID2" type="number" source="entity" persist="false" />
+		<WTATTRIBUTE id="11493" name="GroupID3" type="number" source="entity" persist="false" />
+
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID" />
+		</WTINDEX>
+		<WTINDEX name="GroupID">
+			<WTATTRIBUTE name="GroupID" />
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="DripCampaign" entity="DripCampaign" alias="dec" />
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="DRIPCAMPAIGN-PENDING" value="1" />
+			<WTSYSCON name="DRIPCAMPAIGN-ACTIVE" value="2" />
+			<WTSYSCON name="DRIPCAMPAIGN-INACTIVE" value="3" />
+			<WTSYSCON name="TARGET-LEAD" value="1" />
+			<WTSYSCON name="TARGET-PROSPECT" value="2" />
+			<WTSYSCON name="TARGET-CUSTOMER" value="3" />
+			<WTSYSCON name="TARGET-MEMBER" value="4" />
+		</WTSYSCONS>
+	</WTENTITY>
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" />
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTCODEGROUP>
+				<WTPROCEDURE name="DripPage_DeleteDripCampaign">
+					<WTPARAM name="DripCampaignID" direction="input" value="PARAM(DripCampaignID)" />
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="DripCampaign" lock="true" />
+					<WTCONDITION expr="ATTR(DripCampaignID)" oper="equal" value="PARAM(DripCampaignID)" />
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumDrip" enumname="EnumDripList" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID1)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID2)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID3)" direction="input"/>
+			<WTPARAM name="ATTR(Target)" direction="input"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumDripList" style="GenerateDataProc.xsl" column="DripCampaignName" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>	
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID1)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID2)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID3)" direction="input"/>
+			<WTPARAM name="ATTR(Target)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(DripCampaign.DripCampaignID)" />
+					<WTATTRIBUTE alias="Name" value="ATTR(DripCampaign.DripCampaignName)" />
+					<WTJOIN name="DripCampaign" />
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)" />
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(DRIPCAMPAIGN-ACTIVE)" connector="and" />
+					<WTCONDITION expr="ATTR(Target)" oper="equal" value="PARAM(Target)" connector="and" />
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)" connector="or"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID1)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(IsShare)" oper="not-equal" value="CONST(0)" connector="and" paren="end"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID2)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(IsShare)" oper="not-equal" value="CONST(0)" connector="and" paren="end"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID3)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(IsShare)" oper="not-equal" value="CONST(0)" connector="and" paren="end2"/>
+					<WTORDER name="ATTR(DripCampaign.DripCampaignName)" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumDripAll" enumname="EnumDripListAll" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID1)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID2)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID3)" direction="input"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumDripListAll" style="GenerateDataProc.xsl" column="DripCampaignName" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID1)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID2)" direction="input"/>
+			<WTPARAM name="ATTR(GroupID3)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(DripCampaign.DripCampaignID)" />
+					<WTATTRIBUTE alias="Name" value="ATTR(DripCampaign.DripCampaignName)" />
+					<WTJOIN name="DripCampaign" />
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)" />
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(DRIPCAMPAIGN-ACTIVE)" connector="and" />
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)" connector="or"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID1)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(IsShare)" oper="not-equal" value="CONST(0)" connector="and" paren="end"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID2)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(IsShare)" oper="not-equal" value="CONST(0)" connector="and" paren="end"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID3)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(IsShare)" oper="not-equal" value="CONST(0)" connector="and" paren="end2"/>
+					<WTORDER name="ATTR(DripCampaign.DripCampaignName)" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl" />
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl" />
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListCompany" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(DripCampaign.DripCampaignID)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.DripCampaignName)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.Description)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.Target)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.Status)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.IsShare)" />
+					<WTJOIN name="DripCampaign" />
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)" />
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="CONST(0)" connector="and" />
+					<WTORDER name="ATTR(DripCampaign.DripCampaignName)" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListGroup" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(GroupID)" direction="input" required="false" />
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(DripCampaign.DripCampaignID)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.DripCampaignName)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.Description)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.Target)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.Status)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.IsShare)" />
+					<WTJOIN name="DripCampaign" />
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)" />
+					<WTORDER name="ATTR(DripCampaign.DripCampaignName)" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListActive" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(DripCampaign.DripCampaignID)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.CompanyID)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.Target)" />
+					<WTATTRIBUTE value="ATTR(DripCampaign.IsShare)" />
+					<WTJOIN name="DripCampaign" />
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(DRIPCAMPAIGN-ACTIVE)" />
+					<WTORDER name="ATTR(DripCampaign.CompanyID)" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11402" caption="Drip Campaigns" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="GroupID" datatype="number" />
+			<WTPARAM name="CopyDripCampaignID" datatype="number" />
+<!--			<WTPARAM name="LoadGroupID" datatype="number" />-->
+
+			<WTINCLUDE name="Resources.asp"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadList">
+				<!-- Get The Group, Shared or Company Resources -->
+				<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-DRIP)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupID1)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupID2)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupID3)" value="CONST(0)"/>
+				<WTCALLSUB name="GetResources reqGroupID">
+					<WTCONDITION expr="NotMemberOnly" />
+				</WTCALLSUB>
+				<WTCALLSUB name="GetResource tmpResource, tmpGroupID1, tmpGroupID2, tmpGroupID3">
+					<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+				</WTCALLSUB>
+
+				<WTOBJECT name="DripCampaigns" project="ptsDripCampaignUser" class="CDripCampaigns">
+					<WTMETHOD name="EnumDripAll">
+						<WTPARAM name="xmlDripCampaigns" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="GroupID" direction="input" value="PARAM(GroupID)" />
+						<WTPARAM name="GroupID1" direction="input" value="CONST(tmpGroupID1)" />
+						<WTPARAM name="GroupID2" direction="input" value="CONST(tmpGroupID2)" />
+						<WTPARAM name="GroupID3" direction="input" value="CONST(tmpGroupID3)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="DripCampaign" project="ptsDripCampaignUser" class="CDripCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripCampaignID" direction="input" value="CONST(0)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(DRIPCAMPAIGN-PENDING)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripCampaign" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTACTION>
+			
+			<WTACTION id="2" name="Add" type="Add">
+				<WTSETATTRIBUTE name="CONST(tmpDripCampaignName)" value="CONST(&quot;&quot;)" />
+				<WTSETATTRIBUTE name="CONST(tmpDescription)" value="CONST(&quot;&quot;)" />
+				<WTSETATTRIBUTE name="CONST(tmpTarget)" value="CONST(0)" />
+				<WTSETATTRIBUTE name="CONST(tmpStatus)" value="CONST(0)" />
+				<WTOBJECT name="DripCampaign" project="ptsDripCampaignUser" class="CDripCampaign">
+					<WTCONDITION expr="PARAM(CopyDripCampaignID)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripCampaignID" direction="input" value="PARAM(CopyDripCampaignID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpDripCampaignName)" value="CONST(.DripCampaignName + &quot; Copy&quot;)" />
+					<WTSETATTRIBUTE name="CONST(tmpDescription)" value="ATTR(Description)" />
+					<WTSETATTRIBUTE name="CONST(tmpTarget)" value="ATTR(Target)" />
+<!--
+					<WTSETATTRIBUTE name="CONST(tmpMemberStatus)" value="ATTR(MemberStatus)" />
+					<WTSETATTRIBUTE name="CONST(tmpMemberLevel)" value="ATTR(MemberLevel)" />
+-->					
+					<WTSETATTRIBUTE name="CONST(tmpStatus)" value="SYSCON(DRIPCAMPAIGN-PENDING)" />
+				</WTOBJECT>
+				<WTOBJECT name="DripCampaign" project="ptsDripCampaignUser" class="CDripCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripCampaignID" direction="input" value="CONST(0)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)" />
+					<WTSETATTRIBUTE name="ATTR(GroupID)" value="PARAM(GroupID)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(DripCampaignName)" value="CONST(tmpDripCampaignName)">
+						<WTCONDITION expr="ATTR(DripCampaignName)" oper="equal" value="CONST(&quot;&quot;)" />
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="ATTR(Description)" value="CONST(tmpDescription)">
+						<WTCONDITION expr="ATTR(Description)" oper="equal" value="CONST(&quot;&quot;)" />
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="ATTR(Target)" value="CONST(tmpTarget)">
+						<WTCONDITION expr="ATTR(Target)" oper="equal" value="CONST(0)" />
+					</WTSETATTRIBUTE>
+<!--					
+					<WTSETATTRIBUTE name="ATTR(MemberStatus)" value="CONST(tmpMemberStatus)">
+						<WTCONDITION expr="ATTR(MemberStatus)" oper="equal" value="CONST(0)" />
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="ATTR(MemberLevel)" value="CONST(tmpMemberLevel)">
+						<WTCONDITION expr="ATTR(MemberLevel)" oper="equal" value="CONST(0)" />
+					</WTSETATTRIBUTE>
+-->					
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(tmpStatus)">
+						<WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(0)" />
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Add">
+						<WTPARAM name="NewDripCampaignID" direction="return" datatype="number" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors" />
+						<WTPARAM name="xmlDripCampaign" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<!-- Copy Pages -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors" />
+					<WTCONDITION expr="PARAM(CopyDripCampaignID)" oper="not-equal" value="CONST(0)" connector="and" />
+					<WTOBJECT name="DripPages" project="ptsDripPageUser" class="CDripPages">
+						<WTMETHOD name="ListAll">
+							<WTPARAM name="DripCampaignID" direction="input" value="PARAM(CopyDripCampaignID)" />
+						</WTMETHOD>
+						<WTCUSTOM>
+							Set oHTMLFile = server.CreateObject("wtHTMLFile.CHTMLFile")
+							If oHTMLFile Is Nothing Then
+								DoError Err.Number, Err.Source, "Unable to Create Object - wtHTMLFile.CHTMLFile"
+							End If
+
+							Set oDripPage = server.CreateObject("ptsDripPageUser.CDripPage")
+							If oDripPage Is Nothing Then
+								DoError Err.Number, Err.Source, "Unable to Create Object - ptsDripPageUser.CDripPage"
+							Else
+								For Each oPage in oDripPages
+									With oPage
+										oDripPage.DripCampaignID = NewDripCampaignID
+										oDripPage.Subject = .Subject
+										oDripPage.Status = .Status
+										oDripPage.Days = .Days
+
+										NewDripPageID = oDripPage.Add(CLng(reqSysUserID))
+
+										With oHTMLFile
+											.Project = SysProject
+											.Language = "en"
+											.Path = reqSysWebDirectory + "Drip\"
+											.Filename = "Drip" &amp; oPage.DripPageID &amp; ".htm"
+											.Load
+											.Filename = "Drip" &amp; NewDripPageID &amp; ".htm"
+											.Save
+										End With
+									End With
+								Next
+							End If
+							Set oDripPage = Nothing
+							Set oHTMLFile = Nothing
+						</WTCUSTOM>
+					</WTOBJECT>
+				</WTCODEGROUP>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors" />
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors" />
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN />
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right" />
+				<WTCOLUMN width="440" align="left" />
+				
+				<WTFUNCTION name="SetCampaign()">
+					var obj = document.getElementById('FromDripCampaign');
+					var idx = obj.selectedIndex;
+					document.getElementById('CopyDripCampaignID').value = obj.options[idx].value;
+				</WTFUNCTION>
+				<WTFUNCTION name="ViewCampaign()">
+					var id = document.getElementById('CopyDripCampaignID').value;
+					if( id != 0 )
+					{
+					var url, win;
+					url = "11410.asp?dripcampaignid=" + id
+					win = window.open(url,"DripCampaign","top=100,left=100,height=400,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+					}
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewDripCampaign" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="DripCampaignName" />
+					<WTTEXT col="2" value="ATTR(DripCampaign.DripCampaignName)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status" />
+					<WTCOMBO col="2" value="ATTR(DripCampaign.Status)" />
+					<WTSTATIC col="2" tag="Target" />
+					<WTCOMBO col="2" value="ATTR(DripCampaign.Target)" noprespace="true">
+						<WTOPTION id="1" label="Lead">
+							<WTCONDITION expr="_IsSuspect"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+						</WTOPTION>
+						<WTOPTION id="2" label="Prospect">
+							<WTCONDITION expr="_IsSales"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+						</WTOPTION>
+						<WTOPTION id="3" label="Customer">
+							<WTCONDITION expr="_IsService"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+						</WTOPTION>
+						<WTOPTION id="4" label="Member">
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+							<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+						</WTOPTION>
+					</WTCOMBO>
+					<WTCHECK col="2" value="ATTR(DripCampaign.IsShare)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left" />
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(DripCampaign.Description)" rows="3" cols="72" />
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+					<WTHIDDEN value="PARAM(CopyDripCampaignID)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="CopyHelp" class="Prompt" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CopyDripCampaign" align="center"/>
+					<WTTEXT col="1" value="PARAM(CopyDripCampaignID)" size="3">
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					</WTTEXT>
+					<WTSTATIC col="1" label="from">
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					</WTSTATIC>
+					<WTCOMBO col="1" name="FromDripCampaign" datapath="/DATA/TXN/PTSDRIPCAMPAIGNS/ENUM">
+						<WTCHANGE>SetCampaign()</WTCHANGE>
+					</WTCOMBO>
+					<WTBUTTON col="1" value="CONST(Preview)" btnclass="smbutton">
+						<WTCLICK>ViewCampaign()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+<!--				
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" label="LoadGroup" align="center"/>
+					<WTTEXT col="1" value="PARAM(LoadGroupID)" size="3"/>
+					<WTBUTTON col="1" action="0" value="CONST(Reload)" btnclass="smbutton"/>
+				</WTROW>
+-->				
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)" />
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11403" caption="Drip Campaigns" header="false" footer="false" navbar="false" wrapper="wrapper600" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="DripCampaignID" datatype="number" />
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="URL" datatype="text"/>
+			<WTPARAM name="Language" datatype="text"/>
+
+			<WTSUB name="LoadDripCampaign">
+				<WTSETATTRIBUTE name="PARAM(URL)" value="CONST(&quot;http://&quot; + reqSysServerName + reqSysServerPath + &quot;Drip/Drip&quot;)" />
+				<WTSETATTRIBUTE name="PARAM(Language)" value="CONST(&quot;en&quot;)" />
+				<WTOBJECT name="DripCampaign" project="ptsDripCampaignUser" class="CDripCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripCampaignID" direction="input" value="PARAM(DripCampaignID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripCampaign" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="DripPages" project="ptsDripPageUser" class="CDripPages">
+					<WTMETHOD name="ListAll">
+						<WTPARAM name="DripCampaignID" direction="input" value="PARAM(DripCampaignID)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripPages" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateDripCampaign">
+				<WTOBJECT name="DripCampaign" project="ptsDripCampaignUser" class="CDripCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripCampaignID" direction="input" value="PARAM(DripCampaignID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTES />
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadDripCampaign" />
+			</WTACTION>
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateDripCampaign" />
+				<WTCALLSUB name="LoadDripCampaign">
+					<WTCONDITION expr="IsErrors" />
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors" />
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="DripCampaign" project="ptsDripCampaignUser" class="CDripCampaign">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="DripCampaignID" direction="input" value="PARAM(DripCampaignID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadDripCampaign">
+					<WTCONDITION expr="IsErrors" />
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors" />
+				</WTRETURN>
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right" />
+				<WTCOLUMN width="440" align="left" />
+
+				<WTFUNCTION name="UploadPage(id,lang)">
+					var url, win;
+					var company = document.getElementById('CompanyID').value;
+					var lang = document.getElementById('Language').value;
+					url = "11520.asp?CompanyID=" + company + "&amp;DripPageID=" + id + "&amp;Language=" + lang
+		            win = window.open(url,"UploadFile","top=100,left=100,height=200,width=400,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(Language)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="DripCampaign" value="ATTR(DripCampaign.DripCampaignName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="DripCampaignID" height="18" />
+					<WTSTATIC col="2" value="ATTR(DripCampaign.DripCampaignID)" bold="true" />
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW margin-top="6">
+						<WTSTATIC col="1" tag="CompanyID"/>
+						<WTTEXT col="2" value="ATTR(DripCampaign.CompanyID)" size="3"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTSTATIC col="1" tag="GroupID"/>
+						<WTTEXT col="2" value="ATTR(DripCampaign.GroupID)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(DripCampaign.CompanyID)"/>
+					<WTHIDDEN value="ATTR(DripCampaign.GroupID)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="DripCampaignName" />
+					<WTTEXT col="2" value="ATTR(DripCampaign.DripCampaignName)" />
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Status" />
+					<WTCOMBO col="2" value="ATTR(DripCampaign.Status)" />
+					<WTSTATIC col="2" tag="Target" />
+					<WTCOMBO col="2" value="ATTR(DripCampaign.Target)" noprespace="true">
+						<WTOPTION id="1" label="Lead">
+							<WTCONDITION expr="_IsSuspect"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+						</WTOPTION>
+						<WTOPTION id="2" label="Prospect">
+							<WTCONDITION expr="_IsSales"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+						</WTOPTION>
+						<WTOPTION id="3" label="Customer">
+							<WTCONDITION expr="_IsService"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+						</WTOPTION>
+						<WTOPTION id="4" label="Member">
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+							<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+						</WTOPTION>
+					</WTCOMBO>
+					<WTCHECK col="2" value="ATTR(DripCampaign.IsShare)"/>
+				</WTROW>
+<!--				
+				<WTROW margin-top="6">
+					<WTCONDITION expr="ATTR(DripCampaign.Target)" oper="equal" value="SYSCON(TARGET-MEMBER)"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="MemberStatus"/>
+					<WTCOMBO col="2" value="ATTR(DripCampaign.MemberStatus)" noprespace="true">
+						<WTOPTION id="1" label="Active"/>
+						<WTOPTION id="2" label="Trial"/>
+						<WTOPTION id="3" label="Free"/>
+					</WTCOMBO>
+					<WTSTATIC col="2" tag="MemberLevel"/>
+					<WTCOMBO col="2" value="ATTR(DripCampaign.MemberLevel)" noprespace="true">
+						<WTOPTION id="0" label="0"/>
+						<WTOPTION id="1" label="1"/>
+						<WTOPTION id="2" label="2"/>
+						<WTOPTION id="3" label="3"/>
+					</WTCOMBO>
+				</WTROW>
+-->				
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left" />
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(DripCampaign.Description)" rows="3" cols="72" />
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive" />
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive" />
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" label="DripPages" class="PageHeading" align="left" />
+					<WTSTATIC col="2" bold="true" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewDripPage">
+								<WTLINK name="11502">
+									<WTPARAM name="DripCampaignID" value="PARAM(DripCampaignID)" />
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTSTATIC label="EditOptions"/>
+				<WTSTATIC label="PreviewPage"/>
+				<WTSTATIC label="DownloadPage"/>
+				<WTSTATIC label="UploadPage"/>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="DripPage">
+						<WTCOLUMN width="5" align="center" valign="top" label="Days" />
+						<WTCOLUMN width="10" align="center" valign="top" label="Status" />
+						<WTCOLUMN width="60" align="left" valign="top" label="Subject" />
+						<WTCOLUMN width="10" align="center" valign="top" label="CC" />
+						<WTCOLUMN width="15" align="center" valign="top" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(DripPage.Days)" />
+							<WTSTATIC col="2" value="DATA(DripPage.Status)"/>
+							<WTSTATIC col="3" value="DATA(DripPage.Subject)">
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="EditOptions" imgalign="absmiddle">
+										<WTLINK name="11503">
+											<WTPARAM name="DripPageID" value="DATA(DripPage.DripPageID)" />
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4">
+								<WTSTATIC label="No">
+									<WTCONDITION expr="DATA(DripPage.IsCC)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Yes">
+									<WTCONDITION expr="DATA(DripPage.IsCC)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="5">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(preview.gif)" alt="PreviewPage">
+										<WTLINK name="11506" target="preview">
+											<WTPARAM name="DripPageID" value="DATA(DripPageID)" />
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Download.gif)" alt="DownloadPage">
+										<WTLINK name="CONST(&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@url,@drippageid, '[', /DATA/PARAM/@language, '].htm')&quot;/&gt;)" target="download"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Upload.gif)" alt="UploadPage">
+										<WTLINK name="UploadPage(&lt;xsl:value-of select=&quot;@drippageid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11410" caption="Preview Drip Campaign" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="DripCampaignID" datatype="number" />
+			<WTPARAM name="FolderID" datatype="number" />
+			<WTPARAM name="Folder" datatype="text" />
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Folder" project="ptsFolderUser" class="CFolder">
+					<WTCONDITION expr="PARAM(FolderID)" oper="not-equal" value="CONST(0)" />
+					<WTCONDITION expr="PARAM(DripCampaignID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="FolderID" direction="input" value="PARAM(FolderID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(DripCampaignID)" value="ATTR(DripCampaignID)"/>
+					<WTMETHOD name="FullName">
+						<WTPARAM name="FolderID" direction="input" value="PARAM(FolderID)"/>
+						<WTPARAM name="reqFolder" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="DripCampaign" project="ptsDripCampaignUser" class="CDripCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripCampaignID" direction="input" value="PARAM(DripCampaignID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripCampaign" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="DripPages" project="ptsDripPageUser" class="CDripPages">
+					<WTMETHOD name="ListActive">
+						<WTPARAM name="DripCampaignID" direction="input" value="PARAM(DripCampaignID)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripPages" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left" />
+
+				<WTFUNCTION name="ViewPage(id)">
+					var url, win;
+					url = "11506.asp?drippageid=" + id
+					win = window.open(url,"DripPage","top=100,left=100,height=400,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(DripCampaignID)" oper="equal" value="CONST(0)"/>
+					<WTROW margin-top="24" margin-bottom="24">
+						<WTSTATIC col="1" label="NoDripCampaign" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW>
+						<WTBUTTON col="1" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(DripCampaignID)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" class="PageHeading" align="left">
+							<WTSTATIC tag="Folder" value="PARAM(Folder)" newline="1">
+								<WTCONDITION expr="PARAM(FolderID)" oper="not-equal" value="CONST(0)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="DripCampaign" value="ATTR(DripCampaign.DripCampaignName)"/>
+						</WTSTATIC>
+						<WTBUTTON col="1" value="CONST(Close)" align="center" btnclass="smbutton">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW margin-top="2" margin-bottom="6">
+						<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+
+					<WTROW>
+						<WTRECORDSET col="1" merge="2" graybar="true" entity="DripPage">
+							<WTCOLUMN width="5" align="center" valign="top" label="Days" />
+							<WTCOLUMN width="5" align="center" valign="top" />
+							<WTCOLUMN width="70" align="left" valign="top" label="Subject" />
+							<WTCOLUMN width="20" align="center" valign="top" label="CC" />
+							<WTROW height="24">
+								<WTSTATIC col="1" value="DATA(DripPage.Days)" />
+								<WTSTATIC col="2">
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(preview.gif)" imgalign="absmiddle">
+											<WTLINK click="true" name="CONST(ViewPage(&lt;xsl:value-of select=&quot;@drippageid&quot;/&gt;))"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="3" value="DATA(DripPage.Subject)"/>
+								<WTSTATIC col="4">
+									<WTSTATIC label="No">
+										<WTCONDITION expr="DATA(DripPage.IsCC)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Yes">
+										<WTCONDITION expr="DATA(DripPage.IsCC)" oper="not-equal" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11411" caption="Drip Campaigns" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="DripCampaigns" project="ptsDripCampaignUser" class="CDripCampaigns">
+					<WTMETHOD name="ListCompany">
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" connector="and"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+					</WTMETHOD>
+					<WTMETHOD name="ListGroup">
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="GroupID" direction="input" value="PARAM(GroupID)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripCampaigns" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTFUNCTION name="ViewCampaign(id)">
+					var url, win;
+					url = "11410.asp?dripcampaignid=" + id
+					win = window.open(url,"DripCampaign","top=100,left=100,height=400,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+				
+				<WTROW>
+					<WTSTATIC col="1" label="DripCampaigns" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" bold="true" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewDripCampaign">
+								<WTLINK name="11402">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="DripCampaign">
+						<WTCOLUMN width="70" align="left" valign="top" label="DripCampaignName" />
+						<WTCOLUMN width="15" align="center" valign="top" label="Target" />
+						<WTCOLUMN width="15" align="center" valign="top" label="Status" />
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(DripCampaign.DripCampaignName)" space="1"/>
+								<WTSTATIC value="CONST((#&lt;xsl:value-of select=&quot;@dripcampaignid&quot;/&gt;))" fontcolor="purple"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="11403">
+											<WTPARAM name="DripCampaignID" value="DATA(DripCampaignID)" />
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(IsShare)" oper="not-equal" value="CONST(0)"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Share.gif)" alt="IsShare" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(preview.gif)" imgalign="absmiddle">
+										<WTLINK click="true" name="CONST(ViewCampaign(&lt;xsl:value-of select=&quot;@dripcampaignid&quot;/&gt;))"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Target)"/>
+							<WTSTATIC col="3" value="DATA(Status)"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="DATA(Description)" oper="not-equal" value="CONST('')" />
+							<WTSTATIC col="1" merge="3">
+								<WTSTATIC value="DATA(Description)" fontcolor="gray"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

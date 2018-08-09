@@ -1,0 +1,59 @@
+<REPORTS source="ReportsData.asp" language="reports.xml" path="http://www.pinnaclep.com/" >
+	<REPORT id="1" name="MemberStatus" desc="MemberStatusDesc" chart="pie" type="company">
+		<PARAM name="CompanyID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="2" name="MemberVisit" desc="MemberVisitDesc" chart="pie" type="company">
+		<PARAM name="CompanyID" type="system"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="3" name="ContactStatus" desc="ContactStatusDesc" title="ContactStatusTitle" translate="true" chart="pie" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="4" name="ProspectStatus" desc="ProspectStatusDesc" title="ProspectStatusTitle" translate="true" chart="pie" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="5" name="10KChallenge" desc="10KChallengeDesc" graybar="true" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="Const" type="system" init="60"/>
+		<PARAM name="type" type="list">
+			<OPTION id="1" name="Contacts"/>
+			<OPTION id="2" name="Prospects"/>
+			<OPTION id="3" name="Both"/>
+		</PARAM>
+		<PARAM name="FromDate" type="date" init="now-30"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<COLUMN name="type" width="100" align="center"/>
+		<COLUMN name="status" width="100" align="center"/>
+		<COLUMN name="count" width="100" align="center"/>
+		<TOTAL name="count" type="sum"/>
+	</REPORT>
+	<REPORT id="101" name="10KApproval" desc="10KApprovalDesc" graybar="true" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="Const" type="system" init="60"/>
+		<PARAM name="FromDate" type="date" init="now-30"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<COLUMN name="type" width="100" align="center"/>
+		<COLUMN name="status" width="100" align="center"/>
+		<COLUMN name="count" width="100" align="center"/>
+		<TOTAL name="count" type="sum"/>
+	</REPORT>
+	<REPORT id="101" name="10KApproval" desc="10KApprovalDesc" graybar="true" type="company">
+		<PARAM name="MemberID" type="text"/>
+		<PARAM name="Const" type="system" init="60"/>
+		<PARAM name="FromDate" type="date" init="now-30"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<COLUMN name="type" width="100" align="center"/>
+		<COLUMN name="status" width="100" align="center"/>
+		<COLUMN name="count" width="100" align="center"/>
+		<TOTAL name="count" type="sum"/>
+	</REPORT>
+</REPORTS>

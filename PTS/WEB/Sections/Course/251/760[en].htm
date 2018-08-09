@@ -1,0 +1,123 @@
+<H4 align=center><FONT size=4>Using Comparison Operators</FONT></H4>
+<P><FONT size=3>You can enter criteria in the <B>Criteria</B> row of the query design grid in order to select specific records. The simplest criteria requires that records match a single value to be included in the RecordSet. </FONT>
+<P><FONT size=3>You can also use comparison operators to select a specific group of records in a table. For example, if you want to find all customers with credit limits less than $1000, or all customers with a contract date on or before January 1997, you can write an expression that defines the criteria using a combination of comparison operators and field values, such as &lt;1000 or &lt;=1/1/97. Comparison operators are symbols that represent conditions recognized by Access. The available comparison operators are</FONT> 
+<TABLE cellSpacing=0 cellPadding=5 border=1>
+<TBODY>
+<TR>
+<TD width="16%" height=19><I><B><FONT size=3>&nbsp;Operator</FONT></B></I></TD>
+<TD width="84%" height=19><FONT size=3><I><B>Description</B></I></FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>&lt;</FONT></TD>
+<TD width="84%" height=19><FONT size=3>less than </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>&lt;=</FONT></TD>
+<TD width="84%" height=19><FONT size=3>less than or equal to </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>&gt;</FONT></TD>
+<TD width="84%" height=19><FONT size=3>greater than </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>&gt;=</FONT></TD>
+<TD width="84%" height=19><FONT size=3>greater than or equal to </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>=</FONT></TD>
+<TD width="84%" height=19><FONT size=3>equal to </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>&lt;&gt;</FONT></TD>
+<TD width="84%" height=19><FONT size=3>not equal to </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>Not</FONT></TD>
+<TD width="84%" height=19><FONT size=3>reverse logic </FONT></TD>
+</TR></TBODY></TABLE>
+<P><FONT size=3>You can use a comparison operator to compare a specified value with all the values in a field. When you run the query, only the records with values meeting the criteria you specify appear in the RecordSet. </FONT>
+<P><FONT size=3><IMG style="WIDTH: 441px; HEIGHT: 250px" height=250 alt=CompOp.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/CompOp.gif" width=441 border=0></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual Access file, please click on the link to the left and move between the Access and Web windows until you are satisfied you have mastered the skill. (If a dialog box appears while you are trying to open the exercise, click <I>Open It.</I> )</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the <B>Criteria</B> row under the desired field. 
+<BR><I>The insertion point appears in the <B>Criteria </B>row under the appropriate field</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type a comparison operator and the value for the criteria. 
+<BR></FONT><I><FONT size=3>The criteria appears in the <B>Criteria</B> row under the appropriate field. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Press <B>[Enter]</B> . 
+<BR><I>The criteria is entered into the design grid.</I></FONT>
+</OL><H4 align=center><FONT size=4>Using an AND Condition</FONT></H4>
+<P><FONT size=3>Many times, a query requires more than one condition to obtain the desired result. For example, if you want to find all customers in PA with sales to date over $10,000, you would need two conditions: State=PA and Sales to Date&gt;10000. The records must meet both conditions in order to be included in the RecordSet. To combine two criteria in this way, you use the <B>And</B> logical operator. </FONT>
+<P><FONT size=3>You can use the <B>And </B>operator in a single field or in different fields. In a single field, you can use the <B>And</B> operator to find records that fall into a range. For example, to find customers whose contract dates fall between 9/1/99 and 9/30/99, you type both criteria on a single line in the<B> Criteria</B> row under the appropriate field (i.e., &gt;=<B> 9/1/99 And </B>&lt;=<B> 9/30/99 </B>in the<B> Contract Date </B>field). </FONT>
+<P><FONT size=3>The <B>And</B> operator also allows you to impose conditions in two different fields. For example, to find customers in PA with sales to date over $10,000, you type each criterion on a single line in the <B>Criteria</B> row under the appropriate fields (i.e., =<B> PA</B> in the <B>State/Province</B> field and &gt;<B> 10000</B> in the<B> Sales to Date</B> field). 
+<BR>
+<BR><IMG style="WIDTH: 508px; HEIGHT: 96px" height=96 alt=ANDCond.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/ANDCond.gif" width=508 border=0></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Create a Query that lists University Employees from the Education Department <B>AND</B> from the state of Maryland. 
+<BR><I>Using the University Employees database, create a new Query in Design view using the University Employees Table. Add the following fields: <B>First Name, Last Name, DepartmentName, and StateorProvince.</B></I></FONT> 
+<OL>
+<LI><FONT size=3>Select the <B>Criteria</B> row under the <B>Department</B> <B>Name</B> field. 
+<BR></FONT><I><FONT size=3>Type <B>Education</B> and press <B>[Enter]</B> <B>.</B> 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the <B>Criteria</B> row under the <B>StateorProvince</B> field. 
+<BR></FONT><I><FONT size=3>Type <B>Maryland</B> press <B>[Enter]</B> <B>.</B> 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Switch to <B>Datasheet</B> view to view the Query results.</FONT>
+</OL><H4 align=center><FONT size=4>Using an OR Condition</FONT></H4>
+<P><FONT size=3>Many times, a query requires more than one condition to obtain the desired result. For example, if you want to find all customers in PA or all customers with sales to date over $10,000, you would need two conditions: State=PA as well as Sales to Date&gt;10000. The records only need to meet one of the conditions in order to be included in the RecordSet. To combine two criteria in this way, you use the <B>Or</B> logical operator. </FONT>
+<P><FONT size=3>You can use the <B>Or</B> operator in a single field or in different fields. In a single field, you type the criteria on two separate lines under the same field. In different fields, you type the criteria on two separate lines under the appropriate fields. For example, to find all customers with contract dates on or before 1/1/99 or credit limits above $3,000, you type &lt;=<B> 1/1/99</B> in the <B>Criteria</B> row under the <B>Contract</B> <B>Date</B> field and &gt;<B> 3000</B> in the or row under the <B>Credit</B> <B>Limit</B> field. 
+<BR>
+<BR><IMG style="WIDTH: 395px; HEIGHT: 101px" height=101 alt=ORCond.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/ORCond.gif" width=395 border=0>&nbsp; 
+<BR></FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Create a Query that lists University Employees from the Psychology <B>OR</B> Music department. 
+<BR><I>Using the University Employees database, create a new Query in Design view using the University Employees Table. Add the following fields: <B>First Name, Last Name, and DepartmentName.</B></I></FONT> 
+<OL>
+<LI><FONT size=3><B>Select the <B>Criteria</B> row under the <B>Department</B> Name</B> field. 
+<BR><I>Type <B>Psychology</B> and Press <B>[Enter]</B> .</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>or </B>row under the <B>DepartmentName</B> field. <I>Type <B>Music</B> and Press <B>[Enter]</B> .</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Switch to <B>Datasheet</B> view to view the Query results.</FONT>
+</OL><H4 align=center><FONT size=4>Using the BETWEEN AND Operator</FONT></H4>
+<P><FONT size=3>You can use the <B>Between</B> And operator in a query to find data that is between two values. You can use this operator with a text, numeric, or date field. For example, to find all records of customers with credit limits between 1000 and 2000, you would enter <B>Between 1000 And 2000</B> in the <B>Criteria</B> row under the <B>Credit Limit</B> field.</FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the <B>Criteria</B> row under the desired field. 
+<BR><I>The insertion point appears in the <B>Criteria</B> row under the appropriate field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type the <B>Between And</B> operator and the criteria. 
+<BR><I>The operator and the criteria appear in the <B>Criteria</B> row under the appropriate field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Press <B>[Enter]</B> . 
+<BR><I>The <B>Between And </B>operator and the criteria are entered into the design grid.</I></FONT>
+</OL><H4 align=center><FONT size=4>Using a Wildcard Character</FONT></H4>
+<P><FONT size=3>Wildcard characters are used in a query to find records when the criteria contains a pattern (such as all last names beginning with M) or is only partly known (such as the proper spelling - Kline or Klein). Wildcards take the place of one or several letters in a Text field or numbers in a Date/Time field.</FONT> 
+<P><FONT size=3>The two most common wildcards are listed in the following table:</FONT> 
+<P>
+<TABLE cellSpacing=0 cellPadding=5 border=1>
+<TBODY>
+<TR>
+<TD width="16%" height=19><I><B><FONT size=3>Wildcard - Representing</FONT></B></I></TD>
+<TD width="84%" height=19><FONT size=3><I><B>Example</B></I></FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>? - Any single letter or number</FONT></TD>
+<TD width="84%" height=19><FONT size=3>Sm?th finds Smith and Smyth, whereas ?andy finds Sandy, Randy, etc. </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>* - One or more letters or numbers</FONT></TD>
+<TD width="84%" height=19><FONT size=3>M* finds all records that start with M; 8/*/99 finds all dates in August, 1999; and *ball* finds all records that have the word ball anywhere in the field </FONT></TD>
+</TR></TBODY></TABLE>
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the <B>Criteria</B> row under the desired field. 
+<BR><I>The insertion point appears in the <B>Criteria</B> row under the appropriate field</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type the criteria with the appropriate wildcards. 
+<BR></FONT><I><FONT size=3>The criteria<B></B>and wildcards<B></B>appear in the <B>Criteria</B> row under the appropriate field. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Press <B>[Enter]</B> . 
+<BR><I>The wildcards and criteria are entered into the design grid, and</I> <I>Access inserts the word <B>Like</B> before the criteria and places quotation marks around it.</I></FONT>
+</OL>

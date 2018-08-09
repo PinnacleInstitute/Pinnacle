@@ -1,0 +1,458 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="123" name="Moption" alias="mop" log="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="12301" name="MoptionID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="12302" name="MemberID" type="number" title="true" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="12305" name="IsActivity" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="12306" name="ActivityTracks" type="text" length="20" source="entity" language="false"/>
+		<WTATTRIBUTE id="12307" name="TrackTheme" type="number" source="entity"/>
+		<WTATTRIBUTE id="12308" name="MenuColors" type="text" length="200" source="entity" language="false"/>
+		<WTATTRIBUTE id="12309" name="Portal" type="text" length="100" source="entity" language="false"/>
+		<WTATTRIBUTE id="12310" name="Options0" type="text" length="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="12311" name="Options1" type="text" length="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="12312" name="Options2" type="text" length="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="12313" name="Options3" type="text" length="50" source="entity" language="false"/>
+
+		<!-- Non Persist Fields -->
+		
+		<!--Indexes-->
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Moption" entity="Moption" alias="mop"/>
+			<WTRELATIONSHIP name="Common" entity="Moption" alias="mop"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<!--Procedures-->
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="FetchMember" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(MoptionID)" direction="output"/>
+			<WTPARAM name="ATTR(ActivityTracks)" direction="output"/>
+			<WTPARAM name="ATTR(TrackTheme)" direction="output"/>
+			<WTPARAM name="ATTR(MenuColors)" direction="output"/>
+			<WTPARAM name="ATTR(Portal)" direction="output"/>
+			<WTPARAM name="ATTR(Options0)" direction="output"/>
+			<WTPARAM name="ATTR(Options1)" direction="output"/>
+			<WTPARAM name="ATTR(Options2)" direction="output"/>
+			<WTPARAM name="ATTR(Options3)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PARAM(MoptionID)" value="ATTR(Moption.MoptionID)"/>
+					<WTATTRIBUTE name="PARAM(ActivityTracks)" value="ATTR(Moption.ActivityTracks)"/>
+					<WTATTRIBUTE name="PARAM(TrackTheme)" value="ATTR(Moption.TrackTheme)"/>
+					<WTATTRIBUTE name="PARAM(MenuColors)" value="ATTR(Moption.MenuColors)"/>
+					<WTATTRIBUTE name="PARAM(Portal)" value="ATTR(Moption.Portal)"/>
+					<WTATTRIBUTE name="PARAM(Options0)" value="ATTR(Moption.Options0)"/>
+					<WTATTRIBUTE name="PARAM(Options1)" value="ATTR(Moption.Options1)"/>
+					<WTATTRIBUTE name="PARAM(Options2)" value="ATTR(Moption.Options2)"/>
+					<WTATTRIBUTE name="PARAM(Options3)" value="ATTR(Moption.Options3)"/>
+					<WTJOIN name="Moption" lock="false"/>
+					<WTCONDITION expr="ATTR(Moption.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12303" caption="Member Options" header="false" footer="false" navbar="false" focus="false" wrapper="wrapper600"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+
+			<WTSUB name="LoadMoption">
+				<WTOBJECT name="Moption" project="ptsMoptionUser" class="CMoption">
+					<WTMETHOD name="FetchMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(MoptionID)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+						<WTMETHOD name="Add">
+							<WTPARAM name="MoptionID" direction="return" datatype="number"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MoptionID" direction="input" value="ATTR(MoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateMoption">
+				<WTOBJECT name="Moption" project="ptsMoptionUser" class="CMoption">
+					<WTMETHOD name="FetchMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>			
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>	
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadMoption"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTSETATTRIBUTE name="PARAM(Status)" value="CONST(1)"/>
+				<WTCALLSUB name="UpdateMoption"/>
+				<WTCALLSUB name="LoadMoption"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Edit6" type="Update">
+				<WTCALLSUB name="UpdateMoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="Opt" value="CONST(10)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="Edit7" type="Update">
+				<WTCALLSUB name="UpdateMoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="Opt" value="CONST(11)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="8" name="Edit8" type="Update">
+				<WTCALLSUB name="UpdateMoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="Opt" value="CONST(12)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="9" name="Edit9" type="Update">
+				<WTCALLSUB name="UpdateMoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="Opt" value="CONST(13)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC tag="MemberOptions"/>
+						<WTSTATIC value="ATTR(Moption.MemberID)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(1)"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="Updated" fontcolor="red"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="ActivityTrackerText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Moption.IsActivity)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ActivityTracks"/>
+					<WTTEXT col="2" value="ATTR(Moption.ActivityTracks)"/>
+					<WTSTATIC col="2" label="ActivityTracksText"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TrackTheme"/>
+					<WTCOMBO col="2" value="ATTR(Moption.TrackTheme)">
+						<WTOPTION id="0" label="Financial"/>
+						<WTOPTION id="1" label="Performance"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Portal"/>
+					<WTTEXT col="2" value="ATTR(Moption.Portal)"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(PortalOptions)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTROW margin-top="12">
+						<WTSTATIC col="1" tag="Options0"/>
+						<WTTEXT col="2" value="ATTR(Moption.Options0)" size="48"/>
+						<WTBUTTON col="2" action="6" value="CONST(Edit)" btnclass="smbutton"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Options1"/>
+						<WTTEXT col="2" value="ATTR(Moption.Options1)" size="48"/>
+						<WTBUTTON col="2" action="7" value="CONST(Edit)" btnclass="smbutton"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Options2"/>
+						<WTTEXT col="2" value="ATTR(Moption.Options2)" size="48"/>
+						<WTBUTTON col="2" action="8" value="CONST(Edit)" btnclass="smbutton"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Options3"/>
+						<WTTEXT col="2" value="ATTR(Moption.Options3)" size="48"/>
+						<WTBUTTON col="2" action="9" value="CONST(Edit)" btnclass="smbutton"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+					<WTROW>
+						<WTHIDDEN value="ATTR(Moption.Options0)"/>
+						<WTHIDDEN value="ATTR(Moption.Options1)"/>
+						<WTHIDDEN value="ATTR(Moption.Options2)"/>
+						<WTHIDDEN value="ATTR(Moption.Options3)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="MenuColors" caption="Menu Colors" header="false" footer="false" navbar="false" focus="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" langfile="MenuColors">
+			<!--=============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+			<WTPARAM name="MenuBehindColor" datatype="text"/>
+			<WTPARAM name="MenuTopColor" datatype="text"/>
+			<WTPARAM name="MenuTopBGColor" datatype="text"/>
+			<WTPARAM name="MenuColor" datatype="text"/>
+			<WTPARAM name="MenuBGColor" datatype="text"/>
+			<WTPARAM name="MenuShadowColor" datatype="text"/>
+			<WTPARAM name="MenuBDColor" datatype="text"/>
+			<WTPARAM name="MenuOverColor" datatype="text"/>
+			<WTPARAM name="MenuOverBGColor" datatype="text"/>
+			<WTPARAM name="MenuDividerColor" datatype="text"/>
+			<WTPARAM name="MenuBehindImage" datatype="text"/>
+			<WTPARAM name="MenuTopImage" datatype="text"/>
+			<WTPARAM name="MenuImage" datatype="text"/>
+			<WTPARAM name="Updated" datatype="number"/>
+
+			<WTINCLUDE name="MenuColors.asp"/>
+			<WTJAVASCRIPT name="jscolor.js"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="GetMenuColors reqCompanyID, reqGroupID, reqMenuBehindColor, reqMenuTopColor, reqMenuTopBGColor, reqMenuColor, reqMenuBGColor, reqMenuShadowColor, reqMenuBDColor, reqMenuOverColor, reqMenuOverBGColor, reqMenuDividerColor, reqMenuBehindImage, reqMenuTopImage, reqMenuImage"/>
+			</WTACTION>
+			<WTACTION id="1" name="Update" type="Update">
+				<WTSETATTRIBUTE name="PARAM(Updated)" value="CONST(1)"/>
+				<WTCALLSUB name="SaveMenuColors reqCompanyID, reqGroupID, reqMenuBehindColor, reqMenuTopColor, reqMenuTopBGColor, reqMenuColor, reqMenuBGColor, reqMenuShadowColor, reqMenuBDColor, reqMenuOverColor, reqMenuOverBGColor, reqMenuDividerColor, reqMenuBehindImage, reqMenuTopImage, reqMenuImage"/>
+			</WTACTION>
+			<WTACTION id="2" name="Default" type="Update">
+				<WTCALLSUB name="DefaultMenuColors reqCompanyID, reqGroupID, reqMenuBehindColor, reqMenuTopColor, reqMenuTopBGColor, reqMenuColor, reqMenuBGColor, reqMenuShadowColor, reqMenuBDColor, reqMenuOverColor, reqMenuOverBGColor, reqMenuDividerColor, reqMenuBehindImage, reqMenuTopImage, reqMenuImage"/>
+			</WTACTION>
+			<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right" />
+				<WTCOLUMN width="440" align="left" />
+
+				<WTMENU name="TestMenu" type="bar" menuwidth="125" height="30" top-color="PARAM(MenuTopColor)" top-bgcolor="PARAM(MenuTopBGColor)"
+						color="PARAM(MenuColor)" bgcolor="PARAM(MenuBGColor)" shadow-color="PARAM(MenuShadowColor)" bdcolor="PARAM(MenuBDColor)"
+						over-color="PARAM(MenuOverColor)" over-bgcolor="PARAM(MenuOverBGColor)" divider-color="PARAM(MenuDividerColor)" top-bgimg="PARAM(MenuTopImage)" bgimg="PARAM(MenuImage)">
+					<WTITEM label="Option1">
+						<WTITEM label="Option1.1"/>
+						<WTDIVIDER/>
+						<WTITEM label="Option1.2"/>
+						<WTITEM label="Option1.3">
+							<WTITEM label="Option1.1.1"/>
+							<WTITEM label="Option1.2.1"/>
+							<WTITEM label="Option1.3.1"/>
+						</WTITEM>
+					</WTITEM>
+					<WTITEM label="Option2">
+						<WTITEM label="Option2.1"/>
+						<WTITEM label="Option2.2"/>
+						<WTDIVIDER/>
+						<WTITEM label="Option2.3"/>
+					</WTITEM>
+					<WTITEM label="Option3">
+						<WTITEM label="Option3.1"/>
+						<WTITEM label="Option3.2"/>
+						<WTITEM label="Option3.3"/>
+					</WTITEM>
+				</WTMENU>
+
+				<WTROW margin-top="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="PARAM(MenuBehindColor)" />
+				</WTROW>
+				<WTROW height="36">
+					<WTSTATIC col="1" merge="2" align="left" valign="top" backcolor="PARAM(MenuBehindColor)" bgimg="PARAM(MenuBehindImage)">
+						<WTCODEGROUP>
+							<WTSTARTMENU name="TestMenu" type="bar"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="PARAM(MenuBehindColor)" />
+				</WTROW>
+
+				<WTROW margin-top="18">
+					<WTSTATIC col="1" tag="TopMenu"/>
+					<WTTEXT col="2" value="PARAM(MenuTopColor)" width="100" label="Text" size="10" textclass="color"/>
+					<WTTEXT col="2" value="PARAM(MenuTopBGColor)" width="100" label="Background" size="10" textclass="color"/>
+					<WTCOMBO col="2" value="PARAM(MenuTopImage)" width="240" label="Texture">
+						<WTOPTION id="CONST()" value="CONST()"/>
+						<WTOPTION id="CONST(circles.png)" value="CONST(Circles.png)"/>
+						<WTOPTION id="CONST(crossed_stripes.png)" value="CONST(crossed_stripes.png)"/>
+						<WTOPTION id="CONST(crosses.png)" value="CONST(crosses.png)"/>
+						<WTOPTION id="CONST(dark_circles.png)" value="CONST(dark_circles.png)"/>
+						<WTOPTION id="CONST(dark_matter.png)" value="CONST(dark_matter.png)"/>
+						<WTOPTION id="CONST(diamonds.png)" value="CONST(diamonds.png)"/>
+						<WTOPTION id="CONST(foil.png)" value="CONST(foil.png)"/>
+						<WTOPTION id="CONST(gun_metal.png)" value="CONST(gun_metal.png)"/>
+						<WTOPTION id="CONST(knitted-netting.png)" value="CONST(knitted_netting.png)"/>
+						<WTOPTION id="CONST(littleknobs.png)" value="CONST(littleknobs.png)"/>
+						<WTOPTION id="CONST(merely_cubed.png)" value="CONST(merely_cubed.png)"/>
+						<WTOPTION id="CONST(micro_carbon.png)" value="CONST(micro_carbon.png)"/>
+						<WTOPTION id="CONST(small-crackle.png)" value="CONST(small_crackle.png)"/>
+						<WTOPTION id="CONST(soft_pad.png)" value="CONST(soft_pad.png)"/>
+						<WTOPTION id="CONST(white_carbon.png)" value="CONST(white_carbon.png)"/>
+						<WTOPTION id="CONST(zigzag.png)" value="CONST(zigzag.png)"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="SubMenu"/>
+					<WTTEXT col="2" value="PARAM(MenuColor)" width="100" label="Text" size="10" textclass="color"/>
+					<WTTEXT col="2" value="PARAM(MenuBGColor)" width="100" label="Background" size="10" textclass="color"/>
+					<WTCOMBO col="2" value="PARAM(MenuImage)" width="240" label="Texture">
+						<WTOPTION id="CONST()" value="CONST()"/>
+						<WTOPTION id="CONST(circles.png)" value="CONST(Circles.png)"/>
+						<WTOPTION id="CONST(crossed_stripes.png)" value="CONST(crossed_stripes.png)"/>
+						<WTOPTION id="CONST(crosses.png)" value="CONST(crosses.png)"/>
+						<WTOPTION id="CONST(dark_circles.png)" value="CONST(dark_circles.png)"/>
+						<WTOPTION id="CONST(dark_matter.png)" value="CONST(dark_matter.png)"/>
+						<WTOPTION id="CONST(diamonds.png)" value="CONST(diamonds.png)"/>
+						<WTOPTION id="CONST(foil.png)" value="CONST(foil.png)"/>
+						<WTOPTION id="CONST(gun_metal.png)" value="CONST(gun_metal.png)"/>
+						<WTOPTION id="CONST(knitted-netting.png)" value="CONST(knitted_netting.png)"/>
+						<WTOPTION id="CONST(littleknobs.png)" value="CONST(littleknobs.png)"/>
+						<WTOPTION id="CONST(merely_cubed.png)" value="CONST(merely_cubed.png)"/>
+						<WTOPTION id="CONST(micro_carbon.png)" value="CONST(micro_carbon.png)"/>
+						<WTOPTION id="CONST(small-crackle.png)" value="CONST(small_crackle.png)"/>
+						<WTOPTION id="CONST(soft_pad.png)" value="CONST(soft_pad.png)"/>
+						<WTOPTION id="CONST(white_carbon.png)" value="CONST(white_carbon.png)"/>
+						<WTOPTION id="CONST(zigzag.png)" value="CONST(zigzag.png)"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="MouseOver"/>
+					<WTTEXT col="2" value="PARAM(MenuOverColor)" width="100" label="Text" size="10" textclass="color"/>
+					<WTTEXT col="2" value="PARAM(MenuOverBGColor)" width="340" label="Background" size="10" textclass="color"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="MenuLines"/>
+					<WTTEXT col="2" value="PARAM(MenuBDColor)" width="100" label="Border" size="10" textclass="color"/>
+					<WTTEXT col="2" value="PARAM(MenuDividerColor)" width="340" label="Divider" size="10" textclass="color"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Highlights"/>
+					<WTTEXT col="2" value="PARAM(MenuShadowColor)" width="100" label="Shadow" size="10" textclass="color"/>
+					<WTTEXT col="2" value="PARAM(MenuBehindColor)" width="100" label="Behind" size="10" textclass="color"/>
+					<WTCOMBO col="2" value="PARAM(MenuBehindImage)" width="240" label="Texture">
+						<WTOPTION id="CONST()" value="CONST()"/>
+						<WTOPTION id="CONST(circles.png)" value="CONST(Circles.png)"/>
+						<WTOPTION id="CONST(crossed_stripes.png)" value="CONST(crossed_stripes.png)"/>
+						<WTOPTION id="CONST(crosses.png)" value="CONST(crosses.png)"/>
+						<WTOPTION id="CONST(dark_circles.png)" value="CONST(dark_circles.png)"/>
+						<WTOPTION id="CONST(dark_matter.png)" value="CONST(dark_matter.png)"/>
+						<WTOPTION id="CONST(diamonds.png)" value="CONST(diamonds.png)"/>
+						<WTOPTION id="CONST(foil.png)" value="CONST(foil.png)"/>
+						<WTOPTION id="CONST(gun_metal.png)" value="CONST(gun_metal.png)"/>
+						<WTOPTION id="CONST(knitted-netting.png)" value="CONST(knitted_netting.png)"/>
+						<WTOPTION id="CONST(littleknobs.png)" value="CONST(littleknobs.png)"/>
+						<WTOPTION id="CONST(merely_cubed.png)" value="CONST(merely_cubed.png)"/>
+						<WTOPTION id="CONST(micro_carbon.png)" value="CONST(micro_carbon.png)"/>
+						<WTOPTION id="CONST(small-crackle.png)" value="CONST(small_crackle.png)"/>
+						<WTOPTION id="CONST(soft_pad.png)" value="CONST(soft_pad.png)"/>
+						<WTOPTION id="CONST(white_carbon.png)" value="CONST(white_carbon.png)"/>
+						<WTOPTION id="CONST(zigzag.png)" value="CONST(zigzag.png)"/>
+						<WTOPTION id="CONST(paven.png)" value="CONST(paven.png)"/>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Preview)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Defaults)" align="center"/>
+					<WTBUTTON col="1" merge="2" value="CONST(Apply)">
+						<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(1)" />
+						<WTCLICK>window.parent.doSubmit(0,"");</WTCLICK>
+					</WTBUTTON>
+					<WTSTATIC col="1" merge="2" label="Updated" fontcolor="red" bold="true">
+						<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(1)" />
+					</WTSTATIC>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

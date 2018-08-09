@@ -1,0 +1,173 @@
+<H4 align=center><FONT size=4>Setting Top Values in a Query</FONT></H4>
+<P><FONT size=3>You can limit the results of a query so that only the highest or lowest values for a field appear in a RecordSet. For example, you can set the top values of a <B>Quantity Sold</B> field to 10 to find the top ten best selling products. You can limit the number of records to a specific number or a percentage of all records being queried (i.e. top 25%). The field for which you are setting the top or bottom values must be sorted. If the field is sorted in descending order (Z to A, 9 to 0), the top values will be found. If the field is sorted in ascending order (A to Z, 0 to 9), the bottom values will be found. 
+<BR>
+<BR><IMG style="WIDTH: 441px; HEIGHT: 331px" height=331 alt=TopValues.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/TopValues.gif" width=441 border=0></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the <B>Sort</B> row under the desired field. 
+<BR><I>The insertion point appears in the <B>Sort</B> row under the appropriate field and an arrow appears to the right of the field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Sort</B> list. 
+<BR><I>A list of sort orders appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the desired sort order. 
+<BR><I>The desired sort order appears in the <B>Sort</B> row under the appropriate field</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Top Values</B> list on the <B>Query Design</B> toolbar. 
+<BR><I>A list of top values appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the desired top value. 
+<BR><I>The top value appears in the <B>Top</B> <B>Values</B> box.</I></FONT>
+</OL><H4 align=center><FONT size=4>Creating a Calculated Field</FONT></H4>
+<P><FONT size=3>You may want to use field values in a table to calculate new values, such as multiplying the value in the <B>Participants</B> field by the value in the <B>Cost</B> field to calculate the total cost. Access allows you to use expressions to calculate new field values. The expression can also include a single field, which has a value that needs to be adjusted, such as doubling a <B>Cost</B> field to calculate values for a price increase. In expressions, field names are enclosed in square brackets ([ ]); numbers are not. For example, to calculate a double in the amount of a course cost and display the results in a column you want to name <B>Tuition</B> <B>Increase</B> , you would enter <B>Tuition Increase:2*[Cost]</B> in the design grid. The colon is used to separate the column name from the expression. </FONT>
+<P><FONT size=3>You create calculated fields in queries. You can also use criteria to remove nonessential records, thereby allowing the query to run faster. The results can then be used to generate a report. 
+<BR>
+<BR><IMG style="WIDTH: 574px; HEIGHT: 104px" height=104 alt=CalculateField.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/CalculateField.gif" width=574 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Create a Query to Calculate the total cost (revenue) for each workshop. 
+<BR><I>Using the University Employees database, open the Calculate Total Cost Query in Design view.</I></FONT> 
+<OL>
+<LI><FONT size=3>Select the <B>Field</B> row in the first blank column. 
+<BR><I>The insertion point appears in the first blank </I><B>Field</B> row and an arrow appears to the right of the field. </FONT>
+<LI><FONT size=3>Type the new field name and a colon (<B> :</B> ). 
+<BR></FONT><I><FONT size=3>Type <B>Total Cost</B> and a colon (<B> :</B> ). 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Type the expression required to perform the calculation. Type <B>[Participants]*[Cost]</B> (no spaces). 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Press <B>[Enter]</B> . 
+<BR><I>The calculated field is entered into the design grid.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Switch to <B>Datasheet</B> view to view the Query results.</FONT>
+</OL><H4 align=center><FONT size=4>Creating a Function Query</FONT></H4>
+<P><FONT size=3>Access allows you to create a query that groups records by a selected field and applies a function that calculates values on other fields in the query according to your needs. For example, you can group records in a table by state and then select the <B>Count</B> function to find out how many customers (records) are in each state (field). You can also group by customer name (field) and calculate the <B>Sum</B> of each customer's orders (record values).</FONT> 
+<P><FONT size=3>There are several types of functions from which you can choose. The most commonly used functions are listed in the following table:</FONT> 
+<P>
+<TABLE cellSpacing=0 cellPadding=5 border=1>
+<TBODY>
+<TR>
+<TD width="16%" height=19><I><B><FONT size=3>Function</FONT></B></I></TD>
+<TD width="84%" height=19><FONT size=3><I><B>Description</B></I></FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>Sum</FONT></TD>
+<TD width="84%" height=19><FONT size=3>Sums the values in the calculated field </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>Average</FONT></TD>
+<TD width="84%" height=19><FONT size=3>Finds the average value of the calculated field </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>Count</FONT></TD>
+<TD width="84%" height=19><FONT size=3>Counts the number of records in the calculated field </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>Max</FONT></TD>
+<TD width="84%" height=19><FONT size=3>Finds the highest value in the calculated field </FONT></TD>
+</TR><TR>
+<TD width="16%" height=19><FONT size=3>Min</FONT></TD>
+<TD width="84%" height=19><FONT size=3>Finds the lowest value in the calculated field </FONT></TD>
+</TR></TBODY></TABLE>
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the <B>New</B> button on the Database window toolbar. 
+<BR><I>The New Query dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Design View</B> . 
+<BR><B>Design View</B></FONT><I> <FONT size=3>is selected and a description of <B>Design</B> view appears in the left panel of the New Query dialog box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select <B>OK</B> . 
+<BR><I>The New Query dialog box closes, <B>Design</B> view appears, and the Show Table dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the name of the table you want to add to the query. 
+<BR><I>The table is selected.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Add</B> . 
+<BR><I>The field list for the table appears in the top pane of </I><B>Design</B> view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Close</B> to close the Show Table dialog box. 
+<BR><I>The Show Table dialog box closes.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the field by which you want to group. 
+<BR><I>The field and table names appear in the design grid.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the field you want to calculate. 
+<BR><I>The field and table names appear in the design grid.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>View</B> menu. 
+<BR><I>The <B>View</B> menu appears</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Totals</B> command. 
+<BR><I>A <B>Total</B> row is added to the design grid.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Total</B> row under the field you want to calculate. 
+<BR><I>The insertion point appears in the <B>Total</B> row under the appropriate field and an arrow appears to the right of the field</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Total</B> list. 
+<BR><I>A list of functions appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the desired function. 
+<BR><I>The function appears in the <B>Total</B> row under the appropriate field.</I></FONT>
+</OL><H4 align=center><FONT size=4>Creating a Parameter</FONT></H4>
+<P><FONT size=3>If you want to run a query with different criteria each time, you can create a parameter query. A parameter query is a query that prompts the user for information when the query is run. Access then uses the information as the criteria and runs the query. The resulting RecordSet only includes those records that meet the criteria. This option allows you to avoid displaying the query in <B>Design</B> view each time you want to change the criteria. </FONT>
+<P><FONT size=3>You enter the text that will display in the prompt in the <B>Criteria</B> row under the appropriate field in the design grid, followed by a colon (<B> :</B> ) and enclosed in square brackets (<B> [ ]</B> ). You can set up a parameter query to prompt the user for more than one piece of information as well. 
+<BR>
+<BR><IMG style="WIDTH: 441px; HEIGHT: 331px" height=331 alt=Parameter.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Parameter.gif" width=441 border=0> 
+<BR>
+<BR><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>1. Select the <B>Criteria</B> row under the desired field. 
+<BR></FONT><I><FONT size=3>The insertion point appears in the <B>Criteria</B> row under the appropriate field. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Type the desired text for the prompt, followed by a colon (<B> :</B> ) and enclosed in square brackets (<B> [ ]</B> ). 
+<BR></FONT><I><FONT size=3>The text appears in the <B>Criteria</B> row under the appropriate field. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Press <B>[Enter]</B> . 
+<BR><I>The text is entered into the design grid.</I></FONT>
+</OL><H4 align=center><FONT size=4>Creating a Concatenation in a Query</FONT></H4>
+<P><FONT size=3>Access allows you to combine two or more fields into one field. This process, known as concatenation, enables you to add field name text strings to one another. The text strings can follow each other with or without spaces. You can add other characters between the text strings if needed. For example, you can combine the individual <B>City</B> , <B>State</B> , and <B>Postal</B> <B>Code</B> fields into one field called <B>Address</B> . You can have the comma and space characters appear between the field text strings. This concatenation process can be performed by creating a query to combine two or more fields. </FONT>
+<P><FONT size=3>When typing expressions for concatenation, the first part of the expression defines the name of the new field. The second part of the expression defines the fields which are to be concatenated. These field names must be surrounded by brackets. The ampersand (&amp;) appears between the field name brackets. Any additional characters that are to appear between the fields are surrounded by double quotes.&nbsp; For example, the expression <B>Names: [First Name] &amp;" - "&amp;[Last Name]</B> creates a new field called <B>Names</B> . The new field contains the first name and last name separated by a space, a hyphen, and a space. 
+<BR>
+<BR><IMG style="WIDTH: 514px; HEIGHT: 116px" height=116 alt=Concatenation.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Concatenation.gif" width=514 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Using the <B>University Employees</B> database, create a <B>Concatenation</B> Query to combine <B>First Name</B> and <B>Last Name</B> into one field called <B>Full Name</B> .</FONT> 
+<OL>
+<LI><FONT size=3>Open the <B>Combine Names</B> Query from the <B>University Employees</B> database in Design View. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the next available field in Query design view and type the concatenation. 
+<BR><I>Type <B>Full Name:[First Name]&amp;" "&amp;[Last Name]</B></I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Switch to Datasheet view to view the Query results.</FONT>
+</OL><H4 align=center><FONT size=4>Using Multiple Tables in a Query</FONT></H4>
+<P><FONT size=3>There may be instances when you need to add more than one table or query to a query. In order to do this, you need to ensure that the field lists are joined to each other with a join line so that Access knows how to connect the information. </FONT>
+<P><FONT size=3>If tables in a query are not joined to one another, Access does not know which records are associated with which, so every combination of records between the two tables would appear in the query. Therefore, if each table had 50 records, the query's results would contain 2500 records (50x50), thereby rendering useless results. </FONT>
+<P><FONT size=3>If you previously </FONT><FONT color=#000000 size=3>created a relationship</FONT><FONT size=3> between tables in the Relationship window, Access automatically displays join lines when you add related tables in query <B>Design</B> view. If you have not previously created relationships, Access automatically creates joins if tables were added to a query as long as the tables each have a field with the same or compatible data type and one of the join fields is a primary key. If tables added to the query do not include any fields that can be joined, you have to add one or more extra tables or queries to serve solely as a bridge between the tables containing the data you want to use.</FONT><H4 align=center><FONT size=4>Filtering a Query</FONT></H4>
+<P><FONT size=3>You can apply filters to queries in the same way you apply filters to a table or form. Since the data you want to filter sometimes appears in two or more tables, you might need to create a multiple table query. Once the query is created, you can apply a filter to temporarily isolate the records that you want to view. </FONT>
+<P><FONT size=3>The <B>Filter By Selection</B> feature allows you to create a filter by selecting the field containing the information you want to isolate. Conversely, the <B>Filter By</B> <B>Form</B> feature allows you to create a filter by entering the values you want to isolate. In addition, the <B>Filter By Form</B> feature allows you to select multiple fields. 
+<BR>
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=FilterBySelectionButton.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/FilterBySelectionButton.gif" width=33 border=0> <B>Filter by Selection button</B></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the field containing the data you want to filter. 
+<BR><I>The insertion point appears in the field in the appropriate column.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the desired filter button on the <B>Query Datasheet</B> toolbar. 
+<BR><I>The filtered records appear.</I></FONT>
+</OL>

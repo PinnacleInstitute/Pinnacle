@@ -1,0 +1,2319 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="74" name="Task" alias="ta" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="7401" name="TaskID" type="number" identity="true" min="1" required="true" source="entity" title="true"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="7402" name="MemberID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="7403" name="ParentID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="7404" name="ProjectID" type="number" source="entity"/>
+		<WTATTRIBUTE id="7405" name="DependentID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="7410" name="NameLast" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="Member" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7411" name="NameFirst" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="Member" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7412" name="MemberName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=" "/>
+			<WTCOMPUTE name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7413" name="ProjectName" type="text" length="40" min="1" max="40" source="join">
+			<WTJOIN entity="Project" name="ProjectName" />
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="7420" name="TaskName" type="text" length="60" min="1" max="60" required="true" source="entity"/>
+		<WTATTRIBUTE id="7421" name="Description" type="text" length="1000" min="1" max="1000" source="entity"/>
+		<WTATTRIBUTE id="7422" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Started"/>
+			<WTENUM id="2" name="Completed"/>
+			<WTENUM id="3" name="Cancelled"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7423" name="Seq" type="number" source="entity"/>
+		<WTATTRIBUTE id="7424" name="IsMilestone" type="yesno" source="entity"/>
+
+		<WTATTRIBUTE id="7430" name="EstStartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="7431" name="ActStartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="7432" name="VarStartDate" type="number" source="entity"/>
+		<WTATTRIBUTE id="7433" name="EstEndDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="7434" name="ActEndDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="7435" name="VarEndDate" type="number" source="entity"/>
+		<WTATTRIBUTE id="7436" name="EstCost" type="currency" source="entity"/>
+		<WTATTRIBUTE id="7437" name="TotCost" type="currency" source="entity"/>
+		<WTATTRIBUTE id="7438" name="VarCost" type="currency" source="entity"/>
+		<WTATTRIBUTE id="7439" name="Cost" type="currency" source="entity"/>
+		<WTATTRIBUTE id="7440" name="Hrs" type="currency" min="0" max="999999.9999" source="entity">
+			<WTFORMAT value="###,##0.00" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7441" name="TotHrs" type="currency" min="0" max="999999.9999" source="entity">
+			<WTFORMAT value="###,##0.00" />
+		</WTATTRIBUTE>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="7490" name="FromDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7491" name="ToDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7492" name="Notes" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7493" name="Documents" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7494" name="CompanyID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7495" name="Secure" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7496" name="Email" type="text" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7497" name="FromEmail" type="text" source="entity" persist="false"/>
+		<WTATTRIBUTE id="7498" name="IsMsg" type="yesno" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+		<WTINDEX name="ParentID">
+			<WTATTRIBUTE name="ParentID"/>
+		</WTINDEX>
+		<WTINDEX name="ProjectID">
+			<WTATTRIBUTE name="ProjectID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Task" entity="Task" alias="ta"/>
+			<WTRELATIONSHIP name="Common" entity="Task" alias="ta">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="ta" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+				<WTENTITY name="Project" entity="Project" alias="pj">
+					<WTATTRIBUTE alias="ta" name="ProjectID" relalias="pj" relname="ProjectID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Member" entity="Task" alias="ta">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="ta" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="TASK-STATUS-STARTED" value="1"/>
+			<WTSYSCON name="TASK-STATUS-COMPLETED" value="2"/>
+			<WTSYSCON name="TASK-STATUS-CANCELLED" value="3"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(TaskID)" direction="input"/>
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Shortcut_DeleteItem">
+					<WTPARAM name="EntityID" direction="input" value="ENTITY(Task)"/>
+					<WTPARAM name="ItemID" direction="input" value="PARAM(TaskID)"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="Task_DeleteTasks">
+					<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+					<WTPARAM name="ParentID" direction="input" value="PARAM(TaskID)"/>
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="Task" lock="true"/>
+					<WTCONDITION expr="ATTR(TaskID)" oper="equal" value="PARAM(TaskID)"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListParent" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ParentID)" oper="equal" value="PARAM(ParentID)"/>
+					<WTORDER name="ATTR(Task.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProject" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.Seq)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.ParentID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(Task.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="ComputeTotalCost"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(TaskID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="Projects" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.ProjectID)"/>
+					<WTATTRIBUTE value="ATTR(Task.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListMemberPending" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(Task.TaskID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListMemberStarted" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(Task.ActStartDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListMemberCompleted" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(2)" connector="and"/>
+					<WTORDER name="ATTR(Task.ActEndDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProjectMemberPending" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(Task.TaskID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProjectMemberStarted" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(Task.ActStartDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProjectMemberCompleted" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(2)" connector="and"/>
+					<WTORDER name="ATTR(Task.ActEndDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProjectUnassigned" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Task"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(Task.TaskID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProjectPending" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.MemberID)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(Task.TaskID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProjectStarted" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(Task.ActStartDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListProjectCompleted" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.TotCost)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMilestone)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Task.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+					<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(2)" connector="and"/>
+					<WTORDER name="ATTR(Task.ActEndDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="WhatsNewOwn" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.MemberName)" />
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.Notes)"/>
+					<WTATTRIBUTE value="ATTR(Task.Documents)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="WhatsNewBelong" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.MemberName)" />
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.Notes)"/>
+					<WTATTRIBUTE value="ATTR(Task.Documents)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="WhatsNewAccess" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Secure)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.MemberName)" />
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.Notes)"/>
+					<WTATTRIBUTE value="ATTR(Task.Documents)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="WhatsNew" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.MemberName)" />
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.Status)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarStartDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.ActEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.VarEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.Notes)"/>
+					<WTATTRIBUTE value="ATTR(Task.Documents)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="PastDue" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(EstEndDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Task.TaskID)"/>
+					<WTATTRIBUTE value="ATTR(Task.TaskName)"/>
+					<WTATTRIBUTE value="ATTR(Task.ProjectName)"/>
+					<WTATTRIBUTE value="ATTR(Task.MemberName)"/>
+					<WTATTRIBUTE value="ATTR(Task.Description)"/>
+					<WTATTRIBUTE value="ATTR(Task.EstEndDate)"/>
+					<WTATTRIBUTE value="ATTR(Task.Email)"/>
+					<WTATTRIBUTE value="ATTR(Task.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Task.IsMsg)"/>
+					<WTATTRIBUTE value="ATTR(Task.FromEmail)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="7402" caption="New Task" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="ProjectID" datatype="number"/>
+			<WTPARAM name="ParentID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTSUB name="NewTask">
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(ProjectID)" value="PARAM(ProjectID)"/>
+					<WTSETATTRIBUTE name="ATTR(ParentID)" value="PARAM(ParentID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(IsMilestone)" value="CONST(1)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTask" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="ListMembers"/>
+			</WTSUB>
+
+			<WTSUB name="ListMembers">
+				<WTOBJECT name="ProjectMembers" project="ptsProjectMemberUser" class="CProjectMembers">
+					<WTMETHOD name="EnumMember">
+						<WTPARAM name="xmlProjectMembers" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)" />
+						<WTPARAM name="ItemID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="NewTask"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="TaskID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlTask" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="ListMembers">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="140" align="right"/>
+				<WTCOLUMN width="460" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="NewTask" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(Task.gif)" align="center" valign="top"/>
+					<WTSTATIC col="2" align="left" label="AddInstructions" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="ParentID"/>
+						<WTTEXT col="2" value="ATTR(Task.ParentID)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="ProjectID"/>
+						<WTTEXT col="2" value="ATTR(Task.ProjectID)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="DependentID"/>
+						<WTTEXT col="2" value="ATTR(Task.DependentID)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Status"/>
+						<WTCOMBO col="2" value="ATTR(Task.Status)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Task.ParentID)"/>
+					<WTHIDDEN value="ATTR(Task.ProjectID)"/>
+					<WTHIDDEN value="ATTR(Task.DependentID)"/>
+					<WTHIDDEN value="ATTR(Task.Status)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="TaskName"/>
+					<WTTEXT col="2" value="ATTR(Task.TaskName)" size="60" focus="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTCOMBO col="2" value="ATTR(Task.MemberID)" datapath="/DATA/TXN/PTSPROJECTMEMBERS/ENUM"/>
+					<WTSTATIC col="2" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(Task.Seq)" size="2" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Task.IsMilestone)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Task.Description)" cols="72" rows="4"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="DatesText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1">
+						<WTSTATIC label="Projected" space="1" bold="true"/>
+						<WTSTATIC tag="StartDate"/>
+					</WTSTATIC>
+					<WTTEXT col="2" value="ATTR(Task.EstStartDate)"/>
+					<WTSTATIC col="2" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Task.EstEndDate)" prespace="false"/>
+					<WTSTATIC col="2" tag="Cost"/>
+					<WTTEXT col="2" value="ATTR(Task.EstCost)" prespace="false" size="8"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1">
+						<WTSTATIC label="Actual" space="1" bold="true"/>
+						<WTSTATIC tag="StartDate"/>
+					</WTSTATIC>
+					<WTTEXT col="2" value="ATTR(Task.ActStartDate)"/>
+					<WTSTATIC col="2" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Task.ActEndDate)" prespace="false"/>
+					<WTSTATIC col="2" tag="Cost"/>
+					<WTTEXT col="2" value="ATTR(Task.Cost)" prespace="false" size="8"/>
+					<WTSTATIC col="2" value="ATTR(Task.TotCost)" prespace="false" bold="true">
+						<WTCONDITION expr="ATTR(Task.TotCost)" oper="not-equal" value="CONST('$0.00')"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="7403" caption="View Task" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="ProjectMemberID" datatype="number"/>
+			<WTPARAM name="TaskID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="AttachmentCount" datatype="number"/>
+			<WTPARAM name="Title" datatype="text"/>
+			<WTPARAM name="ProjectTitle" datatype="text"/>
+			<WTPARAM name="VarCost" datatype="number"/>
+			<WTPARAM name="UpdateTaskID" datatype="number"/>
+			<WTPARAM name="ClearTask" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpProjectID)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpForumID)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpIsForum)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpIsChat)" value="0" />
+
+			<WTSUB name="LoadTask">
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="PARAM(TaskID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="ATTR(TaskName)"/>
+					<WTSETATTRIBUTE name="PARAM(VarCost)" value="CONST(CCUR(.VarCost))"/>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(MemberID)" />
+					<WTSETATTRIBUTE name="CONST(tmpProjectID)" value="ATTR(ProjectID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTask" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTGETCACHE name="CONST(tmpMentoringID)" value="MentoringID"/>
+				<WTSETATTRIBUTE name="CONST(tmpMentoringID)" value="CONST(-1)">
+					<WTCONDITION expr="CONST(tmpMentoringID)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Project" project="ptsProjectUser" class="CProject">
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCONDITION expr="CONST(CLng(tmpMemberID))" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+					<WTCONDITION expr="CONST(CLng(tmpMemberID))" oper="not-equal" value="CONST(CLng(tmpMentoringID))" connector="and"/>
+					<WTMETHOD name="Access">
+						<WTCONDITION expr="CONST(tmpMentoringID)" oper="greater" value="CONST(0)"/>
+						<WTPARAM name="ProjectID" direction="input" value="CONST(CLng(tmpProjectID))"/>
+						<WTPARAM name="MemberID" direction="input" value="CONST(CLng(tmpMentoringID))"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="Access">
+						<WTCONDITION expr="CONST(Result)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="ProjectID" direction="input" value="CONST(CLng(tmpProjectID))"/>
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(Result)" oper="equal" value="CONST(0)"/>
+						<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				
+				<WTOBJECT name="Project" project="ptsProjectUser" class="CProject">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProjectID" direction="input" value="CONST(tmpProjectID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpForumID)" value="ATTR(ForumID)" />
+					<WTSETATTRIBUTE name="CONST(tmpIsForum)" value="ATTR(IsForum)" />
+					<WTSETATTRIBUTE name="CONST(tmpIsChat)" value="ATTR(IsChat)" />
+					<WTSETATTRIBUTE name="PARAM(ProjectMemberID)" value="ATTR(MemberID)"/>
+					<WTSETATTRIBUTE name="PARAM(ProjectTitle)" value="ATTR(ProjectName)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Tasks" project="ptsTaskUser" class="CTasks">
+					<WTMETHOD name="ListParent">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(TaskID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTasks" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(TaskID)"/>
+						<WTPARAM name="ParentType" direction="input" value="ENTITY(Task)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqAttachmentCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB function="ReturnTask(prmParentID, prmProjectID)">
+				<!-- If we don't know the parent, look it up -->
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTCONDITION expr="CONST(prmParentID)" oper="equal" value="CONST(-1)"/>
+					<WTCONDITION expr="CONST(prmProjectID)" oper="equal" value="CONST(-1)" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="PARAM(TaskID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(prmParentID)" value="ATTR(ParentID)"/>
+					<WTSETATTRIBUTE name="CONST(prmProjectID)" value="ATTR(ProjectID)"/>
+				</WTOBJECT>
+				<!-- If we don't have a parent, return to the project -->
+				<WTRETURN>
+					<WTCONDITION expr="CONST(prmParentID)" oper="equal" value="CONST(0)"/>
+					<WTLINK name="7503" nolocaldata="true">
+						<WTPARAM name="ProjectID" value="CONST(prmProjectID)"/>
+						<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+						<WTPARAM name="Popup" value="PARAM(Popup)"/>
+					</WTLINK>
+				</WTRETURN>
+				<!-- If we have a parent, return to the parent detail page -->
+				<WTRETURN>
+					<WTCONDITION expr="CONST(prmParentID)" oper="not-equal" value="CONST(0)"/>
+					<WTLINK name="7403" nolocaldata="true">
+						<WTPARAM name="TaskID" value="CONST(prmParentID)"/>
+						<WTPARAM name="ProjectMemberID" value="PARAM(ProjectMemberID)"/>
+						<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+						<WTPARAM name="Popup" value="PARAM(Popup)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTSUB>
+
+			<WTSUB name="UpdateTask">
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTCONDITION expr="PARAM(UpdateTaskID)" oper="greater" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="PARAM(UpdateTaskID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpProjectID)" value="ATTR(ProjectID)" />
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ClearTask)" oper="equal" value="CONST(0)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(TASK-STATUS-STARTED)"/>
+							<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(TASK-STATUS-COMPLETED)"/>
+							<WTSETATTRIBUTE name="ATTR(ActEndDate)" value="SYS(Date)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(TASK-STATUS-STARTED)"/>
+							<WTSETATTRIBUTE name="ATTR(ActStartDate)" value="SYS(Date)"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ClearTask)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(ActStartDate)" value="CONST(&quot;&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(ActEndDate)" value="CONST(&quot;&quot;)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Project" project="ptsProjectUser" class="CProject">
+					<WTMETHOD name="Change">
+						<WTPARAM name="ProjectID" direction="input" value="CONST(tmpProjectID)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTLINK name="7403" return="false">
+						<WTPARAM name="TaskID" value="PARAM(TaskID)"/>
+						<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="UpdateTask">
+					<WTCONDITION expr="PARAM(UpdateTaskID)" oper="greater" value="CONST(0)"/>
+				</WTCALLSUB>
+				<WTCALLSUB name="LoadTask"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTRETURN>
+					<WTLINK name="7404" nolocaldata="true">
+						<WTPARAM name="TaskID" value="PARAM(TaskID)"/>
+						<WTPARAM name="ProjectMemberID" value="PARAM(ProjectMemberID)"/>
+						<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCALLSUB name="ReturnTask -1, -1"/>
+				</WTCODEGROUP>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTSTATIC label="PreviewTask"/>
+				<WTSTATIC label="StartTask"/>
+				<WTSTATIC label="CompleteTask"/>
+				<WTSTATIC label="ClearTask"/>
+
+				<WTMENU name="TaskMenu" type="bar" top-align="center" menuwidth="125">
+					<WTITEM label="New">
+						<WTIMAGE name="New.gif"/>
+						<WTITEM label="NewAttachment">
+							<WTLINK name="8002" nodata="true">
+								<WTPARAM name="ParentID" value="PARAM(TaskID)"/>
+								<WTPARAM name="ParentType" value="ENTITY(Task)"/>
+								<WTPARAM name="Mini" value="CONST(1)"/>
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="NewSubTask">
+							<WTLINK name="7402" nodata="true">
+								<WTPARAM name="ProjectID" value="VALUE(tmpProjectID)"/>
+								<WTPARAM name="ParentID" value="PARAM(TaskID)"/>
+								<WTPARAM name="MemberID" value="VALUE(tmpMemberID)"/>
+								<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+							</WTLINK>
+						</WTITEM>
+					</WTITEM>
+					<WTITEM label="Tools">
+						<WTIMAGE name="Tools.gif"/>
+						<WTITEM label="Forum">
+							<WTCONDITION expr="CONST(tmpIsForum)" oper="not-equal" value="CONST(0)" />
+							<WTLINK name="8411" target="blank" nodata="true">
+								<WTPARAM name="ForumID" value="VALUE(tmpForumID)"/>
+								<WTPARAM name="IsChat" value="VALUE(tmpIsChat)"/>
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="ConferenceRoom">
+							<WTCONDITION expr="CONST(tmpIsChat)" oper="not-equal" value="CONST(0)" />
+							<WTLINK name="8420" target="blank" nodata="true">
+								<WTPARAM name="ForumID" value="VALUE(tmpForumID)" />
+								<WTPARAM name="IsForum" value="VALUE(tmpIsForum)" />
+							</WTLINK>
+						</WTITEM>
+					</WTITEM>
+				</WTMENU>
+				
+				<WTROW>
+					<WTSTATIC col="1" value="PARAM(ProjectTitle)" align="left" width="300" bold="true"/>
+					<WTSTATIC col="2" align="right" valign="top" width="300">
+						<WTCODEGROUP><WTSTARTMENU name="TaskMenu" type="bar"/></WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC label="TaskID"/>
+						<WTSTATIC value="ATTR(Task.TaskID)" bold="true" space="5"/>
+						<WTSTATIC value="ATTR(Task.TaskName)"/>
+					</WTSTATIC>
+					<WTIMAGE col="1" merge="2" value="CONST(Shortcut.gif)">
+						<WTCONDITION expr="NotMemberOnly"/>
+						<WTCONDITION expr="_IsShortcuts" connector="or"/>
+						<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+							<WTPARAM name="EntityID" value="ENTITY(Task)"/>
+							<WTPARAM name="ItemID" value="ATTR(Task.TaskID)"/>
+							<WTPARAM name="Name" value="ATTR(Task.TaskName)" clean="true"/>
+							<WTPARAM name="URL" value="SYS(PageURL)"/>
+						</WTLINK>
+					</WTIMAGE>
+					<WTSTATIC col="1" merge="2">
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(0)" />
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(GoalStart.gif)" alt="Start" imgalign="absmiddle">
+								<WTLINK name="7403" skipreturn="true">
+									<WTPARAM name="TaskID" value="ATTR(TaskID)"/>
+									<WTPARAM name="UpdateTaskID" value="ATTR(TaskID)"/>
+									<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(TASK-STATUS-STARTED)"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(GoalComplete.gif)" alt="Complete" imgalign="absmiddle">
+								<WTLINK name="7403" skipreturn="true">
+									<WTPARAM name="TaskID" value="ATTR(TaskID)"/>
+									<WTPARAM name="UpdateTaskID" value="ATTR(TaskID)"/>
+									<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Status)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(GoalClear.gif)" alt="Clear" imgalign="absmiddle">
+								<WTLINK name="7403" skipreturn="true">
+									<WTPARAM name="TaskID" value="ATTR(TaskID)"/>
+									<WTPARAM name="UpdateTaskID" value="ATTR(TaskID)"/>
+									<WTPARAM name="ClearTask" value="CONST(1)"/>
+									<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="2">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTIMAGE col="1" value="CONST(Task.gif)" align="center" valign="center"/>
+					<WTSTATIC col="2" align="center">
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Task.IsMilestone)" oper="not-equal" value="CONST(0)"/>
+							<WTIMAGE value="CONST(milestone.gif)"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="Milestone" fontcolor="royalblue" bold="true" space="2"/>
+						</WTCODEGROUP>
+						<WTSTATIC tag="MemberName"/>
+						<WTSTATIC value="ATTR(Task.MemberName)" fontcolor="purple" bold="true" space="2"/>
+						<WTSTATIC tag="Status"/>
+						<WTSTATIC label="Pending" fontcolor="gray" bold="true">
+							<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTSTATIC value="ATTR(Task.Status)" fontcolor="green" bold="true">
+							<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-STARTED)"/>
+						</WTSTATIC>
+						<WTSTATIC value="ATTR(Task.Status)" fontcolor="blue" bold="true">
+							<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-COMPLETED)"/>
+						</WTSTATIC>
+						<WTSTATIC value="ATTR(Task.Status)" fontcolor="red" bold="true">
+							<WTCONDITION expr="ATTR(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-CANCELLED)"/>
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(TotHrs)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="2"/>
+							<WTSTATIC tag="Hrs"/>
+							<WTSTATIC value="ATTR(Task.TotHrs)" bold="true"/>
+						</WTCODEGROUP>
+						<WTSTATIC newline="1"/>
+						<WTSTATIC tag="EstDates"/>
+						<WTSTATIC value="ATTR(Task.EstStartDate)" bold="true">
+							<WTCONDITION expr="ATTR(Task.EstStartDate)" oper="not-equal" value="CONST('')"/>
+						</WTSTATIC>
+						<WTSTATIC label="???" bold="true">
+							<WTCONDITION expr="ATTR(Task.EstStartDate)" oper="not-exist"/>
+						</WTSTATIC>
+						<WTSTATIC value="CONST( - )"/>
+						<WTSTATIC value="ATTR(Task.EstEndDate)" bold="true">
+							<WTCONDITION expr="ATTR(Task.EstEndDate)" oper="not-equal" value="CONST('')"/>
+						</WTSTATIC>
+						<WTSTATIC label="???" bold="true">
+							<WTCONDITION expr="ATTR(Task.EstEndDate)" oper="not-exist"/>
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Task.EstCost)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC value="ATTR(Task.EstCost)" fontcolor="green" bold="true"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="3"/>
+						<WTSTATIC tag="ActDates"/>
+						<WTSTATIC value="ATTR(Task.ActStartDate)" bold="true">
+							<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="not-equal" value="CONST('')"/>
+						</WTSTATIC>
+						<WTSTATIC label="???" bold="true">
+							<WTCONDITION expr="ATTR(Task.ActStartDate)" oper="not-exist"/>
+						</WTSTATIC>
+						<WTSTATIC value="CONST( - )"/>
+						<WTSTATIC value="ATTR(Task.ActEndDate)" bold="true">
+							<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="not-equal" value="CONST('')"/>
+						</WTSTATIC>
+						<WTSTATIC label="???" bold="true">
+							<WTCONDITION expr="ATTR(Task.ActEndDate)" oper="not-exist"/>
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Task.TotCost)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC value="ATTR(Task.TotCost)" fontcolor="green" bold="true"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Task.VarStartDate)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="ATTR(Task.VarEndDate)" oper="not-equal" value="CONST(0)" connector="or"/>
+							<WTCONDITION expr="PARAM(VarCost)" oper="not-equal" value="CONST(0)" connector="or"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="Variance" space="1"/>
+							<WTCODEGROUP>
+								<WTCONDITION expr="ATTR(Task.VarStartDate)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC tag="StartDate"/>
+								<WTSTATIC value="ATTR(Task.VarStartDate)" bold="true" fontcolor="blue">
+									<WTCONDITION expr="ATTR(Task.VarStartDate)" oper="less" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="ATTR(Task.VarStartDate)" bold="true" fontcolor="red">
+									<WTCONDITION expr="ATTR(Task.VarStartDate)" oper="greater" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="days"/>
+								<WTSTATIC space="3"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="ATTR(Task.VarEndDate)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC tag="EndDate"/>
+								<WTSTATIC value="ATTR(Task.VarEndDate)" bold="true" fontcolor="blue">
+									<WTCONDITION expr="ATTR(Task.VarEndDate)" oper="less" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="ATTR(Task.VarEndDate)" bold="true" fontcolor="red">
+									<WTCONDITION expr="ATTR(Task.VarEndDate)" oper="greater" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="days"/>
+								<WTSTATIC space="3"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(VarCost)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC tag="Cost"/>
+								<WTSTATIC value="ATTR(Task.VarCost)" bold="true" fontcolor="blue">
+									<WTCONDITION expr="PARAM(VarCost)" oper="less" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="ATTR(Task.VarCost)" bold="true" fontcolor="red">
+									<WTCONDITION expr="PARAM(VarCost)" oper="greater" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTROW margin-top="3" margin-bottom="3">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" merge="2" align="left">
+							<WTSTATIC value="ATTR(Task.Description)" space="1" fontcolor="darkblue"/>
+						</WTSTATIC>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW margin-top="3" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Edit)" align="center">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="PARAM(ProjectMemberID)" oper="equal" value="SYS(MemberID)" connector="or"/>
+						<WTCONDITION expr="ATTR(Task.MemberID)" oper="equal" value="SYS(MemberID)" connector="or"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)"/>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<!-- SUB TASKS *************************************************************************** -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-top="6" margin-bottom="3">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Task">
+						<WTCOLUMN width="40" align="left" valign="top" label="Tasks"/>
+						<WTCOLUMN width="24" align="left" valign="top" label="MemberName"/>
+						<WTCOLUMN width="12" align="left" valign="top" label="Status"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="StartDate"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="EndDate"/>
+						<WTROW>
+							<WTSTATIC col="1" valign="top">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Task.IsMilestone)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(milestone.gif)"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-COMPLETED)"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(GreenChecksm.gif)">
+											<WTCONDITION expr="DATA(Task.Variance)" oper="less-equal" value="CONST(0)"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(RedChecksm.gif)">
+											<WTCONDITION expr="DATA(Task.Variance)" oper="greater" value="CONST(0)"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(RedX.gif)">
+										<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-CANCELLED)"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Task.TaskName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(TaskPreview.gif)" alt="PreviewTask" imgalign="absmiddle">
+										<WTLINK name="7403">
+											<WTPARAM name="TaskID" value="DATA(Task.TaskID)"/>
+											<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(0)" />
+									<WTIMAGE value="CONST(GoalStart.gif)" alt="StartTask" imgalign="absmiddle">
+										<WTLINK name="7503" skipreturn="true">
+											<WTPARAM name="ProjectID" value="ATTR(ProjectID)" />
+											<WTPARAM name="UpdateTaskID" value="DATA(TaskID)" />
+											<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Status)" oper="equal" value="SYSCON(TASK-STATUS-STARTED)" />
+									<WTIMAGE value="CONST(GoalComplete.gif)" alt="CompleteTask" imgalign="absmiddle">
+										<WTLINK name="7503" skipreturn="true">
+											<WTPARAM name="ProjectID" value="ATTR(ProjectID)" />
+											<WTPARAM name="UpdateTaskID" value="DATA(TaskID)" />
+											<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Status)" oper="not-equal" value="CONST(0)" />
+									<WTIMAGE value="CONST(GoalClear.gif)" alt="ClearTask" imgalign="absmiddle">
+										<WTLINK name="7503" skipreturn="true">
+											<WTPARAM name="ProjectID" value="ATTR(ProjectID)" />
+											<WTPARAM name="UpdateTaskID" value="DATA(TaskID)" />
+											<WTPARAM name="ClearTask" value="CONST(1)" />
+											<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Task.MemberName)" fontcolor="purple" valign="top"/>
+							<WTSTATIC col="3" valign="top">
+								<WTSTATIC label="Pending" fontcolor="gray">
+									<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Task.Status)" fontcolor="green">
+									<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-STARTED)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Task.Status)" fontcolor="blue">
+									<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-COMPLETED)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Task.Status)" fontcolor="red">
+									<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-CANCELLED)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="4" valign="top">
+								<WTSTATIC value="DATA(Task.ActStartDate)">
+									<WTCONDITION expr="DATA(Task.VarStartDate)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Task.ActStartDate)" fontcolor="blue">
+									<WTCONDITION expr="DATA(Task.VarStartDate)" oper="less" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Task.ActStartDate)" fontcolor="red">
+									<WTCONDITION expr="DATA(Task.VarStartDate)" oper="greater" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="5" valign="top">
+								<WTSTATIC value="DATA(Task.ActEndDate)">
+									<WTCONDITION expr="DATA(Task.VarEndDate)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Task.ActEndDate)" fontcolor="blue">
+									<WTCONDITION expr="DATA(Task.VarEndDate)" oper="less" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Task.ActEndDate)" fontcolor="red">
+									<WTCONDITION expr="DATA(Task.VarEndDate)" oper="greater" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="5">
+								<WTSTATIC value="DATA(Task.Description)" fontcolor="gray"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+					</WTROW>
+
+					<WTROW margin-top="6">
+						<WTSTATIC col="1" merge="2" align="left" tag="TotalSubTasks" value="PARAM(Count)" bold="true"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<!-- ATTACHMENTS ************************************************************************* -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-top="6" margin-bottom="3">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTRECORDSET col="1" merge="2" graybar="true" entity="Attachment">
+							<WTCOLUMN width="44" align="left" valign="top" label="AttachName"/>
+							<WTCOLUMN width="22" align="left" valign="top" label="File"/>
+							<WTCOLUMN width="12" align="left" valign="top" label="Status"/>
+							<WTCOLUMN width="10" align="left" valign="top" label="AttachSize"/>
+							<WTCOLUMN width="12" align="left" valign="top" label="AttachDate"/>
+							<WTROW>
+								<WTSTATIC col="1" value="DATA(Attachment.AttachName)" bold="true">
+									<WTLINK name="8003">
+										<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+										<WTPARAM name="Mini" value="CONST(1)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(Attachment.FileName)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+					 						<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Attachment.FileName)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTLINK name="CONST(Attachments/74/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@taskid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="3">
+									<WTSTATIC label="Active">
+										<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)" />
+									</WTSTATIC>
+									<WTSTATIC label="Inactive" fontcolor="red">
+										<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)" />
+									</WTSTATIC>
+									<WTSTATIC label="Private" fontcolor="purple">
+										<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(3)" />
+									</WTSTATIC>
+									<WTSTATIC space="1" />
+									<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="blue"/>
+								</WTSTATIC>
+								<WTSTATIC col="4">
+									<WTSTATIC value="DATA(Attachment.AttachSize)">
+											<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="5" value="DATA(Attachment.AttachDate)"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1" merge="5" value="DATA(Attachment.Description)" fontcolor="gray"/>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>		
+					<WTROW>
+						<WTSTATIC col="1" merge="2" align="left" class="prompt">
+							<WTSTATIC value="PARAM(AttachmentCount)" space="1"/>
+							<WTSTATIC label="Attachments"/>
+						</WTSTATIC>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTFRAME col="1" merge="2" src="CONST(9011.asp?Height=150&amp;amp;OwnerType=74&amp;amp;OwnerID=&lt;xsl:value-of select=&quot;/DATA/PARAM/@taskid&quot;/&gt;&amp;amp;Title=&lt;xsl:value-of select=&quot;/DATA/PARAM/@title&quot;/&gt;)" name="NotesFrame" frmclass="FrameNoScroll" frmwidth="600" frmheight="500" label="NoFrameSupport" border="0"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="7404" caption="Edit Task" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="TaskID" datatype="number"/>
+			<WTPARAM name="ProjectMemberID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTSUB function="AddNote(prmNotes)">
+				<WTOBJECT name="Note" project="ptsNoteUser" class="CNote">
+					<WTMETHOD name="Load">
+						<WTPARAM name="NoteID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(UserID)"/>
+					<WTSETATTRIBUTE name="ATTR(NoteDate)" value="SYS(Now)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="ENTITY(Task)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(TaskID)"/>
+					<WTSETATTRIBUTE name="ATTR(IsLocked)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Notes)" value="CONST(prmNotes)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="NoteID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadTask">
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="PARAM(TaskID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpProjectID)" value="ATTR(ProjectID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(MemberID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTask" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTGETCACHE name="CONST(tmpMentoringID)" value="MentoringID"/>
+				<WTSETATTRIBUTE name="CONST(tmpMentoringID)" value="CONST(-1)">
+					<WTCONDITION expr="CONST(tmpMentoringID)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Project" project="ptsProjectUser" class="CProject">
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCONDITION expr="CONST(CLng(tmpMemberID))" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+					<WTCONDITION expr="CONST(CLng(tmpMemberID))" oper="not-equal" value="CONST(CLng(tmpMentoringID))" connector="and"/>
+					<WTMETHOD name="Access">
+						<WTCONDITION expr="CONST(tmpMentoringID)" oper="greater" value="CONST(0)"/>
+						<WTPARAM name="ProjectID" direction="input" value="CONST(CLng(tmpProjectID))"/>
+						<WTPARAM name="MemberID" direction="input" value="CONST(CLng(tmpMentoringID))"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="Access">
+						<WTCONDITION expr="CONST(Result)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="ProjectID" direction="input" value="CONST(CLng(tmpProjectID))"/>
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(Result)" oper="equal" value="CONST(0)"/>
+						<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				
+				<WTOBJECT name="ProjectMembers" project="ptsProjectMemberUser" class="CProjectMembers">
+					<WTMETHOD name="EnumMember">
+						<WTPARAM name="xmlProjectMembers" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="ProjectID" direction="input" value="CONST(tmpProjectID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST(tmpMemberID)" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadTask"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTSETATTRIBUTE name="CONST(tmpStatusChange)" value="CONST(0)"/>
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="PARAM(TaskID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpProjectID)" value="ATTR(ProjectID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEstStartDate)" value="ATTR(EstStartDate)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEstEndDate)" value="ATTR(EstEndDate)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEstCost)" value="ATTR(EstCost)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCost)" value="ATTR(Cost)"/>
+					<WTSETATTRIBUTE name="CONST(tmpHrs)" value="ATTR(Hrs)"/>
+					<WTSETATTRIBUTE name="CONST(tmpStatus)" value="ATTR(Status)"/>
+					<WTSETATTRIBUTES/>
+<WTCUSTOM>
+				If .Status &lt; 3 Then
+					.Status = 0
+					If IsDate(.ActEndDate) Then
+						.Status = 2
+					Else	
+						If IsDate(.ActStartDate) Then .Status = 1
+					End If
+				End If
+				If tmpStatus &lt;&gt; .Status Then tmpStatusChange = 1
+				.VarStartDate = ""
+				.VarEndDate = ""
+				If IsDate(.EstStartDate) AND IsDate(.ActStartDate) Then .VarStartDate = DATEDIFF("d", .EstStartDate, .ActStartDate)
+				If IsDate(.EstEndDate) AND IsDate(.ActEndDate) Then .VarEndDate = DATEDIFF("d", .EstEndDate, .ActEndDate)
+</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpEstStartDate)" oper="not-equal" value="CONST(&quot;0&quot;)"/>
+							<WTCONDITION expr="CONST(tmpEstStartDate)" oper="not-equal" value="ATTR(EstStartDate)" connector="and"/>
+							<WTCALLSUB name="AddNote(&quot;Projected Start Date Changed from &quot; + tmpEstStartDate + &quot; to &quot; + .EstStartDate)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpEstEndDate)" oper="not-equal" value="CONST(&quot;0&quot;)"/>
+							<WTCONDITION expr="CONST(tmpEstEndDate)" oper="not-equal" value="ATTR(EstEndDate)" connector="and"/>
+							<WTCALLSUB name="AddNote(&quot;Projected End Date Changed from &quot; + tmpEstEndDate + &quot; to &quot; + .EstEndDate)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(tmpEstCost)" oper="not-equal" value="CONST(&quot;$0.00&quot;)"/>
+							<WTCONDITION expr="CONST(CCUR(tmpEstCost))" oper="not-equal" value="CONST(CCUR(.EstCost))" connector="and"/>
+							<WTCALLSUB name="AddNote(&quot;Projected Cost Changed from &quot; + tmpEstCost + &quot; to &quot; + .EstCost)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(CCUR(tmpCost))" oper="not-equal" value="CONST(CCUR(.Cost))"/>
+							<WTCONDITION expr="CONST(CCUR(tmpEstCost))" oper="not-equal" value="CONST(CCUR(.EstCost))" connector="or"/>
+							<WTCONDITION expr="CONST(CCUR(tmpHrs))" oper="not-equal" value="CONST(CCUR(.Hrs))" connector="or"/>
+							<WTMETHOD name="ComputeTotalCost">
+								<WTPARAM name="TaskID" direction="input" value="PARAM(TaskID)"/>
+								<WTPARAM name="Result" direction="return" datatype="number"/>
+							</WTMETHOD>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCALLSUB name="LoadTask">
+						<WTCONDITION expr="IsErrors"/>
+					</WTCALLSUB>
+				</WTOBJECT>
+				<WTOBJECT name="Project" project="ptsProjectUser" class="CProject">
+					<WTCONDITION expr="CONST(tmpStatusChange)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Change">
+						<WTPARAM name="ProjectID" direction="input" value="CONST(tmpProjectID)" />
+						<WTPARAM name="Result" direction="return" datatype="number" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Task" project="ptsTaskUser" class="CTask">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaskID" direction="input" value="PARAM(TaskID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpProjectID)" value="ATTR(ProjectID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParentID)" value="ATTR(ParentID)"/>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="TaskID" direction="input" value="PARAM(TaskID)"/>
+						<WTPARAM name="ProjectID" direction="input" value="ATTR(ProjectID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ComputeTotalCost">
+						<WTCONDITION expr="CONST(tmpParentID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="TaskID" direction="input" value="CONST(tmpParentID)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTCALLSUB name="LoadTask">
+						<WTCONDITION expr="IsErrors"/>
+					</WTCALLSUB>
+				</WTOBJECT>
+				<WTOBJECT name="Project" project="ptsProjectUser" class="CProject">
+					<WTCONDITION expr="CONST(tmpParentID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProjectID" direction="input" value="CONST(tmpProjectID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ComputeTotalCost">
+						<WTPARAM name="ProjectID" direction="input" value="CONST(tmpProjectID)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<!-- If we don't have a parent task, return to the project detail page-->
+					<WTRETURN>
+						<WTCONDITION expr="CONST(tmpParentID)" oper="equal" value="CONST(0)" />
+						<WTLINK name="7503" nolocaldata="true">
+							<WTPARAM name="ProjectID" value="CONST(tmpProjectID)" />
+						</WTLINK>
+					</WTRETURN>
+					<!-- If we have a parent task, return to the parent task detail page -->
+					<WTRETURN>
+						<WTCONDITION expr="CONST(tmpParentID)" oper="not-equal" value="CONST(0)" />
+						<WTLINK name="7403" nolocaldata="true">
+							<WTPARAM name="TaskID" value="CONST(tmpParentID)" />
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="140" align="right"/>
+				<WTCOLUMN width="460" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" tag="Task" value="ATTR(Task.TaskName)" class="PageHeading"/>
+					<WTIMAGE col="1" merge="2" value="CONST(Shortcut.gif)">
+						<WTCONDITION expr="NotMemberOnly"/>
+						<WTCONDITION expr="_IsShortcuts" connector="or"/>
+						<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+							<WTPARAM name="EntityID" value="ENTITY(Task)"/>
+							<WTPARAM name="ItemID" value="ATTR(Task.TaskID)"/>
+							<WTPARAM name="Name" value="ATTR(Task.TaskName)" clean="true"/>
+							<WTPARAM name="URL" value="SYS(PageURL)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(Task.gif)" align="center" valign="top"/>
+					<WTSTATIC col="2" align="left" label="EditInstructions" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="ParentID"/>
+						<WTTEXT col="2" value="ATTR(Task.ParentID)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="ProjectID"/>
+						<WTTEXT col="2" value="ATTR(Task.ProjectID)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="DependentID"/>
+						<WTTEXT col="2" value="ATTR(Task.DependentID)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Status"/>
+						<WTCOMBO col="2" value="ATTR(Task.Status)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Task.ParentID)"/>
+					<WTHIDDEN value="ATTR(Task.ProjectID)"/>
+					<WTHIDDEN value="ATTR(Task.DependentID)"/>
+					<WTHIDDEN value="ATTR(Task.Status)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="TaskName"/>
+					<WTTEXT col="2" value="ATTR(Task.TaskName)" size="60" focus="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTCOMBO col="2" value="ATTR(Task.MemberID)" datapath="/DATA/TXN/PTSPROJECTMEMBERS/ENUM"/>
+					<WTSTATIC col="2" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(Task.Seq)" size="2" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Task.IsMilestone)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Task.Description)" cols="72" rows="4"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="DatesText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1">
+						<WTSTATIC label="Projected" space="1" bold="true"/>
+						<WTSTATIC tag="StartDate"/>
+					</WTSTATIC>
+					<WTTEXT col="2" value="ATTR(Task.EstStartDate)"/>
+					<WTSTATIC col="2" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Task.EstEndDate)" prespace="false"/>
+					<WTSTATIC col="2" tag="Cost"/>
+					<WTTEXT col="2" value="ATTR(Task.EstCost)" prespace="false" size="8"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1">
+						<WTSTATIC label="Actual" space="1" bold="true"/>
+						<WTSTATIC tag="StartDate"/>
+					</WTSTATIC>
+					<WTTEXT col="2" value="ATTR(Task.ActStartDate)"/>
+					<WTSTATIC col="2" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Task.ActEndDate)" prespace="false"/>
+					<WTSTATIC col="2" tag="Cost"/>
+					<WTTEXT col="2" value="ATTR(Task.Cost)" prespace="false" size="8"/>
+					<WTSTATIC col="2" value="ATTR(Task.TotCost)" fontcolor="green" bold="true">
+						<WTCONDITION expr="ATTR(Task.TotCost)" oper="not-equal" value="CONST('$0.00')"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Hrs"/>
+					<WTTEXT col="2" value="ATTR(Task.Hrs)" size="4"/>
+					<WTSTATIC col="2" tag="TotHrs"/>
+					<WTSTATIC col="2" value="ATTR(Task.TotHrs)" prespace="false" bold="true"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" align="center" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==========================================================================================-->
+		<WTWEBPAGE name="7426" caption="Task Report" navbar="false" action="5" form="Report"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" langfile="7426" language="false">
+		<!--==========================================================================================-->
+			<WTPARAM name="ProjectID" datatype="number" />
+			<WTPARAM name="MemberID" datatype="number" />
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Term" datatype="number"/>
+			<WTPARAM name="Report" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="IsMember" datatype="text"/>
+
+			<WTDATATXN name="Member"/>
+			<WTDATATXN name="Project"/>
+			<WTDATATXN name="Tasks"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTGETCACHE name="CONST(tmpMentoringID)" value="MentoringID"/>
+				<WTSETATTRIBUTE name="CONST(tmpMentoringID)" value="CONST(-1)">
+					<WTCONDITION expr="CONST(tmpMentoringID)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)"/>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(CLng(tmpMentoringID))" connector="and"/>
+						<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTSETATTRIBUTE name="PARAM(IsMember)" value="CONST(1)"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ProjectID)" oper="equal" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="PARAM(Term)" value="CONST(2)"/>
+					<WTSETATTRIBUTE name="PARAM(FromDate)" value="SYS(date)"/>
+					<WTSETATTRIBUTE name="PARAM(ToDate)" value="CONST(Date())"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ProjectID)" oper="not-equal" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="PARAM(Term)" value="CONST(3)"/>
+					<WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(&quot;1/1/2000&quot;)"/>
+					<WTSETATTRIBUTE name="PARAM(ToDate)" value="CONST(Date())"/>
+				</WTCODEGROUP>
+			</WTACTION>
+
+			<WTACTION id="3" name="Pending" type="Report">
+				<WTSETATTRIBUTE name="PARAM(Report)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Started" type="Report">
+				<WTSETATTRIBUTE name="PARAM(Report)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Completed" type="Report">
+				<WTSETATTRIBUTE name="PARAM(Report)" value="CONST(3)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Unassigned" type="Report">
+				<WTSETATTRIBUTE name="PARAM(Report)" value="CONST(4)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Load">
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlMember" direction="return" datatype="text" />
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Project" project="ptsProjectUser" class="CProject">
+				<WTCONDITION expr="PARAM(ProjectID)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Load">
+					<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlProject" direction="return" datatype="text" />
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<WTOBJECT name="Tasks" project="ptsTaskUser" class="CTasks">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)" />
+				<!-- If we don't have a Project, report on all projects for the company -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ProjectID)" oper="equal" value="CONST(0)" />
+					<WTMETHOD name="ListMemberPending">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListMemberStarted">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListMemberCompleted">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					</WTMETHOD>
+				</WTCODEGROUP>
+				<!-- If we have a Project, report on all projects for the member -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ProjectID)" oper="not-equal" value="CONST(0)" />
+					<!-- If we're listing for a member, report on all projects for the member -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(IsMember)" oper="equal" value="CONST(1)" />
+						<WTMETHOD name="ListProjectMemberPending">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTMETHOD name="ListProjectMemberStarted">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+							<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+						</WTMETHOD>
+						<WTMETHOD name="ListProjectMemberCompleted">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+							<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+						</WTMETHOD>
+						<WTMETHOD name="ListProjectUnassigned">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<!-- If we're NOT listing for a member, report on all projects for the member -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(IsMember)" oper="not-equal" value="CONST(1)" />
+						<WTMETHOD name="ListProjectPending">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+						</WTMETHOD>
+						<WTMETHOD name="ListProjectStarted">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+							<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+							<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+						</WTMETHOD>
+						<WTMETHOD name="ListProjectCompleted">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+							<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+							<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+						</WTMETHOD>
+						<WTMETHOD name="ListProjectUnassigned">
+							<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)"/>
+							<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTMETHOD name="Count">
+					<WTPARAM name="reqCount" direction="return" datatype="number"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlTasks" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="650" align="left"/>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" class="PageHeading" align="center">
+						<WTSTATIC label="ViewAll">
+							<WTCONDITION expr="PARAM(ProjectID)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ProjectID)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC label="ViewProject" space="1"/>
+							<WTSTATIC value="ATTR(Project.ProjectName)"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" class="PageHeading" align="center">
+						<WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(ProjectID)" oper="not-equal" value="CONST(0)"/>
+								<WTCHECK value="PARAM(IsMember)"/>
+							</WTCODEGROUP>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="ViewOnlyTasks" space="1"/>
+							<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+							<WTSTATIC value="ATTR(Member.NameLast)"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="center" tag="ReportOn"/>
+					<WTCOMBO col="1" name="Term" align="center" value="PARAM(Term)">
+						<WTOPTION id="1" label="Yesterday"/>
+						<WTOPTION id="2" label="Today"/>
+						<WTOPTION id="3" label="UptoToday"/>
+						<WTOPTION id="4" label="PrevWeek"/>
+						<WTOPTION id="5" label="PrevMonth"/>
+						<WTOPTION id="6" label="PrevYear"/>
+						<WTOPTION id="7" label="WeekToDate"/>
+						<WTOPTION id="8" label="MonthToDate"/>
+						<WTOPTION id="9" label="YearToDate"/>
+						<WTOPTION id="10" label="Tomorrow"/>
+						<WTOPTION id="11" label="Next7Days"/>
+						<WTOPTION id="12" label="Next14Days"/>
+						<WTOPTION id="13" label="Next30Days"/>
+						<WTCHANGE>
+							var ONE_DAY = 1000 * 60 * 60 * 24;
+							var fromdate = new Date();
+							var todate = new Date();
+							var term = document.getElementById('Term').value;
+							switch(term) {
+							case "0":
+							document.getElementById('FromDate').value = document.getElementById('EnrollDate').value
+							break;
+							case "1":
+							fromdate.setTime(fromdate.getTime() - ONE_DAY );
+							todate = fromdate;
+							break;
+							case "2":
+							break;
+							case "3":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							fromdate.setYear(2000);
+							break;
+							case "4":
+							todate.setTime(todate.getTime() - ( todate.getDay() * ONE_DAY ) );
+							fromdate.setTime(todate.getTime() - ( 6 * ONE_DAY ) );
+							break;
+							case "5":
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setDate(1);
+							break;
+							case "6":
+							todate.setMonth(0);
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+							case "7":
+							fromdate.setTime(fromdate.getTime() - ( (fromdate.getDay()-1) * ONE_DAY ) );
+							break;
+							case "8":
+							fromdate.setDate(1);
+							break;
+							case "9":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+							case "10":
+							fromdate.setTime(fromdate.getTime() + ONE_DAY );
+							todate = fromdate;
+							break;
+							case "11":
+							todate.setTime(todate.getTime() + 6 * ONE_DAY );
+							break;
+							case "12":
+							todate.setTime(todate.getTime() + 13 * ONE_DAY );
+							break;
+							case "13":
+							todate.setTime(todate.getTime() + 29 * ONE_DAY );
+							break;
+							}
+							if(term!="0"){document.getElementById('FromDate').value = fromdate.getMonth()+1 + "/" + fromdate.getDate() + "/" + fromdate.getFullYear();}
+							document.getElementById('ToDate').value = todate.getMonth()+1 + "/" + todate.getDate() + "/" + todate.getFullYear();
+						</WTCHANGE>
+					</WTCOMBO>
+					<WTSTATIC col="1" align="center" tag="From"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true" prespace="false"/>
+					<WTSTATIC col="1" tag="To"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" name="ToDate" type="date" size="8" prespace="false"/>
+					<WTSTATIC col="1" space="3"/>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" action="3" value="CONST(ViewPending)" align="center" default="true"/>
+					<WTBUTTON col="1" action="4" value="CONST(ViewStarted)"/>
+					<WTBUTTON col="1" action="5" value="CONST(ViewCompleted)"/>
+					<WTBUTTON col="1" action="6" value="CONST(ViewUnassigned)">
+						<WTCONDITION expr="PARAM(ProjectID)" oper="not-equal" value="CONST(0)"/>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="SYS(ActionCode)" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-bottom="3">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" bold="true">
+							<WTSTATIC tag="TotalPending">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="TotalStarted">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="TotalCompleted">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="TotalUnassigned">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)"/>
+							</WTSTATIC>
+							<WTSTATIC space="1"/>
+							<WTSTATIC value="PARAM(Count)"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+						<WTRECORDSET col="1" graybar="true" entity="Task">
+							<WTCOLUMN width="40" align="left" valign="top" label="Tasks"/>
+							<WTCOLUMN width="24" align="left" valign="top" label="MemberName"/>
+							<WTCOLUMN width="12" align="left" valign="top" label="Status"/>
+							<WTCOLUMN width="12" align="center" valign="top" label="StartDate"/>
+							<WTCOLUMN width="12" align="center" valign="top" label="EndDate"/>
+							<WTROW>
+								<WTSTATIC col="1" valign="top">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Task.IsMilestone)" oper="not-equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(milestone.gif)"/>
+										<WTSTATIC space="1"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-COMPLETED)"/>
+										<WTCODEGROUP>
+											<WTIMAGE value="CONST(GreenChecksm.gif)">
+												<WTCONDITION expr="DATA(Task.VarEndDate)" oper="less-equal" value="CONST(0)"/>
+											</WTIMAGE>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTIMAGE value="CONST(RedChecksm.gif)">
+												<WTCONDITION expr="DATA(Task.VarEndDate)" oper="greater" value="CONST(0)"/>
+											</WTIMAGE>
+										</WTCODEGROUP>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(RedX.gif)">
+											<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-CANCELLED)"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC value="DATA(Task.TaskName)">
+										<WTLINK name="7403" target="task">
+											<WTPARAM name="TaskID" value="DATA(Task.TaskID)"/>
+											<WTPARAM name="ProjectMemberID" value="ATTR(Project.MemberID)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="2" value="DATA(Task.MemberName)" fontcolor="purple" valign="top"/>
+								<WTSTATIC col="3" valign="top">
+									<WTSTATIC label="Pending" fontcolor="gray">
+										<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Task.Status)" fontcolor="green">
+										<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-STARTED)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Task.Status)" fontcolor="blue">
+										<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-COMPLETED)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Task.Status)" fontcolor="red">
+										<WTCONDITION expr="DATA(Task.Status)" oper="equal" value="SYSCON(TASK-STATUS-CANCELLED)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="4" valign="top">
+									<WTSTATIC value="DATA(Task.ActStartDate)">
+										<WTCONDITION expr="DATA(Task.VarStartDate)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Task.ActStartDate)" fontcolor="green">
+										<WTCONDITION expr="DATA(Task.VarStartDate)" oper="less" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Task.ActStartDate)" fontcolor="red">
+										<WTCONDITION expr="DATA(Task.VarStartDate)" oper="greater" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="5" valign="top">
+									<WTSTATIC value="DATA(Task.ActEndDate)">
+										<WTCONDITION expr="DATA(Task.VarEndDate)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Task.ActEndDate)" fontcolor="green">
+										<WTCONDITION expr="DATA(Task.VarEndDate)" oper="less" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Task.ActEndDate)" fontcolor="red">
+										<WTCONDITION expr="DATA(Task.VarEndDate)" oper="greater" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1" merge="5" value="DATA(Task.Description)" fontcolor="gray"/>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC col="1" bold="true">
+							<WTSTATIC tag="TotalPending">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="TotalStarted">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="TotalCompleted">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="TotalUnassigned">
+								<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)"/>
+							</WTSTATIC>
+							<WTSTATIC space="1"/>
+							<WTSTATIC value="PARAM(Count)"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTBUTTON col="1" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="TaskPastDue" worker="true" navbar="false" header="false" footer="false"
+			aspstyle="GenerateWebASP.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="EstEndDate" datatype="date"/>
+
+			<WTINCLUDE name="Comm.asp"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(EstEndDate)" value="CONST(Date()-1)">
+					<WTCONDITION expr="PARAM(EstEndDate)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Business" project="ptsBusinessUser" class="CBusiness">
+					<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="BusinessID" direction="input" value="CONST(1)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Business.SystemEmail)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTCONDITION expr="SYS(CompanyID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="SYS(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Company.Email)"/>
+				</WTOBJECT>
+
+				<WTOBJECT name="Tasks" project="ptsTaskUser" class="CTasks">
+					<WTMETHOD name="PastDue">
+						<WTPARAM name="EstEndDate" direction="input" value="PARAM(EstEndDate)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				Set oMail = server.CreateObject("CDO.Message")
+				If oMail Is Nothing Then
+					DoError Err.Number, Err.Source, "Unable to Create Object - CDO.Message"
+				Else
+					oMail.Sender = tmpSender
+					For Each oTask in oTasks
+						tmpMsgTo = ""
+						With oTask
+							tmpFrom = .FromEmail
+							tmpTo = .Email
+							If .IsMsg &lt;&gt; "0" Then tmpMsgTo = .MemberID
+							tmpSubject = "Task Past Due: " + .EstEndDate + " - " + .TaskName
+							tmpBody = "Assigned To: " + .MemberName + "&lt;BR&gt;" + "Project: " + .ProjectName + "&lt;BR&gt;" + .Description
+						End With
+						If InStr(tmpFrom, "@") &gt; 0 Then tmpFrom = tmpTo
+						'check for valid to email address
+						If InStr(tmpTo, "@") &gt; 0 Then
+							With oMail
+								.From = tmpFrom
+								.To = tmpTo
+								.Subject = tmpSubject 
+								.HTMLBody = tmpBody
+								.Send
+							End With
+						End If
+
+						If tmpMsgTo &lt;&gt; "" Then
+							SendMsg 1, tmpMsgTo, tmpSubject, tmpBody 
+						End If
+					Next
+				End If
+				Set oMail = Nothing
+</WTCUSTOM>
+				</WTOBJECT>
+
+<WTCUSTOM>
+		Response.end
+</WTCUSTOM>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT/>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

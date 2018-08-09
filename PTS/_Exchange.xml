@@ -1,0 +1,405 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="160" name="Exchange" alias="xc">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="16001" name="ExchangeID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="16005" name="CountryID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="16006" name="CountryName" type="text" length="50" source="join">
+			<WTJOIN entity="Country" name="CountryName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="16010" name="ExchangeName" type="text" length="80" min="1" max="80" source="entity" required="true"/>
+		<WTATTRIBUTE id="16011" name="NameLast" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="16012" name="NameFirst" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="16013" name="Email" type="text" length="80" min="1" max="80" source="entity"/>
+    <WTATTRIBUTE id="16014" name="Phone" type="text" length="30" min="1" max="30" source="entity"/>
+    <WTATTRIBUTE id="16015" name="Skype" type="text" length="30" min="1" max="30" source="entity"/>
+    <WTATTRIBUTE id="16016" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Setup"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="Inactive"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="16017" name="Street1" type="text" length="60" min="1" max="60" source="entity" />
+		<WTATTRIBUTE id="16018" name="Street2" type="text" length="60" min="1" max="60" source="entity"/>
+		<WTATTRIBUTE id="16019" name="City" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="16020" name="State" type="text" length="30" min="1"  max="30" source="entity" />
+		<WTATTRIBUTE id="16021" name="Zip" type="text" length="20" min="1"  max="20" source="entity" />
+		<WTATTRIBUTE id="16022" name="ActiveDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="16023" name="Payment" type="text" length="100" source="entity" language="false"/>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Exchange" entity="Exchange" alias="xc"/>
+      <WTRELATIONSHIP name="Common" entity="Exchange" alias="xc">
+        <WTENTITY name="Country" entity="Country" alias="cou">
+          <WTATTRIBUTE alias="xc" name="CountryID" relalias="cou" relname="CountryID"/>
+        </WTENTITY>
+      </WTRELATIONSHIP>
+    </WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+    <!--===================================================================================-->
+    <WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="SYS(security)" direction="input"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(Exchange.ExchangeID)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.ExchangeName)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.NameFirst)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.NameLast)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.City)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.State)"/>
+          <WTATTRIBUTE value="ATTR(Country.CountryName)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.Status)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.ActiveDate)"/>
+          <WTATTRIBUTE value="ATTR(Exchange.Payment)"/>
+          <WTJOIN name="Common"/>
+          <WTORDER name="ATTR(Exchange.ExchangeName)"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+    
+	<!--============================================================================================-->
+		<WTWEBPAGE name="16003" caption="Exchange" header="false" footer="false" navbar="false" wrapper="wrapper600"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="52">
+      <!--============================================================================================-->
+      <WTPARAM name="ExchangeID" datatype="number"/>
+      <WTPARAM name="BTC" datatype="number"/>
+      <WTPARAM name="NXC" datatype="number"/>
+      <WTPARAM name="GCR" datatype="number"/>
+
+      <WTSUB name="LoadList">
+				<WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCountrys" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="CONST(1)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="LoadExchange">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="Exchange" project="ptsExchangeUser" class="CExchange">
+          <WTMETHOD name="Load">
+            <WTPARAM name="ExchangeID" direction="input" value="PARAM(ExchangeID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(ExchangeID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="ATTR(CountryID)" value="CONST(224)"/>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              tmpPayment = .Payment
+              If InStr(tmpPayment, "BTC") &gt; 0 Then reqBTC = 1
+              If InStr(tmpPayment, "NXC") &gt; 0 Then reqNXC = 1
+              If InStr(tmpPayment, "GCR") &gt; 0 Then reqGCR = 1
+            </WTCUSTOM>
+          </WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExchange" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="UpdateExchange">
+        <WTOBJECT name="Exchange" project="ptsExchangeUser" class="CExchange">
+          <WTMETHOD name="Load">
+            <WTPARAM name="ExchangeID" direction="input" value="PARAM(ExchangeID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              tmpPayment = ""
+              If reqBTC = 1 Then tmpPayment = tmpPayment + "BTC,"
+              If reqNXC = 1 Then tmpPayment = tmpPayment + "NXC,"
+              If reqGCR = 1 Then tmpPayment = tmpPayment + "GCR,"
+              .Payment = tmpPayment
+            </WTCUSTOM>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(ExchangeID)" oper="not-equal" value="CONST(0)"/>
+            <WTMETHOD name="Save">
+              <WTCONDITION expr="NoErrors"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(ExchangeID)" oper="equal" value="CONST(0)"/>
+            <WTMETHOD name="Add">
+              <WTCONDITION expr="NoErrors"/>
+              <WTPARAM name="ExchangeID" direction="return" datatype="number"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsErrors"/>
+            <WTMETHOD name="XML">
+              <WTPARAM name="xmlExchange" direction="return" datatype="text"/>
+              <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+            </WTMETHOD>
+            <WTCALLSUB name="LoadList"/>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadExchange"/>
+			</WTACTION>
+
+      <WTACTION id="1" name="Update" type="Update">
+        <WTCALLSUB name="UpdateExchange"/>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="3" name="Return" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <WTACTION id="4" name="Delete" type="Delete">
+        <WTOBJECT name="Exchange" project="ptsExchangeUser" class="CExchange">
+          <WTMETHOD name="Delete">
+            <WTPARAM name="ExchangeID" direction="input" value="PARAM(ExchangeID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="TitleCase(obj)">	
+					var val = obj.value;
+					obj.value = val.charAt(0).toUpperCase() + val.slice(1);
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="Exchange" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="ExchangeName"/>
+					<WTTEXT col="2" value="ATTR(Exchange.ExchangeName)" required="false">
+						<WTEXIT>TitleCase(this);</WTEXIT>
+					</WTTEXT>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Exchange.Status)"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="ContactName"/>
+					<WTTEXT col="2" value="ATTR(Exchange.NameFirst)" width="200" label="NameFirst" size="25" required="false">
+						<WTEXIT>TitleCase(this);</WTEXIT>
+					</WTTEXT>
+					<WTTEXT col="2" value="ATTR(Exchange.NameLast)" width="240" label="NameLast" size="25" required="false">
+						<WTEXIT>TitleCase(this);</WTEXIT>
+					</WTTEXT>
+				</WTROW>
+        <WTROW margin-top="3" margin-bottom="3">
+          <WTSTATIC col="1" tag="Email"/>
+          <WTTEXT col="2" value="ATTR(Exchange.Email)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Phone"/>
+          <WTTEXT col="2" value="ATTR(Exchange.Phone)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Skype"/>
+          <WTTEXT col="2" value="ATTR(Exchange.Skype)"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="Address"/>
+					<WTTEXT col="2" value="ATTR(Exchange.Street1)" size="60">
+						<WTEXIT>TitleCase(this);</WTEXIT>
+					</WTTEXT>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Exchange.Street2)" size="60">
+						<WTEXIT>TitleCase(this);</WTEXIT>
+					</WTTEXT>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Exchange.City)" width="200" label="City" size="25">
+						<WTEXIT>TitleCase(this);</WTEXIT>
+					</WTTEXT>
+					<WTTEXT col="2" value="ATTR(Exchange.State)" width="240" label="State" size="25">
+						<WTEXIT>TitleCase(this);</WTEXIT>
+					</WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Exchange.Zip)" width="100" label="Zip" size="8"/>
+					<WTCOMBO col="2" value="ATTR(Exchange.CountryID)" width="340" label="CountryID" datapath="/DATA/TXN/PTSCOUNTRYS/ENUM" setselected="true"/>
+				</WTROW>
+        <WTROW margin-top="6" margin-bottom="6">
+          <WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTIMAGE col="1" value="CONST(Crypto-BTC.png)" imgalign="absmiddle"/>
+          <WTSTATIC col="2" fontsize="4">
+            <WTCODEGROUP>
+              <WTCHECK value="PARAM(BTC)" label="BTC"/>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTIMAGE col="1" value="CONST(Crypto-NXC.png)" imgalign="absmiddle"/>
+          <WTSTATIC col="2" fontsize="4">
+            <WTCODEGROUP>
+              <WTCHECK value="PARAM(NXC)" label="NXC"/>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTIMAGE col="1" value="CONST(Crypto-GCR.png)" imgalign="absmiddle"/>
+          <WTSTATIC col="2" fontsize="4">
+            <WTCODEGROUP>
+              <WTCHECK value="PARAM(GCR)" label="GCR"/>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="16011" caption="Exchanges" header="false" footer="false" navbar="false" wrapper="wrapper750"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+      <!--============================================================================================-->
+
+      <WTACTION name="New" type="New" id="0">
+        <WTOBJECT name="Exchanges" project="ptsExchangeUser" class="CExchanges">
+          <WTMETHOD name="List">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlExchanges" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTACTION>
+
+      <WTACTION id="3" name="Return" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="750" align="left"/>
+
+        <WTROW>
+          <WTSTATIC col="1" class="PageHeading" align="left">
+            <WTSTATIC label="Exchanges" space="1"/>
+            <WTCODEGROUP>
+              <WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle">
+                <WTLINK name="16003"/>
+              </WTIMAGE>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTDIVIDER col="1"  height="1" color="SYS(headerdivider)"/>
+        </WTROW>
+
+        <WTSTATIC label="Edit"/>
+        <WTSTATIC label="ExchangeAreas"/>
+
+        <WTROW>
+          <WTRECORDSET col="1" graybar="true" entity="Exchange">
+            <WTCOLUMN width="30" align="left" label="ExchangeName"/>
+            <WTCOLUMN width="15" align="center" label="Status"/>
+            <WTCOLUMN width="15" align="center" label="ActiveDate"/>
+            <WTCOLUMN width="20" align="left" label="NameFirst"/>
+            <WTCOLUMN width="20" align="left" label="NameLast"/>
+            <WTROW>
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(Exchange.ExchangeName)" space="1"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+                    <WTLINK name="16003">
+                      <WTPARAM name="ExchangeID" value="DATA(Exchange.ExchangeID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(GoogleMaps.png)" alt="ExchangeAreas" imgalign="absmiddle">
+                    <WTLINK name="16111">
+                      <WTPARAM name="ExchangeID" value="DATA(Exchange.ExchangeID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(Exchange.Status)"/>
+              <WTSTATIC col="3" value="DATA(Exchange.ActiveDate)"/>
+              <WTSTATIC col="4" value="DATA(Exchange.NameFirst)"/>
+              <WTSTATIC col="5" value="DATA(Exchange.NameLast)"/>
+            </WTROW>
+            <WTROW>
+              <WTSTATIC col="1" merge="5">
+                <WTSTATIC value="DATA(Exchange.City)" space="1"/>
+                <WTSTATIC value="DATA(Exchange.State)" space="1"/>
+                <WTSTATIC value="DATA(Exchange.CountryName)" space="3"/>
+                <WTSTATIC value="DATA(Exchange.Payment)" space="1"/>
+              </WTSTATIC>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+
+        <WTROW margin-bottom="12" margin-top="12">
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+  </WTWEBPAGES>
+</WTROOT>

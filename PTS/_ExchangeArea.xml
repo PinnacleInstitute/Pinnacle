@@ -1,0 +1,269 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="161" name="ExchangeArea" alias="xa" audit="false" translate="false">
+ 
+		<!--Identity-->
+		<WTATTRIBUTE id="16101" name="ExchangeAreaID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="16102" name="ExchangeID" type="number" required="true" source="entity"/>
+
+    <!--Foreign Keys-->
+    <WTATTRIBUTE id="16105" name="CountryID" type="number" source="entity"/>
+
+    <!--Foreign Table Fields-->
+    <WTATTRIBUTE id="16106" name="CountryName" type="text" length="50" source="join">
+      <WTJOIN entity="Country" name="CountryName"/>
+    </WTATTRIBUTE>
+
+    <!--Attributes-->
+		<WTATTRIBUTE id="16103" name="State" type="text" length="20" min="1" max="20" title="true" source="entity"/>
+
+		<WTINDEX name="ExchangeID">
+			<WTATTRIBUTE name="ExchangeID"/>
+      <WTATTRIBUTE name="CountryID"/>
+      <WTATTRIBUTE name="State"/>
+    </WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="ExchangeArea" entity="ExchangeArea" alias="xa"/>
+      <WTRELATIONSHIP name="Common" entity="ExchangeArea" alias="xa">
+        <WTENTITY name="Country" entity="Country" alias="cou">
+          <WTATTRIBUTE alias="xa" name="CountryID" relalias="cou" relname="CountryID"/>
+        </WTENTITY>
+      </WTRELATIONSHIP>
+    </WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+    <WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+    <WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(ExchangeID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(ExchangeArea.ExchangeAreaID)"/>
+          <WTATTRIBUTE value="ATTR(ExchangeArea.State)"/>
+          <WTATTRIBUTE value="ATTR(Country.CountryName)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(ExchangeID)" oper="equal" value="PARAM(ExchangeID)"/>
+          <WTORDER name="ATTR(ExchangeArea.CountryID)"/>
+          <WTORDER name="ATTR(ExchangeArea.State)"/>
+        </WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="16103" caption="ExchangeArea" header="false" footer="false" navbar="false" wrapper="wrapper600"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="52">
+      <!--============================================================================================-->
+      <WTPARAM name="ExchangeAreaID" datatype="number"/>
+      <WTPARAM name="ExchangeID" datatype="number"/>
+
+      <WTSUB name="LoadList">
+        <WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+          <WTMETHOD name="EnumCompany">
+            <WTPARAM name="xmlCountrys" direction="return" concat="true" datatype="text" />
+            <WTPARAM name="CompanyID" direction="input" value="CONST(1)" />
+            <WTPARAM name="ItemID" direction="input" value="CONST()" />
+            <WTPARAM name="Element" direction="input" value="CONST()" />
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="LoadExchangeArea">
+        <WTCALLSUB name="LoadList"/>
+        <WTOBJECT name="ExchangeArea" project="ptsExchangeAreaUser" class="CExchangeArea">
+          <WTMETHOD name="Load">
+            <WTPARAM name="ExchangeAreaID" direction="input" value="PARAM(ExchangeAreaID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(ExchangeAreaID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(CountryID)" value="CONST(224)"/>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlExchangeArea" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="UpdateExchangeArea">
+        <WTOBJECT name="ExchangeArea" project="ptsExchangeAreaUser" class="CExchangeArea">
+          <WTMETHOD name="Load">
+            <WTPARAM name="ExchangeAreaID" direction="input" value="PARAM(ExchangeAreaID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(ExchangeAreaID)" oper="not-equal" value="CONST(0)"/>
+            <WTMETHOD name="Save">
+              <WTCONDITION expr="NoErrors"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(ExchangeAreaID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(ExchangeID)" value="PARAM(ExchangeID)"/>
+            <WTMETHOD name="Add">
+              <WTCONDITION expr="NoErrors"/>
+              <WTPARAM name="ExchangeAreaID" direction="return" datatype="number"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsErrors"/>
+            <WTMETHOD name="XML">
+              <WTPARAM name="xmlExchangeArea" direction="return" datatype="text"/>
+              <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+            </WTMETHOD>
+            <WTCALLSUB name="LoadList"/>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCALLSUB name="LoadExchangeArea"/>
+      </WTACTION>
+
+      <WTACTION id="1" name="Update" type="Update">
+        <WTCALLSUB name="UpdateExchangeArea"/>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="3" name="Return" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <WTACTION id="4" name="Delete" type="Delete">
+        <WTOBJECT name="ExchangeArea" project="ptsExchangeAreaUser" class="CExchangeArea">
+          <WTMETHOD name="Delete">
+            <WTPARAM name="ExchangeAreaID" direction="input" value="PARAM(ExchangeAreaID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="160" align="right"/>
+        <WTCOLUMN width="440" align="left"/>
+
+        <WTROW>
+          <WTSTATIC col="1" merge="2" label="ExchangeArea" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="State"/>
+          <WTTEXT col="2" value="ATTR(ExchangeArea.State)"/>
+        </WTROW>
+        <WTROW>
+          <WTSTATIC col="1" tag="CountryID"/>
+          <WTCOMBO col="2" value="ATTR(ExchangeArea.CountryID)" label="CountryID" datapath="/DATA/TXN/PTSCOUNTRYS/ENUM" setselected="true"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="16111" caption="ExchangeAreas" header="false" footer="false" navbar="false" wrapper="wrapper750"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+      <!--============================================================================================-->
+      <WTPARAM name="ExchangeID" datatype="number"/>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTOBJECT name="Exchange" project="ptsExchangeUser" class="CExchange">
+          <WTMETHOD name="Load">
+            <WTPARAM name="ExchangeID" direction="input" value="PARAM(ExchangeID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlExchange" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="ExchangeAreas" project="ptsExchangeAreaUser" class="CExchangeAreas">
+          <WTMETHOD name="List">
+            <WTPARAM name="ExchangeID" direction="input" value="PARAM(ExchangeID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlExchangeAreas" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTACTION>
+
+      <WTACTION id="3" name="Return" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="750" align="left"/>
+
+        <WTROW>
+          <WTSTATIC col="1" class="PageHeading" align="left">
+            <WTSTATIC tag="ExchangeAreas" value="ATTR(Exchange.ExchangeName)" space="1"/>
+            <WTCODEGROUP>
+              <WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle">
+                <WTLINK name="16103">
+                  <WTPARAM name="ExchangeID" value="PARAM(ExchangeID)"/>
+                </WTLINK>
+              </WTIMAGE>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTDIVIDER col="1"  height="1" color="SYS(headerdivider)"/>
+        </WTROW>
+        <WTROW>
+          <WTRECORDSET col="1" graybar="true" entity="ExchangeArea">
+            <WTCOLUMN width="40" align="left" label="CountryName"/>
+            <WTCOLUMN width="60" align="left" label="State"/>
+            <WTROW>
+              <WTSTATIC col="2" value="DATA(ExchangeArea.CountryName)"/>
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(ExchangeArea.State)" space="1"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+                    <WTLINK name="16103">
+                      <WTPARAM name="ExchangeAreaID" value="DATA(ExchangeArea.ExchangeAreaID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+  </WTWEBPAGES>
+</WTROOT>

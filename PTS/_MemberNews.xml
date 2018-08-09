@@ -1,0 +1,220 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="36" name="MemberNews" alias="mn" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="3601" name="MemberNewsID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="3602" name="MemberID" type="number" source="entity" required="true"/>
+		<WTATTRIBUTE id="3603" name="NewsLetterID" type="number" source="entity" required="true"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="3605" name="NewsLetterName" type="text" length="60" source="join">
+			<WTJOIN entity="NewsLetter" name="NewsLetterName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3606" name="Description" type="text" length="200" source="join">
+			<WTJOIN entity="NewsLetter" name="Description"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3607" name="CompanyName" type="text" length="60" source="join">
+			<WTJOIN entity="Company" name="CompanyName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3608" name="NameLast" type="text" length="30" source="join">
+			<WTJOIN entity="Member" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3609" name="NameFirst" type="text" length="30" source="join">
+			<WTJOIN entity="Member" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3610" name="MemberName" type="text" length="62" source="entity">
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=" "/>
+			<WTCOMPUTE name="NameLast"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="3615" name="EnrollDate" type="date" source="entity" required="true"/>
+
+		<!--Indexes-->
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="MemberNews" entity="MemberNews" alias="mn"/>
+			<WTRELATIONSHIP name="Common" entity="MemberNews" alias="mn">
+				<WTENTITY name="NewsLetter" entity="NewsLetter" alias="nl">
+					<WTATTRIBUTE alias="mn" name="NewsLetterID" relalias="nl" relname="NewsLetterID"/>
+				</WTENTITY>
+				<WTENTITY name="Company" entity="Company" alias="co">
+					<WTATTRIBUTE alias="nl" name="CompanyID" relalias="co" relname="CompanyID"/>
+				</WTENTITY>
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="mn" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="DeleteMember" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(NewsLetterID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="GetMember" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(NewsLetterID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberNews.MemberNewsID)"/>
+					<WTATTRIBUTE value="ATTR(MemberNews.NewsLetterID)"/>
+					<WTATTRIBUTE value="ATTR(NewsLetter.NewsLetterName)"/>
+					<WTATTRIBUTE value="ATTR(NewsLetter.Description)"/>
+					<WTATTRIBUTE value="ATTR(Company.CompanyName)"/>
+					<WTATTRIBUTE value="ATTR(MemberNews.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(MemberNews.EnrollDate)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="CONST(nl.Status)" oper="equal" value="CONST(2)" connector="and"/>
+					<WTORDER name="ATTR(MemberNews.EnrollDate)"/>
+					<WTORDER name="ATTR(NewsLetter.NewsLetterName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+    
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3612" caption="MemberNews" aspstyle="GenerateWebASP.xsl" 
+		xslstyle="GenerateWebXSLList.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberNewss" project="ptsMemberNewsUser" class="CMemberNewss">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberNewss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>		
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Member" value="ATTR(Member.MemberName)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTSTATIC col="1" label="NoCompanyMemberText" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Total" value="PARAM(Count)" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="MemberNews">
+							<WTCOLUMN width="80" align="left" valign="top" label="NewLetterName"/>
+							<WTCOLUMN width="20" align="left" valign="top" label="EnrollDate"/>
+							
+							<WTROW>
+								<WTSTATIC col="1" value="DATA(NewLetterName)" valign="top"/>
+								<WTSTATIC col="2" value="DATA(EnrollDate)" valign="top"/>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Total" value="PARAM(Count)" bold="true"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+					
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="3607" caption="Unsubscribe News Letter" header="false" footer="false" navbar="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="NewsLetterID" />
+			<WTPARAM name="MemberID"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="MemberNews" project="ptsMemberNewsUser" class="CMemberNews">
+					<WTMETHOD name="DeleteMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="NewsLetterID" direction="input" value="PARAM(NewsLetterID)"/>
+					</WTMETHOD>
+				</WTOBJECT>		
+				<WTOBJECT name="NewsLetter" project="ptsNewsLetterUser" class="CNewsLetter">
+					<WTMETHOD name="UpdateMemberCnt">
+						<WTPARAM name="NewsLetterID" direction="input" value="ATTR(NewsLetterID)"/>
+						<WTPARAM name="MemberCnt" direction="input" value="CONST(-1)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="center"/>
+				<WTROW margin-top="24" margin-bottom="96">
+					<WTSTATIC col="1" class="PageHeading" label="UnsubscribeText"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

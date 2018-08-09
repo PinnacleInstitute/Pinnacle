@@ -1,0 +1,426 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="51" name="ProductType" alias="pdt">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="5101" name="ProductTypeID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="5102" name="CompanyID" type="number" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="5103" name="ProductTypeName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="5104" name="Seq" type="number" min="1" source="entity" seq="10"/>
+		<WTATTRIBUTE id="5105" name="IsPrivate" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="5106" name="IsPublic" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="5107" name="Description" type="text" length="3000" min="1" max="3000" source="entity" embedhtml="true"/>
+		<WTATTRIBUTE id="5108" name="Levels" type="text" length="5" source="entity" language="false"/>
+
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="Seq"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="ProductType" entity="ProductType" alias="pdt"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompany" enumname="EnumUserCompany" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(ProductType.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(ProductType.Levels)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompany" style="GenerateDataProc.xsl" column="ProductTypeName" template="new" passthru="true">
+			<WTPARAM name="ATTR(ProductType.CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(ProductType.Levels)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(ProductType.ProductTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(ProductType.ProductTypeName)"/>
+					<WTJOIN name="ProductType"/>
+					<WTCONDITION expr="ATTR(ProductType.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(ProductType.IsPrivate)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="ATTR(ProductType.Levels)" oper="equal" value="CONST('')" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(ProductType.Levels)" oper="contains" value="PARAM(Levels)" connector="or" paren="end"/>
+					<WTORDER name="ATTR(ProductType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompanyPublic" enumname="EnumUserCompanyPublic" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(ProductType.CompanyID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompanyPublic" style="GenerateDataProc.xsl" column="ProductTypeName" template="new" passthru="true">
+			<WTPARAM name="ATTR(ProductType.CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(ProductType.ProductTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(ProductType.ProductTypeName)"/>
+					<WTJOIN name="ProductType"/>
+					<WTCONDITION expr="ATTR(ProductType.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(ProductType.IsPublic)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(ProductType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompanyAll" enumname="EnumUserCompanyAll" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(ProductType.CompanyID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompanyAll" style="GenerateDataProc.xsl" column="ProductTypeName" template="new" passthru="true">
+			<WTPARAM name="ATTR(ProductType.CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(ProductType.ProductTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(ProductType.ProductTypeName)"/>
+					<WTJOIN name="ProductType"/>
+					<WTCONDITION expr="ATTR(ProductType.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(ProductType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(ProductType.ProductTypeID)"/>
+					<WTATTRIBUTE value="ATTR(ProductType.ProductTypeName)"/>
+					<WTATTRIBUTE value="ATTR(ProductType.Seq)"/>
+					<WTATTRIBUTE value="ATTR(ProductType.IsPrivate)"/>
+					<WTATTRIBUTE value="ATTR(ProductType.IsPublic)"/>
+					<WTATTRIBUTE value="ATTR(ProductType.Levels)"/>
+					<WTATTRIBUTE value="ATTR(ProductType.Description)"/>
+					<WTJOIN name="ProductType"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(ProductType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="5102" caption="Product Category" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="ProductType" project="ptsProductTypeUser" class="CProductType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProductTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProductType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="ProductType" project="ptsProductTypeUser" class="CProductType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProductTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ProductTypeID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlProductType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewProductType" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ProductTypeName"/>
+					<WTTEXT col="2" value="ATTR(ProductType.ProductTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(ProductType.Seq)" size="2"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(ProductType.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(ProductType.IsPublic)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Levels"/>
+					<WTTEXT col="2" value="ATTR(ProductType.Levels)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(ProductType.Description)" cols="68" rows="10" htmleditor="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="5103" caption="Product Category" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ProductTypeID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="ProductType" project="ptsProductTypeUser" class="CProductType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProductTypeID" direction="input" value="PARAM(ProductTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProductType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="ProductType" project="ptsProductTypeUser" class="CProductType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProductTypeID" direction="input" value="PARAM(ProductTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlProductType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="ProductType" project="ptsProductTypeUser" class="CProductType">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ProductTypeID" direction="input" value="PARAM(ProductTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="ProductType" project="ptsProductTypeUser" class="CProductType">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProductTypeID" direction="input" value="PARAM(ProductTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProductType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="ProductType" value="ATTR(ProductType.ProductTypeName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ProductTypeName"/>
+					<WTTEXT col="2" value="ATTR(ProductType.ProductTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(ProductType.Seq)" size="2"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(ProductType.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(ProductType.IsPublic)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Levels"/>
+					<WTTEXT col="2" value="ATTR(ProductType.Levels)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(ProductType.Description)" cols="68" rows="10" htmleditor="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="5111" caption="Product Categories" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="ProductTypes" project="ptsProductTypeUser" class="CProductTypes">
+					<WTMETHOD name="List">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProductTypes" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="ProductTypes" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewProductType">
+								<WTLINK name="5102">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="ProductTypesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="ProductType">
+						<WTCOLUMN width="10" align="center" valign="top" label="Seq"/>
+						<WTCOLUMN width="45" align="left" valign="top" label="ProductTypeName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Private"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Public"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Levels"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(ProductType.Seq)"/>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(ProductTypeName)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="5103"><WTPARAM name="ProductTypeID" value="DATA(ProductTypeID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview" imgalign="absmiddle">
+										<WTLINK name="5010" target="Summary"><WTPARAM name="ProductTypeID" value="DATA(ProductTypeID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(ProductType.IsPrivate)"/>
+							<WTSTATIC col="4" value="DATA(ProductType.IsPublic)"/>
+							<WTSTATIC col="5" value="DATA(ProductType.Levels)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="5" value="DATA(ProductType.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="2" action="3" value="CONST(Return)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

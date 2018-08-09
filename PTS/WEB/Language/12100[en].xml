@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="NotAvailable">Oops! The selected function is not currently available.</LABEL>
+	<LABEL name="BillingTokens">CREATE BILLING TOKENS: Click the "Process" button below to create billing token for new members.</LABEL>
+	<LABEL name="CreatePayments">CREATE PAYMENTS: Click the "Process" button below to create payments for members due to be billed on or before the date specified below.</LABEL>
+	<LABEL name="PaymentFile">PROCESS PAYMENTS: Click the "Process" button below to process payments with a submitted status.</LABEL>
+	<LABEL name="DeclinedTokens">LIST DECLINED TOKENS: Click the "Process" button below to view a list of members with declined tokens.</LABEL>
+	<LABEL name="DeclinedPayments">LIST DECLINED PAYMENTS: Click the "Process" button below to view a list of members with declined payments.</LABEL>
+	<LABEL name="UpdateDeclined">UPDATE DECLINED PAYMENTS: Click the "Process" button below to update declined payments with recently provided billing info.</LABEL>
+	<LABEL name="BonusQualified">VERIFY BONUS QUALIFIED MEMBERS: Click the "Process" button below to calculate all active 
+	members that are qualified to earn bonuses or that are "Qualify" locked after the date specified below.</LABEL>
+	<LABEL name="CalcBonuses">CALCULATE BONUSES: Click the "Process" button below to calculate commissions and bonuses 
+	for all member payments in the specified date range below.</LABEL>
+	<LABEL name="DisplayBonuses">UNHIDE NEW BONUSES: Click the "Process" button below to display all hidden new commissions and bonuses.</LABEL>
+	<LABEL name="CreatePayouts">CREATE PAYOUTS: Click the "Process" button below to create payouts for all unpaid 
+	bonuses totalling more that their autoship amount up to the date specified below.</LABEL>
+	<LABEL name="PaymentCredits">CREAT PAYMENT CREDITS: Click the "Process" button below to create payment credits 
+	for all members with bill dates due within the next 30 days that have sufficient earned bonuses that have not been paid yet.</LABEL>
+	<LABEL name="PayoutQualified">VERIFY QUALIFIED PAYOUTS: Click the "Process" button below to calculate all active 
+	members that are qualified to receive a payout.</LABEL>
+	<LABEL name="PayoutFile">CREATE PAYQUICKER EXPORT FILE: Click the "Process" button below to create payout files. Submitted payouts will be processed up to the date specified below.</LABEL>
+	<LABEL name="PayoutPaid">MARK SUBMITTED PAYOUTS PAID: Click the "Process" button below to update the status of all 
+	submitted payouts to paid, up to the date specified below.</LABEL>
+	<LABEL name="DisplayPayouts">UNHIDE NEW PAYOUTS: Click the "Process" button below to display all hidden new payouts.</LABEL>
+	<LABEL name="MaintainSales">RECALCULATE GROUP SALES VOLUME: Click the "Process" button below to recalculate all group sales volume and check for new promotions.</LABEL>
+	<LABEL name="MaintainSummary">POST SALES SUMMARY: Click the "Process" button below to post the current personal and group sales volume for all active members with personal sales volume. The sales summary will be posted with the date below.</LABEL>
+	<LABEL name="ListOrphans">LIST ORPHANED MEMBERS: Click the "Process" button below to view a list of members without active sponsors.</LABEL>
+	<LABEL name="CreateWallets">CREATE NEW eWALLETS: Click the "Process" button below to list all eWallets for all new active International members to be imported into iPayout.</LABEL>
+	<LABEL name="AssignWallets">ASSIGN NEW eWALLETS: Click the "Process" button below to set the eWallet identifier for all new active International members.</LABEL>
+	<LABEL name="SetAlerts">SET MEMBER ALERTS: Click the "Process" button below to set declined payment alerts for all members.</LABEL>
+	<LABEL name="CleanupData">CLEANUP OLD DATA: Click the "Process" button below to delete incomplete enrollments and other old data.</LABEL>
+	<LABEL name="ExportOrdersSubmitted">EXPORT ORDERS: Click the "Process" button below to export all submitted orders up to the date specified below and change their status to Inprocess.</LABEL>
+	<LABEL name="ExportOrdersInprocess">ExportOrdersInprocess</LABEL>
+	<LABEL name="UpdateOrdersSubmitted">UPDATE EXPORTED ORDERS: Click the "Process" button below to update all exported orders to Complete.</LABEL>
+	<LABEL name="UpdateOrdersInprocess">UpdateOrdersInprocess</LABEL>
+	<LABEL name="EmailCommissions">EMAIL EARNED BONUSES: Click the "Process" button below to email all members that earned bonuses created in the specified date range below.</LABEL>
+	<LABEL name="TitleAdvancements">RECALCULATE TITLE ADVANCEMENTS: Click the "Process" button below to recalculate title advancements for all members.</LABEL>
+	<LABEL name="ExportPayments">EXPORT PAYMENTS: Click the "Process" button below to export payments with a submitted status.</LABEL>
+	<LABEL name="UpdateBinarySales">UPDATE BINARY SALES: Click the "Process" button below to update all current approved payments that have not been added to the Binary Sales Volume. This will also automatically calculate bonuses for the processed payments.</LABEL>
+	<LABEL name="UpdateBinaryCount">UPDATE BINARY COUNT: Click the "Process" button below to update the member counts in the binary downline.</LABEL>
+	<LABEL name="TopRecruiters">TOP RECRUITERS: Click the "Process" button below to view a list of the top 50 recruiters in the Binary Program.</LABEL>
+	<LABEL name="TopEarners">TOP EARNERS: Click the "Process" button below to view a list of the top 50 earners in the Binary Program.</LABEL>
+	<LABEL name="TopCountries">TOP COUNTRIES: Click the "Process" button below to view a list of the top countries in the Binary Program.</LABEL>
+	<LABEL name="DeclineEmail">EMAIL DECLINED PAYMENTS: Click the "Process" button below to email every member with a declined payment in the specified date range below.</LABEL>
+	<LABEL name="DeclineSuspend">SUSPEND DECLINED PAYMENTS: Click the "Process" button below to Suspend every member with a declined payment older that the date below.</LABEL>
+	<LABEL name="DeclineCancel">CANCEL DECLINED PAYMENTS: Click the "Process" button below to Cancel every suspended member with a declined payment older that the date below.</LABEL>
+	<LABEL name="From">From</LABEL>
+	<LABEL name="To">To</LABEL>
+	<LABEL name="eWalletHdr">UserName,FirstName,LastName,CompanyName,Address1,Address2,City,State,ZipCode,Country2xFormat,PhoneNumber,CellPhoneNumber,EmailAddress,SSN,CompanyTaxID,GovernmentID,MilitaryID,PassportNumber,DriversLicense,DateOfBirth,WebsitePassword,DefaultCurrency,PreferredLanguage</LABEL>
+	<LABEL name="Process">Process</LABEL>
+	<LABEL name="Close">Close</LABEL>
+</LANGUAGE>

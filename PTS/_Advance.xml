@@ -1,0 +1,71 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="103" name="Advance" alias="av" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="10301" name="AdvanceID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="10302" name="MemberID" type="number" title="true" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="10304" name="Personal" type="number" source="entity"/>
+		<WTATTRIBUTE id="10305" name="Group" type="number" source="entity"/>
+		<WTATTRIBUTE id="10306" name="Title" type="number" source="entity"/>
+		<WTATTRIBUTE id="10307" name="IsLocked" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="10308" name="Title1" type="number" source="entity"/>
+		<WTATTRIBUTE id="10309" name="Title2" type="number" source="entity"/>
+		<WTATTRIBUTE id="10310" name="Title3" type="number" source="entity"/>
+		<WTATTRIBUTE id="10311" name="Title4" type="number" source="entity"/>
+		<WTATTRIBUTE id="10312" name="Title5" type="number" source="entity"/>
+		<WTATTRIBUTE id="10313" name="Process" type="number" source="entity"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Advance" entity="Advance" alias="av"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchMember" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(AdvanceID)" direction="output"/>
+			<WTPARAM name="ATTR(Personal)" direction="output"/>
+			<WTPARAM name="ATTR(Group)" direction="output"/>
+			<WTPARAM name="ATTR(Title)" direction="output"/>
+			<WTPARAM name="ATTR(IsLocked)" direction="output"/>
+			<WTPARAM name="ATTR(Title1)" direction="output"/>
+			<WTPARAM name="ATTR(Title2)" direction="output"/>
+			<WTPARAM name="ATTR(Title3)" direction="output"/>
+			<WTPARAM name="ATTR(Title4)" direction="output"/>
+			<WTPARAM name="ATTR(Title5)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PARAM(AdvanceID)" value="ATTR(Advance.AdvanceID)"/>
+					<WTATTRIBUTE name="PARAM(Personal)" value="ATTR(Advance.Personal)"/>
+					<WTATTRIBUTE name="PARAM(Group)" value="ATTR(Advance.Group)"/>
+					<WTATTRIBUTE name="PARAM(Title)" value="ATTR(Advance.Title)"/>
+					<WTATTRIBUTE name="PARAM(IsLocked)" value="ATTR(Advance.IsLocked)"/>
+					<WTATTRIBUTE name="PARAM(Title1)" value="ATTR(Advance.Title1)"/>
+					<WTATTRIBUTE name="PARAM(Title2)" value="ATTR(Advance.Title2)"/>
+					<WTATTRIBUTE name="PARAM(Title3)" value="ATTR(Advance.Title3)"/>
+					<WTATTRIBUTE name="PARAM(Title4)" value="ATTR(Advance.Title4)"/>
+					<WTATTRIBUTE name="PARAM(Title5)" value="ATTR(Advance.Title5)"/>
+					<WTJOIN name="Advance" lock="false"/>
+					<WTCONDITION expr="ATTR(Advance.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="UpdateTitle" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true" >
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,468 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="69" name="Channel" alias="ch" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="6901" name="ChannelID" type="number" identity="true" min="1" required="true" source="entity"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="6903" name="CompanyID" type="number" source="entity"/>
+		
+		<!--Foreign Table Fields-->
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="6910" name="PubDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mmam/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6911" name="Title" type="text" length="80" min="1" max="80" title="true" required="true" source="entity"/>
+		<WTATTRIBUTE id="6912" name="Link" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="6913" name="Description" type="text" length="1000" min="1" max="1000" source="entity"/>
+		<WTATTRIBUTE id="6914" name="IsActive" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="6915" name="Filename" type="text" length="20" min="1" max="20" source="entity"/>
+		<WTATTRIBUTE id="6916" name="Image" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="6917" name="Language" type="text" length="6" min="1" max="6" source="entity"/>
+
+		<!-- Non Persist Fields -->
+
+		<!--Indexes-->
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="PubDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Channel" entity="Channel" alias="ch"/>
+			<WTRELATIONSHIP name="Common" entity="Channel" alias="ch"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListChannels" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Channel.ChannelID)"/>
+					<WTATTRIBUTE value="ATTR(Channel.PubDate)"/>
+					<WTATTRIBUTE value="ATTR(Channel.Title)"/>
+					<WTATTRIBUTE value="ATTR(Channel.Link)"/>
+					<WTATTRIBUTE value="ATTR(Channel.Description)"/>
+					<WTATTRIBUTE value="ATTR(Channel.Filename)"/>
+					<WTATTRIBUTE value="ATTR(Channel.Image)"/>
+					<WTATTRIBUTE value="ATTR(Channel.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(Channel.Language)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Channel.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(Channel.Title)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="6902" page-width="600" page-left="10" margin-width="0" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Channel" project="ptsChannelUser" class="CChannel">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ChannelID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(PubDate)" value="SYS(Now)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlChannel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Channel" project="ptsChannelUser" class="CChannel">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ChannelID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(IsActive)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="CONST(&quot;en&quot;)"/>
+					<WTSETATTRIBUTES/>
+					<!-- If we are on the same day, set the time to now -->
+					<WTSETATTRIBUTE name="CONST(tmpDate)" value="CONST(CDATE(MONTH(.PubDate)&amp;&quot;/&quot;&amp;DAY(.PubDate)&amp;&quot;/&quot;&amp;YEAR(.PubDate)))"/>
+					<WTSETATTRIBUTE name="ATTR(PubDate)" value="SYS(Now)">
+						<WTCONDITION expr="CONST(CDATE(tmpDate))" oper="equal" value="CONST(CDATE(reqSysDate))"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ChannelID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlChannel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" width="50%" align="left" class="PageHeading">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(rss.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewChannel"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+					<WTBUTTON col="2" width="50%" action="2" value="CONST(Add)" align="right" btnclass="smbutton" prespace="false">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="PubDate"/>
+					<WTTEXT col="2" value="ATTR(Channel.PubDate)" size="15" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Title"/>
+					<WTTEXT col="2" value="ATTR(Channel.Title)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Link"/>
+					<WTTEXT col="2" value="ATTR(Channel.Link)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Filename"/>
+					<WTTEXT col="2" value="ATTR(Channel.Filename)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Channel.Description)" cols="72" rows="4"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="6903" page-width="600" page-left="10" margin-width="0" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="ChannelID" datatype="number"/>
+			<WTPARAM name="RSSFile" datatype="text"/>
+
+			<WTSUB name="LoadChannel">
+				<WTOBJECT name="Channel" project="ptsChannelUser" class="CChannel">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ChannelID" direction="input" value="PARAM(ChannelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;RSS&quot; + CStr(reqChannelID))">
+						<WTCONDITION expr="ATTR(Filename)" oper="equal" value="CONST(&quot;&quot;)"/>
+					</WTSETATTRIBUTE>
+<WTCUSTOM>
+			tmpFilename = .Filename
+			If InStr(tmpFilename, ".") = 0 Then tmpFilename = tmpFilename + ".xml"
+			reqRSSFile = "http://" + reqSysServerName + reqSysServerPath + "LiveDesktop/Company/" + .CompanyID + "/" + tmpFilename
+</WTCUSTOM>			
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlChannel" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Newss" project="ptsNewsUser" class="CNewss">
+					<WTMETHOD name="ListNews">
+						<WTPARAM name="Channel" direction="input" value="PARAM(ChannelID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlNewss" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadChannel"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Channel" project="ptsChannelUser" class="CChannel">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ChannelID" direction="input" value="PARAM(ChannelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;RSS&quot; + CStr(reqChannelID))">
+						<WTCONDITION expr="ATTR(Filename)" oper="equal" value="CONST(&quot;&quot;)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadChannel">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTCONDITION expr="IsEmployee"/>
+				<WTOBJECT name="Channel" project="ptsChannelUser" class="CChannel">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ChannelID" direction="input" value="PARAM(ChannelID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadChannel">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="ATTR(Channel.CompanyID)"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" width="50%" align="left" class="PageHeading">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(rss.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="Channel"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+					<WTBUTTON col="2" width="50%" action="1" value="CONST(Update)" align="right" btnclass="smbutton" prespace="false">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" btnclass="smbutton" msg="ConfirmDelete" prespace="false">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="PubDate"/>
+					<WTTEXT col="2" value="ATTR(Channel.PubDate)" size="15"/>
+					<WTSTATIC col="2" tag="Language"/>
+					<WTTEXT col="2" value="ATTR(Channel.Language)" size="3" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Channel.IsActive)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Title"/>
+					<WTTEXT col="2" value="ATTR(Channel.Title)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Link"/>
+					<WTTEXT col="2" value="ATTR(Channel.Link)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Image"/>
+					<WTTEXT col="2" value="ATTR(Channel.Image)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Filename"/>
+					<WTTEXT col="2" value="ATTR(Channel.Filename)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Channel.Description)" cols="72" rows="4"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" tag="RSSFile" value="PARAM(RSSFile)" align="center" class="prompt"/>
+				</WTROW>
+				
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(rssitem.gif)" imgalign="absmiddle" align="left"/>
+					<WTSTATIC col="1" label="News" bold="true"/>
+					<WTSTATIC col="2" label="NewNews" bold="true" align="right">
+						<WTLINK name="9802">
+							<WTPARAM name="CompanyID" value="ATTR(Channel.CompanyID)"/>
+							<WTPARAM name="ChannelID" value="ATTR(Channel.ChannelID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" noitems="false" entity="News">
+						<WTCOLUMN width="4" align="left" valign="top"/>
+						<WTCOLUMN width="18" align="left" valign="top"/>
+						<WTCOLUMN width="78" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Seq)"/>
+							<WTSTATIC col="2" value="DATA(PubDate)"/>
+							<WTSTATIC col="3">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(IsActive)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(redx.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Title)" space="1" bold="true">
+									<WTLINK name="9803"><WTPARAM name="CompanyID" value="ATTR(Channel.CompanyID)"/><WTPARAM name="NewsID" value="DATA(NewsID)"/></WTLINK>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Link)" space="1" fontcolor="blue"/>
+								<WTSTATIC value="DATA(Image)" fontcolor="purple"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" value="DATA(Filename)" fontcolor="gray"/>
+							<WTSTATIC col="3" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6911" page-width="580" page-left="10" margin-width="0" caption="RSS Channels" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ChannelID" datatype="number"/>
+
+			<WTINCLUDE name="RSS.asp"/>
+
+			<WTSUB name="LoadChannel">
+				<WTOBJECT name="Channels" project="ptsChannelUser" class="CChannels">
+					<WTMETHOD name="ListChannels">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlChannels" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTCALLSUB name="LoadChannel"/>
+			</WTACTION>
+
+			<WTACTION name="Publish" type="Update" id="2">
+				<WTCALLSUB name="LoadChannel"/>
+<WTCUSTOM>
+		tmpResult = PublishRSS( reqCompanyID, reqChannelID )
+		DoError 0, "", tmpResult
+</WTCUSTOM>
+
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="280" align="left"/>
+
+				<WTFUNCTION name="Publish(id)">
+					document.getElementById('ChannelID').value = id; 
+					doSubmit(2,"");
+			    </WTFUNCTION>  
+				<WTROW>
+					<WTHIDDEN value="PARAM(ChannelID)"/>
+				</WTROW>
+
+				<WTSTATIC label="Publish"/>
+
+				<WTROW margin-top="6">
+					<WTIMAGE col="1" value="CONST(rss.gif)" imgalign="absmiddle"/>
+					<WTSTATIC col="1" label="Channels" bold="true"/>
+					<WTSTATIC col="2" label="NewChannel" bold="true" align="right">
+						<WTLINK name="6902" nodata="true">
+							<WTPARAM name="CompanyID" value="ATTR(Channel.CompanyID)"/>
+						</WTLINK>
+					</WTSTATIC>
+					<WTBUTTON col="2" value="CONST(Close)" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-top="3">
+					<WTRECORDSET col="1" merge="2" graybar="true" noitems="false" entity="Channel">
+						<WTCOLUMN width="20" align="left" valign="top"/>
+						<WTCOLUMN width="80" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Channel.PubDate)" valign="top"/>
+							<WTSTATIC col="2">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Channel.IsActive)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(redx.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Channel.Title)" space="1" bold="true">
+									<WTLINK name="6903" nodata="true"><WTPARAM name="ChannelID" value="DATA(ChannelID)"/></WTLINK>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Template.gif)" alt="Publish" imgalign="absmiddle">
+										<WTLINK click="true" name="CONST(Publish(&lt;xsl:value-of select=&quot;@channelid&quot;/&gt;))"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="DATA(Channel.Language)" space="1"  fontcolor="darkgreen"/>
+								<WTSTATIC value="DATA(Link)" space="1" fontcolor="blue"/>
+								<WTSTATIC value="DATA(Image)" fontcolor="purple"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Filename)" fontcolor="gray"/>
+							<WTSTATIC col="2" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

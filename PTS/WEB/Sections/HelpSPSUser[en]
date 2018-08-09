@@ -1,0 +1,112 @@
+
+<P align=center><FONT color=#000066 size=5><B>Sales Prospecting System</B></FONT> 
+<P align=center><FONT color=#000066 size=5>User Guide</FONT> 
+<P><B><FONT size=3>Introduction</FONT></B> 
+<BR>The Pinnacle Sales Prospecting System (SPS) is a sales tool designed specifically for lead tracking.&nbsp; Typical sales activities can be categorized into one of the following three categories. 
+<BR>
+<BR>1.&nbsp;<B> Lead Generation</B> :&nbsp; The identification of a qualified lead 
+<BR>2.&nbsp;<B> Lead Tracking</B> : The conversion of a qualified lead to a customer 
+<BR>3.&nbsp;<B> Customer Management</B> : The ongoing sales and service to an existing customer. 
+<BR>
+<BR>SPS takes a qualified lead identified as a suspect and manages the process of converting the suspect to a prospect and eventually to a final response of yes, no or maybe later.&nbsp; Many methods are used to generate qualified leads including; personal acquaintances, networking, referral sources, mailing lists, telemarketing, search engine optimization, bulk email campaigns, etc. Email lead generation is typically spamming and is not recommended by Pinnacle.&nbsp; Spamming is a socially unacceptable practice and is done at the risk of criminal prosecution.&nbsp; Customer Management is closely aligned with a company’s specific operations, which typically requires a custom solution. 
+<P><B> <FONT size=3>Sales Tracking
+<BR></FONT></B> The Sales Prospecting System (SPS) provides members with powerful lead tracking capabilities and management reports. Each signed-in member that has the Sales Prospecting System enabled can access it by clicking the “My Sales” link on the navigation bar on the left hand side of the page. 
+<BR>
+<BR>The SPS page provides links to all SPS functionality and the ability to search for prospects by prospect name, contact name, prospect #, email address and suspect date.&nbsp; The contact name is searched by last name and first name (i.e. Smith, Bob).&nbsp; A partial search word will return all matches that start with the search entry, except for prospect name, which returns all matches that contain the search entry anywhere in the name.&nbsp; The search list results are sorted by the search field selected in the first combo box.&nbsp; The prospect search can also be filtered by one of the predefined statuses by selecting a status option from the second combo box.&nbsp; This is convenient for members to easily view their current suspects. 
+<P><B> Prospect Information
+<BR></B> The Sales Prospecting System tracks the following information for each prospect.&nbsp;
+<BR>&nbsp;
+<BR>Assigned Member
+<BR>Sales Campaign
+<BR>Prospect Type
+<BR>Prospect Name
+<BR>Website
+<BR>Description
+<BR>Contact First Name
+<BR>Contact Last Name
+<BR>Contact Title
+<BR>Contact Email
+<BR>Contact Phone1
+<BR>Contact Phone2
+<BR>Street
+<BR>Unit
+<BR>City
+<BR>State
+<BR>Zip
+<BR>Country
+<BR>Status
+<BR>Potential Value
+<BR>Next Event
+<BR>Next Date
+<BR>Next Time
+<BR>Suspect Date
+<BR>First Appt. Date
+<BR>Fallback Date
+<BR>Closed Date
+<BR>Dead Date
+<BR>Milestone Date 1
+<BR>Milestone Date 2
+<BR>Milestone Date 3
+<BR>Milestone Date 4
+<BR>Milestone Date 5
+<BR>Milestone Date 6
+<BR>Milestone Date 7
+<BR>Milestone Date 8
+<BR>Milestone Date 9
+<BR>Milestone Date 10
+<BR>Next Status
+<BR>Change Status Date
+<BR>Email Message
+<BR>Send Email Date
+<BR>RSVP
+<BR><B> 
+<BR>Sales Campaign
+<BR></B> The sales campaign for the prospect is displayed at the top of the prospect page.&nbsp; Click the “Change” button to select a different sales campaign for the prospect.&nbsp; The sales campaign defines the sales steps that appear in the prospect status list, in the milestone date list, and on the Sales Board.
+<BR>&nbsp;
+<BR><B> Prospect Type
+<BR></B> The list of prospect types is a custom list defined by each company.&nbsp; Select the appropriate prospect type or contact the company administrator for additional list options. The prospect type is used for information purposes and for categorizing prospects for management reporting. 
+<BR>&nbsp;
+<BR><B> Prospect Potential Value
+<BR></B> The potential value of the prospect is used by the Sales Board to calculate the current value of all active prospects.&nbsp; The conversion rate for the current sales step (status) will be multiplied by the prospect's potential value to calculate an estimated current value on the Sales Board.&nbsp; The potential value may be the total value over a specific period of time (e.g. 1 yr., 2 yrs., 3 yrs.) for subscription services.
+<BR>&nbsp;
+<BR><B> Prospect Status
+<BR></B> Each prospect has five predefined statuses including, Suspect, “First Appointment”, Fallback, Closed and Dead.&nbsp; The custom sales steps for the sales campaign assigned to the prospect will also appear in the status list after the predefined “First Appointment” status. 
+<P><B> RSVP Response
+<BR></B> The RSVP field is used to store the prospect’s response to an email message.&nbsp; The RSVP response is also automatically logged in the notes by the system.&nbsp; The logged RSVP response is defined in the email message for an automated email sales step.&nbsp; The RSVP response may be used for management reporting statistics on automated email campaigns. 
+<P><B> Agreed Upon Next Step
+<BR></B> The sales person should track the next step that the prospect has agreed upon.&nbsp; There should always be an agreed upon next step with a specific date and time.&nbsp; Any prospect without an agreed upon next step with a specific date and time should be considered in a Fallback status.&nbsp; The next events are selected from a predefined list that includes; Call, Meeting, Email, Mail, Drop By, and Other.&nbsp; Click the “Clear” button to reset the Next Event, Next Date and Next Time fields.
+<BR>&nbsp;
+<BR><B> Milestone Dates
+<BR></B> All five of the predefined sales steps include a milestone date to track when the event happened.&nbsp; Additionally each custom sales step that has a milestone # indicated will also appear in the list of milestone dates.&nbsp; A short description follows each milestone date field.&nbsp; Click the calendar icon following each milestone date field to select a date from a popup calendar.
+<BR>&nbsp;
+<BR><B> Auto Change Status
+<BR></B> Automated sales steps set the “Auto Change Status” and change date fields.&nbsp; These fields may also be manually set by the salesperson.&nbsp; The system checks every hour for prospects that have a status change date specified.&nbsp; If the new sales step being changed to specifies a next step, the system will set the prospect’s next status and date.&nbsp; The change date can contain a date and time (e.g. 1/1/05 1:00pm)
+<P><B> Auto Email Message
+<BR></B> Automated sales steps set the Email message and send date fields.&nbsp; The email message # may be edited by management.&nbsp; If an auto email message is specified the user can edit the send date.
+<P><B> Contact Information
+<BR></B> In addition to the prospect name, SPS also tracks the contact name, title, email address, 2 phone numbers, and street, city, state postal code and country.&nbsp; The prospects web page and a 2000 character description may also be entered.&nbsp; If the prospect is a business, the business name is entered as the prospect name and the primary contact is entered as the contact name.&nbsp; If the prospect is an individual, their name is entered as the contact name and the prospect name can be their last name and first name for searching.&nbsp; Additional contact information may be entered in the description field or in the notes.
+<BR>&nbsp;
+<BR><B> Prospect Notes
+<BR></B> Multiple notes may be stored for each prospect. Each 1000 character note tracks who made the note and when the note was made.&nbsp; Automated sales steps and email RSVPs also add notes to document the activity.&nbsp; Notes can be viewed and added by selecting the “Notes” link at the upper right hand corner of the prospect page.&nbsp; A note may be pinned to the top of the list for priority access to important information.
+<BR>&nbsp;
+<BR><B> Prospect Shortcuts
+<BR></B> Members and Administrators can create shortcuts to prospects by clicking the shortcut icon&nbsp;&nbsp; that follows the prospect name at the top of the page.&nbsp; The user can view a list of all their shortcuts by selecting the shortcut link at the top of the navigation bar on the left hand side of the page.&nbsp; Shortcuts may be pinned to the top of the list for priority access.&nbsp; Pinned shortcuts will also appear as large icons on the member’s home page.
+<P><B> Prospect Lookup
+<BR></B> Members can lookup a potential suspect before entering it into the system to check if another member is already working with the prospect.&nbsp; If the suspect exists, the member can view the basic contact information for the member to possible contact him/her with additional assistance or partnership.&nbsp; Select the “Prospect Lookup” link at the top of the “Sales Prospecting System” page.
+<BR>&nbsp;
+<BR><B> View Sales Documents
+<BR></B> If the current sales step of a prospect includes attached documents, a link is displayed at the top of the prospect page.&nbsp; Selecting the link will display a popup window with a list of all attached documents.&nbsp; Clicking the name of a document will display the document in a separate popup window.&nbsp; Sales Documents are convenient ways for salespeople to easily access sales scripts and reference documents.&nbsp;
+<BR><FONT size=3><B>
+<BR>Sales Management 
+<BR></B></FONT>
+<BR><FONT size=3><B>Management Reports 
+<BR></B></FONT>Sales people and management can review the following sales reports.&nbsp; Sales people only view prospects assigned to them. 
+<BR>
+<BR>1.&nbsp;SALES BOARD:&nbsp; Sales Board of prospects at each sales step with estimated sales value. 
+<BR>2.&nbsp;SCHECULE:&nbsp; Schedule of events to be performed for the specified time frame. 
+<BR>3.&nbsp;FIRST APPOINTMENTS:&nbsp; Statistics on first appointments set for the specified time frame. 
+<BR>4.&nbsp;FALLBACK:&nbsp; List of prospect in fallback status for the specified time frame. 
+<BR>5.&nbsp;CLOSED:&nbsp; List of closed prospects for the specified time frame. 
+<BR>6.&nbsp;CONVERSION RATES:&nbsp; Member conversion rates for each step in a campaign. (coming soon) 
+<BR>7.&nbsp;EXCEPTIONS:&nbsp; List of prospects that have an exception like a past next event or a current status that is past the recommended length of time. (coming soon) 
+<P>&nbsp;&nbsp; 

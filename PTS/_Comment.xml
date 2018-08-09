@@ -1,0 +1,209 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="146" name="Comment" alias="cmt" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="14601" name="CommentID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="14602" name="OwnerType" type="number" source="entity"/>
+		<WTATTRIBUTE id="14603" name="OwnerID" type="number" source="entity"/>
+		<WTATTRIBUTE id="14604" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="14605" name="ReplyID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="14610" name="CommentDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mmam/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="14611" name="Msg" type="text" length="2000" min="1" max="2000" source="entity" embedhtml="true"/>
+		<WTATTRIBUTE id="14612" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Blocked"/>
+			<WTENUM id="3" name="Open"/>
+			<WTENUM id="4" name="Closed"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="14613" name="Likes" type="number" source="entity"/>
+		<WTATTRIBUTE id="14614" name="Dislikes" type="number" source="entity"/>
+		<WTATTRIBUTE id="14615" name="Bads" type="number" source="entity"/>
+		<WTATTRIBUTE id="14616" name="Favorites" type="number" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="14690" name="MemberName" type="text" source="entity" persist="false"/>
+		<WTATTRIBUTE id="14691" name="ReplyName" type="text" source="entity" persist="false"/>
+		<WTATTRIBUTE id="14692" name="Stat" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="14693" name="Num" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="CommentDate">
+			<WTATTRIBUTE name="OwnerType"/>
+			<WTATTRIBUTE name="OwnerID"/>
+			<WTATTRIBUTE name="CommentDate"/>
+		</WTINDEX>
+		<WTINDEX name="Like">
+			<WTATTRIBUTE name="OwnerType"/>
+			<WTATTRIBUTE name="OwnerID"/>
+			<WTATTRIBUTE name="Likes"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Comment" entity="Comment" alias="cmt"/>
+			<WTRELATIONSHIP name="Common" entity="Comment" alias="cmt"/>
+		</WTRELATIONSHIPS>
+
+		<!--List-->
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListNew" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Comment.CommentID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.MemberName)"/>
+					<WTATTRIBUTE value="ATTR(Comment.ReplyID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.ReplyName)"/>
+					<WTATTRIBUTE value="ATTR(Comment.CommentDate)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Msg)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Status)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Likes)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Dislikes)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Bads)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Favorites)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTORDER name="ATTR(Comment.CommentDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListOld" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Comment.CommentID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.MemberName)"/>
+					<WTATTRIBUTE value="ATTR(Comment.ReplyID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.ReplyName)"/>
+					<WTATTRIBUTE value="ATTR(Comment.CommentDate)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Msg)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Status)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Likes)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Dislikes)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Bads)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Favorites)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTORDER name="ATTR(Comment.CommentDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListBest" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Comment.CommentID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.MemberName)"/>
+					<WTATTRIBUTE value="ATTR(Comment.ReplyID)"/>
+					<WTATTRIBUTE value="ATTR(Comment.ReplyName)"/>
+					<WTATTRIBUTE value="ATTR(Comment.CommentDate)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Msg)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Status)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Likes)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Dislikes)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Bads)"/>
+					<WTATTRIBUTE value="ATTR(Comment.Favorites)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTORDER name="ATTR(Comment.Likes)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<WTPROCEDURE name="Stats" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CommentID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(Stat)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(Num)" direction="input" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="14600" page-width="600" page-left="0" margin-width="0" caption="List" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="Title" datatype="text"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Comments" project="ptsCommentUser" class="CComments">
+					<WTMETHOD name="ListComments">
+						<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlComments" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" value="PARAM(Title)" class="PageHeading" align="center"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" noitems="false" entity="Comment">
+						<WTCOLUMN width="100" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Comment.CommentDate)" space="1" fontcolor="purple"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="14605" worker="true" aspstyle="GenerateWebASP.xsl" >
+			<!--==================================================================-->
+			<WTPARAM name="CID" datatype="number"/>
+			<WTPARAM name="Stat" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Comment" project="ptsCommentUser" class="CComment">
+					<WTMETHOD name="Stats">
+						<WTPARAM name="CommentID" direction="input" value="PARAM(CID)"/>
+						<WTPARAM name="Stat" direction="input" value="PARAM(Stat)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			<!--**************************************************************-->
+			<WTCONTENT/>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,132 @@
+<!doctype html>
+
+<html class="no-js" lang="en">
+<head>
+
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Marketing System</title>
+
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="mobile/style.css">
+
+    <script src="mobile/modernizr-2.5.3.min.js"></script>
+
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+
+        {parsetags: 'explicit'}
+
+    </script>
+
+</head>
+
+<body>
+
+
+<SCRIPT language="JavaScript"> function ShowTab(tab, shw){ 
+    var win, frm, src='', page='', target='', url='', style='', compare=0, load=0;
+
+    switch(shw) {
+    case 1: url = 'm_1412.asp?pagetype=2'; compare=21; break;
+    case 2: url = 'm_8162.asp?memberid={id}'; break;
+    case 3: url = 'm_8161.asp?memberid={id}'; break;
+    case 4: url = 'm_11702.asp?memberid={id}&companyid={cid}'; break;
+    case 5: url = 'm_11712.asp?memberid={id}&companyid={cid}'; break;
+    case 6: url = 'm_11710.asp?memberid={id}&companyid={cid}'; break;
+    case 7: url = 'm_0463.asp?memberid={id}'; break;
+    }
+
+    if( target.length > 0 ) {
+        win = window.open(url,target,style);
+        win.focus();
+    }
+    else {
+        if( url.length > 0 ) {
+            frm = document.getElementById(tab);
+            src = frm.src;
+            if( compare == 0 ) { compare = url.indexOf('.') }
+            page = url.substring(0,compare);
+            if (load == 1 || src.indexOf(page) < 0 ) { frm.src = url }
+        }
+        document.getElementById('content').style.display = 'none';
+        document.getElementById('PageFrame').style.display = 'none';
+        document.getElementById('AcctFrame').style.display = 'none';
+        document.getElementById(tab).style.display = '';
+    }
+}
+</SCRIPT>
+
+<header class="wrap">
+
+    <div id="top_bar">
+
+        <div id="top_bar_left">{name}</div>
+        <div id="clock">&nbsp;</div>
+
+        <div id="top_bar_right">WorldVentures</div>
+    </div>
+
+</header>
+
+
+<section role="main" class="wrap">
+
+    <div id="content">
+
+        <div id="dab" class="scroll">
+
+            <ul>
+
+                <li class="banner"><img src="{header}" width="320" height="69" /></li>
+
+                <li><a href="" onclick="ShowTab('PageFrame',1)" title="Send Presentation"><img src="mobile/presentation.png" width="60" height="60" border="0" class="title" /><br />Send Presentation</a><div class="clear"></div></li>
+                <li><a href="" onclick="ShowTab('PageFrame',2)" title="Add Contact"><img src="mobile/contact.png" width="60" height="60" border="0" class="title" /><br />Add Contact</a>
+<div class="clear"></div></li>
+                <li><a href="" onclick="ShowTab('PageFrame',3)" title="View Contacts"><img src="mobile/contacts.png" width="60" height="60" border="0" class="title" /><br />View Contacts</a><div class="clear"></div></li>
+                <li><a href="" onclick="ShowTab('PageFrame',4)" title="Log Activities"><img src="mobile/logactivities.png" width="60" height="60" border="0" class="title" /><br />Log Activities</a><div class="clear"></div></li>
+                <li><a href="" onclick="ShowTab('PageFrame',5)" title="View My Statistics"><img src="mobile/stats.png" width="60" height="60" border="0" class="title" /><br />View My Statistics</a><div class="clear"></div></li>
+                <li><a href="" onclick="ShowTab('PageFrame',6)" title="View Leader Board"><img src="mobile/leaderboard.png" width="60" height="60" border="0" class="title" /><br />View Leader Board</a><div class="clear"></div></li>
+            </ul>
+
+        </div>
+
+    </div>
+    <IFRAME src="" style='display:none' width="320" height="406" frmheight="406" id="PageFrame" name="PageFrame" frameborder="0"><A href="">NoFrameSupport</A></IFRAME>
+    <IFRAME src="" style='display:none' width="320" height="406" frmheight="406" id="AcctFrame" name="AcctFrame" frameborder="0"><A href="">NoFrameSupport</A></IFRAME>
+
+
+    <div class="clearfix"></div>
+
+</section>
+
+
+<footer class="wrap">
+
+    <div id="bottom_bar">
+
+        <a href="" onclick="ShowTab('content',0)" id="DAB_link" class="selected" >Home</a>
+
+        <a href="" onclick="ShowTab('AcctFrame',7)" id="DAB_link" class="" >Account</a>
+
+    </div>
+
+</footer>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<script>window.jQuery || document.write('<script src="mobile/jquery-1.7.1.min.js"><\/script>')</script>
+
+
+<script src="mobile/jquery.jplayer.min.js"></script>
+
+<script src="mobile/plugins.js"></script>
+
+<script src="mobile/script.js"></script>
+
+</body>
+
+</html>

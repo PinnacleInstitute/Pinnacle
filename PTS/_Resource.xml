@@ -1,0 +1,725 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="119" name="Resource" alias="rs" log="false" translate="false">
+	
+		<!--Identity-->
+		<WTATTRIBUTE id="11901" name="ResourceID" type="number" identity="true" title="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="11902" name="MemberID" type="number" min="1" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="11903" name="MemberName" type="text" length="60" source="join">
+			<WTJOIN entity="Member" name="CompanyName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11904" name="ShareName" type="text" length="60" source="join">
+			<WTJOIN entity="Share" name="CompanyName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="11905" name="ResourceType" type="number" min="1" source="entity" blankrow="false">
+			<WTENUM id="0" name="All"/>
+			<WTENUM id="1" name="Resource1"/>
+			<WTENUM id="2" name="Resource2"/>
+			<WTENUM id="3" name="Resource3"/>
+			<WTENUM id="4" name="Resource4"/>
+			<WTENUM id="5" name="Resource5"/>
+			<WTENUM id="6" name="Resource6"/>
+			<WTENUM id="7" name="Resource7"/>
+			<WTENUM id="8" name="Resource8"/>
+			<WTENUM id="9" name="Resource9"/>
+			<WTENUM id="10" name="Resource10"/>
+			<WTENUM id="11" name="Resource11"/>
+			<WTENUM id="12" name="Resource12"/>
+			<WTENUM id="13" name="Resource13"/>
+			<WTENUM id="14" name="Resource14"/>
+			<WTENUM id="15" name="Resource15"/>
+			<WTENUM id="16" name="Resource16"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11906" name="Share" type="number" min="1" source="entity" blankrow="false">
+			<WTENUM id="0" name="Used"/>
+			<WTENUM id="1" name="Shared"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11907" name="ShareID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="11908" name="IsExclude" type="yesno" source="entity"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+		<WTINDEX name="ShareID">
+			<WTATTRIBUTE name="ShareID"/>
+		</WTINDEX>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="11999" name="CompanyID" type="number" source="entity" persist="false"/>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Resource" entity="Resource" alias="rs"/>
+			<WTRELATIONSHIP name="Common" entity="Resource" alias="rs">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="rs" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+				<WTENTITY name="Share" entity="Member" alias="me2">
+					<WTATTRIBUTE alias="rs" name="ShareID" relalias="me2" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Member" entity="Resource" alias="rs">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="rs" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Share" entity="Resource" alias="rs">
+				<WTENTITY name="Share" entity="Member" alias="me">
+					<WTATTRIBUTE alias="rs" name="ShareID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+		
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListSharing" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Resource.ResourceID)"/>
+					<WTATTRIBUTE value="ATTR(Resource.ResourceType)"/>
+					<WTATTRIBUTE value="ATTR(Resource.ShareID)"/>
+					<WTATTRIBUTE value="ATTR(Share.ShareName)"/>
+					<WTATTRIBUTE value="ATTR(Resource.IsExclude)"/>
+					<WTJOIN name="Share"/>
+					<WTCONDITION expr="ATTR(Resource.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)" connector="and"/>
+					<WTORDER name="ATTR(Resource.ResourceType)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListUsing" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<!--==================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Resource.ResourceID)"/>
+					<WTATTRIBUTE value="ATTR(Resource.ResourceType)"/>
+					<WTATTRIBUTE value="ATTR(Resource.ShareID)"/>
+					<WTATTRIBUTE value="ATTR(Share.ShareName)"/>
+					<WTATTRIBUTE value="ATTR(Share.IsExclude)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListShared" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<!--==================================================================-->
+			<WTPARAM name="ATTR(Resource.CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Resource.MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Resource.ResourceType)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Resource.ResourceID)"/>
+					<WTATTRIBUTE value="ATTR(Resource.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Member.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(Resource.MemberID)" oper="not-equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)" connector="and"/>
+					<WTCONDITION expr="ATTR(Resource.ResourceType)" oper="equal" value="SYSCON(RESOURCE-ALL)" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(Resource.ResourceType)" oper="equal" value="PARAM(ResourceType)" connector="or" paren="end"/>
+					<WTCONDITION expr="ATTR(Resource.ShareID)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(Resource.ShareID)" oper="equal" value="PARAM(MemberID)" connector="or" paren="start"/>
+					<WTCONDITION expr="ATTR(Resource.IsExclude)" oper="equal" value="CONST(0)" connector="and" paren="end2"/>
+					<WTORDER name="CONST('MemberName')"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListUsed" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<!--==================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Resource.ResourceID)"/>
+					<WTATTRIBUTE value="ATTR(Resource.ResourceType)"/>
+					<WTATTRIBUTE value="ATTR(Resource.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Resource.ShareID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-USING)" connector="and"/>
+					<WTORDER name="ATTR(Resource.ResourceType)"/>
+					<WTORDER name="CONST('MemberName')"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="11902" caption="Resource" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Share" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Resource" project="ptsResourceUser" class="CResource">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ResourceID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlResource" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Resource" project="ptsResourceUser" class="CResource">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ResourceID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(Share)" value="PARAM(Share)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ResourceID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlResource" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="ViewMembers()">
+					var url, win, company, member, type;
+					company = document.getElementById('CompanyID').value
+					member = document.getElementById('MemberID').value
+					type = document.getElementById('ResourceType').value
+					url = "11904.asp?c=" + company + "&amp;m=" + member + "&amp;t=" + type
+					win = window.open(url,"Members","height=300,width=250,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTSTATIC tag="NewSharing">
+							<WTCONDITION expr="PARAM(Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+						</WTSTATIC>
+						<WTSTATIC tag="NewUsing">
+							<WTCONDITION expr="PARAM(Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						</WTSTATIC>
+						<WTSTATIC value="PARAM(MemberID)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ResourceType"/>
+					<WTCOMBO col="2" value="ATTR(Resource.ResourceType)">
+						<WTCHANGE>document.getElementById('ShareID').value = '';</WTCHANGE>
+						<WTOPTION id="0" label="All"/>
+						<WTOPTION id="1" label="Resource1"/>
+						<WTOPTION id="2" label="Resource2"/>
+						<WTOPTION id="3" label="Resource3"/>
+						<WTOPTION id="6" label="Resource6"/>
+						<WTOPTION id="9" label="Resource9"/>
+						<WTOPTION id="10" label="Resource10"/>
+						<WTOPTION id="11" label="Resource11"/>
+						<WTOPTION id="12" label="Resource12"/>
+						<WTOPTION id="13" label="Resource13"/>
+						<!--						
+						<WTOPTION id="4" label="Resource4"/>
+						<WTOPTION id="5" label="Resource5"/>
+						<WTOPTION id="7" label="Resource7"/>
+						<WTOPTION id="8" label="Resource8"/>
+						<WTOPTION id="14" label="Resource14"/>
+						<WTOPTION id="15" label="Resource15"/>
+-->
+						<WTOPTION id="16" label="Resource16"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="ShareText">
+							<WTCONDITION expr="PARAM(Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						</WTSTATIC>
+						<WTSTATIC label="WithText">
+							<WTCONDITION expr="PARAM(Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1">
+						<WTSTATIC tag="ShareID">
+							<WTCONDITION expr="PARAM(Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						</WTSTATIC>
+						<WTSTATIC tag="WithID">
+							<WTCONDITION expr="PARAM(Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+					<WTTEXT col="2" value="ATTR(Resource.ShareID)"/>
+					<WTCHECK col="2" value="ATTR(Resource.IsExclude)">
+						<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+					</WTCHECK>
+					<WTIMAGE col="2" value="CONST(Member16.gif)" align="center" valign="center">
+						<WTCONDITION expr="PARAM(Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						<WTLINK name="ViewMembers()" click="true" />
+					</WTIMAGE>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11903" caption="Resource" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="ResourceID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Resource" project="ptsResourceUser" class="CResource">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ResourceID" direction="input" value="PARAM(ResourceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlResource" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Resource" project="ptsResourceUser" class="CResource">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ResourceID" direction="input" value="PARAM(ResourceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlResource" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Resource" project="ptsResourceUser" class="CResource">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ResourceID" direction="input" value="PARAM(ResourceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Resource" project="ptsResourceUser" class="CResource">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ResourceID" direction="input" value="PARAM(ResourceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlResource" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="ViewMembers()">
+					var url, win, company, member, type;
+					company = document.getElementById('CompanyID').value
+					member = document.getElementById('MemberID').value
+					type = document.getElementById('ResourceType').value
+					url = "11904.asp?c=" + company + "&amp;m=" + member + "&amp;t=" + type
+					win = window.open(url,"Members","height=300,width=250,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="ATTR(Resource.MemberID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTSTATIC tag="ResourcesSharing">
+							<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+						</WTSTATIC>
+						<WTSTATIC tag="ResourcesUsing">
+							<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						</WTSTATIC>
+						<WTSTATIC value="ATTR(Resource.MemberID)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ResourceType"/>
+					<WTCOMBO col="2" value="ATTR(Resource.ResourceType)">
+						<WTCHANGE>document.getElementById('ShareID').value = '';</WTCHANGE>
+						<WTOPTION id="0" label="All"/>
+						<WTOPTION id="1" label="Resource1"/>
+						<WTOPTION id="2" label="Resource2"/>
+						<WTOPTION id="3" label="Resource3"/>
+						<WTOPTION id="6" label="Resource6"/>
+						<WTOPTION id="9" label="Resource9"/>
+						<WTOPTION id="10" label="Resource10"/>
+						<WTOPTION id="11" label="Resource11"/>
+						<WTOPTION id="12" label="Resource12"/>
+						<WTOPTION id="13" label="Resource13"/>
+						<!--						
+						<WTOPTION id="4" label="Resource4"/>
+						<WTOPTION id="5" label="Resource5"/>
+						<WTOPTION id="7" label="Resource7"/>
+						<WTOPTION id="8" label="Resource8"/>
+						<WTOPTION id="14" label="Resource14"/>
+						<WTOPTION id="15" label="Resource15"/>
+-->
+						<WTOPTION id="16" label="Resource16"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="ShareText">
+							<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						</WTSTATIC>
+						<WTSTATIC label="WithText">
+							<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1">
+						<WTSTATIC tag="ShareID">
+							<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						</WTSTATIC>
+						<WTSTATIC tag="WithID">
+							<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+					<WTTEXT col="2" value="ATTR(Resource.ShareID)"/>
+					<WTCHECK col="2" value="ATTR(Resource.IsExclude)">
+						<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-SHARING)"/>
+					</WTCHECK>
+					<WTIMAGE col="2" value="CONST(Member16.gif)" align="center" valign="center">
+						<WTCONDITION expr="ATTR(Resource.Share)" oper="equal" value="SYSCON(RESOURCE-USING)"/>
+						<WTLINK name="ViewMembers()" click="true" />
+					</WTIMAGE>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="11904" caption="Members" focus="false" navbar="false" header="false" footer="false" wrapper="wrapper600"
+		margin="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+			<!--===============================================================================-->
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="T" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Resources" project="ptsResourceUser" class="CResources">
+					<WTMETHOD name="ListShared">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(C)" datatype="number"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(M)" datatype="number"/>
+						<WTPARAM name="ResourceType" direction="input" value="PARAM(T)" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlResources" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="240" align="left"/>
+
+				<WTFUNCTION name="SetAssigned(V)">
+					window.opener.document.getElementById('ShareID').value = V;
+					window.close();
+				</WTFUNCTION>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" label="ClickMember" class="Prompt" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Resource">
+						<WTCOLUMN width="100" align="center" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(MemberName)">
+									<WTLINK click="true" name="CONST(SetAssigned(&lt;xsl:value-of select=&quot;@memberid&quot;/&gt;);)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11910" caption="Resource" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTDATATXN name="Resource2"/>
+			<WTDATATXN name="Resource3"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Resources" project="ptsResourceUser" class="CResources">
+					<WTMETHOD name="ListSharing">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlResources" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListUsing">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlResource2" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+						<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Resource2&quot;)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListUsed">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlResource3" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+						<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Resource3&quot;)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="SharedResources" value="PARAM(MemberID)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ResourcesText2" align="left" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" align="left" label="ResourcesUsing" class="PageHeading" />
+					<WTSTATIC col="2" align="right" bold="true">
+						<WTCODEGROUP><WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewUsing">
+							<WTLINK name="11902">
+								<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+								<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Share" value="SYSCON(RESOURCE-USING)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="2">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Resource2">
+						<WTCOLUMN width="30" align="left" valign="top" label="ResourceType"/>
+						<WTCOLUMN width="70" align="left" valign="top" label="ShareName"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ResourceType)">
+									<WTCONDITION expr="DATA(IsExclude)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(ResourceType)" fontcolor="red">
+									<WTCONDITION expr="DATA(IsExclude)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="11903">
+											<WTPARAM name="ResourceID" value="DATA(ResourceID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(ShareName)">
+									<WTCONDITION expr="DATA(IsExclude)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(ShareName)" fontcolor="red">
+									<WTCONDITION expr="DATA(IsExclude)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ResourcesText1" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" label="ResourcesSharing" class="PageHeading" />
+					<WTSTATIC col="2" align="right" bold="true">
+						<WTCODEGROUP><WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewSharing">
+							<WTLINK name="11902">
+								<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+								<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								<WTPARAM name="Share" value="SYSCON(RESOURCE-SHARING)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="2">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Resource">
+						<WTCOLUMN width="30" align="left" valign="top" label="ResourceType"/>
+						<WTCOLUMN width="70" align="left" valign="top" label="ShareWith"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ResourceType)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="11903">
+											<WTPARAM name="ResourceID" value="DATA(Resource.ResourceID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC label="Everyone">
+									<WTCONDITION expr="DATA(ShareID)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC>
+									<WTCONDITION expr="DATA(ShareID)" oper="not-equal" value="CONST(0)"/>
+									<WTSTATIC value="DATA(ShareName)">
+										<WTCONDITION expr="DATA(IsExclude)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(ShareName)" fontcolor="red">
+										<WTCONDITION expr="DATA(IsExclude)" oper="not-equal" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ResourcesText3" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" label="ResourcesUsed" class="PageHeading" />
+				</WTROW>
+				<WTROW margin-bottom="2">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Resource3">
+						<WTCOLUMN width="30" align="left" valign="top" label="ResourceType"/>
+						<WTCOLUMN width="70" align="left" valign="top" label="MemberName"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(ResourceType)"/>
+							<WTSTATIC col="2" value="DATA(MemberName)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

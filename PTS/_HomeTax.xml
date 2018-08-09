@@ -1,0 +1,846 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="104" name="HomeTax" alias="ht">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="10401" name="HomeTaxID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="10402" name="MemberID" type="number" title="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="10403" name="TaxRate" type="number" source="entity">
+			<WTENUM id="1" name="TaxRate1"/>
+			<WTENUM id="2" name="TaxRate2"/>
+			<WTENUM id="3" name="TaxRate3"/>
+			<WTENUM id="4" name="TaxRate4"/>
+			<WTENUM id="5" name="TaxRate5"/>
+			<WTENUM id="6" name="TaxRate6"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="10404" name="Office" type="number" source="entity"/>
+		<WTATTRIBUTE id="10405" name="Miles" type="number" source="entity"/>
+		<WTATTRIBUTE id="10406" name="Home" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10407" name="Meetings" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10408" name="Meals" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10409" name="Supplies" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10410" name="Gifts" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10411" name="Materials" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10412" name="Phones" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10413" name="Internet" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10414" name="Kids" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10415" name="Subscriptions" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10416" name="Entertainment" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10417" name="Activities" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10418" name="Events" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10419" name="Medical" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10420" name="Recreational" type="currency" min="0" max="999999.99" source="entity"/>
+
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="HomeTax" entity="HomeTax" alias="ht"/>
+			<WTRELATIONSHIP name="Common" entity="HomeTax" alias="ht"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchMember" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(HomeTaxID)" direction="output"/>
+			<WTPARAM name="ATTR(TaxRate)" direction="output"/>
+			<WTPARAM name="ATTR(Office)" direction="output"/>
+			<WTPARAM name="ATTR(Miles)" direction="output"/>
+			<WTPARAM name="ATTR(Home)" direction="output"/>
+			<WTPARAM name="ATTR(Meetings)" direction="output"/>
+			<WTPARAM name="ATTR(Meals)" direction="output"/>
+			<WTPARAM name="ATTR(Supplies)" direction="output"/>
+			<WTPARAM name="ATTR(Gifts)" direction="output"/>
+			<WTPARAM name="ATTR(Materials)" direction="output"/>
+			<WTPARAM name="ATTR(Phones)" direction="output"/>
+			<WTPARAM name="ATTR(Internet)" direction="output"/>
+			<WTPARAM name="ATTR(Kids)" direction="output"/>
+			<WTPARAM name="ATTR(Subscriptions)" direction="output"/>
+			<WTPARAM name="ATTR(Entertainment)" direction="output"/>
+			<WTPARAM name="ATTR(Activities)" direction="output"/>
+			<WTPARAM name="ATTR(Events)" direction="output"/>
+			<WTPARAM name="ATTR(Medical)" direction="output"/>
+			<WTPARAM name="ATTR(Recreational)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PARAM(HomeTaxID)" value="ATTR(HomeTax.HomeTaxID)"/>
+					<WTATTRIBUTE name="PARAM(TaxRate)" value="ATTR(HomeTax.TaxRate)"/>
+					<WTATTRIBUTE name="PARAM(Office)" value="ATTR(HomeTax.Office)"/>
+					<WTATTRIBUTE name="PARAM(Miles)" value="ATTR(HomeTax.Miles)"/>
+					<WTATTRIBUTE name="PARAM(Home)" value="ATTR(HomeTax.Home)"/>
+					<WTATTRIBUTE name="PARAM(Meetings)" value="ATTR(HomeTax.Meetings)"/>
+					<WTATTRIBUTE name="PARAM(Meals)" value="ATTR(HomeTax.Meals)"/>
+					<WTATTRIBUTE name="PARAM(Supplies)" value="ATTR(HomeTax.Supplies)"/>
+					<WTATTRIBUTE name="PARAM(Gifts)" value="ATTR(HomeTax.Gifts)"/>
+					<WTATTRIBUTE name="PARAM(Materials)" value="ATTR(HomeTax.Materials)"/>
+					<WTATTRIBUTE name="PARAM(Phones)" value="ATTR(HomeTax.Phones)"/>
+					<WTATTRIBUTE name="PARAM(Internet)" value="ATTR(HomeTax.Internet)"/>
+					<WTATTRIBUTE name="PARAM(Kids)" value="ATTR(HomeTax.Kids)"/>
+					<WTATTRIBUTE name="PARAM(Subscriptions)" value="ATTR(HomeTax.Subscriptions)"/>
+					<WTATTRIBUTE name="PARAM(Entertainment)" value="ATTR(HomeTax.Entertainment)"/>
+					<WTATTRIBUTE name="PARAM(Activities)" value="ATTR(HomeTax.Activities)"/>
+					<WTATTRIBUTE name="PARAM(Events)" value="ATTR(HomeTax.Events)"/>
+					<WTATTRIBUTE name="PARAM(Medical)" value="ATTR(HomeTax.Medical)"/>
+					<WTATTRIBUTE name="PARAM(Recreational)" value="ATTR(HomeTax.Recreational)"/>
+					<WTJOIN name="HomeTax" lock="false"/>
+					<WTCONDITION expr="ATTR(HomeTax.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10400" caption="HomeTax Estimator" header="false" footer="false" navbar="false" wrapper="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="Deduct" datatype="currency"/>
+			<WTPARAM name="Amount" datatype="currency"/>
+			<WTPARAM name="Monthly" datatype="currency"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="CONST(tmpMilesRate)" value="CONST(0)" />
+			</WTCODEGROUP>
+      
+      <!-- CHECK FOR ILLEGAL ACCESS -->
+      <WTCODEGROUP>
+        <WTCONDITION expr="IsMemberOnly"/>
+        <WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTCODEGROUP>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="SYS(CompanyID)" value="PARAM(C)" />
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadHTML">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;HomeTax.htm&quot;)" />
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			<WTSUB name="GetRates">
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTMETHOD name="FetchRate">
+						<WTPARAM name="Year" direction="input" value="CONST(YEAR(reqSysDate))"/>
+						<WTPARAM name="TaxType" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpMilesRate)" value="ATTR(Rate)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMilesRate)" value="CONST(.51)">
+						<WTCONDITION expr="CONST(tmpMilesRate)" oper="equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+			</WTSUB>
+			<WTSUB function="CalcTax(oItem)">
+<WTCUSTOM>
+			With oItem
+				reqDeduct = 0
+				reqDeduct = reqDeduct + CleanNumber(.Home) * ( CleanNumber(.Office) / 100 ) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Miles) * tmpMilesRate * 12
+				reqDeduct = reqDeduct + CleanNumber(.Meetings) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Meals) * .5 * 12
+				reqDeduct = reqDeduct + CleanNumber(.Supplies) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Gifts) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Materials) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Phones) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Internet) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Kids) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Subscriptions) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Entertainment) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Activities) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Events) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Medical) * 12
+				reqDeduct = reqDeduct + CleanNumber(.Recreational) * 12
+				Select Case .TaxRate
+					Case 1: reqAmount = reqDeduct * .10
+					Case 2: reqAmount = reqDeduct * .15
+					Case 3: reqAmount = reqDeduct * .25
+					Case 4: reqAmount = reqDeduct * .28
+					Case 5: reqAmount = reqDeduct * .33
+					Case 6: reqAmount = reqDeduct * .35
+					Case Else: reqAmount = reqDeduct * .33
+				End Select				
+			End With
+			reqDeduct = FormatCurrency(reqDeduct)
+			reqAmount = FormatCurrency(reqAmount)
+			reqMonthly = FormatCurrency( reqAmount / 12 )
+</WTCUSTOM>			
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="HomeTax" project="ptsHomeTaxUser" class="CHomeTax">
+					<WTSETATTRIBUTE name="ATTR(HomeTaxID)" value="CONST(0)"/>
+					<WTMETHOD name="FetchMember">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(HomeTaxID)" oper="not-equal" value="CONST(0)"/>
+						<WTCALLSUB name="GetRates"/>
+						<WTCALLSUB name="CalcTax(oHomeTax)"/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(HomeTaxID)" oper="equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="DebtID" direction="input" value="CONST(0)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+						<WTSETATTRIBUTE name="ATTR(TaxRate)" value="CONST(5)"/>
+						<WTMETHOD name="Add">
+							<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="HomeTaxID" direction="return" datatype="number"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomeTax" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadHTML"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="HomeTax" project="ptsHomeTaxUser" class="CHomeTax">
+					<WTMETHOD name="FetchMember">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTCALLSUB name="GetRates"/>
+					<WTCALLSUB name="CalcTax(oHomeTax)"/>
+					<WTMETHOD name="Save">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomeTax" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadHTML"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="right"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="3" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Deduct)" oper="not-equal" value="CONST('')"/>
+					<WTROW>
+						<WTTABLE col="1" merge="3">
+							<WTCOLUMN width="100"/>
+							<WTCOLUMN width="550"/>
+							<WTCOLUMN width="100"/>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid" backcolor="#F0F0F0">
+									<WTCOLUMN width="550" align="center"/>
+									<WTROW margin-top="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC label="TotalDeductions" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Deduct)" fontcolor="darkgoldenrod"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC label="TotalSavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Amount)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW margin-bottom="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC label="MonthlySavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Monthly)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+								</WTTABLE>
+							</WTROW>
+						</WTTABLE>
+					</WTROW>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="Office"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Office)" size="2"/>
+					<WTSTATIC col="3" label="OfficeText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="HomeExp"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Home)" size="8"/>
+					<WTSTATIC col="3" label="HomeText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Miles"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Miles)" size="3"/>
+					<WTSTATIC col="3" label="MilesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Meetings"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Meetings)" size="8"/>
+					<WTSTATIC col="3" label="MeetingsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Meals"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Meals)" size="8"/>
+					<WTSTATIC col="3" label="MealsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="Supplies"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Supplies)" size="8"/>
+					<WTSTATIC col="3" label="SuppliesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Materials"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Materials)" size="8"/>
+					<WTSTATIC col="3" label="MaterialsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Phones"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Phones)" size="8"/>
+					<WTSTATIC col="3" label="PhonesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Internet"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Internet)" size="8"/>
+					<WTSTATIC col="3" label="InternetText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Medical"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Medical)" size="8"/>
+					<WTSTATIC col="3" label="MedicalText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="Subscriptions"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Subscriptions)" size="8"/>
+					<WTSTATIC col="3" label="SubscriptionsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="Entertainment"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Entertainment)" size="8"/>
+					<WTSTATIC col="3" label="EntertainmentText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Activities"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Activities)" size="8"/>
+					<WTSTATIC col="3" label="ActivitiesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="Events"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Events)" size="8"/>
+					<WTSTATIC col="3" label="EventsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="Recreational"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Recreational)" size="8"/>
+					<WTSTATIC col="3" label="RecreationalText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Kids"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Kids)" size="8"/>
+					<WTSTATIC col="3" label="KidsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" tag="Gifts"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Gifts)" size="8"/>
+					<WTSTATIC col="3" label="GiftsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="TaxRate"/>
+					<WTCOMBO col="2" value="ATTR(HomeTax.TaxRate)"/>
+					<WTSTATIC col="3" label="TaxRateText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="24">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Calculate)" btnclass="bigbutton" align="center"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Deduct)" oper="not-equal" value="CONST('')"/>
+					<WTROW>
+						<WTTABLE col="1" merge="3">
+							<WTCOLUMN width="100"/>
+							<WTCOLUMN width="550"/>
+							<WTCOLUMN width="100"/>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid" backcolor="#F0F0F0">
+									<WTCOLUMN width="550" align="center"/>
+									<WTROW margin-top="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC label="TotalDeductions" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Deduct)" fontcolor="darkgoldenrod"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC label="TotalSavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Amount)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW margin-bottom="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC label="MonthlySavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Monthly)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+								</WTTABLE>
+							</WTROW>
+						</WTTABLE>
+					</WTROW>
+				</WTCODEGROUP>
+
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="m_10400" caption="HomeTax Estimator" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100" viewport="width=device-width"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="98" track="0">
+			<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="Deduct" datatype="currency"/>
+			<WTPARAM name="Amount" datatype="currency"/>
+			<WTPARAM name="Monthly" datatype="currency"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="CONST(tmpMilesRate)" value="CONST(0)" />
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="SYS(CompanyID)" value="PARAM(C)" />
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadHTML">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;mHomeTax.htm&quot;)" />
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			<WTSUB name="GetRates">
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTMETHOD name="FetchRate">
+						<WTPARAM name="Year" direction="input" value="CONST(YEAR(reqSysDate))"/>
+						<WTPARAM name="TaxType" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpMilesRate)" value="ATTR(Rate)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMilesRate)" value="CONST(.51)">
+						<WTCONDITION expr="CONST(tmpMilesRate)" oper="equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+			</WTSUB>
+			<WTSUB function="CalcTax(oItem)">
+				<WTCUSTOM>
+					With oItem
+					reqDeduct = 0
+					reqDeduct = reqDeduct + CleanNumber(.Home) * ( CleanNumber(.Office) / 100 ) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Miles) * tmpMilesRate * 12
+					reqDeduct = reqDeduct + CleanNumber(.Meetings) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Meals) * .5 * 12
+					reqDeduct = reqDeduct + CleanNumber(.Supplies) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Gifts) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Materials) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Phones) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Internet) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Kids) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Subscriptions) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Entertainment) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Activities) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Events) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Medical) * 12
+					reqDeduct = reqDeduct + CleanNumber(.Recreational) * 12
+					Select Case .TaxRate
+					Case 1: reqAmount = reqDeduct * .10
+					Case 2: reqAmount = reqDeduct * .15
+					Case 3: reqAmount = reqDeduct * .25
+					Case 4: reqAmount = reqDeduct * .28
+					Case 5: reqAmount = reqDeduct * .33
+					Case 6: reqAmount = reqDeduct * .35
+					Case Else: reqAmount = reqDeduct * .33
+					End Select
+					End With
+					reqDeduct = FormatCurrency(reqDeduct)
+					reqAmount = FormatCurrency(reqAmount)
+					reqMonthly = FormatCurrency( reqAmount / 12 )
+				</WTCUSTOM>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="HomeTax" project="ptsHomeTaxUser" class="CHomeTax">
+					<WTSETATTRIBUTE name="ATTR(HomeTaxID)" value="CONST(0)"/>
+					<WTMETHOD name="FetchMember">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(HomeTaxID)" oper="not-equal" value="CONST(0)"/>
+						<WTCALLSUB name="GetRates"/>
+						<WTCALLSUB name="CalcTax(oHomeTax)"/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(HomeTaxID)" oper="equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="DebtID" direction="input" value="CONST(0)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+						<WTSETATTRIBUTE name="ATTR(TaxRate)" value="CONST(5)"/>
+						<WTMETHOD name="Add">
+							<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="HomeTaxID" direction="return" datatype="number"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomeTax" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadHTML"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="HomeTax" project="ptsHomeTaxUser" class="CHomeTax">
+					<WTMETHOD name="FetchMember">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTCALLSUB name="GetRates"/>
+					<WTCALLSUB name="CalcTax(oHomeTax)"/>
+					<WTMETHOD name="Save">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomeTax" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadHTML"/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="50" align="right"/>
+				<WTCOLUMN width="50" align="left"/>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Deduct)" oper="not-equal" value="CONST('')"/>
+					<WTROW>
+						<WTTABLE col="1" merge="2">
+							<WTCOLUMN width="8"/>
+							<WTCOLUMN width="84"/>
+							<WTCOLUMN width="8"/>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid" backcolor="#F0F0F0">
+									<WTCOLUMN width="250" align="center"/>
+									<WTROW margin-top="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC tag="mTotalDeductions" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Deduct)" fontcolor="darkgoldenrod"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC tag="mTotalSavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Amount)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW margin-bottom="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC tag="mMonthlySavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Monthly)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+								</WTTABLE>
+							</WTROW>
+						</WTTABLE>
+					</WTROW>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Office"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Office)" size="2"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="OfficeText" align="left" class="prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="HomeExp"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Home)" size="8"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="HomeText" align="left" class="prompt"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTSTATIC col="1" tag="Miles"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Miles)" size="3"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="MilesText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Meetings"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Meetings)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="MeetingsText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Meals"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Meals)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="MealsText" align="left" class="prompt"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Supplies"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Supplies)" size="8"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="SuppliesText" align="left" class="prompt"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTSTATIC col="1" tag="Materials"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Materials)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="MaterialsText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Phones"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Phones)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="PhonesText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Internet"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Internet)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="InternetText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Medical"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Medical)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="MedicalText" align="left" class="prompt"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Subscriptions"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Subscriptions)" size="8"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="SubscriptionsText" align="left" class="prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Entertainment"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Entertainment)" size="8"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="EntertainmentText" align="left" class="prompt"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTSTATIC col="1" tag="Activities"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Activities)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="ActivitiesText" align="left" class="prompt"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Events"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Events)" size="8"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="EventsText" align="left" class="prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Recreational"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Recreational)" size="8"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="RecreationalText" align="left" class="prompt"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTSTATIC col="1" tag="Kids"/>
+					<WTTEXT col="2" value="ATTR(HomeTax.Kids)" size="8"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="KidsText" align="left" class="prompt"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Gifts"/>
+						<WTTEXT col="2" value="ATTR(HomeTax.Gifts)" size="8"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="GiftsText" align="left" class="prompt"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTSTATIC col="1" tag="TaxRate"/>
+					<WTCOMBO col="2" value="ATTR(HomeTax.TaxRate)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="TaxRateText" align="left" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="24">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Calculate)" btnclass="bigbutton" align="center"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Deduct)" oper="not-equal" value="CONST('')"/>
+					<WTROW margin-bottom="12">
+						<WTTABLE col="1" merge="2">
+							<WTCOLUMN width="8"/>
+							<WTCOLUMN width="84"/>
+							<WTCOLUMN width="8"/>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid" backcolor="#F0F0F0">
+									<WTCOLUMN width="100" align="center"/>
+									<WTROW margin-top="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC tag="mTotalDeductions" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Deduct)" fontcolor="darkgoldenrod"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC tag="mTotalSavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Amount)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW margin-bottom="6" height="24">
+										<WTSTATIC col="1" align="center" class="PageHeading">
+											<WTSTATIC tag="mMonthlySavings" fontcolor="black" space="1"/>
+											<WTSTATIC value="PARAM(Monthly)" fontcolor="green"/>
+										</WTSTATIC>
+									</WTROW>
+								</WTTABLE>
+							</WTROW>
+						</WTTABLE>
+					</WTROW>
+				</WTCODEGROUP>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="Credit" caption="Credit Manager" header="false" footer="false" navbar="false" wrapper="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+      <!-- CHECK FOR ILLEGAL ACCESS -->
+      <WTCODEGROUP>
+        <WTCONDITION expr="IsMemberOnly"/>
+        <WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;CreditMgr.htm&quot;)" />
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

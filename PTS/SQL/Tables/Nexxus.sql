@@ -1,0 +1,17 @@
+EXEC [dbo].pts_CheckTable 'Nexxus'
+ GO
+
+CREATE TABLE [dbo].[Nexxus] (
+   [NexxusID] int IDENTITY (1,1) NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Nexxus] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[Nexxus] WITH NOCHECK ADD
+   CONSTRAINT [PK_Nexxus] PRIMARY KEY NONCLUSTERED
+   ([NexxusID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

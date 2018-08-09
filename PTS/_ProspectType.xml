@@ -1,0 +1,363 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="82" name="ProspectType" alias="pt" audit="false" translate="false">
+ 
+		<!--Identity-->
+		<WTATTRIBUTE id="8201" name="ProspectTypeID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="8202" name="CompanyID" type="number" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="8203" name="ProspectTypeName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="8204" name="Seq" type="number" min="1" source="entity" seq="10"/>
+		<WTATTRIBUTE id="8205" name="InputOptions" type="text" length="1000" min="1" max="1000" source="entity"/>
+
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="Seq"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="ProspectType" entity="ProspectType" alias="pt"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompany" enumname="EnumUserCompany" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(ProspectType.CompanyID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompany" style="GenerateDataProc.xsl" column="ProspectTypeName" template="new" passthru="true">
+			<WTPARAM name="ATTR(ProspectType.CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(ProspectType.ProspectTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(ProspectType.ProspectTypeName)"/>
+					<WTJOIN name="ProspectType"/>
+					<WTCONDITION expr="ATTR(ProspectType.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(ProspectType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(ProspectType.ProspectTypeID)"/>
+					<WTATTRIBUTE value="ATTR(ProspectType.ProspectTypeName)"/>
+					<WTATTRIBUTE value="ATTR(ProspectType.Seq)"/>
+					<WTJOIN name="ProspectType"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTORDER name="ATTR(ProspectType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8202" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="ProspectType" project="ptsProspectTypeUser" class="CProspectType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProspectTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProspectType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="ProspectType" project="ptsProspectTypeUser" class="CProspectType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProspectTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ProspectTypeID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlProspectType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewProspectType" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ProspectTypeName"/>
+					<WTTEXT col="2" value="ATTR(ProspectType.ProspectTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(ProspectType.Seq)" size="2"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8203" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ProspectTypeID" datatype="number"/>
+
+			<WTSUB name="UpdateProspectType">
+				<WTOBJECT name="ProspectType" project="ptsProspectTypeUser" class="CProspectType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProspectTypeID" direction="input" value="PARAM(ProspectTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlProspectType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadProspectType">
+				<WTOBJECT name="ProspectType" project="ptsProspectTypeUser" class="CProspectType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProspectTypeID" direction="input" value="PARAM(ProspectTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProspectType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadProspectType"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Update" type="Update">
+				<WTCALLSUB name="UpdateProspectType"/>
+				<WTCALLSUB name="LoadProspectType"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="UpdateExit" type="Update">
+				<WTCALLSUB name="UpdateProspectType"/>
+				<WTCALLSUB name="LoadProspectType">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="ProspectType" project="ptsProspectTypeUser" class="CProspectType">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ProspectTypeID" direction="input" value="PARAM(ProspectTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="ProspectType" project="ptsProspectTypeUser" class="CProspectType">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProspectTypeID" direction="input" value="PARAM(ProspectTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProspectType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="TestOptions()">
+					var url, win;
+					url = "5005.asp?prospecttypeid=" + document.getElementById('ProspectTypeID').value
+		            win = window.open(url,"TestOptions","top=100,left=100,height=300,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(ProspectTypeID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="ProspectType" value="ATTR(ProspectType.ProspectTypeName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ProspectTypeName"/>
+					<WTTEXT col="2" value="ATTR(ProspectType.ProspectTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(ProspectType.Seq)" size="2"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CustomFields" align="left"/>
+					<WTBUTTON col="1" value="CONST(Test)" btnclass="smbutton" align="right">
+						<WTCLICK>TestOptions()</WTCLICK>
+					</WTBUTTON>
+					<WTSTATIC col="1" label="SaveFirst" class="prompt" space="2"/>
+					<WTIMAGE col="1" value="CONST(LearnMore.gif)">
+						<WTLINK name="Page" target="Help">
+							<WTPARAM name="Page" value="CONST(CustomField)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+				
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(ProspectType.InputOptions)" cols="70" rows="10"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(UpdateExit)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8211" caption="Prospect Types" header="false" footer="false" navbar="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="ProspectTypes" project="ptsProspectTypeUser" class="CProspectTypes">
+					<WTMETHOD name="List">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProspectTypes" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="ProspectTypes" class="PageHeading" align="left"/>
+					<WTLINKGROUP col="2" align="right">
+						<WTLINK name="8202" label="NewProspectType">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						</WTLINK>
+						<WTLINK name="Page" label="Help" class="PageHeadingLink" target="help">
+							<WTPARAM name="Page" value="CONST(HelpSPSAdmin)" />
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="ProspectTypesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="ProspectType">
+						<WTCOLUMN width="10" align="center" valign="top" label="Seq"/>
+						<WTCOLUMN width="90" align="left" valign="top" label="ProspectTypeName"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(ProspectType.Seq)"/>
+							<WTSTATIC col="2" value="DATA(ProspectType.ProspectTypeName)">
+								<WTLINK name="8203"><WTPARAM name="ProspectTypeID" value="DATA(ProspectType.ProspectTypeID)"/></WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="2" action="3" value="CONST(Return)"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,635 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="179" name="Meeting" alias="mtg">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="17901" name="MeetingID" type="number" identity="true" title="true" min="1" required="true" source="entity"/>
+
+    <!--Foreign Keys-->
+    <WTATTRIBUTE id="17902" name="VenueID" type="number" source="entity"/>
+
+    <!--Foreign Table Fields-->
+
+    <!--Attributes-->
+    <WTATTRIBUTE id="17910" name="MeetingDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="17911" name="StartTime" type="text" length="10" min="1" source="entity"/>
+    <WTATTRIBUTE id="17912" name="EndTime" type="text" length="10" min="1" source="entity"/>
+    <WTATTRIBUTE id="17913" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Pending"/>
+      <WTENUM id="2" name="Active"/>
+      <WTENUM id="3" name="Full"/>
+      <WTENUM id="4" name="Cancelled"/>
+      <WTENUM id="5" name="Complete"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="17914" name="Limit" type="number" source="entity"/>
+    <WTATTRIBUTE id="17915" name="Guests" type="number" source="entity"/>
+    <WTATTRIBUTE id="17916" name="Attended" type="number" source="entity"/>
+    <WTATTRIBUTE id="17917" name="Notes" type="text" length="500" min="1" source="entity"/>
+
+    <!-- Non Persist Fields -->
+    <WTATTRIBUTE id="17990" name="SeminarID" type="number" source="entity" persist="false"/>
+    <WTATTRIBUTE id="17991" name="VenueName" type="text" length="60" source="entity" persist="false"/>
+    <WTATTRIBUTE id="17992" name="Description" type="text" length="300" source="entity" persist="false"/>
+    <WTATTRIBUTE id="17993" name="Day" type="text" length="10" source="entity" persist="false"/>
+
+    <!--Indexes-->
+    <WTINDEX name="VenueID">
+      <WTATTRIBUTE name="VenueID"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Meeting" entity="Meeting" alias="mtg"/>
+      <WTRELATIONSHIP name="Common" entity="Meeting" alias="mtg"/>
+    </WTRELATIONSHIPS>
+
+    <!-- System Constants -->
+
+  </WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+    <WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+    <!--==================================================================-->
+    <WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(VenueID)" direction="input"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(Meeting.MeetingID)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.MeetingDate)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.StartTime)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.EndTime)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Status)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Limit)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Guests)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Attended)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Notes)"/>
+          <WTJOIN name="Meeting" lock="false"/>
+          <WTCONDITION expr="ATTR(Meeting.VenueID)" oper="equal" value="PARAM(VenueID)"/>
+          <WTORDER name="ATTR(Meeting.MeetingDate)"/>
+          <WTORDER name="ATTR(Meeting.StartTime)"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--==================================================================-->
+    <WTPROCEDURE type="List" name="ListSeminar" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(SeminarID)" direction="input"/>
+      <WTPARAM name="ATTR(Status)" direction="input"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(Meeting.MeetingID)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.MeetingDate)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.StartTime)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.EndTime)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Status)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Limit)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Guests)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Attended)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.VenueName)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Description)"/>
+          <WTJOIN name="Meeting" lock="false"/>
+          <WTCONDITION expr="ATTR(Meeting.SeminarID)" oper="equal" value="PARAM(SeminarID)"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--==================================================================-->
+    <WTPROCEDURE type="List" name="ListActive" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(SeminarID)" direction="input"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(Meeting.MeetingID)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.MeetingDate)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.StartTime)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.EndTime)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Status)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Limit)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Guests)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.VenueName)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.Description)"/>
+          <WTATTRIBUTE value="ATTR(Meeting.SeminarID)"/>
+          <WTJOIN name="Meeting" lock="false"/>
+          <WTCONDITION expr="ATTR(Meeting.SeminarID)" oper="equal" value="PARAM(SeminarID)"/>
+          <WTCONDITION expr="ATTR(Meeting.Status)" oper="equal" value="CONST(2)" connector="and"/>
+          <WTCONDITION expr="ATTR(Meeting.MeetingDate)" oper="greater-equal" value="SYS(Date)" connector="and"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="CountGuests" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(MeetingID)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="Result" direction="output" datatype="text" length="100"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+    <!--============================================================================================-->
+    <WTWEBPAGE name="17902" caption="NewMeeting" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+      <!--============================================================================================-->
+      <WTPARAM name="VenueID" datatype="number"/>
+
+      <WTSUB name="AddMeeting">
+        <WTOBJECT name="Meeting" project="ptsMeetingUser" class="CMeeting">
+          <WTMETHOD name="Load">
+            <WTPARAM name="MeetingID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="ATTR(VenueID)" value="PARAM(VenueID)"/>
+          <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(2)"/>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Add">
+            <WTPARAM name="reqMeetingID" direction="return" datatype="number"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsErrors"/>
+            <WTMETHOD name="XML">
+              <WTPARAM name="xmlMeeting" direction="return" datatype="text"/>
+              <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="LoadMeeting">
+        <WTOBJECT name="Meeting" project="ptsMeetingUser" class="CMeeting">
+          <WTMETHOD name="Load">
+            <WTPARAM name="MeetingID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlMeeting" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCALLSUB name="LoadMeeting"/>
+      </WTACTION>
+
+      <WTACTION id="2" name="Add" type="Add">
+        <WTCALLSUB name="AddMeeting"/>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="3" name="Cancel" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="100" align="right"/>
+        <WTCOLUMN width="500" align="left"/>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+            <WTCODEGROUP>
+              <WTIMAGE value="CONST(DateTime48.png)" imgalign="absmiddle"/>
+            </WTCODEGROUP>
+            <WTSTATIC space="3"/>
+            <WTSTATIC label="NewMeeting"/>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="MeetingDate"/>
+          <WTTEXT col="2" value="ATTR(Meeting.MeetingDate)"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="StartTime"/>
+          <WTTEXT col="2" value="ATTR(Meeting.StartTime)"/>
+          <WTSTATIC col="2" tag="EndTime"/>
+          <WTTEXT col="2" value="ATTR(Meeting.EndTime)" prespace="false"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="Limit"/>
+          <WTTEXT col="2" value="ATTR(Meeting.Limit)" size="3"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+          <WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="17903" caption="Meeting" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+      <!--============================================================================================-->
+      <WTPARAM name="MeetingID" datatype="number"/>
+      <WTPARAM name="SeminarID" datatype="number"/>
+      <WTPARAM name="Rate" datatype="text"/>
+
+      <WTSUB name="UpdateMeeting">
+        <WTOBJECT name="Meeting" project="ptsMeetingUser" class="CMeeting">
+          <WTMETHOD name="Load">
+            <WTPARAM name="MeetingID" direction="input" value="PARAM(MeetingID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Save">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsErrors"/>
+            <WTMETHOD name="XML">
+              <WTPARAM name="xmlMeeting" direction="return" datatype="text"/>
+              <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="LoadMeeting">
+        <WTOBJECT name="Meeting" project="ptsMeetingUser" class="CMeeting">
+          <WTMETHOD name="Load">
+            <WTPARAM name="MeetingID" direction="input" value="PARAM(MeetingID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Rate)" value="CONST( ROUND(CInt(.Attended) / CInt(.Guests),2) * 100 )">
+            <WTCONDITION expr="ATTR(Meeting.Guests)" oper="not-equal" value="CONST(0)"/>
+          </WTSETATTRIBUTE>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlMeeting" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Attendees" project="ptsAttendeeUser" class="CAttendees">
+          <WTMETHOD name="List">
+            <WTPARAM name="MeetingID" direction="input" value="PARAM(MeetingID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlAttendees" direction="return" datatype="text"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCALLSUB name="LoadMeeting"/>
+      </WTACTION>
+
+      <WTACTION id="1" name="Update" type="Update">
+        <WTCALLSUB name="UpdateMeeting"/>
+        <WTCALLSUB name="LoadMeeting">
+          <WTCONDITION expr="IsErrors"/>
+        </WTCALLSUB>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="3" name="Cancel" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <WTACTION id="4" name="Delete" type="Delete">
+        <WTOBJECT name="Meeting" project="ptsMeetingUser" class="CMeeting">
+          <WTMETHOD name="Load">
+            <WTPARAM name="MeetingID" direction="input" value="PARAM(MeetingID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="Delete">
+            <WTPARAM name="MeetingID" direction="input" value="PARAM(MeetingID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="100" align="right"/>
+        <WTCOLUMN width="500" align="left"/>
+
+        <WTFUNCTION name="NewAttendee()">
+          var mid = document.getElementById('MeetingID').value
+          var sid = document.getElementById('SeminarID').value
+          var url = "18003.asp?meetingid=" + mid + "&amp;seminarid=" + sid + "&amp;returnurl=17903.asp?meetingid=" + mid + "%26seminarid=" + sid
+          window.location = url
+        </WTFUNCTION>
+        <WTFUNCTION name="PrintList()">
+          var mid = document.getElementById('MeetingID').value
+          var url = "17905.asp?meetingid=" + mid
+          var win = window.open(url,"GuestList");
+          win.focus();
+        </WTFUNCTION>
+        <WTROW>
+          <WTHIDDEN value="PARAM(MeetingID)"/>
+          <WTHIDDEN value="PARAM(SeminarID)"/>
+        </WTROW>
+        
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+            <WTCODEGROUP><WTIMAGE value="CONST(DateTime48.png)" imgalign="absmiddle"/></WTCODEGROUP>
+            <WTSTATIC space="3"/>
+            <WTSTATIC tag="Meeting" value="ATTR(Meeting.MeetingDate)"/>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTCODEGROUP>
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+          <WTROW margin-bottom="6">
+            <WTSTATIC col="1" merge="2" tag="VenueID" align="center"/>
+            <WTTEXT col="1" value="ATTR(Meeting.VenueID)" size="3" prespace="false"/>
+          </WTROW>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="NotEmployee"/>
+          <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+          <WTCONDITION expr="NotOrgManagerOnly" connector="and"/>
+          <WTROW>
+            <WTHIDDEN value="ATTR(Meeting.VenueID)"/>
+          </WTROW>
+        </WTCODEGROUP>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="MeetingDate"/>
+          <WTTEXT col="2" value="ATTR(Meeting.MeetingDate)"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="StartTime"/>
+          <WTTEXT col="2" value="ATTR(Meeting.StartTime)"/>
+          <WTSTATIC col="2" tag="EndTime"/>
+          <WTTEXT col="2" value="ATTR(Meeting.EndTime)" prespace="false"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(Meeting.Status)"/>
+          <WTSTATIC col="2" tag="Limit"/>
+          <WTTEXT col="2" value="ATTR(Meeting.Limit)" size="3" prespace="false"/>
+          <WTSTATIC col="2">
+            <WTSTATIC space="2"/>
+            <WTSTATIC value="ATTR(Meeting.Guests)" bold="true" space="1"/>
+            <WTSTATIC label="Guests" space="1"/>
+            <WTSTATIC value="CONST(-)" space="1"/>
+            <WTSTATIC value="ATTR(Meeting.Attended)" bold="true" space="1"/>
+            <WTSTATIC label="Attended"/>
+            <WTSTATIC fontcolor="purple">
+              <WTCONDITION expr="PARAM(Rate)" oper="not-equal" value="CONST('')"/>
+              <WTSTATIC space="1"/>
+              <WTSTATIC value="CONST(-)" space="1"/>
+              <WTSTATIC value="PARAM(Rate)" bold="true"/>
+              <WTSTATIC value="CONST(%)"/>
+            </WTSTATIC>
+          </WTSTATIC>
+        </WTROW>
+        <WTROW>
+          <WTSTATIC col="1" merge="2" tag="Notes" align="left"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTMEMO col="1" merge="2" value="ATTR(Meeting.Notes)" rows="4" cols="70" align="left"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Return)"/>
+          <WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+        </WTROW>
+
+        <WTROW margin-top="12">
+          <WTTABLE col="1" merge="2">
+            <WTCOLUMN width="200" align="left"/>
+            <WTCOLUMN width="400" align="right"/>
+            <WTROW>
+              <WTSTATIC col="1" align="left" class="PageHeading">
+                <WTCODEGROUP><WTIMAGE value="CONST(Attendees48.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+                <WTSTATIC space="3"/>
+                <WTSTATIC label="AttendeeList"/>
+              </WTSTATIC>
+              <WTBUTTON col="2" value="CONST(Print)" align="right" class="PageHeader">
+                <WTCLICK>PrintList()</WTCLICK>
+              </WTBUTTON>
+              <WTBUTTON col="2" value="CONST(NewAttendee)" align="right" class="PageHeader">
+                <WTCLICK>NewAttendee()</WTCLICK>
+              </WTBUTTON>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+
+        <WTROW>
+          <WTRECORDSET col="1" merge="2" graybar="true" entity="Attendee">
+            <WTCOLUMN width="26" align="left" label="Name"/>
+            <WTCOLUMN width="30" align="left" label="Email"/>
+            <WTCOLUMN width="14" align="center" label="Phone"/>
+            <WTCOLUMN width="10" align="center" label="Status"/>
+            <WTCOLUMN width="10" align="center" label="Guests"/>
+            <WTCOLUMN width="10" align="center" label="Attended"/>
+            <WTROW height="24">
+              <WTSTATIC col="1" fontsize="3">
+                <WTSTATIC value="DATA(NameFirst)" space="1"/>
+                <WTSTATIC value="DATA(NameLast)"/>
+                <WTCODEGROUP>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="18003">
+                      <WTPARAM name="AttendeeID" value="DATA(AttendeeID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(Email)"/>
+              <WTSTATIC col="3" value="DATA(Phone)"/>
+              <WTSTATIC col="4">
+                <WTSTATIC label="Attend"><WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/></WTSTATIC>
+                <WTSTATIC label="Interested" fontcolor="green"><WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/></WTSTATIC>
+                <WTSTATIC label="Cancelled" fontcolor="red"><WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/></WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="5" value="DATA(Guests)"/>
+              <WTSTATIC col="6" value="DATA(Attended)"/>
+            </WTROW>
+            <WTROW>
+              <WTSTATIC col="1" merge="6" align="left">
+                <WTSTATIC fontcolor="gray">
+                  <WTSTATIC value="DATA(Street1)"/>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Street2)" oper="not-equal" value="CONST('')"/>
+                    <WTSTATIC space="1"/>
+                    <WTSTATIC value="DATA(Street2)"/>
+                  </WTCODEGROUP>
+                  <WTSTATIC value="CONST(,)" space="1"/>
+                  <WTSTATIC value="DATA(City)" space="1"/>
+                  <WTSTATIC value="DATA(State)" space="1"/>
+                  <WTSTATIC value="DATA(Zip)"/>
+                </WTSTATIC>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Refer)" oper="not-equal" value="CONST('')"/>
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC fontcolor="blue">
+                    <WTSTATIC value="CONST(-)" space="1"/>
+                    <WTSTATIC value="DATA(Refer)"/>
+                  </WTSTATIC>
+                </WTCODEGROUP>
+                <WTSTATIC space="2"/>
+                <WTSTATIC fontcolor="purple">
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC value="DATA(RegisterDate)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="17905" caption="Guest List" header="false" footer="false" navbar="false" wrapper="wrapper1000"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+      <!--============================================================================================-->
+      <WTPARAM name="MeetingID" datatype="number"/>
+
+      <WTSUB name="LoadMeeting">
+        <WTOBJECT name="Meeting" project="ptsMeetingUser" class="CMeeting">
+          <WTMETHOD name="Load">
+            <WTPARAM name="MeetingID" direction="input" value="PARAM(MeetingID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpVenueID)" value="ATTR(VenueID)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlMeeting" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Venue" project="ptsVenueUser" class="CVenue">
+          <WTMETHOD name="Load">
+            <WTPARAM name="VenueID" direction="input" value="CONST(tmpVenueID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpSeminarID)" value="ATTR(SeminarID)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlVenue" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Seminar" project="ptsSeminarUser" class="CSeminar">
+          <WTMETHOD name="Load">
+            <WTPARAM name="SeminarID" direction="input" value="CONST(tmpSeminarID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSeminar" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Attendees" project="ptsAttendeeUser" class="CAttendees">
+          <WTMETHOD name="List">
+            <WTPARAM name="MeetingID" direction="input" value="PARAM(MeetingID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlAttendees" direction="return" datatype="text"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCALLSUB name="LoadMeeting"/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="1000" align="center"/>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" fontsize="4">
+            <WTSTATIC value="ATTR(Seminar.SeminarName)" fontsize="5"/>
+            <WTSTATIC newline="1"/>
+            <WTSTATIC value="ATTR(Venue.VenueName)" fontsize="5"/>
+            <WTSTATIC newline="1"/>
+            <WTSTATIC value="ATTR(Venue.Street1)"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="ATTR(Venue.Street2)" oper="exist"/>
+              <WTSTATIC space="1"/>
+              <WTSTATIC value="ATTR(Venue.Street2)"/>
+            </WTCODEGROUP>
+            <WTSTATIC value="CONST(,)" space="1"/>
+            <WTSTATIC value="ATTR(Venue.City)" space="1"/>
+            <WTSTATIC value="ATTR(Venue.State)" space="1"/>
+            <WTSTATIC value="ATTR(Venue.Zip)" space="1"/>
+            <WTSTATIC newline="1"/>
+            <WTSTATIC value="ATTR(Meeting.MeetingDate)" space="2"/>
+            <WTSTATIC value="ATTR(Meeting.StartTime)"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="ATTR(Meeting.EndTime)" oper="not-equal" value="CONST('')"/>
+              <WTSTATIC space="1"/>
+              <WTSTATIC value="CONST(-)" space="1"/>
+              <WTSTATIC value="ATTR(Meeting.EndTime)"/>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW>
+          <WTRECORDSET col="1" merge="2" graybar="false" entity="Attendee">
+            <WTCOLUMN width="25" align="left" label="Name"/>
+            <WTCOLUMN width="40" align="left" label="Email"/>
+            <WTCOLUMN width="15" align="center" label="Phone"/>
+            <WTCOLUMN width="10" align="center" label="Status"/>
+            <WTCOLUMN width="10" align="center" label="Guests"/>
+            <WTROW height="24">
+              <WTSTATIC col="1" fontsize="4">
+                <WTSTATIC value="DATA(NameFirst)" space="1"/>
+                <WTSTATIC value="DATA(NameLast)"/>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(Email)" fontsize="3"/>
+              <WTSTATIC col="3" value="DATA(Phone)" fontsize="3"/>
+              <WTSTATIC col="4" fontsize="3">
+                <WTSTATIC label="Attend">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/>
+                </WTSTATIC>
+                <WTSTATIC label="Interested">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+                </WTSTATIC>
+                <WTSTATIC label="Cancelled">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="5" value="DATA(Guests)" fontsize="3"/>
+            </WTROW>
+            <WTROW>
+              <WTSTATIC col="1"/>
+              <WTSTATIC col="2" merge="4" align="left">
+                <WTSTATIC fontcolor="gray">
+                  <WTSTATIC value="DATA(Street1)"/>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Street2)" oper="exist"/>
+                    <WTSTATIC space="1"/>
+                    <WTSTATIC value="DATA(Street2)"/>
+                  </WTCODEGROUP>
+                  <WTSTATIC value="CONST(,)" space="1"/>
+                  <WTSTATIC value="DATA(City)" space="1"/>
+                  <WTSTATIC value="DATA(State)" space="1"/>
+                  <WTSTATIC value="DATA(Zip)"/>
+                </WTSTATIC>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Refer)" oper="not-equal" value="CONST('')"/>
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC fontcolor="blue">
+                    <WTSTATIC value="CONST(-)" space="1"/>
+                    <WTSTATIC value="DATA(Refer)"/>
+                  </WTSTATIC>
+                </WTCODEGROUP>
+                <WTSTATIC space="2"/>
+                <WTSTATIC fontcolor="purple">
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC value="DATA(RegisterDate)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+  </WTWEBPAGES>
+</WTROOT>

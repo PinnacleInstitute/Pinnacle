@@ -1,0 +1,1003 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="61" name="Signature" alias="sr">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="6101" name="SignatureID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+		<WTATTRIBUTE id="6102" name="MemberID" type="number" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="6103" name="UseType" type="number" source="entity">
+			<WTENUM id="1" name="Default"/>
+			<WTENUM id="2" name="LeadPage"/>
+			<WTENUM id="3" name="Presentation"/>
+			<WTENUM id="4" name="LeadEmail"/>
+			<WTENUM id="5" name="ProspectEmail"/>
+			<WTENUM id="6" name="CustomerEmail"/>
+			<WTENUM id="7" name="Welcome"/>
+			<WTENUM id="8" name="Story"/>
+			<WTENUM id="9" name="Vision"/>
+			<WTENUM id="10" name="Testimony"/>
+			<WTENUM id="11" name="Invite"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6104" name="UseID" type="number" source="entity"/>
+		<WTATTRIBUTE id="6105" name="IsActive" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="6106" name="Data" type="text" length="4000" min="1" max="4000" source="entity" embedhtml="true"/>
+		<WTATTRIBUTE id="6107" name="Language" type="text" length="6" min="1" max="6" source="entity" language="false"/>				
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="6190" name="CopyID" type="number" source="entity" persist="false"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="UseType"/>
+			<WTATTRIBUTE name="UseID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Signature" entity="Signature" alias="sr"/>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="SIG-TYPE-DEFAULT" value="1"/>
+			<WTSYSCON name="SIG-TYPE-LEADPAGE" value="2"/>
+			<WTSYSCON name="SIG-TYPE-PRESENT" value="3"/>
+			<WTSYSCON name="SIG-TYPE-LEADEMAIL" value="4"/>
+			<WTSYSCON name="SIG-TYPE-PROSPECTEMAIL" value="5"/>
+			<WTSYSCON name="SIG-TYPE-CUSTOMEREMAIL" value="6"/>
+			<WTSYSCON name="SIG-TYPE-WELCOME" value="7"/>
+			<WTSYSCON name="SIG-TYPE-STORY" value="8"/>
+			<WTSYSCON name="SIG-TYPE-VISION" value="9"/>
+			<WTSYSCON name="SIG-TYPE-TESTIMONY" value="10"/>
+			<WTSYSCON name="SIG-TYPE-INVITE" value="11"/>
+		</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Signature.SignatureID)"/>
+					<WTATTRIBUTE value="ATTR(Signature.UseType)"/>
+					<WTATTRIBUTE value="ATTR(Signature.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(Signature.UseID)"/>
+					<WTATTRIBUTE value="ATTR(Signature.Data)"/>
+					<WTATTRIBUTE value="ATTR(Signature.Language)"/>
+					<WTJOIN name="Signature"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(UseType)" oper="less" value="SYSCON(SIG-TYPE-WELCOME)" connector="and"/>
+					<WTORDER name="ATTR(Signature.UseType)"/>
+					<WTORDER name="ATTR(Signature.UseID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListPersonal" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(UseID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Language)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Signature.SignatureID)"/>
+					<WTATTRIBUTE value="ATTR(Signature.UseType)"/>
+					<WTATTRIBUTE value="ATTR(Signature.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(Signature.UseID)"/>
+					<WTATTRIBUTE value="ATTR(Signature.Data)"/>
+					<WTATTRIBUTE value="ATTR(Signature.Language)"/>
+					<WTJOIN name="Signature"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(UseType)" oper="greater-equal" value="SYSCON(SIG-TYPE-WELCOME)" connector="and"/>
+					<WTCONDITION expr="ATTR(UseID)" oper="equal" value="PARAM(UseID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Language)" oper="equal" value="PARAM(Language)" connector="and"/>
+					<WTORDER name="ATTR(Signature.UseType)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetPersonal" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(UseType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(UseID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Language)" direction="input" required="false"/>
+			<WTPARAM name="Result" direction="output" datatype="text" length="3000"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Copy" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(UseID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Language)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(CopyID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6102" page-width="580" page-left="10" margin-width="0" caption="Add Signature" navbar="false" header="false" footer="false" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(IsActive)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="SignatureID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewSignature" class="PageHeading" align="left"/>
+					<WTSTATIC col="1" merge="2">
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-SIGNATURES)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="SignatureTypeText" class="prompt" />
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="UseType"/>
+					<WTCOMBO col="2" value="ATTR(Signature.UseType)">
+						<WTCOMBO id="1" label="Default"/>
+						<WTCOMBO id="2" label="LeadPage"/>
+						<WTCOMBO id="3" label="Presentation"/>
+						<WTCOMBO id="4" label="LeadEmail"/>
+						<WTCOMBO id="5" label="ProspectEmail"/>
+						<WTCOMBO id="6" label="CustomerEmail"/>
+					</WTCOMBO>
+					<WTSTATIC col="2" tag="UseID"/>
+					<WTTEXT col="2" value="ATTR(Signature.UseID)" size="2" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Signature.IsActive)"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="Language"/>
+					<WTTEXT col="2" value="ATTR(Signature.Language)" size="4"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="Data" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Signature.Data)" cols="72" rows="10" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(medium)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="SignatureHelp" class="prompt" />
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6103" page-width="580" page-left="10" margin-width="0" caption="Edit Signature" navbar="false" header="false" footer="false" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="SignatureID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="PARAM(SignatureID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="PARAM(SignatureID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SignatureID" direction="input" value="PARAM(SignatureID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="PARAM(SignatureID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Signature" value="ATTR(Signature.UseType)" class="PageHeading" align="left"/>
+					<WTSTATIC col="1" merge="2">
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-SIGNATURES)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="SignatureTypeText" class="prompt" />
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="UseType"/>
+					<WTCOMBO col="2" value="ATTR(Signature.UseType)">
+						<WTCOMBO id="1" label="Default"/>
+						<WTCOMBO id="2" label="LeadPage"/>
+						<WTCOMBO id="3" label="Presentation"/>
+						<WTCOMBO id="4" label="LeadEmail"/>
+						<WTCOMBO id="5" label="ProspectEmail"/>
+						<WTCOMBO id="6" label="CustomerEmail"/>
+					</WTCOMBO>
+					<WTSTATIC col="2" tag="UseID"/>
+					<WTTEXT col="2" value="ATTR(Signature.UseID)" size="2" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Signature.IsActive)"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="Language"/>
+					<WTTEXT col="2" value="ATTR(Signature.Language)" size="4"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="Data" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Signature.Data)" cols="72" rows="10" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(medium)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="SignatureHelp" class="prompt" />
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6104" caption="Personalization" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="LeadCampaignID" datatype="number"/>
+			<WTPARAM name="Welcome" datatype="number"/>
+			<WTPARAM name="Story" datatype="number"/>
+			<WTPARAM name="Vision" datatype="number"/>
+			<WTPARAM name="Testimony" datatype="number"/>
+			<WTPARAM name="Invite" datatype="number"/>
+			<WTPARAM name="Language" datatype="text"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(Language)" value="SYS(Language)"/>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadList">
+				<WTGETCACHE name="CONST(tmpGroupID)" value="GROUPID"/>
+				<WTOBJECT name="LeadCampaigns" project="ptsLeadCampaignUser" class="CLeadCampaigns">
+					<WTCONDITION expr="PARAM(LeadCampaignID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="EnumPresent">
+						<WTPARAM name="xmlLeadCampaigns" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Grp" direction="input" value="CONST(tmpGroupID)" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()"/>
+						<WTPARAM name="Element" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+xmlLeadCampaigns = Replace( xmlLeadCampaigns, "name=" + CHR(34) + " " + CHR(34), "name=" + CHR(34) + "Personal Info for All Presentations" + CHR(34)) 
+</WTCUSTOM>					
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadPersonal">
+				<WTOBJECT name="LeadCampaign" project="ptsLeadCampaignUser" class="CLeadCampaign">
+					<WTCONDITION expr="PARAM(LeadCampaignID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadCampaignID" direction="input" value="PARAM(LeadCampaignID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadCampaign" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Signatures" project="ptsSignatureUser" class="CSignatures">
+					<WTMETHOD name="ListPersonal">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="UserID" direction="input" value="PARAM(LeadCampaignID)"/>
+						<WTPARAM name="Language" direction="input" value="PARAM(Language)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+		For Each oItem in oSignatures
+			Select Case oItem.UseType
+				Case 7: reqWelcome = 1
+				Case 8: reqStory = 1
+				Case 9: reqVision = 1
+				Case 10: reqTestimony = 1
+				Case 11: reqInvite = 1
+			End Select	
+		Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignatures" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTSUB>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTCALLSUB name="LoadPersonal"/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTSETATTRIBUTE name="CONST(tmpSignatureID)" value="FORM(SignatureID)"/>
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SignatureID" direction="input" value="CONST(tmpSignatureID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadPersonal"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Copy" type="Update">
+				<WTSETATTRIBUTE name="CONST(tmpCopy)" value="FORM(CopyLeadCampaign)"/>
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTMETHOD name="Copy">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="UserID" direction="input" value="PARAM(LeadCampaignID)"/>
+						<WTPARAM name="Language" direction="input" value="PARAM(Language)"/>
+						<WTPARAM name="CopyID" direction="input" value="CONST(tmpCopy)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadPersonal"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTFUNCTION name="Edit(id,usetype)">
+					var memberid = document.getElementById('MemberID').value;
+					var useid = document.getElementById('LeadCampaignID').value;
+					var language = document.getElementById('Language').value;
+					var url, win;
+					url = "6105.asp?signatureid=" + id + "&amp;memberid=" + memberid + "&amp;usetype=" + usetype + "&amp;useid=" + useid + "&amp;language=" + language
+		            win = window.open(url,"Personal");
+					win.focus();
+			    </WTFUNCTION>  
+				<WTFUNCTION name="Remove(id)">
+					document.getElementById('SignatureID').value = id;
+					doSubmit(4,"");
+			    </WTFUNCTION>  
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+					<WTHIDDEN value="PARAM(LeadCampaignID)"/>
+					<WTHIDDEN value="PARAM(Language)"/>
+					<WTHIDDEN value="ATTR(Signature.SignatureID)"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" class="PageHeading" align="left">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(presentation sites.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="3"/>
+						<WTSTATIC label="Personalization">
+							<WTCONDITION expr="PARAM(LeadCampaignID)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(LeadCampaignID)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC tag="Personalize"/>
+							<WTSTATIC value="ATTR(LeadCampaign.LeadCampaignName)"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" class="prompt" align="left">
+						<WTSTATIC label="PersonalizeAllText">
+							<WTCONDITION expr="PARAM(LeadCampaignID)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PersonalizeText">
+							<WTCONDITION expr="PARAM(LeadCampaignID)" oper="not-equal" value="CONST(0)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="6"/>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(LeadCampaignID)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" label="CopyLeadCampaign" align="right"/>
+					<WTCOMBO col="1" name="CopyLeadCampaign" datapath="/DATA/TXN/PTSLEADCAMPAIGNS/ENUM"/>
+					<WTBUTTON col="1" action="5" value="CONST(Copy)" btnclass="smbutton"/>
+				</WTROW>
+				
+				<WTSTATIC label="Edit"/>
+				<WTSTATIC label="Remove"/>
+				<WTSTATIC label="AllInfo"/>
+
+				<!-- ================================================================ -->
+				<WTROW margin-top="6" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="PageHeading">
+						<WTSTATIC label="PersonalWelcome"/>
+						<WTSTATIC space="2"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Welcome)" oper="equal" value="CONST(1)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 7)]/@signatureid&quot;/&gt;,7))"/>
+							</WTIMAGE>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(trash.gif)" alt="Remove" imgalign="absmiddle">
+								<WTLINK name="JAVA(Remove(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 7)]/@signatureid&quot;/&gt;))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Welcome)" oper="equal" value="CONST(0)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(0,7))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Welcome)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="InfoMissing" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Welcome)" oper="equal" value="CONST(1)"/>
+					<WTREPEAT entity="Signature">
+						<WTFILTER name="DATA(UseType)" oper="equal" value="SYSCON(SIG-TYPE-WELCOME)"/>	
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Signature.Data)"/>
+						</WTROW>
+					</WTREPEAT>
+				</WTCODEGROUP>
+				
+				<!-- ================================================================ -->
+				<WTROW margin-top="18" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="PageHeading">
+						<WTSTATIC label="PersonalStory"/>
+						<WTSTATIC space="2"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Story)" oper="equal" value="CONST(1)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 8)]/@signatureid&quot;/&gt;,8))"/>
+							</WTIMAGE>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(trash.gif)" alt="Remove" imgalign="absmiddle">
+								<WTLINK name="JAVA(Remove(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 8)]/@signatureid&quot;/&gt;))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Story)" oper="equal" value="CONST(0)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(0,8))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Story)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="InfoMissing" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Story)" oper="equal" value="CONST(1)"/>
+					<WTREPEAT entity="Signature">
+						<WTFILTER name="DATA(UseType)" oper="equal" value="SYSCON(SIG-TYPE-STORY)"/>	
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Signature.Data)"/>
+						</WTROW>
+					</WTREPEAT>
+				</WTCODEGROUP>
+				
+				<!-- ================================================================ -->
+				<WTROW margin-top="18" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="PageHeading">
+						<WTSTATIC label="PersonalVision"/>
+						<WTSTATIC space="2"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Vision)" oper="equal" value="CONST(1)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 9)]/@signatureid&quot;/&gt;,9))"/>
+							</WTIMAGE>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(trash.gif)" alt="Remove" imgalign="absmiddle">
+								<WTLINK name="JAVA(Remove(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 9)]/@signatureid&quot;/&gt;))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Vision)" oper="equal" value="CONST(0)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(0,9))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Vision)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="InfoMissing" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Vision)" oper="equal" value="CONST(1)"/>
+					<WTREPEAT entity="Signature">
+						<WTFILTER name="DATA(UseType)" oper="equal" value="SYSCON(SIG-TYPE-VISION)"/>	
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Signature.Data)"/>
+						</WTROW>
+					</WTREPEAT>
+				</WTCODEGROUP>
+				
+				<!-- ================================================================ -->
+				<WTROW margin-top="18" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="PageHeading">
+						<WTSTATIC label="PersonalTestimony"/>
+						<WTSTATIC space="2"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Testimony)" oper="equal" value="CONST(1)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 10)]/@signatureid&quot;/&gt;,10))"/>
+							</WTIMAGE>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(trash.gif)" alt="Remove" imgalign="absmiddle">
+								<WTLINK name="JAVA(Remove(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 10)]/@signatureid&quot;/&gt;))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Testimony)" oper="equal" value="CONST(0)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(0,10))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Testimony)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="InfoMissing" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Testimony)" oper="equal" value="CONST(1)"/>
+					<WTREPEAT entity="Signature">
+						<WTFILTER name="DATA(UseType)" oper="equal" value="SYSCON(SIG-TYPE-TESTIMONY)"/>	
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Signature.Data)"/>
+						</WTROW>
+					</WTREPEAT>
+				</WTCODEGROUP>
+				
+				<!-- ================================================================ -->
+				<WTROW margin-top="18" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="PageHeading">
+						<WTSTATIC label="PersonalInvitation"/>
+						<WTSTATIC space="2"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Invite)" oper="equal" value="CONST(1)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 11)]/@signatureid&quot;/&gt;,11))"/>
+							</WTIMAGE>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(trash.gif)" alt="Remove" imgalign="absmiddle">
+								<WTLINK name="JAVA(Remove(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSSIGNATURES/PTSSIGNATURE[(@usetype = 11)]/@signatureid&quot;/&gt;))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Invite)" oper="equal" value="CONST(0)"/>
+							<WTIMAGE value="CONST(edit.gif)" alt="Edit" imgalign="absmiddle">
+								<WTLINK name="JAVA(Edit(0,11))"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Invite)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="InfoMissing" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Invite)" oper="equal" value="CONST(1)"/>
+					<WTREPEAT entity="Signature">
+						<WTFILTER name="DATA(UseType)" oper="equal" value="SYSCON(SIG-TYPE-INVITE)"/>	
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Signature.Data)"/>
+						</WTROW>
+					</WTREPEAT>
+				</WTCODEGROUP>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="6105" caption="Personalization" navbar="false" header="false" footer="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="SignatureID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="UseType" datatype="number"/>
+			<WTPARAM name="UseID" datatype="number"/>
+			<WTPARAM name="Language" datatype="text"/>
+			<WTPARAM name="Txn" datatype="number"/>
+
+			<WTSUB name="LoadLeadPage">
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTCONDITION expr="PARAM(SignatureID)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="PARAM(SignatureID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateLeadPage">
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTCONDITION expr="PARAM(SignatureID)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="PARAM(SignatureID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Signature" project="ptsSignatureUser" class="CSignature">
+					<WTCONDITION expr="PARAM(SignatureID)" oper="equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="SignatureID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(UseType)" value="PARAM(UseType)"/>
+					<WTSETATTRIBUTE name="ATTR(UseID)" value="PARAM(UseID)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="PARAM(Language)"/>
+					<WTSETATTRIBUTE name="ATTR(IsActive)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="reqSignatureID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignature" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(Txn)" value="CONST(1)">
+					<WTCONDITION expr="NoErrors"/>
+				</WTSETATTRIBUTE>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadLeadPage"/>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateLeadPage"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+				<WTROW>
+					<WTHIDDEN value="PARAM(SignatureID)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTSTATIC label="PersonalWelcome">
+							<WTCONDITION expr="PARAM(UseType)" oper="equal" value="SYSCON(SIG-TYPE-WELCOME)" />
+						</WTSTATIC>
+						<WTSTATIC label="PersonalStory">
+							<WTCONDITION expr="PARAM(UseType)" oper="equal" value="SYSCON(SIG-TYPE-STORY)" />
+						</WTSTATIC>
+						<WTSTATIC label="PersonalVision">
+							<WTCONDITION expr="PARAM(UseType)" oper="equal" value="SYSCON(SIG-TYPE-VISION)" />
+						</WTSTATIC>
+						<WTSTATIC label="PersonalTestimony">
+							<WTCONDITION expr="PARAM(UseType)" oper="equal" value="SYSCON(SIG-TYPE-TESTIMONY)" />
+						</WTSTATIC>
+						<WTSTATIC label="PersonalInvite">
+							<WTCONDITION expr="PARAM(UseType)" oper="equal" value="SYSCON(SIG-TYPE-INVITE)" />
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Txn)" oper="not-equal" value="CONST(0)" />
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="Updated" fontcolor="red"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" align="left" value="ATTR(Signature.Data)" cols="70" rows="15" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" label="MaxPersonal" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" value="CONST(Close)">
+						<WTCLICK>window.parent.opener.doSubmit(0,'');window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6111" page-width="580" page-left="10" margin-width="0" caption="Custom Signatures" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Signatures" project="ptsSignatureUser" class="CSignatures">
+					<WTMETHOD name="List">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSignatures" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" label="Signatures" class="PageHeading" align="left">
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-SIGNATURES)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+					<WTSTATIC col="2" align="right">
+						<WTCODEGROUP><WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"><WTLINK name="6102"><WTPARAM name="MemberID" value="PARAM(MemberID)"/></WTLINK></WTIMAGE></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewSignature" bold="true"><WTLINK name="6102"><WTPARAM name="MemberID" value="PARAM(MemberID)"/></WTLINK></WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="SignatureText" class="prompt" />
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="false" entity="Signature">
+						<WTCOLUMN width="20" align="left" valign="top" label="UseType"/>
+						<WTCOLUMN width="10" align="left" valign="top" label="UseID"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="Language"/>
+						<WTCOLUMN width="50" align="left" valign="top" label="IsActive"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Signature.UseType)" bold="true">
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="6103">
+											<WTPARAM name="SignatureID" value="DATA(Signature.SignatureID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Signature.UseID)"/>
+							<WTSTATIC col="3" value="DATA(Signature.Language)"/>
+							<WTSTATIC col="4" value="DATA(Signature.IsActive)"/>
+						</WTROW>
+						<WTROW>
+							<WTDIVIDER col="1" merge="4" height="1" color="SYS(light)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="4" value="DATA(Signature.Data)"/>
+						</WTROW>
+						<WTROW>
+							<WTDIVIDER col="1" merge="4" height="1" color="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

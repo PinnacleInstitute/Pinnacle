@@ -1,0 +1,160 @@
+// XPBar definition
+var BarDef = {
+    imgblank:"img/1x1.gif", 
+    style:{
+        css:"bartitle", 
+        align:"center", 
+        size:[160,25], 
+        imgendoff:{src:"img/arr_up.gif", width:24, height:24}, 
+        imgendon:{src:"img/arr_down.gif", width:24, height:24}, 
+        imgspace:5, 
+        itemoffset:{x:5, y:10}, 
+        fixheight:200, 
+        bgcolor:"#6C86DC", 
+        shadow:{color:"#C0C0C0", width:1}, 
+        border:{
+            color:"black", 
+            width:1
+        }
+    }, 
+    itemover:{
+        css:"bartitle", 
+        size:[160,25], 
+        imgendoff:{src:"img/arr_up_over.gif", width:24, height:24}, 
+        imgendon:{src:"img/arr_down_over.gif", width:24, height:24}, 
+        bgimg:"img/title_bg_big.gif"
+    }, 
+    itemon:{
+        color:"white", 
+        bgcolor:"#265BCC"
+    }, 
+    scroller:{
+        style:{
+            css:"bartitlecenter", 
+            align:"center", 
+            size:[170,18], 
+            bgcolor:"white", 
+            opacity:60
+        }, 
+        styleover:{
+            css:"bartitlecenter", 
+            align:"center", 
+            size:[170,80], 
+            bgcolor:"white", 
+            opacity:60
+        }, 
+        up:"img/scroller_up.gif", 
+        down:"img/scroller_down.gif", 
+        len:60, 
+        step:5, 
+        time:30
+    }, 
+    position:{
+        pos:[10,10], 
+        absolute:true
+    },
+    items: [ 
+    {
+        text:"Folders", 
+        style:{
+            align:"center", 
+            bgimg:"img/title_bg_big.gif"
+        }, 
+        menu:{
+            style:{
+                size:[150,22], 
+                itemoffset:{x:5, y:2}, 
+                bgcolor:"#D6DFF7", 
+                border:{
+                    color:"white", 
+                    width:1
+                }
+            }, 
+            itemover:{
+                size:[150,22]
+            }, 
+            items:[
+            {
+                text:"Search", 
+                style:{
+                    imgitem:{src:"img/folder_search.gif", width:16, height:16}
+                }
+            },
+            {
+                text:"Options", 
+                style:{
+                    imgitem:{src:"img/folder_options.gif", width:16, height:16}
+                }
+            },
+            {
+                text:"Download", 
+                style:{
+                    imgitem:{src:"img/folder_download.gif", width:16, height:16}
+                }
+            }
+            ]
+        }
+    },
+    {
+        text:"Other Places", 
+        style:{
+            align:"center", 
+            bgimg:"img/title_bg_big.gif"
+        }, 
+        menu:{
+            style:{
+                size:[150,22], 
+                itemoffset:{x:5, y:2}, 
+                bgcolor:"#D6DFF7", 
+                border:{
+                    color:"white", 
+                    width:1
+                }
+            }, 
+            itemover:{
+                size:[150,22]
+            }, 
+            items:[
+            {
+                text:"My Computer", 
+                style:{
+                    imgitem:{src:"img/computer.gif", width:16, height:16}
+                }
+            },
+            {
+                text:"Printer", 
+                style:{
+                    imgitem:{src:"img/print.gif", width:16, height:16}
+                }
+            }
+            ]
+        }
+    },
+    {
+        text:"Details", 
+        style:{
+            align:"center", 
+            bgimg:"img/title_bg_big.gif"
+        }, 
+        menu:{
+            style:{
+                align:"center", 
+                size:[150,50], 
+                itemoffset:{x:5, y:1}, 
+                bgcolor:"#D6DFF7"
+            }, 
+            itemover:{
+                border:{
+                    color:"white", 
+                    width:1
+                }
+            }, 
+            items:[
+            {
+                text:"<p><b>Copyright</b><br>www.CodeThat.com"
+            }
+            ]
+        }
+    }
+    ]
+};

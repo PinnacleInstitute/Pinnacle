@@ -1,0 +1,17 @@
+EXEC [dbo].pts_CheckTable 'Silver'
+ GO
+
+CREATE TABLE [dbo].[Silver] (
+   [SilverID] int IDENTITY (1,1) NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Silver] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[Silver] WITH NOCHECK ADD
+   CONSTRAINT [PK_Silver] PRIMARY KEY NONCLUSTERED
+   ([SilverID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

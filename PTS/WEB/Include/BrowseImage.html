@@ -1,0 +1,312 @@
+<!-- based on insimage.dlg -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD W3 HTML 3.2//EN">
+<HTML id="dlgImage" STYLE="width: 49.1em; height: 50em">
+	<HEAD>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="MSThemeCompatible" content="Yes">
+		<TITLE>Insert Image</TITLE>
+		<style>
+  html, body, button, div, input, select, fieldset { font-family: MS Shell Dlg; font-size: 8pt; position: absolute; };
+</style>
+		<!--
+// htmlArea Released under the (Modified) BSD license
+// Copyright (c) 2002, interactivetools.com, inc
+// All rights reserved.
+
+// Browse image dialog ASP code released under the (Modified) BSD license
+// Copyright (c) 2002-2003, S Babu, vsbabu@vsbabu.org, http://vsbabu.org/
+// All rights reserved.
+
+// Adaptation to htmlArea and security addon released under the (Modified) BSD license
+// Copyright (c) 2002-2003, P Engvall, pengvall@engvall.nu, // http://www.engvall.nu/
+// All rights reserved.
+-->
+		<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function showPreview()
+
+{
+if (document.frmImagePick.ImgUrl.value != "")
+ document.PREVIEWPIC.src=document.frmImagePick.ImgUrl.value ;
+
+else
+
+document.PREVIEWPIC.src='../images/imgpreview.gif';
+
+}
+
+function UploadImages() {
+	var newWindow;
+	var props = 'scrollBars=yes,resizable=yes,toolbar=no,menubar=no,location=no,directories=no,width=400,height=200,top=100,left=200';
+	newWindow = window.open('../PureASPUpload.asp', 'Upload_Images_to_server', props);
+}
+
+
+// -->
+		</SCRIPT>
+		<SCRIPT defer>
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+
+function _getTextRange(elm) {
+  var r = elm.parentTextEdit.createTextRange();
+  r.moveToElementText(elm);
+  return r;
+}
+
+window.onerror = HandleError
+
+function HandleError(message, url, line) {
+  var str = "An error has occurred in this dialog." + "\n\n"
+  + "Error: " + line + "\n" + message;
+  alert(str);
+  window.close();
+  return true;
+}
+
+function Init() {
+  var elmSelectedImage;
+  var htmlSelectionControl = "Control";
+  var globalDoc = window.dialogArguments;
+  var grngMaster = globalDoc.selection.createRange();
+  
+  
+
+  // event handlers  
+  document.body.onkeypress = _CloseOnEsc;
+  btnOK.onclick = new Function("btnOKClick()");
+
+  txtFileName.fImageLoaded = false;
+  txtFileName.intImageWidth = 0;
+  txtFileName.intImageHeight = 0;
+
+  if (globalDoc.selection.type == htmlSelectionControl) {
+    if (grngMaster.length == 1) {
+      elmSelectedImage = grngMaster.item(0);
+      if (elmSelectedImage.tagName == "IMG") {
+        txtFileName.fImageLoaded = true;
+        if (elmSelectedImage.src) {
+
+	document.frmImagePick.ImgUrl.value = elmSelectedImage.src;
+document.PREVIEWPIC.src=document.frmImagePick.ImgUrl.value ;
+
+// EiSa: Inserted this value to get the ALT-value if you click on the image and opens the insert image dialog box again
+document.frmImagePick.txtAlt.value = elmSelectedImage.alt;
+
+          txtFileName.value          = elmSelectedImage.src.replace(/^[^*]*(\*\*\*)/, "$1");  // fix placeholder src values that editor converted to abs paths
+          txtFileName.intImageHeight = elmSelectedImage.height;
+          txtFileName.intImageWidth  = elmSelectedImage.width;
+          txtVertical.value          = elmSelectedImage.vspace;
+          txtHorizontal.value        = elmSelectedImage.hspace;
+          txtBorder.value            = elmSelectedImage.border;
+          txtAltText.value           = elmSelectedImage.alt;
+          selAlignment.value         = elmSelectedImage.align;
+        }
+      }
+    }
+  }
+
+
+  txtFileName.value = txtFileName.value || "http://";
+
+// FOCUS REMOVED, Focus on ImgURL instead
+//  txtFileName.focus();
+document.frmImagePick.ImgUrl.focus();
+
+
+}
+
+function _isValidNumber(txtBox) {
+  var val = parseInt(txtBox);
+  if (isNaN(val) || val < 0 || val > 999) { return false; }
+  return true;
+}
+
+function btnOKClick() {
+  var elmImage;
+  var intAlignment;
+  var htmlSelectionControl = "Control";
+  var globalDoc = window.dialogArguments;
+  var grngMaster = globalDoc.selection.createRange();
+  
+  // error checking
+
+
+// REMOVE: Http:// check
+//  if (!txtFileName.value || txtFileName.value == "http://") { 
+//    alert("Image URL must be specified.");
+//    txtFileName.focus();
+//    return;
+//  }
+
+
+  if (txtHorizontal.value && !_isValidNumber(txtHorizontal.value)) {
+    alert("Horizontal spacing must be a number between 0 and 999.");
+    txtHorizontal.focus();
+    return;
+  }
+  if (txtBorder.value && !_isValidNumber(txtBorder.value)) {
+    alert("Border thickness must be a number between 0 and 999.");
+    txtBorder.focus();
+    return;
+  }
+  if (txtVertical.value && !_isValidNumber(txtVertical.value)) {
+    alert("Vertical spacing must be a number between 0 and 999.");
+    txtVertical.focus();
+    return;
+  }
+
+  // delete selected content and replace with image
+  if (globalDoc.selection.type == htmlSelectionControl && !txtFileName.fImageLoaded) {
+    grngMaster.execCommand('Delete');
+    grngMaster = globalDoc.selection.createRange();
+  }
+    
+  idstr = "\" id=\"556e697175657e537472696e67";     // new image creation ID
+  if (!txtFileName.fImageLoaded) {
+    grngMaster.execCommand("InsertImage", false, idstr);
+    elmImage = globalDoc.all['556e697175657e537472696e67'];
+    elmImage.removeAttribute("id");
+    elmImage.removeAttribute("src");
+    grngMaster.moveStart("character", -1);
+  } else {
+    elmImage = grngMaster.item(0);
+    if (elmImage.src != txtFileName.value) {
+      grngMaster.execCommand('Delete');
+      grngMaster = globalDoc.selection.createRange();
+      grngMaster.execCommand("InsertImage", false, idstr);
+      elmImage = globalDoc.all['556e697175657e537472696e67'];
+      elmImage.removeAttribute("id");
+      elmImage.removeAttribute("src");
+      grngMaster.moveStart("character", -1);
+      txtFileName.fImageLoaded = false;
+    }
+    grngMaster = _getTextRange(elmImage);
+  }
+
+  if (txtFileName.fImageLoaded) {
+    elmImage.style.width = txtFileName.intImageWidth;
+    elmImage.style.height = txtFileName.intImageHeight;
+  }
+
+  if (txtFileName.value.length > 2040) {
+    txtFileName.value = txtFileName.value.substring(0,2040);
+  }
+  
+
+
+	elmImage.src = document.PREVIEWPIC.src
+
+// REMOVE:
+//  if (txtFileName.value != "") { elmImage.src = document.frmImagePick.ImgUrl.value; }
+//  else                           { elmImage.src = txtFileName.value; }  
+
+  if (txtHorizontal.value != "") { elmImage.hspace = parseInt(txtHorizontal.value); }
+  else                           { elmImage.hspace = 0; }
+
+  if (txtVertical.value != "") { elmImage.vspace = parseInt(txtVertical.value); }
+  else                         { elmImage.vspace = 0; }
+  
+//EiSa: Changed this value to get the value from the link from the imagelist.asp file
+	elmImage.alt = document.frmImagePick.txtAlt.value
+
+  if (txtBorder.value != "") { elmImage.border = parseInt(txtBorder.value); }
+  else                       { elmImage.border = 0; }
+
+  elmImage.align = selAlignment.value;
+  grngMaster.collapse(false);
+  grngMaster.select();
+  window.close();
+}
+		</SCRIPT>
+	</HEAD>
+	<BODY id="bdy" onload="Init()" style="BACKGROUND: buttonface; COLOR: windowtext" scroll="no">
+		<DIV id="divHoriz" style="LEFT: 1.98em; TOP: 0.7em; HEIGHT: 1.21em">Browse picture source:</DIV>
+		<DIV id="divHoriz" style="LEFT: 28.48em; WIDTH: 10.76em; TOP: 0.7em; HEIGHT: 1.21em">Image preview:</DIV>
+			
+		<!--<DIV id=divHoriz style="left: 31.88em; top: 27.126em; width: 6.76em; height: 1.2168em; ">Upload new images here</DIV>-->
+		<DIV id="divHoriz" style="LEFT: 1.98em; TOP: 28.12em; HEIGHT: 1.21em">Browse above or enter full URL including http://</DIV>
+		<DIV id="divFileName" style="LEFT: 0.98em; WIDTH: 7em; TOP: 40.21em; HEIGHT: 1.21em">
+		</DIV>
+		<INPUT ID="txtFileName" style="LEFT: 8.54em; VISIBILITY: hidden; WIDTH: 21.5em; TOP: 40.06em; HEIGHT: 2.12em" tabIndex="10">
+		<DIV id="divAltText" style="LEFT: 1.98em; WIDTH: 6.58em; TOP: 33.1em; HEIGHT: 1.21em">Alternate 
+			Text:</DIV> <!-- EiSa: Here is the new txtAltText value. Now it's a hidden value, earlier it was the name of the textfield -->
+		<INPUT ID="txtAltText" style="LEFT: 8.94em; VISIBILITY: hidden; WIDTH: 21.5em; TOP: 32.8em; HEIGHT: 2.12em" tabIndex="10">
+<!--
+		<FIELDSET id="fldLayout" style="LEFT: 0.9em; WIDTH: 17.08em; TOP: 37.1em; HEIGHT: 7.6em">
+			<LEGEND id="lgdLayout">Layout</LEGEND>
+		</FIELDSET>
+		<FIELDSET id="fldSpacing" style="LEFT: 18.9em; WIDTH: 11em; TOP: 37.1em; HEIGHT: 7.6em">
+			<LEGEND id="lgdSpacing">Spacing</LEGEND>
+		</FIELDSET>
+		<DIV id="divAlign" style="LEFT: 1.82em; WIDTH: 4.76em; TOP: 39.12em; HEIGHT: 1.21em">Alignment:</DIV>
+		<SELECT size="1" ID="selAlignment" tabIndex="20" style="LEFT: 10.36em; WIDTH: 6.72em; TOP: 38.82em; HEIGHT: 1.21em">
+			<OPTION id="optNotSet" value="">
+				Not set
+			</OPTION>
+			<OPTION id="optLeft" value="left">
+				Left
+			</OPTION>
+			<OPTION id="optRight" value="right">
+				Right
+			</OPTION>
+			<OPTION id="optTexttop" value="textTop">
+				Texttop
+			</OPTION>
+			<OPTION id="optAbsMiddle" value="absMiddle">
+				Absmiddle
+			</OPTION>
+			<OPTION id="optBaseline" value="baseline" SELECTED>
+				Baseline
+			</OPTION>
+			<OPTION id="optAbsBottom" value="absBottom">
+				Absbottom
+			</OPTION>
+			<OPTION id="optBottom" value="bottom">
+				Bottom
+			</OPTION>
+			<OPTION id="optMiddle" value="middle">
+				Middle
+			</OPTION>
+			<OPTION id="optTop" value="top">
+				Top
+			</OPTION>
+		</SELECT>
+		<DIV id="divHoriz" style="LEFT: 19.88em; WIDTH: 4.76em; TOP: 39.12em; HEIGHT: 1.21em">Horizontal:</DIV>
+		<INPUT ID="txtHorizontal" style="LEFT: 24.92em; IME-MODE: disabled; WIDTH: 4.2em; TOP: 38.82em; HEIGHT: 2.12em" size="3" maxlength="3" tabIndex="25" onfocus="select()">
+		<DIV id="divBorder" style="LEFT: 1.82em; WIDTH: 8.12em; TOP: 42.01em; HEIGHT: 1.21em">Border 
+			Thickness:</DIV>
+		<INPUT ID="txtBorder" style="LEFT: 10.36em; IME-MODE: disabled; WIDTH: 6.72em; TOP: 41.55em; HEIGHT: 2.12em" size="3" maxlength="3" tabIndex="21" onfocus="select()">
+		<DIV id="divVert" style="LEFT: 19.88em; WIDTH: 3.64em; TOP: 42.01em; HEIGHT: 1.21em">Vertical:</DIV>
+		<INPUT ID="txtVertical" style="LEFT: 24.92em; IME-MODE: disabled; WIDTH: 4.2em; TOP: 41.55em; HEIGHT: 2.12em" size="3" maxlength="3" tabIndex="30" onfocus="select()">
+-->		
+		<BUTTON ID="btnOK" style="LEFT: 31.36em; WIDTH: 7em; TOP: 40.06em; HEIGHT: 2.2em" type="submit" tabIndex="40">OK</BUTTON>
+		<BUTTON ID="btnCancel" style="LEFT: 31.36em; WIDTH: 7em; TOP: 42.65em; HEIGHT: 2.2em" type="reset" tabIndex="45" onClick="window.close();">Cancel</BUTTON>
+		<!--
+<BUTTON ID=btnUpload style="left: 31.36em; top: 30.0647em; width: 7em; height: 2.2em; " type=reset tabIndex=45 onClick="UploadImages();">Upload Image</BUTTON>
+-->
+		<FORM NAME="frmImagePick" method="post" action="">
+			<TABLE CELLSPACING="10" border="0">
+				<TR>
+					<TD style="FONT-SIZE: 8pt; FONT-FAMILY: MS Shell Dlg" VALIGN="top" align="left" nowrap>
+						<br>
+						<iframe name="IMGPICK" src="browseimage.asp" style="BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; Z-INDEX: 1; BORDER-LEFT: black 1px solid; WIDTH: 280px; BORDER-BOTTOM: black 1px solid; HEIGHT: 240px"></iframe>
+						<br>
+						<br>
+						<INPUT SIZE="40" NAME="ImgUrl" style="LEFT: 1.98em; WIDTH: 303px; TOP: 30.06em; HEIGHT: 2.2em" onChange="showPreview()"> <!-- EiSa: The new value for the textfield is called txtAlt, earlier it was called txtAltText -->
+						<INPUT ID="txtAlt" tabIndex="15" style="LEFT: 8.94em; WIDTH: 21.5em; TOP: 32.8em; HEIGHT: 2.12em" onfocus="select()">
+					</TD>
+					<TD VALIGN="top" align="middle">
+						<br>
+						<span style="BORDER-RIGHT: white 1px solid; BORDER-TOP: threeddarkshadow 1px solid; OVERFLOW: auto; BORDER-LEFT: threeddarkshadow 1px solid; WIDTH: 200px; BORDER-BOTTOM: white 1px solid; HEIGHT: 200px; BACKGROUND-COLOR: gray">
+							<IMG id="PREVIEWPIC" alt="Preview" src="../images/imgpreview.gif" align="absMiddle" name="PREVIEWPIC" valign="middle" bgcolor="#ffffff">
+						</span>
+					</TD>
+				</TR>
+			</TABLE>
+		</FORM>
+	</BODY>
+</HTML>

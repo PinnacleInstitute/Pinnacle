@@ -1,0 +1,40 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+<s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<GetReportResponse xmlns="http://schema.microbilt.com/messages/">
+<GetReportResult>
+
+<MsgRsHdr xmlns="http://schema.microbilt.com/globals">
+<RqUID>{B403D16F-1193-4EA6-B6E3-13DC99752ABD}</RqUID>
+<Status><StatusCode>0</StatusCode>
+<Severity>Info</Severity>
+<StatusDesc>OK</StatusDesc>
+<AdditionalStatus>
+<StatusCode>0</StatusCode>
+<ServerStatusCode>A01</ServerStatusCode>
+<Severity>Info</Severity>
+<StatusDesc>APPROVED</StatusDesc>
+</AdditionalStatus>
+</Status>
+</MsgRsHdr>
+
+<RefNum xmlns="http://schema.microbilt.com/globals">7-5</RefNum>
+<MerchantId xmlns="http://schema.microbilt.com/globals">128710</MerchantId>
+<SalesAmt xmlns="http://schema.microbilt.com/globals"><Amt>1.0</Amt></SalesAmt>
+<PersonInfo Source="AT" EffDt="2011-06-27" xmlns="http://schema.microbilt.com/globals"><PersonName Source="AT" EffDt="2011-06-27"><LastName/><FirstName/></PersonName></PersonInfo>
+
+<ACHResponseInfo Source="AT" EffDt="2011-06-27" xmlns="http://schema.microbilt.com/globals">
+<MsgClass>PREAUTH</MsgClass>
+<MsgCode>POS</MsgCode>
+<Text>P71:LOW RISK APPROVAL</Text>
+</ACHResponseInfo>
+
+<TraceNum xmlns="http://schema.microbilt.com/globals">4D4D4901-D15B-4179-9D44-549D549201ED</TraceNum>
+<AuthorizationCd xmlns="http://schema.microbilt.com/globals">56958129</AuthorizationCd><Message Source="AT" EffDt="2011-06-27" xmlns="http://schema.microbilt.com/globals">
+<MsgClass>STATUS</MsgClass>
+<MsgCode>A</MsgCode>
+<Text>APPROVED</Text>
+</Message>
+</GetReportResult>
+</GetReportResponse>
+</s:Body>
+</s:Envelope>

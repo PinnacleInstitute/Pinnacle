@@ -1,0 +1,56 @@
+EXEC [dbo].pts_CheckTableRebuild 'Org'
+ GO
+
+ALTER TABLE [dbo].[Org] WITH NOCHECK ADD
+   CONSTRAINT [DF_Org_AuthUserID] DEFAULT (0) FOR [AuthUserID] ,
+   CONSTRAINT [DF_Org_ParentID] DEFAULT (0) FOR [ParentID] ,
+   CONSTRAINT [DF_Org_CompanyID] DEFAULT (0) FOR [CompanyID] ,
+   CONSTRAINT [DF_Org_ForumID] DEFAULT (0) FOR [ForumID] ,
+   CONSTRAINT [DF_Org_MemberID] DEFAULT (0) FOR [MemberID] ,
+   CONSTRAINT [DF_Org_PrivateID] DEFAULT (0) FOR [PrivateID] ,
+   CONSTRAINT [DF_Org_OrgName] DEFAULT ('') FOR [OrgName] ,
+   CONSTRAINT [DF_Org_Description] DEFAULT ('') FOR [Description] ,
+   CONSTRAINT [DF_Org_Status] DEFAULT (0) FOR [Status] ,
+   CONSTRAINT [DF_Org_NameLast] DEFAULT ('') FOR [NameLast] ,
+   CONSTRAINT [DF_Org_NameFirst] DEFAULT ('') FOR [NameFirst] ,
+   CONSTRAINT [DF_Org_Email] DEFAULT ('') FOR [Email] ,
+   CONSTRAINT [DF_Org_IsCatalog] DEFAULT (0) FOR [IsCatalog] ,
+   CONSTRAINT [DF_Org_Level] DEFAULT (0) FOR [Level] ,
+   CONSTRAINT [DF_Org_Hierarchy] DEFAULT ('') FOR [Hierarchy] ,
+   CONSTRAINT [DF_Org_CourseCount] DEFAULT (0) FOR [CourseCount] ,
+   CONSTRAINT [DF_Org_MemberCount] DEFAULT (0) FOR [MemberCount] ,
+   CONSTRAINT [DF_Org_IsPublic] DEFAULT (0) FOR [IsPublic] ,
+   CONSTRAINT [DF_Org_IsChat] DEFAULT (0) FOR [IsChat] ,
+   CONSTRAINT [DF_Org_IsForum] DEFAULT (0) FOR [IsForum] ,
+   CONSTRAINT [DF_Org_IsSuggestion] DEFAULT (0) FOR [IsSuggestion] ,
+   CONSTRAINT [DF_Org_IsFavorite] DEFAULT (0) FOR [IsFavorite] ,
+   CONSTRAINT [DF_Org_IsProgram] DEFAULT (0) FOR [IsProgram] ,
+   CONSTRAINT [DF_Org_NoCertificate] DEFAULT (0) FOR [NoCertificate] ,
+   CONSTRAINT [DF_Org_IsCustomCertificate] DEFAULT (0) FOR [IsCustomCertificate] ,
+   CONSTRAINT [DF_Org_Secure] DEFAULT (0) FOR [Secure] ,
+   CONSTRAINT [DF_Org_Credits] DEFAULT (0) FOR [Credits]
+GO
+
+ALTER TABLE [dbo].[Org] WITH NOCHECK ADD
+   CONSTRAINT [PK_Org] PRIMARY KEY NONCLUSTERED
+   ([OrgID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO
+
+CREATE INDEX [I_Org_AuthUserID]
+   ON [dbo].[Org]
+   ([AuthUserID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO
+
+CREATE INDEX [I_Org_OrgName]
+   ON [dbo].[Org]
+   ([OrgName])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO
+
+CREATE INDEX [I_Org_CompanyID]
+   ON [dbo].[Org]
+   ([CompanyID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

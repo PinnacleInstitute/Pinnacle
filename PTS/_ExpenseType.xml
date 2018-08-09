@@ -1,0 +1,356 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="65" name="ExpenseType" alias="ext" audit="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="6501" name="ExpenseTypeID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="6502" name="ExpType" type="number" source="entity">
+			<WTENUM id="1" name="StandardMileage"/>
+			<WTENUM id="2" name="Meals"/>
+			<WTENUM id="3" name="Travel"/>
+			<WTENUM id="4" name="HomeOffice"/>
+			<WTENUM id="5" name="Misc"/>
+			<WTENUM id="11" name="VehicleCost"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6503" name="ExpenseTypeName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="6504" name="Seq" type="number" source="entity"/>
+		<WTATTRIBUTE id="6505" name="TaxType" type="number" source="entity" blankrow='false'>
+			<WTENUM id="-1" name="BusinessUse"/>
+			<WTENUM id="0" name="DirectExpense"/>
+			<WTENUM id="1" name="BusinessMiles"/>
+			<WTENUM id="2" name="CharityMiles"/>
+			<WTENUM id="3" name="MovingMiles"/>
+			<WTENUM id="4" name="BusinessMeal"/>
+			<WTENUM id="5" name="BusinessFood"/>
+			<WTENUM id="6" name="TaxType6"/>
+			<WTENUM id="7" name="TaxType7"/>
+			<WTENUM id="8" name="TaxType8"/>
+			<WTENUM id="9" name="TaxType9"/>
+			<WTENUM id="10" name="TaxType10"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6506" name="IsRequired" type="yesno" source="entity"/>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="ExpenseType" entity="ExpenseType" alias="ext"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumExpenseType" enumname="EnumUserExpenseType" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(ExpenseType.ExpType)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserExpenseType" style="GenerateDataProc.xsl" column="ExpenseTypeName" template="new" passthru="true">
+			<WTPARAM name="ATTR(ExpenseType.ExpType)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(ExpenseType.ExpenseTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(ExpenseType.ExpenseTypeName)"/>
+					<WTJOIN name="ExpenseType"/>
+					<WTCONDITION expr="ATTR(ExpenseType.ExpType)" oper="equal" value="PARAM(ExpType)"/>
+					<WTORDER name="ATTR(ExpenseType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(ExpenseType.ExpenseTypeID)"/>
+					<WTATTRIBUTE value="ATTR(ExpenseType.ExpType)"/>
+					<WTATTRIBUTE value="ATTR(ExpenseType.ExpenseTypeName)"/>
+					<WTATTRIBUTE value="ATTR(ExpenseType.TaxType)"/>
+					<WTATTRIBUTE value="ATTR(ExpenseType.IsRequired)"/>
+					<WTATTRIBUTE value="ATTR(ExpenseType.Seq)"/>
+					<WTJOIN name="ExpenseType"/>
+					<WTORDER name="ATTR(ExpenseType.ExpType)"/>
+					<WTORDER name="ATTR(ExpenseType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6502" header="false" footer="false" navbar="false" wrapper="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="ExpenseType" project="ptsExpenseTypeUser" class="CExpenseType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpenseType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="ExpenseType" project="ptsExpenseTypeUser" class="CExpenseType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ExpenseTypeID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlExpenseType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewExpenseType" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpType"/>
+					<WTCOMBO col="2" value="ATTR(ExpenseType.ExpType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpenseTypeName"/>
+					<WTTEXT col="2" value="ATTR(ExpenseType.ExpenseTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(ExpenseType.Seq)" size="2"/>
+					<WTCHECK col="2" value="ATTR(ExpenseType.IsRequired)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TaxType"/>
+					<WTCOMBO col="2" value="ATTR(ExpenseType.TaxType)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6503" header="false" footer="false" navbar="false" wrapper="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ExpenseTypeID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="ExpenseType" project="ptsExpenseTypeUser" class="CExpenseType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseTypeID" direction="input" value="PARAM(ExpenseTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpenseType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="ExpenseType" project="ptsExpenseTypeUser" class="CExpenseType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseTypeID" direction="input" value="PARAM(ExpenseTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlExpenseType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="ExpenseType" project="ptsExpenseTypeUser" class="CExpenseType">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ExpenseTypeID" direction="input" value="PARAM(ExpenseTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="ExpenseType" project="ptsExpenseTypeUser" class="CExpenseType">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseTypeID" direction="input" value="PARAM(ExpenseTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpenseType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="ExpenseType" value="ATTR(ExpenseType.ExpenseTypeName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpType"/>
+					<WTCOMBO col="2" value="ATTR(ExpenseType.ExpType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpenseTypeName"/>
+					<WTTEXT col="2" value="ATTR(ExpenseType.ExpenseTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(ExpenseType.Seq)" size="2"/>
+					<WTCHECK col="2" value="ATTR(ExpenseType.IsRequired)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TaxType"/>
+					<WTCOMBO col="2" value="ATTR(ExpenseType.TaxType)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6511" caption="ExpenseTypes" header="false" footer="false" navbar="false" wrapper="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="ExpenseTypes" project="ptsExpenseTypeUser" class="CExpenseTypes">
+					<WTMETHOD name="List">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpenseTypes" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="ExpenseTypes" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" align="right" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewExpenseType">
+								<WTLINK name="6502"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(taxrate.gif)" imgalign="absmiddle"/>
+							<WTSTATIC label="TaxRates">
+								<WTLINK name="6611"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="ExpenseType">
+						<WTCOLUMN width="5" align="center" valign="top" label="#"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="ExpType"/>
+						<WTCOLUMN width="45" align="left" valign="top" label="ExpenseTypeName"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="TaxType"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Required"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(ExpenseType.Seq)"/>
+							<WTSTATIC col="2" value="DATA(ExpenseType.ExpType)"/>
+							<WTSTATIC col="3" value="DATA(ExpenseType.ExpenseTypeName)">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="6503"><WTPARAM name="ExpenseTypeID" value="DATA(ExpenseType.ExpenseTypeID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(ExpenseType.TaxType)"/>
+							<WTSTATIC col="5" value="DATA(ExpenseType.IsRequired)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

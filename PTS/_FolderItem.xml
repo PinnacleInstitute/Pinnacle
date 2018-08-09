@@ -1,0 +1,583 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="125" name="FolderItem" alias="foi">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="12501" name="FolderItemID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="12502" name="FolderID" type="number" source="entity"/>
+		<WTATTRIBUTE id="12503" name="MemberID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="12504" name="FolderName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Folder" name="FolderName" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="12505" name="MemberName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Member" name="CompanyName" />
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="12510" name="Entity" type="number" source="entity"/>
+		<WTATTRIBUTE id="12511" name="ItemID" type="number" source="entity"/>
+		<WTATTRIBUTE id="12512" name="ItemDate" type="date" title="true" source="entity"/>
+		<WTATTRIBUTE id="12513" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="InActive"/>
+			<WTENUM id="3" name="Moved"/>
+			<WTENUM id="4" name="Unsubsribed"/>
+		</WTATTRIBUTE>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="12591" name="ItemName" type="text" length="80" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12592" name="IsShare" type="yesno" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12593" name="CompanyID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12594" name="DripCampaignID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12595" name="Days" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12596" name="Target" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="12597" name="Data" type="text" length="2000" source="entity" persist="false"/>
+
+		<WTINDEX name="FolderID">
+			<WTATTRIBUTE name="FolderID"/>
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="Entity"/>
+			<WTATTRIBUTE name="ItemID"/>
+		</WTINDEX>
+		<WTINDEX name="Entity">
+			<WTATTRIBUTE name="Entity"/>
+			<WTATTRIBUTE name="ItemID"/>
+		</WTINDEX>
+		<WTINDEX name="ItemDate">
+			<WTATTRIBUTE name="FolderID"/>
+			<WTATTRIBUTE name="ItemDate"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="FolderItem" entity="FolderItem" alias="foi"/>
+			<WTRELATIONSHIP name="Common" entity="FolderItem" alias="foi">
+				<WTENTITY name="Folder" entity="Folder" alias="fo">
+					<WTATTRIBUTE alias="foi" name="FolderID" relalias="fo" relname="FolderID"/>
+				</WTENTITY>
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="foi" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="FOLDERITEM_STATUS_ACTIVE" value="1" />
+			<WTSYSCON name="FOLDERITEM_STATUS_INACTIVE" value="2" />
+			<WTSYSCON name="FOLDERITEM_STATUS_MOVED" value="3" />
+			<WTSYSCON name="FOLDERITEM_STATUS_UNSUBSCRIBED" value="4" />
+		</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common" />
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE name="FetchItemID" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(FolderID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(Entity)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(ItemID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(FolderItemID)" direction="output"/>
+			<WTDECLARE name="FolderItemID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="FolderItemID" value="ATTR(FolderItem.FolderItemID)"/>
+					<WTJOIN name="FolderItem" lock="false"/>
+					<WTCONDITION expr="ATTR(FolderItem.FolderID)" oper="equal" value="PARAM(FolderID)"/>
+					<WTCONDITION expr="ATTR(FolderItem.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(FolderItem.Entity)" oper="equal" value="PARAM(Entity)" connector="and"/>
+					<WTCONDITION expr="ATTR(FolderItem.ItemID)" oper="equal" value="PARAM(ItemID)" connector="and"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(FolderItemID)" value="FolderItemID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListFolder" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(FolderID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(FolderItem.FolderItemID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.Entity)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.ItemID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.ItemName)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.ItemDate)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.Status)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListItem" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(ItemID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Entity)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(FolderItem.FolderItemID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.FolderID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.ItemName)"/>  <!-- Folder Name -->-->
+					<WTATTRIBUTE value="ATTR(FolderItem.ItemDate)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.Status)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.IsShare)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.CompanyID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListDrip" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(DripCampaignID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Target)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Days)" direction="input" datatype="number" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(FolderItem.FolderItemID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.ItemID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.Data)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListVirtualDrip" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Target)" direction="input" required="false"/>  <!-- Virtual #-->
+			<WTPARAM name="ATTR(Days)" direction="input" datatype="number" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(FolderItem.FolderItemID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.ItemID)"/>
+					<WTATTRIBUTE value="ATTR(FolderItem.Data)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="12502" worker="true" aspstyle="GenerateWebASP.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="FolderID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Entity" datatype="number"/>
+			<WTPARAM name="ItemID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="FolderItem" project="ptsFolderItemUser" class="CFolderItem">
+					<WTMETHOD name="FetchItemID">
+						<WTPARAM name="FolderID" direction="input" value="PARAM(FolderID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Entity" direction="input" value="PARAM(Entity)"/>
+						<WTPARAM name="ItemID" direction="input" value="PARAM(ItemID)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(FolderItem.FolderItemID)" oper="equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FolderItemID" direction="input" value="CONST(0)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(FolderID)" value="PARAM(FolderID)"/>
+						<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+						<WTSETATTRIBUTE name="ATTR(Entity)" value="PARAM(Entity)"/>
+						<WTSETATTRIBUTE name="ATTR(ItemID)" value="PARAM(ItemID)"/>
+						<WTSETATTRIBUTE name="ATTR(ItemDate)" value="SYS(Now)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(FOLDERITEM_STATUS_ACTIVE)"/>
+						<WTMETHOD name="Add">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+			</WTACTION>
+			<!--*******************************************************************************************-->
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12503" page-width="580" page-left="0" margin-width="0" navbar="false" header="false" footer="false"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="FolderItemID" datatype="number"/>
+			<WTPARAM name="FolderID" datatype="number"/>
+			<WTPARAM name="Title" datatype="text"/>
+
+			<WTSUB name="LoadFolderItem">
+				<WTOBJECT name="FolderItem" project="ptsFolderItemUser" class="CFolderItem">
+					<WTMETHOD name="Load">
+						<WTPARAM name="FolderItemID" direction="input" value="PARAM(FolderItemID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FolderID)" value="ATTR(FolderID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFolderItem" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Folder" project="ptsFolderUser" class="CFolder">
+					<WTMETHOD name="Load">
+						<WTPARAM name="FolderID" direction="input" value="PARAM(FolderID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="FullName">
+						<WTPARAM name="FolderID" direction="input" value="PARAM(FolderID)"/>
+						<WTPARAM name="reqTitle" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadFolderItem"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="FolderItem" project="ptsFolderItemUser" class="CFolderItem">
+					<WTMETHOD name="Load">
+						<WTPARAM name="FolderItemID" direction="input" value="PARAM(FolderItemID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadFolderItem">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="FolderItem" project="ptsFolderItemUser" class="CFolderItem">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="FolderItemID" direction="input" value="PARAM(FolderItemID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="420" align="left"/>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" tag="FolderName" value="PARAM(Title)" bold="true" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ItemDate"/>
+					<WTTEXT col="2" value="ATTR(FolderItem.ItemDate)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(FolderItem.Status)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center" btnclass="smbutton">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" btnclass="smbutton"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Remove)" msg="ConfirmRemove" btnclass="smbutton">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12510" caption="Folder Items" page-width="400" page-left="10" margin-width="0" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="FolderID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="FolderItems" project="ptsFolderItemUser" class="CFolderItems">
+					<WTMETHOD name="ListFolder">
+						<WTPARAM name="FolderID" direction="input" value="PARAM(FolderID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFolderItems" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="380" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="FolderItems" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="FolderItem">
+						<WTCOLUMN width="40" align="left" valign="top" label="ItemName"/>
+						<WTCOLUMN width="30" align="left" valign="top" label="ItemDate"/>
+						<WTCOLUMN width="30" align="left" valign="top" label="Status"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ItemName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="12503"><WTPARAM name="FolderItemID" value="DATA(FolderItemID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(ItemDate)"/>
+							<WTSTATIC col="3" value="DATA(Status)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12511" page-width="580" page-left="0" margin-width="0" navbar="false" header="false" footer="false"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="ItemID" datatype="number"/>
+			<WTPARAM name="Entity" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="FolderItems" project="ptsFolderItemUser" class="CFolderItems">
+					<WTMETHOD name="ListItem">
+						<WTPARAM name="ItemID" direction="input" value="PARAM(ItemID)"/>
+						<WTPARAM name="Entity" direction="input" value="PARAM(Entity)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFolderItems" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="580" align="left"/>
+				<WTROW margin-top="6">
+					<WTRECORDSET col="1" graybar="true" entity="FolderItem">
+						<WTCOLUMN width="60" align="left" valign="top" label="FolderName"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="ItemDate"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="Status"/>
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ItemName)"/>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(MemberID)" oper="not-equal" value="PARAM(MemberID)"/>
+									<WTIMAGE value="CONST(Share.gif)" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(ItemDate)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="12503">
+											<WTPARAM name="FolderItemID" value="DATA(FolderItemID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Status)"/>
+							</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!-- Utility Function for Drip Campaigns -->
+		<!-- to Unsuscribe or change the folder and/or folder entry date -->
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="Dripper" worker="true" aspstyle="GenerateWebASP.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="Item" datatype="number"/>          <!-- FolderItemID -->
+			<WTPARAM name="Unsubscribe" datatype="number"/>   <!-- Unsubscribe if != 0 -->
+			<WTPARAM name="Folder" datatype="number"/>        <!-- Add to another folder -->
+			<WTPARAM name="Day" datatype="number"/>           <!-- Change Date added to folder -->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="FolderItem" project="ptsFolderItemUser" class="CFolderItem">
+					<WTCONDITION expr="PARAM(Item)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="FolderItemID" direction="input" value="PARAM(Item)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(MemberID)" value="ATTR(MemberID)"/>
+					<WTSETATTRIBUTE name="CONST(Entity)" value="ATTR(Entity)"/>
+					<WTSETATTRIBUTE name="CONST(ItemID)" value="ATTR(ItemID)"/>
+					<WTSETATTRIBUTE name="CONST(Dirty)" value="CONST(0)"/>
+					<!-- Check if we are changing the date on this folder -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Folder)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="PARAM(Day)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="ATTR(ItemDate)" value="CONST(DATEADD(&quot;d&quot;, (reqDay-1) * -1, reqSysDate))"/>
+						<WTSETATTRIBUTE name="CONST(Dirty)" value="CONST(1)"/>
+					</WTCODEGROUP>
+					<!-- Check if we moving to a new folder -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Folder)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(FOLDERITEM_STATUS_MOVED)"/>
+						<WTSETATTRIBUTE name="CONST(Dirty)" value="CONST(1)"/>
+					</WTCODEGROUP>
+					<!-- Check if we are unsubscribing from this folder -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Unsubscribe)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(FOLDERITEM_STATUS_UNSUBSCRIBED)"/>
+						<WTSETATTRIBUTE name="CONST(Dirty)" value="CONST(1)"/>
+					</WTCODEGROUP>
+					<!-- save the changes if necessary -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(Dirty)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Save">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<!-- Check if we are adding this item to a new folder -->
+				<WTOBJECT name="FolderItem" project="ptsFolderItemUser" class="CFolderItem">
+					<WTCONDITION expr="PARAM(Folder)" oper="not-equal" value="CONST(0)"/>
+					<!-- first check if it already is in this folder -->
+					<WTMETHOD name="FetchItemID">
+						<WTPARAM name="FolderID" direction="input" value="PARAM(Folder)"/>
+						<WTPARAM name="MemberID" direction="input" value="CONST(MemberID)"/>
+						<WTPARAM name="Entity" direction="input" value="CONST(Entity)"/>
+						<WTPARAM name="ItemID" direction="input" value="CONST(ItemID)"/>
+					</WTMETHOD>
+					<!-- if already in this folder, update the status and date -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(FolderItem.FolderItemID)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(FOLDERITEM_STATUS_ACTIVE)"/>
+						<!-- if Date Change, adjust the date back so it picks up the requested day for tomorrow -->
+						<WTSETATTRIBUTE name="ATTR(ItemDate)" value="CONST(DATEADD(&quot;d&quot;, (reqDay-1) * -1, reqSysDate))">
+							<WTCONDITION expr="PARAM(Day)" oper="not-equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<!-- reset the date to today if no date adjustment is requested -->
+						<WTSETATTRIBUTE name="ATTR(ItemDate)" value="SYS(Date)">
+							<WTCONDITION expr="PARAM(Day)" oper="equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<WTMETHOD name="Save">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<!-- if not in this folder, add a new item -->
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(FolderItem.FolderItemID)" oper="equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FolderItemID" direction="input" value="CONST(0)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(FolderID)" value="PARAM(Folder)"/>
+						<WTSETATTRIBUTE name="ATTR(MemberID)" value="CONST(MemberID)"/>
+						<WTSETATTRIBUTE name="ATTR(Entity)" value="CONST(Entity)"/>
+						<WTSETATTRIBUTE name="ATTR(ItemID)" value="CONST(ItemID)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(FOLDERITEM_STATUS_ACTIVE)"/>
+						<!-- if Date Change, adjust the date back so it picks up the requested day for tomorrow -->
+						<WTSETATTRIBUTE name="ATTR(ItemDate)" value="CONST(DATEADD(&quot;d&quot;, (reqDay-1) * -1, reqSysDate))">
+							<WTCONDITION expr="PARAM(Day)" oper="not-equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<!-- reset the date to today if no date adjustment is requested -->
+						<WTSETATTRIBUTE name="ATTR(ItemDate)" value="SYS(Date)">
+							<WTCONDITION expr="PARAM(Day)" oper="equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<WTMETHOD name="Add">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+			</WTACTION>
+			<!--*******************************************************************************************-->
+		</WTWEBPAGE>
+
+    <!-- Unsuscribe from the folder -->
+    <!--=============================================================================================-->
+    <WTWEBPAGE name="12586" caption="Unsubscribe" header="false" footer="false" navbar="false"  wrapper="wrapper750"
+      aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+      <!--=============================================================================================-->
+      <WTPARAM name="F" datatype="number"/>      <!-- FolderItemID -->
+      <WTPARAM name="I" datatype="number"/>      <!-- ItemID -->
+      <WTPARAM name="T" datatype="text"/>        <!-- Note Text -->
+      <WTPARAM name="Entity" datatype="number"/>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTOBJECT name="FolderItem" project="ptsFolderItemUser" class="CFolderItem">
+          <WTCONDITION expr="PARAM(F)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="FolderItemID" direction="input" value="PARAM(F)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <!-- Check if the item matches -->
+          <WTCODEGROUP>
+            <WTCONDITION expr="CONST(CStr(reqI))" oper="equal" value="ATTR(ItemID)"/>
+            <WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(FOLDERITEM_STATUS_UNSUBSCRIBED)"/>
+            <WTSETATTRIBUTE name="PARAM(Entity)" value="ATTR(Entity)"/>
+            <WTMETHOD name="Save">
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="Note" project="ptsNoteUser" class="CNote">
+          <WTCONDITION expr="PARAM(Entity)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="NoteID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="ATTR(Notes)" value="CONST(&quot;UNSUBSCRIBED: &quot; + reqT)"/>
+          <WTSETATTRIBUTE name="ATTR(AuthUserID)" value="CONST(1)"/>
+          <WTSETATTRIBUTE name="ATTR(NoteDate)" value="SYS(Now)"/>
+          <WTSETATTRIBUTE name="ATTR(OwnerType)" value="CONST(tmpEntity)"/>
+          <WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(I)"/>
+          <WTMETHOD name="Add">
+            <WTPARAM name="NoteID" direction="return" datatype="number"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTACTION>
+      <!--*******************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="750" align="center"/>
+        <WTROW margin-top="24" margin-bottom="24">
+          <WTSTATIC col="1" class="PageHeading">
+            <WTSTATIC label="UnsubscribeText">
+              <WTCONDITION expr="PARAM(Entity)" oper="not-equal" value="CONST(0)"/>
+            </WTSTATIC>
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(Entity)" oper="equal" value="CONST(0)"/>
+              <WTSTATIC label="NotUnsubscribeText" space="1"/>
+              <WTSTATIC value="PARAM(F)" space="1"/>
+              <WTSTATIC value="PARAM(I)"/>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+  </WTWEBPAGES>
+</WTROOT>

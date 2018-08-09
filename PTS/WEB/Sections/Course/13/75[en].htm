@@ -1,0 +1,89 @@
+
+<P><B> Introduction to Queries</B>
+<P>Queries select records from one or more tables in a database so they can be viewed, analyzed, and sorted on a common datasheet. The resulting collection of records, called a <B>dynaset</B> (short for dynamic subset), is saved as a database object and can therefore be easily used in the future. The query will be updated whenever the original tables are updated. Types of queries are <I><B>select queries</B></I> that extract data from tables based on specified values, <I><B>find duplicate</B></I> queries that display records with duplicate values for one or more of the specified fields, and <I><B>find unmatched</B></I> queries display records from one table that do not have corresponding values in a second table.
+<P><B> Create a Query in Design View</B>
+<P>Follow these steps to create a new query in Design View:
+<OL>
+<LI>From the Queries page on the Database Window, click the <B>New</B> button.
+<BR><IMG height=374 alt="[New Query]" src="http://www.fgcu.edu/support/office2000/access/images/createquery1.gif" width=510 vspace=10> 
+<LI>Select Design View and click <B>OK</B>. 
+<LI>Select tables and existing queries from the <B>Tables</B> and <B>Queries</B> tabs and click the <B>Add</B> button to add each one to the new query. 
+<LI>Click <B>Close</B> when all of the tables and queries have been selected.
+<BR><IMG height=305 alt="[Show Table window]" src="http://www.fgcu.edu/support/office2000/access/images/query1.gif" width=538 vspace=10 border=1> 
+<LI>Add fields from the tables to the new query by double-clicking the field name in the table boxes or selecting the field from the <B>Field:</B> and <B>Table:</B> drop-down menus on the query form. Specify sort orders if necessary.
+<BR><IMG height=495 alt="[Select Query window]" src="http://www.fgcu.edu/support/office2000/access/images/query2.gif" width=493 vspace=10 border=0> 
+<LI>Enter the criteria for the query in the <B>Criteria:</B> field. The following table provides examples for some of the wildcard symbols and arithmetic operators that may be used. The <B>Expression Builder</B> <IMG height=20 alt="[Expression Builder button]" src="http://www.fgcu.edu/support/office2000/access/images/expressionbuilder.gif" width=23 align=textTop border=1> can also be used to assist in writing the expressions.
+<BR>
+<BR>
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" border=1>
+<TBODY>
+<TR align=middle>
+<TD bgColor=#d7dfee colSpan=2><B>Query Wildcards and Expression Operators </B></TD>
+</TR><TR align=middle>
+<TD><B>Wildcard / Operator</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR vAlign=top>
+<TD><B>? Street</B></TD>
+<TD>The question mark is a wildcard that takes the place of a single letter.</TD>
+</TR><TR vAlign=top>
+<TD><B>43th *</B></TD>
+<TD>The asterisk is the wildcard that represents a number of characters.</TD>
+</TR><TR vAlign=top>
+<TD><B>&lt;100</B></TD>
+<TD>Value less than 100</TD>
+</TR><TR vAlign=top>
+<TD><B>&gt;=1</B></TD>
+<TD>Value greater than or equal to 1</TD>
+</TR><TR vAlign=top>
+<TD><B>&lt;&gt;"FL"</B></TD>
+<TD>Not equal to (all states besides Florida)</TD>
+</TR><TR vAlign=top>
+<TD><B>Between 1 and 10</B></TD>
+<TD>Numbers between 1 and 10</TD>
+</TR><TR vAlign=top>
+<TD><B>Is Null
+<BR>Is Not Null</B></TD>
+<TD>Finds records with no value
+<BR>or all records that have a value</TD>
+</TR><TR vAlign=top>
+<TD><B>Like "a*"</B></TD>
+<TD>All words beginning with "a"</TD>
+</TR><TR vAlign=top>
+<TD><B>&gt;0 And &lt;=10</B></TD>
+<TD>All numbers greater than 0 and less than 10</TD>
+</TR><TR vAlign=top>
+<TD><B>"Bob" Or "Jane"</B></TD>
+<TD>Values are Bob or Jane</TD>
+</TR></TBODY></TABLE>
+<BR>
+<LI>After you have selected all of the fields and tables, click the <B>Run</B> button on the toolbar. 
+<LI>Save the query by clicking the <B>Save</B> button. 
+</OL>
+<P><B> Query Wizard</B>
+<P>Access' Query Wizard will easily assist you to begin creating a select query. 
+<BR>
+<OL>
+<LI>Click the <B>Create query by using wizard</B> icon in the database window to have Access step you through the process of creating a query.
+<BR><IMG height=360 alt="[Simple Query Wizard dialog box]" src="http://www.fgcu.edu/support/office2000/access/images/querywizard1.gif" width=486 vspace=5 border=1> 
+<LI>From the first window, select fields that will be included in the query by first selecting the table from the drop-down <B>Tables/Queries</B> menu. Select the fields by clicking the <B>&gt;</B> button to move the field from the Available Fields list to Selected Fields. Click the double arrow button <B>&gt;&gt;</B> to move all of the fields to Selected Fields. Select another table or query to choose from more fields and repeat the process of moving them to the Selected Fields box. Click <B>Next &gt;</B> when all of the fields have been selected.
+<BR><IMG height=360 alt="[Simple Query Wizard dialog box]" src="http://www.fgcu.edu/support/office2000/access/images/querywizard2.gif" width=486 vspace=5 border=1> 
+<LI>On the next window, enter the name for the query and click <B>Finish</B>. 
+<LI>Refer to steps 5-8 of the previous tutorial to add more parameters to the query.
+<BR>
+</OL>
+<P><B> Find Duplicates Query</B>
+<P>This query will filter out records in a single table that contain duplicate values in a field. 
+<OL>
+<LI>Click the <B>New</B> button on the Queries database window, select <B>Find Duplicates Query Wizard</B> from the <B>New Query</B> window and click <B>OK</B>.
+<BR><IMG height=218 alt="[New Query window]" src="http://www.fgcu.edu/support/office2000/access/images/finddups1.gif" width=351 vspace=10 border=1> 
+<LI>Select the table or query that the find duplicates query will be applied to from the list provided and click <B>Next &gt;</B>.
+<BR><IMG height=362 alt="Find Duplicates Query Wizard" src="http://www.fgcu.edu/support/office2000/access/images/finddups2.gif" width=534 vspace=10 border=1> 
+<LI>Select the fields that may contain duplicate values by highlighting the names in the Available fields list and clicking the <B>&gt;</B> button to individually move the fields to the Duplicate-value fields list or <B>&gt;&gt;</B> to move all of the fields. Click <B>Next &gt;</B> when all fields have been selected.
+<BR><IMG height=362 alt="Find Duplicates Query Wizard" src="http://www.fgcu.edu/support/office2000/access/images/finddups3.gif" width=534 vspace=10 border=1> 
+<LI>Select the fields that should appear in the new query along with the fields selected on the previous screen and click <B>Next &gt;</B>.
+<BR><IMG height=362 alt="Find Duplicates Query Wizard" src="http://www.fgcu.edu/support/office2000/access/images/finddups4.gif" width=534 vspace=10 border=1> 
+<LI>Name the new query and click <B>Finish</B>.
+<BR><IMG height=362 alt="Find Duplicates Query Wizard" src="http://www.fgcu.edu/support/office2000/access/images/finddups5.gif" width=534 vspace=10 border=1>
+</OL>
+<P><B> Delete a Query</B>
+<P>To delete a table from the query, click the table's title bar and press the <B>Delete</B> key on the keyboard.

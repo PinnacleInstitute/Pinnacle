@@ -1,0 +1,58 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="113" name="Pool" alias="poo" audit="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="11301" name="PoolID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="11305" name="PoolType" type="number" source="entity" blankrow="false">
+			<WTENUM id="1" name="Revenue"/>
+			<WTENUM id="2" name="Founder"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11306" name="PoolDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="11307" name="Amount" type="currency" source="entity"/>
+		<WTATTRIBUTE id="11308" name="Distributed" type="currency" source="entity"/>
+
+		<!--Indexes-->
+		<WTINDEX name="PoolType">
+			<WTATTRIBUTE name="PoolType"/>
+			<WTATTRIBUTE name="PoolDate"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Pool" entity="Pool" alias="poo"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Pool.PoolID)"/>
+					<WTATTRIBUTE value="ATTR(Pool.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Pool.PoolDate)"/>
+					<WTATTRIBUTE value="ATTR(Pool.PoolType)"/>
+					<WTATTRIBUTE value="ATTR(Pool.Amount)"/>
+					<WTATTRIBUTE value="ATTR(Pool.Distributed)"/>
+					<WTJOIN name="Pool"/>
+					<WTCONDITION expr="ATTR(Pool.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(Pool.PoolDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+
+	
+	</WTWEBPAGES>
+</WTROOT>

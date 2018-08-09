@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="Product">Product</LABEL>
+	<LABEL name="NewProduct">Add New Product</LABEL>
+	<LABEL name="FindProduct">Products</LABEL>
+	<LABEL name="ProductID">Product ID</LABEL>
+	<LABEL name="ProductName">Product Name</LABEL>
+	<LABEL name="ProductCode">Product Code</LABEL>
+	<LABEL name="Category">Product Category</LABEL>
+	<LABEL name="ImageFile">Product Image File</LABEL>
+	<LABEL name="Thumbnail">Thumbnail Image</LABEL>
+	<LABEL name="Brief">Enter a Short Description to be displayed in the product lists</LABEL>
+	<LABEL name="Description">Product Description</LABEL>
+	<LABEL name="Price">Price</LABEL>
+	<LABEL name="SalePrice">Sale Price</LABEL>
+	<LABEL name="Cost">Cost</LABEL>
+	<LABEL name="RecurringPrice">Recurring Price</LABEL>
+	<LABEL name="RecurringCnt">Recurring Months</LABEL>
+	<LABEL name="RecurringID">Recurring Product ID</LABEL>
+	<LABEL name="Seq">Sequence</LABEL>
+	<LABEL name="IsActive">This product is currently available</LABEL>
+	<LABEL name="IsTaxable">This product is taxable</LABEL>
+	<LABEL name="IsInventory">Track inventory for this product</LABEL>
+	<LABEL name="Inventory">Inventory</LABEL>
+	<LABEL name="Reorder">Reorder Qty</LABEL>
+	<LABEL name="Data">Payment Processing</LABEL>
+	<LABEL name="InputOptions">Input Options</LABEL>
+	<LABEL name="PackageProducts">Package Products</LABEL>
+	<LABEL name="ShipType">Shipping Calculation</LABEL>
+	<LABEL name="Shipping">Shipping</LABEL>
+	<LABEL name="Handling">Handling</LABEL>
+	<LABEL name="Weight">Weight</LABEL>
+	<LABEL name="Email">Email</LABEL>
+	<LABEL name="IsQty">This product requires a quantity to be entered</LABEL>
+	<LABEL name="IsRequest">The customer can ONLY request more information</LABEL>
+	<LABEL name="DigitalFile">Digital File</LABEL>
+	<LABEL name="None">None</LABEL>
+	<LABEL name="Unit">Unit</LABEL>
+	<LABEL name="Special">Special</LABEL>
+	<LABEL name="IsActiveTrue">Yes</LABEL>
+	<LABEL name="IsActiveFalse">No</LABEL>
+	<LABEL name="IsTaxableTrue">Yes</LABEL>
+	<LABEL name="IsTaxableFalse">No</LABEL>
+	<LABEL name="IsInventoryTrue">Yes</LABEL>
+	<LABEL name="IsInventoryFalse">No</LABEL>
+	<LABEL name="IsQtyTrue">Yes</LABEL>
+	<LABEL name="IsQtyFalse">No</LABEL>
+	<LABEL name="IsRequestTrue">Yes</LABEL>
+	<LABEL name="IsRequestFalse">No</LABEL>
+	<LABEL name="ProductFindText">Select your Products from the list below.  You can search for your products by entering the product name, ID, code, category or description text in the Find text box below and clicking the "Go" button. 20 products are displayed at a time. Click the "Previous Page" or "Next Page" links to view additional products.  New products can be added by clicking the "Add New Product" link in the upper right hand corner of this page.</LABEL>
+	<LABEL name="IsActiveCaption">Active</LABEL>
+	<LABEL name="IsTaxableCaption">Taxable</LABEL>
+	<LABEL name="ProductEditText">Enter a unique product name with price and cost.  The optional product code is a merchant-defined identifier up to 15 characters. If the sale price is provided, the regular price is displayed striked-through in red (for a sales price effect).  The special prices are for customers that have the special pricing option selected. Enter up to three quantities and discount prices per special price schedule (A,B,C). Indicate if this product is currently available for purchase, is taxable, if it requires a quantity entered, and if the customer can ONLY request more information about this product.</LABEL>
+	<LABEL name="InventoryText">INVENTORY - Select the following checkbox to track inventory for this product.  Enter the current quantity available in the Inventory textbox. Enter the quantity for reordering in the Reorder Qty textbox. A reorder email will be sent when the Inventory drops to the Reorder Qty or zero.</LABEL>
+	<LABEL name="DescriptionText">PRESENTATION - The following product image file and long description are displayed on the product detail page.  The thumbnail image file and short description are displayed in the product lists. Click the question mark "?" in the upper right hand corner of the editor to get help.</LABEL>
+	<LABEL name="CategoryText">CATEGORY - Enter a product category and sub-categories (separated by a back slash "\" with no spaces) and a sequence number for the user to browse this product by category. Each category has a maximun length of 30.  The total category/sub-category length is 80.</LABEL>
+	<LABEL name="CategoryText2">Men’s Apparel\Formal Wear\Slacks</LABEL>
+	<LABEL name="PackageProductsText">PACKAGE - If this product represents a package of other products, Enter the other product IDs below. The following Product IDs must start, end and be separated by a tilde (~1~2~).</LABEL>
+	<LABEL name="InputOptionsText">CUSTOM USER INPUT -you can define custom input options for this product.
+	  Each user-defined Input Option starts on a separate line and can continue to the next line if too long.  The Option name must be followed by a colon(:).
+     If the name of the option starts with an Asterick(*), entry is required.
+     A list of choices must be separated by semi-colons(;). If the name of the choice starts with an Asterick(*) it will be the default choice. A choice can be followed by a price in parathesis (2.00).
+     Non-list options can specify the data type (type=text|memo|number|date), minimum and/or maximum values (min=xxx max=xxx),
+     price in parathesis (3.00), width of text box or height of memo (size=xx), and a default value (value=abc). If a default value is specified it cannot include any spaces.
+     If type=date, the min, max and value settings can be entered as NOW for the current date.
+     A prompt can be included with the option name for input instructions (Size[Enter your personal size]:) and cannot include a colon.</LABEL>
+	<LABEL name="InputOptionsText1">*Size: Small; Medium; Large; Extra Large (2.00)</LABEL>
+	<LABEL name="Small">Small</LABEL>
+	<LABEL name="Medium">Medium</LABEL>
+	<LABEL name="Large">Large</LABEL>
+	<LABEL name="XLarge">Extra Large (2.00)</LABEL>
+	<LABEL name="InputOptionsText2">*Color: *Red; Green; Blue</LABEL>
+	<LABEL name="Red">Red</LABEL>
+	<LABEL name="Green">Green</LABEL>
+	<LABEL name="Blue">Blue</LABEL>
+	<LABEL name="InputOptionsText3">Monogram[Enter up to 3 characters]: type=text max=3 size=3 (3.00)</LABEL>
+	<LABEL name="DigitalText">DIGITAL PRODUCT - If this product is digitally fulfilled by downloading a file, enter the name of the digital file.</LABEL>
+	<LABEL name="ShippingText">SHIPPING CHARGES - Optional shipping charges can be calculated by total weight or by number of units(qty). Special shipping is manually calculated by the business. The shipping amount is per pound or unit. An Optional handling charge can be added per order.</LABEL>
+	<LABEL name="RecurringText">RECURRING PAYMENTS / SUBSCRIPTIONS - If this product has recurring monthly payments (e.g. subscriptions), enter the recurring monthly price below.  If there is a specific number of monthly payments, enter it in the Recurring Months.  If the monthly payments are perpetual, enter zero for Recurring Months.  Enter the Product ID to be used for the recurring monthly order.</LABEL>
+	<LABEL name="EmailText">EMAIL NOTIFICATION - The following email address(s) will be emailed a copy of each product order. Separate each email address with a semicolon.</LABEL>
+	<LABEL name="UploadImageHeader">Upload Image</LABEL>
+	<LABEL name="UploadImageText">Click the "Browse" and "Submit" buttons to select an image file to upload or select an already uploaded image below.  Images must be under 50 KB in size with an extension of .jpg, .gif or .bmp.</LABEL>
+	<LABEL name="SelectUploadedImages">Click on one of the following image file names to select an already uploaded file.</LABEL>
+	<LABEL name="UploadDigitalHeader">Upload Digital File</LABEL>
+	<LABEL name="UploadDigitalText">Click the "Browse" and "Submit" buttons to select a file to upload or select an already uploaded file below.</LABEL>
+	<LABEL name="SelectUploadedLibrary">Click on one of the following file names to select an already uploaded file.</LABEL>
+	<LABEL name="Pricing">Pricing</LABEL>
+	<LABEL name="DescriptionLong">Enter a Long Description to be displayed on the product detail page</LABEL>
+	<LABEL name="WeightPrompt">Weight (lbs)</LABEL>
+	<LABEL name="Upload">Upload</LABEL>
+	<LABEL name="Submit">Submit</LABEL>
+</LANGUAGE>

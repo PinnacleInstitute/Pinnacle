@@ -1,0 +1,845 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="40" name="Survey" alias="su" language="false" >
+
+		<!--Identity-->
+		<WTATTRIBUTE id="4001" name="SurveyID" type="number" identity="true" min="1" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="4002" name="OrgID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="4003" name="OrgName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Org" name="OrgName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4004" name="CompanyID" type="number" source="join">
+			<WTJOIN entity="Org" name="CompanyID"/>
+		</WTATTRIBUTE>
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="4005" name="SurveyName" type="text" length="60" min="1" max="60" source="entity" title="true" required="true"/>
+		<WTATTRIBUTE id="4006" name="Description" type="text" length="500" min="1" max="500" source="entity"/>
+		<WTATTRIBUTE id="4007" name="Status" type="number" required="true" source="entity">
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="Inactive"/>
+			<WTENUM id="3" name="Calced"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4008" name="StartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="4009" name="EndDate" type="date" source="entity"/>
+
+		<WTATTRIBUTE id="4010" name="MemberID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="OrgID">
+			<WTATTRIBUTE name="OrgID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Survey" entity="Survey" alias="su"/>
+			<WTRELATIONSHIP name="Common" entity="Survey" alias="su">
+				<WTENTITY name="Org" entity="Org" alias="og">
+					<WTATTRIBUTE alias="su" name="OrgID" relalias="og" relname="OrgID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--List-->
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="SurveyName" default="true"/>
+			<WTATTRIBUTE name="SurveyID"/>
+			<WTATTRIBUTE name="Status"/>
+		</WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="SURVEY-ACTIVE" value="1"/>
+			<WTSYSCON name="SURVEY-INACTIVE" value="2"/>
+			<WTSYSCON name="SURVEY-CALCED" value="3"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new" nodata="true">
+			<WTPARAM name="ATTR(SurveyID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Find" name="FindOrg" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(OrgID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(OrgID)" oper="equal" value="PARAM(OrgID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Find" name="FindCompany" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListActive" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(OrgID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Survey.SurveyID)"/>
+					<WTATTRIBUTE value="ATTR(Survey.SurveyName)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTATTRIBUTE value="ATTR(Survey.Description)"/>
+					<WTATTRIBUTE value="ATTR(Survey.Status)"/>
+					<WTATTRIBUTE value="ATTR(Survey.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Survey.EndDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+			<WTPROCEDURE type="List" name="ListTB" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(StartDate)" direction="input"/>
+			<WTPARAM name="ATTR(Status)" direction="input"/> <!-- ListType -->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Survey.SurveyID)"/>
+					<WTATTRIBUTE value="ATTR(Survey.SurveyName)"/>
+					<WTATTRIBUTE value="ATTR(Survey.Description)"/>
+					<WTATTRIBUTE value="ATTR(Survey.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Survey.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(Survey.Status)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		
+		<!--============================================================================================-->
+		<WTPROCEDURE name="CalcResults" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(SurveyID)" direction="input" required="false"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="Copy" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(SurveyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OrgID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="4001" caption="Find" action="5"  contentpage="true" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(SurveyName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Surveys" project="ptsSurveyUser" class="CSurveys">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurveys" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTOBJECT name="Surveys" project="ptsSurveyUser" class="CSurveys">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)" connector="or"/>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="or"/>
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindOrg">
+					<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindCompany">
+					<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="and"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlSurveys" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="FindSurvey" class="PageHeading"/>
+							<WTLINKGROUP  col="2" align="right" >
+<!--
+								<WTLINK name="3803" label="Company" class="PageHeadingLink">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="and"/>
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								</WTLINK>
+								<WTLINK name="2809" label="Folders" class="PageHeadingLink">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="and"/>
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								</WTLINK>
+-->								
+								<WTLINK name="4002" label="NewSurvey" class="PageHeadingLink">
+									<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)"/>
+									<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+									<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+								</WTLINK>
+							</WTLINKGROUP>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Surveys.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(OrgID)" oper="greater" value="CONST(0)" connector="or"/>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)" connector="or"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Survey">
+						<WTCOLUMN width="5" align="left" valign="top" label="#" />
+						<WTCOLUMN width="45" align="left" valign="top" label="SurveyName" />
+						<WTCOLUMN width="12" align="left" valign="top" label="StartDate" />
+						<WTCOLUMN width="12" align="left" valign="top" label="EndDate" />
+						<WTCOLUMN width="14" align="left" valign="top" label="Status" />
+						<WTCOLUMN width="12" align="left" valign="top" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Survey.SurveyID)"/>
+							<WTSTATIC col="2" value="DATA(Survey.SurveyName)">
+								<WTLINK name="4003">
+									<WTPARAM name="SurveyID" value="DATA(Survey.SurveyID)"/>
+									<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Survey.StartDate)"/>
+							<WTSTATIC col="4" value="DATA(Survey.EndDate)"/>
+							<WTSTATIC col="5" value="DATA(Survey.Status)"/>
+							<WTSTATIC col="6" bold="true">
+								<WTSTATIC label="Questions">
+									<WTLINK name="4111">
+										<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+										<WTPARAM name="SurveyID" value="DATA(Survey.SurveyID)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="4" fontcolor="gray">
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+									<WTSTATIC value="DATA(Survey.OrgName)" bold="true"/>
+									<WTSTATIC value="CONST( - )"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Survey.Description)"/>
+							</WTSTATIC>
+							<WTSTATIC col="6" bold="true">
+								<WTSTATIC label="Report">
+									<WTLINK name="4160" target="Report">
+										<WTPARAM name="SurveyID" value="DATA(Survey.SurveyID)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">				
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4002" caption="Survey"  contentpage="true"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			<WTPARAM name="CopySurveyID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Survey" project="ptsSurveyUser" class="CSurvey">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurvey" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Survey" project="ptsSurveyUser" class="CSurvey">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Survey.OrgID)" value="PARAM(OrgID)"/>
+					<WTSETATTRIBUTES/>
+					
+					<WTMETHOD name="Add">
+						<WTPARAM name="SurveyID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSurvey" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION name="Copy" type="Copy" id="2">
+				<WTOBJECT name="Survey" project="ptsSurveyUser" class="CSurvey">
+					<WTSETATTRIBUTE name="PARAM(CopySurveyID)" value="FORM(CopySurveyID)"/>
+					<WTMETHOD name="Copy">
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+						<WTPARAM name="SurveyID" direction="input" value="PARAM(CopySurveyID)"/>
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSurvey" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="Survey" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW >
+					<WTSTATIC col="1" tag="SurveyName"/>
+					<WTTEXT col="2" value="ATTR(Survey.SurveyName)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Survey.Description)" cols="66" rows="4"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Survey.StartDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Survey.EndDate)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Survey.Status)"/>
+				</WTROW>
+			
+				<WTROW margin-top="12" margin-bottom="24">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="center" label="CopySurveyText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTTEXT col="1" merge="2" value="PARAM(CopySurveyID)" size="2" align="center"/>
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Copy)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4003" caption="Survey" contentpage="true"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="SurveyID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			<WTPARAM name="URL" datatype="text"/>
+
+			<WTCODEGROUP>
+<WTCUSTOM>
+	reqURL = "http://" + reqSysServerName + reqSysServerPath + "4112.asp?SurveyID=" &amp; reqSurveyID
+</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			<WTSUB name="LoadSurvey">
+				<WTOBJECT name="Survey" project="ptsSurveyUser" class="CSurvey">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyID" direction="input" value="PARAM(SurveyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurvey" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateSurvey">
+				<WTOBJECT name="Survey" project="ptsSurveyUser" class="CSurvey">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyID" direction="input" value="PARAM(SurveyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(Survey.Status)" value="CONST(3)">
+						<WTCONDITION expr="CONST(reqActionCode)" oper="equal" value="CONST(4)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSurvey" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadSurvey"/>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateSurvey"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION id="2" name="Delete" type="Delete">
+				<WTOBJECT name="Survey" project="ptsSurveyUser" class="CSurvey">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SurveyID" direction="input" value="PARAM(SurveyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadSurvey">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+		</WTACTION>
+
+			<WTACTION id="4" name="Calc" type="Calc">
+				<WTCALLSUB name="UpdateSurvey"/>
+				<WTOBJECT name="Survey" project="ptsSurveyUser" class="CSurvey">
+					<WTMETHOD name="CalcResults">
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+						<WTPARAM name="SurveyID" direction="input" value="PARAM(SurveyID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCUSTOM>
+		DoError 0, "Calc", Result &amp; "  Responses Calculated for Survey!"
+</WTCUSTOM>
+				<WTCALLSUB name="LoadSurvey"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Survey" class="PageHeading" align="left"/>
+					<WTLINKGROUP  col="2" align="right" >
+						<WTLINK name="4111" label="Questions" class="PageHeadingLink" nodata="true">
+							<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							<WTPARAM name="SurveyID" value="PARAM(SurveyID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="SurveyID" class="BoldText" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Survey.SurveyID)" class="BoldText"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" tag="OrgID"/>
+					<WTTEXT col="2" value="ATTR(Survey.OrgID)" size="4"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Survey.OrgID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="SurveyName"/>
+					<WTTEXT col="2" value="ATTR(Survey.SurveyName)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Survey.Description)" cols="66" rows="4"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Survey.StartDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Survey.EndDate)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Survey.Status)"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SurveyLink"/>
+					<WTSTATIC col="2" value="PARAM(URL)" bold="true"/>
+				</WTROW>
+			
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Delete)" align="center" msg="ConfirmDelete"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Calc)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4011" caption="Active Surveys" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotSurvey" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTSETATTRIBUTE name="PARAM(OrgID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Surveys" project="ptsSurveyUser" class="CSurveys">
+					<WTMETHOD name="ListActive">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurveys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Surveys" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSSURVEYS/PTSSURVEY))" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" align="left" label="SelectSurveyText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSSURVEYS/PTSSURVEY))" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" align="left" label="NoSurveyText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="false" entity="Survey">
+						<WTCOLUMN width="5" align="left" valign="top" label="#"/>
+						<WTCOLUMN width="25" align="left" valign="top" label="OrgName"/>
+						<WTCOLUMN width="70" align="left" valign="top" label="SurveyName"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Survey.SurveyID)"/>
+							<WTSTATIC col="2" value="DATA(Survey.OrgName)">
+								<WTLINK name="4112">
+									<WTPARAM name="SurveyID" value="DATA(Survey.SurveyID)"/>
+									<WTPARAM name="MemberID" value="SYS(MemberID)"/>
+									<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Survey.SurveyName)">
+								<WTLINK name="4112">
+									<WTPARAM name="SurveyID" value="DATA(Survey.SurveyID)"/>
+									<WTPARAM name="MemberID" value="SYS(MemberID)"/>
+									<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+-->				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--==================================================================-->
+		<WTWEBPAGE name="4012" Caption="List" aspstyle="GenerateWebASP.xsl" 
+		     xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--==================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Mode" datatype="number"/>
+			<WTPARAM name="VisitDate" datatype="date"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Surveys" project="ptsSurveyUser" class="CSurveys">
+					<WTMETHOD name="ListTB">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SurveyDate" direction="input" value="PARAM(VisitDate)"/>
+						<WTPARAM name="Status" direction="input" value="PARAM(Mode)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				For Each oSurvey in oSurveys
+				   With oSurvey
+						If IsDate(.EndDate) AND .Status = "1" Then
+							If DateDiff("d", CDate(.EndDate), Now) &gt; 0 Then
+								.Status = 2
+							End If
+						End If
+				   End With
+				Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurveys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+				<WTROW>
+				  <WTSTATIC col="1" align="left" class="pageheading">
+						<WTSTATIC label="TakenText">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/> 
+						</WTSTATIC>
+						<WTSTATIC label="UntakenText">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/> 
+						</WTSTATIC>
+						<WTSTATIC label="LastVisitText">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)"/> 
+						</WTSTATIC>
+						<WTSTATIC label="30DaysText">
+							<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(4)"/> 
+						</WTSTATIC>
+					</WTSTATIC>	
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true"  entity="Survey">
+						<WTCOLUMN width="12" align="left" valign="top" label="StartDate" />
+						<WTCOLUMN width="12" align="left" valign="top" label="EndDate" />
+						<WTCOLUMN width="38" align="left" valign="top" label="SurveyName" />
+						<WTCOLUMN width="38" align="left" valign="top" label="OrgName" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Survey.StartDate)"/>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Survey.EndDate)">
+									<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/> 
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Survey.EndDate)" fontcolor="red">
+									<WTCONDITION expr="DATA(Status)" oper="not-equal" value="CONST(1)"/> 
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Survey.SurveyName)">
+									<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/> 
+									<WTLINK name="4112">
+										<WTPARAM name="SurveyID" value="DATA(Survey.SurveyID)"/>
+										<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Survey.SurveyName)" fontcolor="red">
+									<WTCONDITION expr="DATA(Status)" oper="not-equal" value="CONST(1)"/> 
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Survey.OrgName)"/>
+						</WTROW>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+						<WTROW>
+							<WTSTATIC col="1" value="CONST(#&lt;xsl:value-of select=&quot;@surveyid&quot;/&gt;)" fontcolor="gray"/>
+							<WTSTATIC col="2" merge="3" value="DATA(Survey.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">				
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

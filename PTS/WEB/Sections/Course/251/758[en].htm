@@ -1,0 +1,165 @@
+<H4 align=center><FONT size=4>Using Queries and RecordSets</FONT></H4>
+<P><FONT size=3>A query is a question about information in a table or tables. You can use queries to view and analyze data or as a basis for forms and reports. Queries are commonly used to display fields from related tables and enable you to control not only what records display, but also what fields display. For example, you may want a list of the contacts and telephone numbers for a particular region to give to one of your sales representatives. By creating what is called a select query, you can limit the records to the appropriate region and limit the fields to the contact name and telephone number. </FONT>
+<P><FONT size=3>A query does not contain data. Rather, it is a set of instructions. Access uses these instructions to select and display the appropriate records in a table. Therefore, when you add data to a table, you do not have to update the query. The query always considers all the data in the table. If the new records meet the conditions of the query, they will be included when the query results appear.</FONT> 
+<P><FONT size=3>When you open or run a query, a RecordSet appears. A RecordSet contains all the fields and records that meet the conditions of the query. While the RecordSet is not a table, it can be used under certain conditions to add and edit records in tables.</FONT><H4 align=center><FONT size=4>Using the Simple Query Wizard</FONT></H4>
+<P><FONT size=3>Access provides a Simple Query Wizard that guides you through the steps to create a basic select query. When you use the Simple Query Wizard, you select the table you want to use and the fields you want to display in the query. In the last step, you name the query and then choose whether or not to display the results (the RecordSet) of the query or if you want to go to Design view to change the design of the query. 
+<BR>
+<BR><IMG style="WIDTH: 489px; HEIGHT: 362px" height=362 alt=Using201.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Using201.gif" width=489 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><I><FONT size=3>Create a Query that shows the First Name, Last Name, and Workshop for workshop participants.</FONT></I> 
+<OL>
+<LI><FONT size=3>Select the <B>New</B> button on the Database window toolbar. <IMG style="WIDTH: 69px; HEIGHT: 33px" height=33 alt=Using202.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Using202.gif" width=69 border=0> 
+<BR><I>The New Query dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Simple Query Wizard</B> . 
+<BR><B>Simple Query Wizard</B> is selected and a description of the Simple Query Wizard appears in the left panel of the New Query dialog box. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>OK</B> . 
+<BR><I>The New Query dialog box closes and the Simple Query Wizard opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Tables/Queries</B> list. 
+<BR><I>A list of available tables and queries appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the table or query you want to use as the basis for the query. 
+<BR></FONT><I><FONT size=3>Scroll as necessary and click <B>Table: Workshop Registration</B> . 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Use the single right arrow to add the field(s) you want to display in the query from the <B>Available Fields</B> list box. <I>Add First Name, Last Name, and Workshop Registration.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Next</B> . 
+<BR><I>The second page of the Simple Query Wizard appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type a name for the query. 
+<BR><I>The name appears in the <B>What title do you want for your query?</B> text box.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Finish</B> . 
+<BR><I>The Simple Query Wizard closes, the query runs, and the RecordSet appears in <B>Datasheet</B> view.</I></FONT>
+</OL><H4 align=center><FONT size=4>Creating a Query in Design View</FONT></H4>
+<P><FONT size=3>You can create a query in Design view. This option gives you the most flexibility in designing a select query. It allows you to add criteria to select records and sort the resulting RecordSet. </FONT>
+<P><FONT size=3>When you create a query in Design view, you use the design grid to set up the query. The field list of the table you want to use in the query appears in the top pane of Design view. You add the fields you want to use in the query to the design grid in the bottom pane of Design view, along with any sort orders or criteria for selecting records. 
+<BR>
+<BR><IMG style="WIDTH: 473px; HEIGHT: 368px" height=368 alt=Creati7.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati7.gif" width=473 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Create a Query in Design view that shows the First Name, Last Name, and Workshop for workshop participants.</FONT> 
+<OL>
+<LI><FONT size=3>Click the <B>New</B> button on the Database window toolbar. 
+<BR><IMG style="WIDTH: 69px; HEIGHT: 33px" height=33 alt=Creati4.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati4.gif" width=69 border=0> 
+<BR><I>The New Query dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Design View</B> . 
+<BR><B>Design View</B> is selected and a description of <B>Design</B> view appears in the left panel of the New Query dialog box. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>OK</B> . 
+<BR><I>The New Query dialog box closes, <B>Design</B> view appears, and the Show Table dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select a table and add it to the query. 
+<BR><I>Double Click</I> <I><B>Workshop Registration</B> .</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Close</B> to close the Show Table dialog box. 
+<BR><I>The Show Table dialog box closes.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the first field you want to add to the query. 
+<BR><I>Select the <B>First Name</B> field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Drag the field to the desired column in the <B>Field</B> row in the design grid. 
+<BR><I>A small box indicating the position of the field moves as you drag and then the field and table names appear in the design grid.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Add other fields to the query as desired. 
+<BR><I>Add <B>Last Name</B> and <B>Workshop</B> to the query.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the <B>Save</B> button. 
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Creati5.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Creati5.gif" width=33 border=0> 
+<BR><I>The Save As dialog box opens with the insertion point in the </I><B>Query Name</B> text box. </FONT>
+<LI><FONT size=3>Type a name for the query. 
+<BR><I>The name appears in the <B>Query Name</B> text box.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>11. Select <B>OK</B> . 
+<BR><I>The Save As dialog box closes and the query is saved.</I></FONT>
+</OL><H4 align=center><FONT size=4>Opening a Query</FONT></H4>
+<P><FONT size=3>When you open a query, Access runs the instructions in the query and displays the resulting RecordSet in <B>Datasheet</B> view. If you have added records since the last time you ran a particular query, the new records will appear if they meet the query criteria.</FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the name of the query you want to open. 
+<BR><I>The query name is selected.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Open</B> button on the Database window toolbar. <IMG style="WIDTH: 76px; HEIGHT: 33px" height=33 alt=Openin7.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Openin7.gif" width=76 border=0> 
+<BR><I>The query runs and the RecordSet appears in <B>Datasheet</B> view.</I></FONT>
+</OL><H4 align=center><FONT size=4>Adding a Table to a Query</FONT></H4>
+<P><FONT size=3>You can use more than one table in a query. The tables must be joined in order for the query to give accurate results. If they are not joined, you can create a join in the top pane of Design view. </FONT>
+<P><FONT size=3>When you add more than one table, the field lists appear in the top pane of Design view. If the tables are already related, join lines appear automatically. </FONT>
+<P><FONT size=3>Once you have added a table to the query, you can then add fields from the field list to the design grid. The second row in the design grid is the Table row, which indicates from which table the field originates. </FONT>
+<P><FONT size=3>When you open Design view to design a new query, the Show Table dialog box opens automatically so that you can add multiple tables. However, when you open Design view to modify an existing query design (i.e., to add a table), you must open the Show Table dialog box manually.</FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the name of the query to which you want to add a table. 
+<BR><I>The query name is selected.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Design</B> button on the Database window toolbar. 
+<BR><I><B>Design</B> view appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the <B>Show Table</B> button on the <B>Query Design</B> toolbar. 
+<BR><I>The Show Table dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the name of the table you want to add to the query. 
+<BR><I>The field list for the table appears in the top pane of <B>Design</B> view.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Close</B> to close the Show Table dialog box. 
+<BR><I>The Show Table dialog box closes and the table is added to the query.</I></FONT>
+</OL><H4 align=center><FONT size=4>Joining Tables in a Query</FONT></H4>
+<P><FONT size=3>If you have multiple tables query, the tables must be joined in order for the query to give accurate and meaningful results. If Access does not know how to relate the data between tables, it displays every combination of data between the two tables. For example, if one table has 20 records and the other has 5, then the RecordSet will contain 100 records and the results are virtually meaningless. </FONT>
+<P><FONT size=3>If the relationships have already been defined in the Relationships window, join lines between the field lists display automatically in Design view. Therefore, if you add a related table to a query, a join line appears automatically. Access also automatically creates a join if there is a field with the same name in both tables. If there is no predefined relationship or fields with the same name, you must create the relationship. </FONT>
+<P><FONT size=3>The join type defined in the relationship is particularly important to queries. The default type is an inner join in which records are only included in the RecordSet if there is matching data in the join fields for both tables. You can also create an outer join in which all the records from the "one" table appear, even if there is no matching data in the "many" table. 
+<BR>
+<BR><IMG style="WIDTH: 441px; HEIGHT: 315px" height=315 alt=Joinin2.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Joinin2.gif" width=441 border=0></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the join field in the field list of the first table. 
+<BR><I>The field name is selected.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Drag the field on top of the matching field in the field list of the second table. 
+<BR><I>A small box indicating the position of the field moves as you drag and then a join line appears between the two field lists.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Double-click the join line. 
+<BR><I>The Join Properties dialog box opens.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the desired join type. 
+<BR><I>The desired join type option is selected.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>OK</B> . 
+<BR><I>The Join Properties dialog box closes and the tables in the query are joined.</I></FONT>
+</OL><H4 align=center><FONT size=4>Running a Query</FONT></H4>
+<P><FONT size=3>You can run a query directly from Design view to display the RecordSet. This option is useful if you want to test the design of the query to see if the resulting RecordSet contains the information you need.</FONT> 
+<P><FONT size=3>Running a query does not save the design of the query. If you close the RecordSet after running a query, a message box opens, asking if you want to save the changes. 
+<BR>
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Runnin3.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Runnin3.gif" width=33 border=0> <B>Run Query button</B></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>
+<BR></FONT>&nbsp; 
+<OL>
+<LI><FONT size=3>Click the <B>Run</B> button on the <B>Query</B> <B>Design</B> toolbar. 
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Runnin4.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Runnin4.gif" width=33 border=0> 
+<BR><I>The query runs and the RecordSet appears.</I></FONT>
+</OL>

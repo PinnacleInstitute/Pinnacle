@@ -1,0 +1,1332 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="23" name="Lesson" alias="le" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="2301" name="LessonID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="2303" name="CourseID" type="number" source="entity" parent="true"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="2305" name="CourseName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Course" name="CourseName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="2310" name="LessonName" type="text" length="80" min="1" max="80" required="true" source="entity" title="true" />
+				<!-- Lesson description, to show in syllabus -->
+		<WTATTRIBUTE id="2311" name="Description" type="text" length="1000" min="1" max="1000" source="entity" />
+				<!-- Status, currently used to allow deactivation of lessons TODO: pending states and auditing? -->
+		<WTATTRIBUTE id="2312" name="Status" type="number" required="true" source="entity">
+			<WTENUM id="1" name="InActive"/>
+			<WTENUM id="2" name="Active"/>
+		</WTATTRIBUTE>
+				<!-- Lesson Length in minutes (integer).  Used in course length calc, syllabus/detail, and ratings -->
+		<WTATTRIBUTE id="2313" name="LessonLength" type="number" source="entity"/>
+		<WTATTRIBUTE id="2315" name="Seq" type="number" source="entity" seq="10"/>
+
+		<!--Media attributes-->
+				<!-- URL (on media server) of video/audio file for the course, or if the
+					type is flash, located in Sections\Course\[CourseID] folder? TODO: implement media -->
+		<WTATTRIBUTE id="2320" name="MediaURL" type="text" length="250" min="1" max="250" source="entity" language="false"/>
+				<!-- Media type determines how to display course material and where it is located -->
+		<WTATTRIBUTE id="2321" name="MediaType" type="number" source="entity">
+			<WTENUM id="1" name="Video"/>
+			<WTENUM id="2" name="Audio"/>
+			<WTENUM id="3" name="Link"/>
+		</WTATTRIBUTE>
+				<!-- Length, in minutes (integer) of the course media.  TODO: automate calculation of this? -->
+		<WTATTRIBUTE id="2322" name="MediaLength" type="number" source="entity"/>
+		<WTATTRIBUTE id="2323" name="MediaWidth" type="number" source="entity"/>
+		<WTATTRIBUTE id="2324" name="MediaHeight" type="number" source="entity"/>
+		
+		<!--Quiz Attributes-->
+				<!-- Number of questions to display in the quiz, zero if this lesson has
+					no quiz (TODO: need a good ui for this) -->
+		<WTATTRIBUTE id="2330" name="Content" type="number" source="entity">
+			<WTENUM id="1" name="NoContent"/>
+			<WTENUM id="2" name="ContentAbove"/>
+			<WTENUM id="3" name="ContentBelow"/>
+			<WTENUM id="4" name="ContentBoth"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2331" name="Quiz" type="number" source="entity">
+			<WTENUM id="1" name="NoQuiz"/>
+			<WTENUM id="2" name="HasQuiz"/>
+			<WTENUM id="3" name="AutoQuiz"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2332" name="QuizLimit" type="number" source="entity">
+			<WTENUM id="1" name="NoRetake"/>
+			<WTENUM id="2" name="NoAnswer"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2333" name="QuizLength" type="number" source="entity" />
+				<!-- Grade weight: determines how much this quiz contributes to the final course grade.
+					If zero, this quiz does not contribute to the final grade in this course.
+					Value is percent of total 100% for the course. (TODO: good ui for this) -->
+		<WTATTRIBUTE id="2334" name="PassingGrade" type="number" min="0" max="100" source="entity"/>
+		<WTATTRIBUTE id="2335" name="QuizWeight" type="number" min="0" max="100" source="entity"/>
+		<WTATTRIBUTE id="2336" name="IsPassQuiz" type="yesno" source="entity"/>
+		
+		<!--Indexes-->
+		<WTINDEX name="CourseID">
+			<WTATTRIBUTE name="CourseID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Lesson" entity="Lesson" alias="le"/>
+			<WTRELATIONSHIP name="Common" entity="Lesson" alias="le">
+				<WTENTITY name="Course" entity="Course" alias="cs">
+					<WTATTRIBUTE alias="le" name="CourseID" relalias="cs" relname="CourseID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="LESSON-VIDEO" value="1"/>
+			<WTSYSCON name="LESSON-AUDIO" value="2"/>
+			<WTSYSCON name="LESSON-LINK" value="3"/>
+			<WTSYSCON name="LESSON-NOCONTENT" value="1"/>
+			<WTSYSCON name="LESSON-CONTENTABOVE" value="2"/>
+			<WTSYSCON name="LESSON-CONTENTBELOW" value="3"/>
+			<WTSYSCON name="LESSON-CONTENTBOTH" value="4"/>
+			<WTSYSCON name="LESSON-NOQUIZ" value="1"/>
+			<WTSYSCON name="LESSON-HASQUIZ" value="2"/>
+			<WTSYSCON name="LESSON-AUTOQUIZ" value="3"/>
+			<WTSYSCON name="LESSON-NORETAKE" value="1"/>
+			<WTSYSCON name="LESSON-NOANSWER" value="2"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListCourse" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CourseID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Lesson.LessonID)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.CourseID)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.LessonName)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.Description)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.Seq)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.Status)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.LessonLength)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.MediaType)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.Quiz)"/>
+					<WTATTRIBUTE value="ATTR(Lesson.IsPassQuiz)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(CourseID)" oper="equal" value="PARAM(CourseID)"/>
+					<WTORDER name="ATTR(Lesson.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2302" caption="Lesson" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="31">
+		<!--===============================================================================-->
+			<WTPARAM name="CourseID" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LessonID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLesson" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LessonID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CourseID)" value="PARAM(CourseID)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(2)"/>
+					<WTSETATTRIBUTE name="ATTR(Content)" value="CONST(3)"/>
+					<WTSETATTRIBUTE name="ATTR(PassingGrade)" value="CONST(70)"/>
+					<WTSETATTRIBUTE name="ATTR(LessonLength)" value="CONST(15)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="LessonID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLesson" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewLesson" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="LessonName"/>
+					<WTTEXT col="2" value="ATTR(Lesson.LessonName)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Lesson.Description)" rows="8" cols="72"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2303" caption="Lesson" contentpage="true" navbar="false" page-left="10"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="LessonID" datatype="number"/>
+			<WTPARAM name="CourseID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+<!--
+			<WTPARAM name="IsUpload" datatype="yesno"/>
+-->			
+			<WTPARAM name="FILE" datatype="text"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+
+			<WTPARAM name="AttachmentCount" datatype="number"/>
+
+			<WTDATATXN name="HTMLQuiz"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+			<WTSUB name="LoadLesson">
+<!--
+				<WTOBJECT name="Course" project="ptsCourseUser" class="CCourse">
+					<WTMETHOD name="CanUpload">
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="reqIsUpload" direction="return" datatype="yesno"/>
+					</WTMETHOD>
+				</WTOBJECT>
+-->
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(LessonID)"/>
+						<WTPARAM name="ParentType" direction="input" value="ENTITY(Lesson)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqAttachmentCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Homeworks" project="ptsHomeworkUser" class="CHomeworks">
+					<WTMETHOD name="List">
+						<WTPARAM name="LessonID" direction="input" value="PARAM(LessonID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomeworks" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="CONST(tmpContent)" oper="greater" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqLessonID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Course\&quot; &amp; CStr(reqCourseID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			<WTSUB name="UpdateLesson">
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LessonID" direction="input" value="PARAM(LessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpContent)" value="ATTR(Content)"/>
+					<WTSETATTRIBUTE name="PARAM(CourseID)" value="ATTR(CourseID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLessons" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Course" project="ptsCourseUser" class="CCourse">
+					<WTMETHOD name="SetContent">
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="CONST(tmpContent)" oper="greater" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqLessonID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Course\&quot; &amp; CStr(reqCourseID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadLesson">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+			</WTSUB>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LessonID" direction="input" value="PARAM(LessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpContent)" value="ATTR(Content)"/>
+					<WTSETATTRIBUTE name="PARAM(CourseID)" value="ATTR(CourseID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLesson" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+<WTCUSTOM>
+			SetCache "IMAGEPATH", "sections/course/" + CStr(reqCourseID) + "\" 
+</WTCUSTOM>
+				<WTCALLSUB name="LoadLesson"/>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTCALLSUB name="UpdateLesson"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LessonID" direction="input" value="PARAM(LessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="LessonID" direction="input" value="PARAM(LessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLesson" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION name="Preview" type="Update" id="5">
+				<WTCALLSUB name="UpdateLesson"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="2430" return="false">
+						<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+						<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+					</WTLINK>				
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION name="Quiz" type="Update" id="6">
+				<WTCALLSUB name="UpdateLesson"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="2111" nolocaldata="true">
+						<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+<!--
+			<WTACTION name="Upload" type="Upload" id="7">
+				<WTRETURN>
+					<WTLINK >
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+-->
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="75" align="right"/>
+				<WTCOLUMN width="665" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Lesson" value="ATTR(Lesson.LessonName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(step1.gif)" align="center" valign="center"/>
+					<WTSTATIC col="2" label="EditLessonText" align="left" valign="center" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Name"/>
+					<WTTEXT col="2" value="ATTR(Lesson.LessonName)" size="60" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Lesson.Status)" prespace="false"/>
+					<WTSTATIC col="2" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(Lesson.Seq)" size="2" prespace="false"/>
+					<WTSTATIC col="2" tag="LessonLength"/>
+					<WTTEXT col="2" value="ATTR(Lesson.LessonLength)" size="2" prespace="false"/>
+					<WTSTATIC col="2" label="InMinutes"/>
+					<WTSTATIC col="2" label="ZeroMinutes" fontcolor="red"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Lesson.IsPassQuiz)"/>
+					<WTIMAGE col="2" value="CONST(stopsm.gif)" imgalign="absmiddle"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTMEMO col="2" align="left" value="ATTR(Lesson.Description)" rows="4" cols="80"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="CourseID" align="right"/>
+					<WTTEXT col="2" value="ATTR(Lesson.CourseID)" prespace="false" size="5"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Lesson.CourseID)"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(Preview)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(step2.gif)" align="center" valign="center"/>
+					<WTSTATIC col="2" label="HasContentText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCOMBO col="2" value="ATTR(Lesson.Content)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Lesson.Content)" oper="greater" value="CONST(1)"/>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTIMAGE col="1" value="CONST(step3.gif)" align="center" valign="center"/>
+						<WTSTATIC col="2" label="LessonText" align="left" class="prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTMEMO col="1" merge="2" value="ATTR(HTMLFile.Data)" rows="50" cols="91" htmleditor="true" embedhtml="true"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(step4.gif)" align="center" valign="center"/>
+					<WTSTATIC col="2" label="LessonMediaText" align="left" class="prompt"/>
+				</WTROW>
+<!--
+				<WTROW>
+					<WTCONDITION expr="PARAM(IsUpload)" oper="equal" value="CONST(True)"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="UploadMedia" valign="center"/>
+					<WTBUTTON col="2" action="7" value="CONST(Upload)"/>
+				</WTROW>
+-->
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="MediaType"/>
+					<WTCOMBO col="2" value="ATTR(Lesson.MediaType)" prespace="false"/>
+					<WTSTATIC col="2" tag="MediaLength"/>
+					<WTTEXT col="2" value="ATTR(Lesson.MediaLength)" size="2" prespace="false"/>
+					<WTSTATIC col="2" label="InMinutes"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="MediaURL" valign="center"/>
+					<WTMEMO col="2" value="ATTR(Lesson.MediaURL)" rows="2" cols="70" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" label="MediaWidthText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="MediaWidth"/>
+					<WTTEXT col="2" value="ATTR(Lesson.MediaWidth)" size="2" prespace="false"/>
+					<WTSTATIC col="2" tag="MediaHeight"/>
+					<WTTEXT col="2" value="ATTR(Lesson.MediaHeight)" size="2" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(step5.gif)" align="center" valign="center"/>
+					<WTSTATIC col="2" label="LessonQuizText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Quiz"/>
+					<WTCOMBO col="2" value="ATTR(Lesson.Quiz)"/>
+					<WTBUTTON col="2" action="6" value="CONST(EditQuiz)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="QuizLimit"/>
+					<WTCOMBO col="2" value="ATTR(Lesson.QuizLimit)" prespace="false"/>
+					<WTSTATIC col="2" tag="QuizLength"/>
+					<WTTEXT col="2" value="ATTR(Lesson.QuizLength)" size="2" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="PassingGrade"/>
+					<WTTEXT col="2" value="ATTR(Lesson.PassingGrade)" size="2" prespace="false"/>
+					<WTSTATIC col="2" label="Percent"/>
+					<WTSTATIC col="2" tag="QuizWeight"/>
+					<WTTEXT col="2" value="ATTR(Lesson.QuizWeight)" size="2" prespace="false"/>
+					<WTSTATIC col="2" label="Percent"/>
+				</WTROW>			
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" align="left" label="MyAttachmentsText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" align="left" label="NoAttachments" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" align="right" bold="true">
+						<WTCODEGROUP><WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewAttachment">
+							<WTLINK name="8002">
+								<WTPARAM name="ParentID" value="PARAM(LessonID)"/>
+								<WTPARAM name="ParentType" value="ENTITY(Lesson)"/>
+								<WTPARAM name="Mini" value="CONST(1)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="true" entity="Attachment">
+						<WTCOLUMN width="44" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="22" align="left" valign="top" label="File"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="Status"/>
+						<WTCOLUMN width="10" align="right" valign="top" label="AttachSize"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="AttachDate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Attachment.AttachName)" bold="true">
+								<WTLINK name="8003">
+									<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+									<WTPARAM name="Mini" value="CONST(1)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Attachment.FileName)">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+					 					<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Attachment.FileName)">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTLINK name="CONST(Attachments/23/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@lessonid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Attachment.Status)">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Attachment.Status)" fontcolor="red">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="red"/>
+							</WTSTATIC>
+							<WTSTATIC col="4">
+								<WTSTATIC value="DATA(Attachment.AttachSize)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="5" value="DATA(Attachment.AttachDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="5" value="DATA(Attachment.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>		
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTSTATIC value="PARAM(AttachmentCount)" space="1"/>
+						<WTSTATIC label="Attachments"/>
+					</WTSTATIC>
+				</WTROW>
+
+
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" align="right" bold="true">
+						<WTCODEGROUP><WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewHomework">
+							<WTLINK name="6802">
+								<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="true" entity="Homework">
+						<WTCOLUMN width="70" align="left" valign="top" label="Homework"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="HomeworkSeq"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Weight"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="IsGrade"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Homework.gif)"/>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="DATA(Homework.Name)"/>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(edit.gif)" alt="EditHomework" valign="top" imgalign="absmiddle">
+										<WTLINK name="6803">
+											<WTPARAM name="HomeworkID" value="DATA(HomeworkID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Homework.Seq)"/>
+							<WTSTATIC col="3" value="CONST(&lt;xsl:value-of select=&quot;@weight&quot;/&gt;%)"/>
+							<WTSTATIC col="4">
+								<WTSTATIC label="No">
+									<WTCONDITION expr="DATA(IsGrade)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Yes">
+									<WTCONDITION expr="DATA(IsGrade)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="4" value="DATA(Homework.Description)" embedhtml="true"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTDIVIDER col="1" merge="4" height="1" color="SYS(light)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>		
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(Preview)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2304" caption="Lesson Content" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" secured="52">
+		<!--=============================================================================================-->
+			<WTPARAM name="LessonID" datatype="number"/>
+			<WTPARAM name="CourseID" datatype="number"/>
+			
+			<WTSUB name="UpdateContent">
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LessonID" direction="input" value="PARAM(LessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(Content)" oper="less-equal" value="CONST(1)"/>
+						<WTSETATTRIBUTE name="ATTR(Content)" value="CONST(3)"/>
+						<WTMETHOD name="Save">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqLessonID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Course\&quot; &amp; CStr(reqCourseID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Lesson" project="ptsLessonUser" class="CLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LessonID" direction="input" value="PARAM(LessonID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLesson" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqLessonID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Course\&quot; &amp; CStr(reqCourseID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCUSTOM>
+			SetCache "IMAGEPATH", "sections/course/" + CStr(reqCourseID) + "\" 
+</WTCUSTOM>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTCALLSUB name="UpdateContent"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION name="Cancel" type="Cancel" id="3">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION name="Images" type="Update" id="4">
+				<WTCALLSUB name="UpdateContent"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="2305">
+						<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+						<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+					</WTLINK>				
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION name="Files" type="Update" id="5">
+				<WTCALLSUB name="UpdateContent"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="2306">
+						<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+						<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+					</WTLINK>				
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION name="Quiz" type="Update" id="6">
+				<WTCALLSUB name="UpdateContent"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="2111">
+						<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+					</WTLINK>				
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" align="left" tag="Lesson" value="ATTR(Lesson.LessonName)" class="PageHeading">
+						<WTLINK name="2303" >
+							<WTPARAM name="LessonID" value="ATTR(Lesson.LessonID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="475" align="left"/>
+						<WTCOLUMN width="275" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" align="left" tag="Course" value="ATTR(Lesson.CourseName)" class="PageHeading">
+								<WTLINK name="1103" >
+									<WTPARAM name="CourseID" value="ATTR(Lesson.CourseID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTLINKGROUP  col="2" align="right">
+								<WTLINK name="1713" label="FAQ" class="PageHeadingLink" target="FAQ"/>
+							</WTLINKGROUP>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="LessonContentText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" action="4" value="CONST(ImageManager)" align="center"/>
+					<WTBUTTON col="1" action="5" value="CONST(FileManager)" align="center"/>
+					<WTBUTTON col="1" action="6" value="CONST(QuizQuestions)" align="center"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" value="ATTR(HTMLFile.Data)" rows="50" cols="91" htmleditor="true" embedhtml="true"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2305" caption="Upload Image" action="false" submit="2305Upload.asp" type="multi" header="false" footer="false" navbar="false" wrapper="wrapper600"
+               aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="UploadImageFile" datatype="text"/>
+			<WTPARAM name="DeleteFile" datatype="text"/>
+			<WTPARAM name="CourseID" datatype="number"/>
+			<WTPARAM name="LessonID" datatype="number"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadImageFile)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadImageFile + " Successfully Uploaded!"
+</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="COURSEID" value="PARAM(CourseID)"/>
+				<WTSETCACHE name="LESSONID" value="PARAM(LessonID)"/>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;sections\course\&quot; &amp; reqCourseID &amp; &quot;\&quot;)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(DeleteFile)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="PARAM(DeleteFile)"/>
+						<WTMETHOD name="Delete"/>
+					</WTCODEGROUP>
+					<WTSETATTRIBUTE name="ATTR(Ext)" value="CONST(&quot;gif,jpg,png&quot;)"/>
+					<WTMETHOD name="XMLFiles">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>			
+			</WTACTION>
+	
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="250" align="left"/>
+				<WTCOLUMN width="350" align="left"/>
+
+        <WTFUNCTION name="ShowImage( filename )">
+          var courseid = document.getElementById('CourseID').value;
+          var link = 'sections/course/' + courseid + '/' + filename;
+          document.getElementById('PreviewImage').src = link;
+          document.getElementById('ImageLink').value = link;
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(CourseID)"/>
+        </WTROW>
+
+        <WTROW>
+					<WTSTATIC col="1" label="ImageManager" class="PageHeading"/>
+					<WTLINKGROUP  col="2" align="right" >
+						<WTCONDITION expr="PARAM(LessonID)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="2304" label="ReturnToLesson" class="PageHeadingLink" return="false">
+							<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+							<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+					<WTLINKGROUP  col="2" align="right" >
+						<WTCONDITION expr="PARAM(LessonID)" oper="equal" value="CONST(0)"/>
+						<WTLINK name="2311" label="ReturnToLessons" class="PageHeadingLink" return="false">
+							<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="UploadImagesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTFILE col="1" merge="2" value="upload" align="center" size="40"/>
+					<WTBUTTON col="1" merge="2" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTTEXT col="1" merge="2" name="ImageLink" align="center" size="54"/>
+				</WTROW>
+        <WTROW margin-bottom="12">
+          <WTIMAGE col="1" merge="2" id="PreviewImage" name="PreviewImage" value="CONST(imgpreview.gif)" align="center" valign="center"/>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" merge="2" label="UploadedImages" class="prompt" valign="bottom"/>
+        </WTROW>
+
+        <WTROW>
+					<WTTABLE col="1" merge="2">
+<!--						<WTSPAN style="BORDER: gray 1px solid; BORDER-TOP: threeddarkshadow 1px solid; OVERFLOW: auto; BORDER-LEFT: threeddarkshadow 1px solid; WIDTH: 600px; BORDER-BOTTOM: gray 1px solid; HEIGHT: 400px; BACKGROUND-COLOR: white"/>-->
+						<WTCOLUMN width="50" align="left"/>
+						<WTCOLUMN width="200" align="left"/>
+						<WTCOLUMN width="50" align="left"/>
+						<WTCOLUMN width="150" align="left"/>
+						<WTCOLUMN width="100" align="left"/>
+
+						<WTREPEAT xpath="/DATA/TXN/FILES/FILE">
+							<WTROW margin-bottom="3">
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" value="DATA(name)">
+									<WTLINK click="true" name="CONST(ShowImage('&lt;xsl:value-of select=&quot;@name&quot;/&gt;');)"/>
+								</WTSTATIC>
+								<WTSTATIC col="3" value="DATA(size)"/>
+								<WTSTATIC col="4" value="DATA(date)"/>
+								<WTLINKGROUP col="5" >
+									<WTLINK name="2305" label="Delete" class="SelectLink">
+										<WTPARAM name="DeleteFile" value="DATA(name)"/>
+										<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+										<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+									</WTLINK>
+								</WTLINKGROUP>
+							</WTROW>
+						</WTREPEAT>
+					</WTTABLE>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2306" caption="Upload Library" action="false" submit="2306Upload.asp" type="multi" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="UploadImageFile" datatype="text"/>
+			<WTPARAM name="DeleteFile" datatype="text"/>
+			<WTPARAM name="CourseID" datatype="number"/>
+			<WTPARAM name="LessonID" datatype="number"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+	
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadImageFile)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadImageFile + " Successfully Uploaded!"
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="COURSEID" value="PARAM(CourseID)"/>
+				<WTSETCACHE name="LESSONID" value="PARAM(LessonID)"/>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;sections\course\&quot; &amp; reqCourseID &amp; &quot;\&quot;)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(DeleteFile)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="PARAM(DeleteFile)"/>
+						<WTMETHOD name="Delete"/>
+					</WTCODEGROUP>
+					<WTSETATTRIBUTE name="ATTR(Ext)" value="CONST(&quot;~htm,gif,jpg&quot;)"/>
+					<WTMETHOD name="XMLFiles">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>			
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="200" align="left"/>
+				<WTCOLUMN width="50" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" merge="3" label="FileManager" class="PageHeading"/>
+					<WTLINKGROUP  col="4" merge="2" align="right" >
+						<WTCONDITION expr="PARAM(LessonID)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="2304" label="ReturnToLesson" class="PageHeadingLink" return="false">
+							<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+							<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+					<WTLINKGROUP  col="4" merge="2" align="right" >
+						<WTCONDITION expr="PARAM(LessonID)" oper="equal" value="CONST(0)"/>
+						<WTLINK name="2311" label="ReturnToLessons" class="PageHeadingLink" return="false">
+							<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="5" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="5" label="UploadLibraryText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="5" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTFILE col="1" merge="5" value="upload" align="center" size="40"/>
+					<WTBUTTON col="1" merge="5" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="5" label="UploadedLibrary" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="5" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTREPEAT xpath="/DATA/TXN/FILES/FILE">
+					<WTROW margin-bottom="3">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" value="DATA(name)"/>
+						<WTSTATIC col="3" value="DATA(size)"/>
+						<WTSTATIC col="4" value="DATA(date)"/>
+						<WTLINKGROUP col="5" >
+							<WTLINK name="2306" label="Delete" class="SelectLink">
+								<WTPARAM name="DeleteFile" value="DATA(name)"/>
+								<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+								<WTPARAM name="LessonID" value="PARAM(LessonID)"/>
+							</WTLINK>
+						</WTLINKGROUP>
+					</WTROW>
+				</WTREPEAT>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2311" caption="Lessons" contentpage="true" aspstyle="GenerateWebASP.xsl" wrapper="wrapper600"
+		 xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="CourseID" datatype="text"/> 
+			<WTPARAM name="Count" datatype="number"/>  
+			<WTPARAM name="contentpage" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTSETCACHE name="COURSEID" value="PARAM(CourseID)"/>
+				<WTOBJECT name="Lessons" project="ptsLessonUser" class="CLessons">
+					<WTMETHOD name="ListCourse">
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLessons" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Add" type="Add">
+				<WTRETURN>
+					<WTLINK name="2302" nolocaldata="true">
+						<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+						<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="ImageManager" type="Add">
+				<WTRETURN>
+					<WTLINK name="2305">
+						<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+						<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="FileManager" type="Add">
+				<WTRETURN>
+					<WTLINK name="2306">
+						<WTPARAM name="CourseID" value="PARAM(CourseID)"/>
+						<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Lessons" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="MyLessonsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="NoLessons" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Lesson">
+						<WTCOLUMN width="4" align="center"/>
+						<WTCOLUMN width="68" align="left" valign="top" label="LessonName"/>
+						<WTCOLUMN width="6" align="center" valign="top" label="Order"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="LessonLength"/>
+						<WTCOLUMN width="6" align="right" valign="top" label="Quiz"/>
+						<WTROW height="24">
+							<WTSTATIC col="1" value="CONST(&lt;xsl:value-of select=&quot;position()&quot;/&gt;)"/>
+							<WTSTATIC col="2" bold="true">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Lesson.IsPassQuiz)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(stopsm.gif)" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="DATA(Lesson.LessonName)">
+									<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Lesson.LessonName)" fontcolor="red">
+									<WTCONDITION expr="DATA(Status)" oper="not-equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="2303"><WTPARAM name="LessonID" value="DATA(Lesson.LessonID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Preview.gif)" alt="Preview" imgalign="absmiddle">
+										<WTLINK name="2430" target="Preview" return="false">
+											<WTPARAM name="LessonID" value="DATA(LessonID)"/>
+											<WTPARAM name="CourseID" value="DATA(CourseID)"/>
+											<WTPARAM name="Popup" value="CONST(1)"/>
+										</WTLINK>				
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Lesson.Seq)"/>
+							<WTSTATIC col="4" value="DATA(Lesson.Status)"/>
+							<WTSTATIC col="5" value="DATA(Lesson.LessonLength)"/>
+							<WTSTATIC col="6">
+								<WTSTATIC label="Quiz" bold="true">
+									<WTLINK name="2111">
+										<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+										<WTPARAM name="LessonID" value="DATA(Lesson.LessonID)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="4" value="DATA(Lesson.Description)"/>
+							<WTSTATIC col="6" valign="top">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Lesson.MediaType)" oper="equal" value="CONST(1)"/>
+									<WTIMAGE value="CONST(video.gif)"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Lesson.MediaType)" oper="equal" value="CONST(2)"/>
+									<WTIMAGE value="CONST(audio.gif)"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Lesson.Quiz)" oper="greater" value="CONST(1)"/>
+									<WTIMAGE value="CONST(quiz.gif)"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" action="4" value="CONST(NewLesson)" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="6">
+					<WTSTATIC col="1" align="center" label="ImageManager" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="left" label="ImageManagerText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" action="5" value="CONST(ImageManager)" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="6">
+					<WTSTATIC col="1" align="center" label="FileManager" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="left" label="FileManagerText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" action="6" value="CONST(FileManager)" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+-->
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+	</WTWEBPAGES>
+
+</WTROOT>

@@ -1,0 +1,898 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="156" name="LeadAd" alias="la" audit="false">
+		<!--Identity-->
+		<WTATTRIBUTE id="15601" name="LeadAdID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="15602" name="CompanyID" type="number" required="true" source="entity"/>
+		<WTATTRIBUTE id="15603" name="GroupID" type="number" source="entity"/>
+    <!--Attributes-->
+		<WTATTRIBUTE id="15605" name="LeadAdName" type="text" length="60" min="1" max="60" required="true" title="true" source="entity" />
+		<WTATTRIBUTE id="15606" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending" />
+			<WTENUM id="2" name="Active" />
+      <WTENUM id="3" name="InActive" />
+      <WTENUM id="4" name="Divider" />
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="15607" name="Target" type="text" length="30" min="1" max="30" source="entity"/>
+    <WTATTRIBUTE id="15608" name="Link" type="text" length="500" source="entity" />
+		<WTATTRIBUTE id="15609" name="Seq" type="number" source="entity"/>
+    <WTATTRIBUTE id="15610" name="Image" type="text" length="25" min="1" max="25" source="entity"/>
+
+    <!-- Non Persist Fields -->
+
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID" />
+		</WTINDEX>
+		<WTINDEX name="GroupID">
+			<WTATTRIBUTE name="GroupID" />
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="LeadAd" entity="LeadAd" alias="la" />
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="LeadAdName" default="true" contains="true"/>
+      <WTATTRIBUTE name="Target"/>
+      <WTATTRIBUTE name="LeadAdID"/>
+      <WTATTRIBUTE name="GroupID"/>
+		</WTENUM>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="LEADAD-PENDING" value="1" />
+			<WTSYSCON name="LEADAD-ACTIVE" value="2" />
+      <WTSYSCON name="LEADAD-INACTIVE" value="3" />
+      <WTSYSCON name="LEADAD-DIVIDER" value="4" />
+    </WTSYSCONS>
+	</WTENTITY>
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" />
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl" />
+		<!--================================================================================================-->
+    <WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name="" />
+      <WTPARAM name="ATTR(CompanyID)" direction="input"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTJOIN name="LeadAd"/>
+      <WTCONDITION expr="ATTR(LeadAd.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and" />
+    </WTPROCEDURE>
+    <!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl" />
+    <!--===================================================================================-->
+    <WTPROCEDURE type="List" name="ListCompany" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(LeadAd.LeadAdID)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.LeadAdName)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Target)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Status)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Link)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Image)" />
+          <WTJOIN name="LeadAd" />
+          <WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+          <WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(LEADAD-ACTIVE)" connector="and" paren="start"/>
+          <WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(LEADAD-DIVIDER)" connector="or" paren="end"/>
+          <WTORDER name="ATTR(LeadAd.Seq)" />
+          <WTORDER name="ATTR(LeadAd.LeadAdName)" />
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--===================================================================================-->
+    <WTPROCEDURE type="List" name="ListGroup" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(GroupID)" direction="input" required="false"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(LeadAd.LeadAdID)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.LeadAdName)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Target)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Status)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Link)" />
+          <WTATTRIBUTE value="ATTR(LeadAd.Image)" />
+          <WTJOIN name="LeadAd" />
+          <WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)"/>
+          <WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(LEADAD-ACTIVE)" connector="and" paren="start"/>
+          <WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(LEADAD-DIVIDER)" connector="or" paren="end"/>
+          <WTORDER name="ATTR(LeadAd.Seq)" />
+          <WTORDER name="ATTR(LeadAd.LeadAdName)" />
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="15601" caption="Find" action="5" header="false" footer="false" navbar="false" wrapper="wrapper800"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61">
+		<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+			</WTSETATTRIBUTE>
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(LeadAdName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)" />
+			</WTSETATTRIBUTE>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)" />
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)" />
+				<WTOBJECT name="LeadAds" project="ptsLeadAdUser" class="CLeadAds">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadAds" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(156)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark" />
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)" />
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)" />
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)" />
+			</WTACTION>
+
+      <WTACTION id="7" name="Next" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)" />
+      </WTACTION>
+
+      <WTOBJECT name="LeadAds" project="ptsLeadAdUser" class="CLeadAds">
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text" />
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)" />
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)" />
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)" />
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)" />
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlLeadAds" direction="return" datatype="text" />
+					<WTPARAM name="Option" direction="input" value="CONST(15)" />
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)" />
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text" />
+				</WTMETHOD>
+			</WTOBJECT>
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="800" align="left" />
+
+        <WTFUNCTION name="ViewAds()">
+          var url, win;
+          var cid = document.getElementById('CompanyID').value;
+          url = "15612.asp?CompanyID=" + cid
+          win = window.open(url,"Ads","");
+          win.focus();
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(CompanyID)"/>
+        </WTROW>
+
+        <WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="400" align="left" />
+						<WTCOLUMN width="400" align="right" />
+						<WTROW>
+							<WTSTATIC col="1" label="LeadAds" class="PageHeading" align="left"/>
+							<WTSTATIC col="2" bold="true" class="PageHeader" align="right">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="NewLeadAd">
+										<WTLINK name="15602"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+                <WTSTATIC space="2"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(preview.gif)" imgalign="absmiddle">
+                    <WTLINK name="ViewAds()" click="true" />
+                  </WTIMAGE>
+                  <WTSTATIC space="1"/>
+									<WTSTATIC label="ViewAds">
+                    <WTLINK name="ViewAds()" click="true" />
+                  </WTSTATIC>
+								</WTCODEGROUP>
+              </WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="left" label="LeadAdsText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(LeadAds.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="LeadAd">
+						<WTCOLUMN width="10" align="center" valign="top" label="Seq" />
+            <WTCOLUMN width="45" align="left" valign="top" label="LeadAdName" />
+            <WTCOLUMN width="25" align="left" valign="top" label="Target" />
+            <WTCOLUMN width="10" align="center" valign="top" label="Status" />
+            <WTCOLUMN width="10" align="center" valign="top" label="GroupID" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(LeadAd.Seq)" />
+							<WTSTATIC col="2">
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="SYSCON(LEADAD-DIVIDER)" />
+                  <WTSTATIC value="CONST(-----)" fontcolor="blue"/>
+                  <WTSTATIC value="DATA(LeadAd.LeadAdName)" fontcolor="blue"/>
+                </WTCODEGROUP>
+								<WTSTATIC value="DATA(LeadAd.LeadAdName)" fontcolor="green">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="SYSCON(LEADAD-PENDING)" />
+                </WTSTATIC>
+								<WTSTATIC value="DATA(LeadAd.LeadAdName)">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="SYSCON(LEADAD-ACTIVE)" />
+								</WTSTATIC>
+								<WTSTATIC value="DATA(LeadAd.LeadAdName)" fontcolor="red">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="SYSCON(LEADAD-INACTIVE)" />
+                </WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="CONST((#&lt;xsl:value-of select=&quot;@leadadid&quot;/&gt;))" fontcolor="purple"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Image)" oper="not-equal" value="CONST('')" />
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Images.gif)" imgalign="absmiddle"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="15603"><WTPARAM name="LeadAdID" value="DATA(LeadAd.LeadAdID)" /></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+              <WTSTATIC col="3" value="DATA(LeadAd.Target)" />
+              <WTSTATIC col="4" value="DATA(LeadAd.Status)" />
+              <WTSTATIC col="5" value="DATA(LeadAd.GroupID)" />
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="15602" caption="Lead Ad"  header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="GroupID" datatype="number" />
+			<WTPARAM name="CopyLeadAdID" datatype="number" />
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadAdID" direction="input" value="CONST(0)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadAd" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION id="2" name="Add" type="Add">
+				<WTSETATTRIBUTE name="CONST(tmpGroupID)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="CONST(tmpTarget)" value="CONST(&quot;&quot;)" />
+        <WTSETATTRIBUTE name="CONST(tmpLink)" value="CONST(&quot;&quot;)" />
+        <WTSETATTRIBUTE name="CONST(tmpImage)" value="CONST(&quot;&quot;)" />
+        <WTSETATTRIBUTE name="PARAM(CopyLeadAdID)" value="FORM(CopyLeadAdID)" />
+				<WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+					<WTCONDITION expr="PARAM(CopyLeadAdID)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadAdID" direction="input" value="PARAM(CopyLeadAdID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpTarget)" value="ATTR(Target)" />
+          <WTSETATTRIBUTE name="CONST(tmpLink)" value="ATTR(Link)" />
+        </WTOBJECT>
+				<WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadAdID" direction="input" value="CONST(0)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)" />
+          <WTSETATTRIBUTE name="ATTR(GroupID)" value="PARAM(GroupID)"/>
+          <WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(LEADAD-PENDING)" />
+          <WTSETATTRIBUTE name="ATTR(Target)" value="CONST(tmpTarget)"/>
+          <WTSETATTRIBUTE name="ATTR(Link)" value="CONST(tmpLink)" />
+					<WTSETATTRIBUTES />
+					<WTMETHOD name="Add">
+						<WTPARAM name="NewLeadAdID" direction="return" datatype="number" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors" />
+						<WTPARAM name="xmlLeadAd" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors" />
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN />
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right" />
+				<WTCOLUMN width="440" align="left" />
+
+				<WTFUNCTION name="AddCampaign()">
+				var id = document.getElementById('CopyLeadAdID').value;
+				if( id == 0 )
+					alert('Please select an ad to copy.');
+				else
+					doSubmit(2,"");
+			    </WTFUNCTION>  
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(GroupID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewAd" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+        <WTROW>
+          <WTSTATIC col="1" tag="LeadAdName" />
+          <WTTEXT col="2" value="ATTR(LeadAd.LeadAdName)" />
+        </WTROW>
+        <WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="CopyHelp" class="Prompt" />
+				</WTROW>
+				<WTROW>
+          <WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+          <WTSTATIC col="1" merge="2" label="CopyLeadAd" align="center"/>
+					<WTTEXT col="1" value="PARAM(CopyLeadAdID)" size="3"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)" />
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="15603" caption="Lead Ad" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="LeadAdID" datatype="number" />
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="GroupID" datatype="number" />
+			<WTPARAM name="ParentType" datatype="number"/>
+			<WTPARAM name="ParentID" datatype="number"/>
+			<WTPARAM name="URL" datatype="text"/>
+			<WTPARAM name="Images" datatype="number"/>
+			<WTPARAM name="UploadImageFile" datatype="text"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadImageFile)" oper="not-equal" value="&quot;&quot;"/>
+				<WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadAdID" direction="input" value="PARAM(LeadAdID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Image)" value="PARAM(UploadImageFile)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadLeadAd">
+				<WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadAdID" direction="input" value="PARAM(LeadAdID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadAd" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(2)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateLeadAd">
+				<WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadAdID" direction="input" value="PARAM(LeadAdID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTES />
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+      
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadLeadAd" />
+			</WTACTION>
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateLeadAd" />
+				<WTCALLSUB name="LoadLeadAd">
+					<WTCONDITION expr="IsErrors" />
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors" />
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					<WTLINK name="15601" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)" />
+					</WTLINK>
+				</WTRETURN>
+				<WTRETURN>
+					<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LeadAdID" direction="input" value="PARAM(LeadAdID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadLeadAd">
+					<WTCONDITION expr="IsErrors" />
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors" />
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="UploadImage" type="Upload">
+				<WTCALLSUB name="UpdateLeadAd"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETCACHE name="LEADAD" value="PARAM(LeadAdID)"/>
+					<WTRETURN>
+						<WTLINK name="15622"/>
+					</WTRETURN>
+				</WTCODEGROUP>
+			</WTACTION>
+
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right" />
+				<WTCOLUMN width="440" align="left" />
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="LeadAd" value="ATTR(LeadAd.LeadAdName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="EditLeadAdText" align="left" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadAdID" height="18" />
+					<WTSTATIC col="2" value="ATTR(LeadAd.LeadAdID)" bold="true" />
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="CompanyID"/>
+						<WTTEXT col="2" value="ATTR(LeadAd.CompanyID)" size="3"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="GroupID"/>
+						<WTTEXT col="2" value="ATTR(LeadAd.GroupID)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(LeadAd.CompanyID)"/>
+					<WTHIDDEN value="ATTR(LeadAd.GroupID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadAdName" />
+					<WTTEXT col="2" value="ATTR(LeadAd.LeadAdName)" />
+				</WTROW>
+        <WTROW>
+          <WTSTATIC col="1" tag="Target" />
+          <WTTEXT col="2" value="ATTR(LeadAd.Target)" />
+        </WTROW>
+        <WTROW>
+					<WTSTATIC col="1" tag="Status" />
+					<WTCOMBO col="2" value="ATTR(LeadAd.Status)" />
+					<WTSTATIC col="2" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(LeadAd.Seq)" prespace="false" size="3"/>
+				</WTROW>
+        <WTROW>
+          <WTSTATIC col="1" tag="Link" align="left"/>
+        </WTROW>
+        <WTROW>
+          <WTMEMO col="1" merge="2" align="left" value="ATTR(LeadAd.Link)" rows="4" cols="72" />
+        </WTROW>
+
+        <WTROW margin-top="6" margin-bottom="12">
+          <WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+            <WTCONDITION expr="IsActive"/>
+          </WTBUTTON>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" />
+          <WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+            <WTCONDITION expr="IsActive"/>
+          </WTBUTTON>
+        </WTROW>
+
+        <WTCODEGROUP>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+          <WTROW margin-bottom="6">
+            <WTSTATIC col="1" merge="2" align="center" valign="bottom" tag="Image"/>
+            <WTTEXT col="1" value="ATTR(LeadAd.Image)" size="10"/>
+            <WTBUTTON col="1" action="7" value="CONST(Upload)"/>
+          </WTROW>
+          <WTROW margin-bottom="12">
+            <WTCONDITION expr="ATTR(LeadAd.Image)" oper="not-equal" value="''"/>
+            <WTIMAGE col="1" merge="2" align="center" value="ATTR(LeadAd.Image)" path="LeadAd"/>
+          </WTROW>
+        </WTCODEGROUP>
+				<WTROW>
+          <WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+          <WTHIDDEN value="ATTR(LeadAd.Image)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--============================================================================================-->
+		<WTWEBPAGE name="15611" caption="Lead Ads" header="false" footer="false" navbar="false" wrapper="wrapper800"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number" />
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="LeadAds" project="ptsLeadAdUser" class="CLeadAds">
+					<WTMETHOD name="ListGroup">
+						<WTPARAM name="GroupID" direction="input" value="PARAM(GroupID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadAds" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="left"/>
+				<WTCOLUMN width="400" align="right"/>
+
+				<WTSTATIC label="Traffic"/>
+				<WTSTATIC label="Usage"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="LeadAds" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" bold="true" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewLeadAd">
+								<WTLINK name="15602">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="GrpLeadAdsText" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="LeadAd">
+            <WTCOLUMN width="60" align="left" valign="top" label="LeadAdName" />
+            <WTCOLUMN width="25" align="left" valign="top" label="Target" />
+            <WTCOLUMN width="15" align="left" valign="top" label="Status" />
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(LeadAd.LeadAdName)" space="1"/>
+								<WTSTATIC value="CONST((#&lt;xsl:value-of select=&quot;@leadadid&quot;/&gt;))" fontcolor="purple"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="15603">
+											<WTPARAM name="LeadAdID" value="DATA(LeadAd.LeadAdID)" />
+											<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+              <WTSTATIC col="2" value="DATA(LeadAd.Target)"/>
+              <WTSTATIC col="3" value="DATA(LeadAd.Status)"/>
+            </WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2">
+								<WTSTATIC value="DATA(LeadAd.Link)" fontcolor="gray"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+      </WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="15612" caption="Marketing Ads" header="false" footer="false" navbar="false" wrapper="wrapper800"
+			   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" track="0">
+      <!--============================================================================================-->
+      <WTPARAM name="CompanyID" datatype="number" />
+      <WTPARAM name="MemberID" datatype="number" />
+      <WTPARAM name="LeadCampaignID" datatype="number" />
+
+      <WTINCLUDE name="Resources.asp"/>
+
+      <WTCODEGROUP>
+        <WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+          <WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+        </WTSETATTRIBUTE>
+        <WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+          <WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+        </WTSETATTRIBUTE>
+      </WTCODEGROUP>
+
+      <WTSUB name="LoadList">
+        <!-- Get The Group, Shared or Company Resources -->
+        <WTGETCACHE name="CONST(tmpGroupID)" value="GROUPID" datatype="number"/>
+        <WTCODEGROUP>
+          <WTCONDITION expr="NotMemberOnly" />
+          <WTSETATTRIBUTE name="CONST(tmpGroupID)" value="PARAM(MemberID)"/>
+          <WTCALLSUB name="GetResources tmpGroupID"/>
+        </WTCODEGROUP>
+        <WTSETATTRIBUTE name="CONST(tmpGroupID1)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="CONST(tmpGroupID2)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="CONST(tmpGroupID3)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-LEADPAGE)"/>
+        <WTCALLSUB name="GetResource tmpResource, tmpGroupID1, tmpGroupID2, tmpGroupID3">
+          <WTCONDITION expr="CONST(tmpGroupID)" oper="not-equal" value="CONST(0)" />
+        </WTCALLSUB>
+        <WTOBJECT name="LeadCampaigns" project="ptsLeadCampaignUser" class="CLeadCampaigns">
+          <WTMETHOD name="EnumMember">
+            <WTPARAM name="xmlLeadCampaigns" direction="return" datatype="text"/>
+            <WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+            <WTPARAM name="Grp" direction="input" value="CONST(tmpGroupID)" />
+            <WTPARAM name="GroupID1" direction="input" value="CONST(tmpGroupID1)" />
+            <WTPARAM name="GroupID2" direction="input" value="CONST(tmpGroupID2)" />
+            <WTPARAM name="GroupID3" direction="input" value="CONST(tmpGroupID3)" />
+            <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+            <WTPARAM name="ItemID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="Element" direction="input" value="CONST()"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTCODEGROUP>
+          <!-- Remove Blank Row -->
+          <WTCUSTOM>
+            xmlLeadCampaigns = Replace( xmlLeadCampaigns, "&lt;ENUM id=&quot;&quot;0&quot;&quot; name=&quot;&quot; &quot;&quot;/&gt;", "" )
+          </WTCUSTOM>
+        </WTCODEGROUP>        
+      </WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTOBJECT name="LeadAds" project="ptsLeadAdUser" class="CLeadAds">
+          <WTMETHOD name="ListCompany">
+            <WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlLeadAds" direction="return" datatype="text" />
+            <WTPARAM name="Option" direction="input" value="CONST(13)" />
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTCALLSUB name="LoadList"/>
+      </WTACTION>
+      <WTACTION id="3" name="Return" type="Cancel">
+        <WTRETURN />
+      </WTACTION>
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="800" align="left" />
+
+        <WTFUNCTION name="ViewLink(id)">
+          var url, win;
+          var mid = document.getElementById('MemberID').value;
+          var lid = document.getElementById('LeadCampaignID').value;
+          if( lid == 0 ) { alert('Please select a lead page above'); }
+          else {
+          url = "15613.asp?a=" + id + "&amp;m=" + mid + "&amp;l=" + lid
+          win = window.open(url,"AdLink","top=100,left=100,height=200,width=400,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+          win.focus();
+          }
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(CompanyID)"/>
+          <WTHIDDEN value="PARAM(MemberID)"/>
+        </WTROW>
+
+        <WTROW>
+          <WTSTATIC col="1" label="LeadAds" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTDIVIDER col="1" height="1" color="SYS(headerdivider)" />
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" label="MemberLeadAdsText" class="prompt" align="left" space="2"/>
+          <WTCOMBO col="1" value="PARAM(LeadCampaignID)" datapath="/DATA/TXN/PTSLEADCAMPAIGNS/ENUM" prespace="false"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTDIVIDER col="1" height="1" color="SYS(divider)" />
+        </WTROW>
+
+        <WTROW>
+          <WTRECORDSET col="1" entity="LeadAd">
+            <WTCOLUMN width="100" align="left" valign="top"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="DATA(Status)" oper="equal" value="SYSCON(LEADAD-DIVIDER)"/>
+              <WTROW height="30" margin-top="3" margin-bottom="3">
+                <WTSTATIC col="1" value="DATA(LeadAd.LeadAdName)" bold="true" align="center" backcolor="#7c8a9c" fontsize="3" fontcolor="white"/>
+              </WTROW>
+            </WTCODEGROUP>
+            <WTCODEGROUP>
+              <WTCONDITION expr="DATA(Status)" oper="not-equal" value="SYSCON(LEADAD-DIVIDER)"/>
+              <WTROW margin-bottom="6">
+                <WTIMAGE col="1" value="DATA(Image)" align="left" imgalign="absmiddle" path="LeadAd">
+                  <WTLINK name="ViewLink(&lt;xsl:value-of select=&quot;@leadadid&quot;/&gt;)" click="true" />
+                </WTIMAGE>
+              </WTROW>
+            </WTCODEGROUP>
+          </WTRECORDSET>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="15613" caption="Lead Ad" header="false" footer="false" navbar="false" wrapper="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+      <!--============================================================================================-->
+      <WTPARAM name="A" datatype="number" />
+      <WTPARAM name="M" datatype="number" />
+      <WTPARAM name="L" datatype="number" />
+
+      <WTACTION id="0" name="New" type="New">
+        <WTOBJECT name="LeadAd" project="ptsLeadAdUser" class="CLeadAd">
+          <WTMETHOD name="Load">
+            <WTPARAM name="LeadAdID" direction="input" value="PARAM(A)" />
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+          </WTMETHOD>
+          <WTCUSTOM>
+            tmpLink = .Link
+            tmpLink = Replace( tmpLink, "{memberid}", CSTR(reqM) )
+            tmpLink = Replace( tmpLink, "{leadpageid}", CSTR(reqL) )
+            .Link = tmpLink
+          </WTCUSTOM>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlLeadAd" direction="return" datatype="text" />
+            <WTPARAM name="Option" direction="input" value="CONST(2)" />
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTACTION>
+      
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="300" align="center" />
+        
+        <WTROW margin-top="6" margin-bottom="6">
+          <WTSTATIC col="1" label="CopyLinkText" class="prompt" align="center" bold="true"/>
+        </WTROW>
+        <WTROW>
+          <WTMEMO col="1" merge="2" align="left" value="ATTR(LeadAd.Link)" rows="6" cols="35" />
+        </WTROW>
+
+        <WTROW margin-top="6" margin-bottom="12">
+          <WTBUTTON col="1" value="CONST(SelectAll)" align="center">
+            <WTCLICK>document.getElementById('Link').select();</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--**************************************Image Upload Page**************************************-->
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="15622" header="false" footer="false" navbar="false" caption="Upload File" action="false" submit="15622Upload.asp" type="multi"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" wrapper="wrapper600">
+			<!--=============================================================================================-->
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+				<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+				</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+
+				<WTROW margin-top="19">
+					<WTSTATIC col="1" merge="3" label="UploadLeadAdImageHeader" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="19">
+					<WTSTATIC col="1" merge="3" label="UploadLeadAdImageText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="19">
+					<WTSTATIC col="1"/>
+					<WTFILE col="2"  align="center" value="upload" accept="*.png, *.jpg, *.gif"/>
+					<WTBUTTON col="2" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video.js | HTML5 Video Player</title>
+
+  <!-- Chang URLs to wherever Video.js files will be hosted -->
+  <link href="include/video-js.min.css" rel="stylesheet" type="text/css">
+  <!-- video.js must be in the <head> for older IEs to work. -->
+  <script src="include/video.js"></script>
+
+  <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
+  <script>
+    videojs.options.flash.swf = "include/video-js.swf";
+  </script>
+
+
+</head>
+<body>
+<center>
+  <video id="video_1" class="video-js vjs-default-skin vjs-big-play-centered" controls autoplay preload="auto" width="480" height="360"
+      data-setup="{}">
+    <source src="lapp_hiring.mp4" type='video/mp4' />
+    <source src="lapp_hiring.webm" type='video/webm' />
+    <source src="lapp_hiring.ogv" type='video/ogv' />
+  </video>
+</center>
+</body>
+</html>

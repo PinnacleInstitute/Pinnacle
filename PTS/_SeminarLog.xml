@@ -1,0 +1,250 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="181" name="SeminarLog" alias="sel" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="18101" name="SeminarLogID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="18102" name="SeminarID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="18105" name="LogDate" type="date" title="true" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="18191" name="FromDate" type="date" source="entity" persist="false" />
+		<WTATTRIBUTE id="18192" name="ToDate" type="date" source="entity" persist="false" />
+
+		<WTINDEX name="SeminarLogID">
+			<WTATTRIBUTE name="SeminarID"/>
+			<WTATTRIBUTE name="LogDate"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="SeminarLog" entity="SeminarLog" alias="sel"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE name="ClearAll"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(SeminarID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="Report" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(SeminarID)" direction="input"/>
+      <WTPARAM name="ATTR(FromDate)" direction="input"/>
+      <WTPARAM name="ATTR(ToDate)" direction="input"/>
+      <WTPARAM name="Result" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+    <!--==================================================================-->
+    <WTWEBPAGE name="18115" caption="Seminar Report" form="Report" navbar="false" header="false" footer="false" wrapper="wrapper1000"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+      <!--==================================================================-->
+      <WTPARAM name="SeminarID" datatype="number" />
+      <WTPARAM name="FromDate" datatype="date" />
+      <WTPARAM name="ToDate" datatype="date" />
+      <WTPARAM name="Term" datatype="number" />
+      <WTPARAM name="Visitors" datatype="number" />
+      <WTPARAM name="Registered" datatype="number" />
+      <WTPARAM name="Rate" datatype="text" />
+
+      <WTSUB name="LoadReport">
+        <!-- Add a day to account for the minutes of the day -->
+        <WTSETATTRIBUTE name="CONST(tmpToDate)" value="CONST(DATEADD(&quot;d&quot;,1,CDate(reqToDate)))" />
+        <WTOBJECT name="SeminarLog" project="ptsSeminarLogUser" class="CSeminarLog">
+          <WTMETHOD name="Report">
+            <WTPARAM name="SeminarID" direction="input" value="PARAM(SeminarID)" />
+            <WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)" />
+            <WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)" />
+            <WTPARAM name="reqVisitors" direction="return" datatype="number" />
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Attendee" project="ptsAttendeeUser" class="CAttendee">
+          <WTMETHOD name="Report">
+            <WTPARAM name="SeminarID" direction="input" value="PARAM(SeminarID)" />
+            <WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)" />
+            <WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)" />
+            <WTPARAM name="reqRegistered" direction="return" datatype="number" />
+          </WTMETHOD>
+          <WTCUSTOM>
+            If reqVisitors &gt; 0 Then
+            reqRate = CStr(formatPercent(CLng(reqRegistered)/Clng(reqVisitors),0))
+            Else
+            reqRate = "0%"
+            End If
+          </WTCUSTOM>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="LoadSeminar">
+        <WTOBJECT name="Seminar" project="ptsSeminarUser" class="CSeminar">
+          <WTCONDITION expr="NoErrors" />
+          <WTMETHOD name="Load">
+            <WTPARAM name="SeminarID" direction="input" value="PARAM(SeminarID)" />
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSeminar" direction="return" datatype="text" />
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTSETATTRIBUTE name="PARAM(Term)" value="CONST(3)" />
+        <WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(&quot;1/1/17&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(date)"/>
+        <WTCALLSUB name="LoadReport"/>
+        <WTCALLSUB name="LoadSeminar"/>
+      </WTACTION>
+
+      <WTACTION id="5" name="Report" type="Update">
+        <WTCALLSUB name="LoadReport"/>
+        <WTCALLSUB name="LoadSeminar"/>
+      </WTACTION>
+
+      <WTACTION id="6" name="Clear" type="Clear">
+        <!-- Add a day to account for the minutes of the day -->
+        <WTSETATTRIBUTE name="CONST(tmpToDate)" value="CONST(DATEADD(&quot;d&quot;,1,CDate(reqToDate)))" />
+        <WTOBJECT name="SeminarLog" project="ptsSeminarLogUser" class="CSeminarLog">
+          <WTMETHOD name="ClearAll">
+            <WTPARAM name="SeminarID" direction="input" value="PARAM(SeminarID)" />
+            <WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)" />
+            <WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)" />
+            <WTPARAM name="Count" direction="return" datatype="number" />
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTCALLSUB name="LoadSeminar"/>
+        <WTCUSTOM>DoError 0, "Delete", Count &amp; " Statistics Cleared!"</WTCUSTOM>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="750" align="left" />
+        <WTSTATIC label="ConfirmClear"/>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" align="center" class="PageHeading">
+            <WTSTATIC label="TrafficReport" newline="1"/>
+            <WTSTATIC value="ATTR(Seminar.SeminarName)"/>
+          </WTSTATIC>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" align="center" tag="ReportOn" />
+          <WTCOMBO col="1" name="Term" align="center" value="PARAM(Term)">
+            <WTOPTION id="1" label="Yesterday" />
+            <WTOPTION id="2" label="Today" />
+            <WTOPTION id="3" label="UptoToday" />
+            <WTOPTION id="4" label="PrevWeek" />
+            <WTOPTION id="5" label="PrevMonth" />
+            <WTOPTION id="6" label="PrevYear" />
+            <WTOPTION id="7" label="WeekToDate" />
+            <WTOPTION id="8" label="MonthToDate" />
+            <WTOPTION id="9" label="YearToDate" />
+            <WTCHANGE>
+              var ONE_DAY = 1000 * 60 * 60 * 24;
+              var fromdate = new Date();
+              var todate = new Date();
+              var term = document.getElementById('Term').value;
+              switch(term) {
+              case "0":
+              document.getElementById('FromDate').value = document.getElementById('EnrollDate').value
+              break;
+              case "1":
+              fromdate.setTime(fromdate.getTime() - ONE_DAY );
+              todate = fromdate;
+              break;
+              case "2":
+              break;
+              case "3":
+              fromdate.setMonth(0);
+              fromdate.setDate(1);
+              fromdate.setYear(2017);
+              break;
+              case "4":
+              todate.setTime(todate.getTime() - ( todate.getDay() * ONE_DAY ) );
+              fromdate.setTime(todate.getTime() - ( 6 * ONE_DAY ) );
+              break;
+              case "5":
+              todate.setDate(1);
+              todate.setTime(todate.getTime() - ONE_DAY );
+              fromdate.setTime(todate.getTime());
+              fromdate.setDate(1);
+              break;
+              case "6":
+              todate.setMonth(0);
+              todate.setDate(1);
+              todate.setTime(todate.getTime() - ONE_DAY );
+              fromdate.setTime(todate.getTime());
+              fromdate.setMonth(0);
+              fromdate.setDate(1);
+              break;
+              case "7":
+              fromdate.setTime(fromdate.getTime() - ( (fromdate.getDay()-1) * ONE_DAY ) );
+              break;
+              case "8":
+              fromdate.setDate(1);
+              break;
+              case "9":
+              fromdate.setMonth(0);
+              fromdate.setDate(1);
+              break;
+              }
+              if(term!="0"){document.getElementById('FromDate').value = fromdate.getMonth()+1 + "/" + fromdate.getDate() + "/" + fromdate.getFullYear();}
+              document.getElementById('ToDate').value = todate.getMonth()+1 + "/" + todate.getDate() + "/" + todate.getFullYear();
+            </WTCHANGE>
+          </WTCOMBO>
+          <WTSTATIC col="1" align="center" tag="From" />
+          <WTTEXT col="1" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true" />
+          <WTSTATIC col="1" tag="To" />
+          <WTTEXT col="1" value="PARAM(ToDate)" name="ToDate" type="date" size="8" />
+          <WTBUTTON col="1" action="5" value="CONST(Report)" default="true" />
+<!--
+          <WTBUTTON col="1" action="6" value="CONST(Clear)" msg="ConfirmClear">
+            <WTCONDITION expr="IsEmployee"/>
+          </WTBUTTON>
+-->
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTDIVIDER col="1" height="1" color="SYS(divider)" />
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTTABLE col="1">
+            <WTCOLUMN width="75" align="left"/>
+            <WTCOLUMN width="200" align="center"/>
+            <WTCOLUMN width="200" align="center"/>
+            <WTCOLUMN width="200" align="center"/>
+            <WTROW margin-bottom="6">
+              <WTSTATIC col="1"/>
+              <WTSTATIC col="2" label="Visitors" fontsize="5"/>
+              <WTSTATIC col="3" label="Registered" fontsize="5"/>
+              <WTSTATIC col="4" label="Rate" fontsize="5"/>
+            </WTROW>
+            <WTROW>
+              <WTSTATIC col="1"/>
+              <WTSTATIC col="2" value="PARAM(Visitors)" bold="true" fontsize="5"/>
+              <WTSTATIC col="3" value="PARAM(Registered)" bold="true" fontsize="5"/>
+              <WTSTATIC col="4" value="PARAM(Rate)" bold="true" fontsize="5"/>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+
+  </WTWEBPAGES>
+</WTROOT>

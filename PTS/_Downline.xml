@@ -1,0 +1,1675 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="54" name="Downline" alias="dl" title="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="5401" name="DownlineID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="5402" name="Line" type="number" source="entity"/>
+		<WTATTRIBUTE id="5403" name="ParentID" type="number" source="entity"/>
+		<WTATTRIBUTE id="5404" name="ChildID" type="number" source="entity"/>
+		<WTATTRIBUTE id="5405" name="Position" type="number" source="entity"/>
+		<WTATTRIBUTE id="5406" name="IsLocked" type="yesno" source="entity"/>
+	        
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="5490" name="ChildName" type="text" length="60" source="entity" persist="false"/>
+		<WTATTRIBUTE id="5491" name="EnrollDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="5492" name="Title" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="5493" name="Status" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="5494" name="Location" type="text" length="60" source="entity" persist="false"/>
+		<WTATTRIBUTE id="5495" name="Dec" type="number" source="entity" persist="false" xml="false"/>
+		<WTATTRIBUTE id="5496" name="Old" type="number" source="entity" persist="false" xml="false"/>
+		<WTATTRIBUTE id="5497" name="CompanyID" type="number" source="entity" persist="false" xml="false"/>
+
+		<WTINDEX name="Parent">
+			<WTATTRIBUTE name="Line"/>
+			<WTATTRIBUTE name="ParentID"/>
+			<WTATTRIBUTE name="Position"/>
+		</WTINDEX>
+		<WTINDEX name="Child">
+			<WTATTRIBUTE name="Line"/>
+			<WTATTRIBUTE name="ChildID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Downline" entity="Downline" alias="dl"/>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="ChildName" default="true"/>
+			<WTATTRIBUTE name="EnrollDate"/>
+		</WTENUM>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Build" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/> 
+			<WTPARAM name="ATTR(ParentID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ChildID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Rebuild" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/> 
+			<WTPARAM name="ATTR(ParentID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ChildID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="BuildAll" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Delete" type="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Fetch" type="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTPARAM name="ATTR(Line)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTATTRIBUTE name="DownlineID"/>
+			<WTATTRIBUTE name="ChildID"/>
+			<WTATTRIBUTE name="Title"/>
+			<WTATTRIBUTE name="Status"/>
+			<WTATTRIBUTE name="ChildName"/>
+			<WTATTRIBUTE name="EnrollDate"/>
+			<WTBOOKMARK name=""/>
+			<WTJOIN name="Member"/>
+			<WTCONDITION expr="ATTR(Downline.Line)" oper="equal" value="PARAM(Line)" connector="and"/>
+			<WTCONDITION expr="ATTR(Downline.ParentID)" oper="equal" value="PARAM(ParentID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Member.Status)" oper="greater-equal" value="CONST(1)" connector="and"/>
+			<WTCONDITION expr="ATTR(Member.Status)" oper="less-equal" value="CONST(4)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Genealogy" type="List" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Downline.DownlineID)"/>
+					<WTATTRIBUTE value="ATTR(Downline.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Downline.ChildID)"/>
+					<WTATTRIBUTE value="ATTR(Downline.Position)"/>
+					<WTATTRIBUTE value="ATTR(Downline.ChildName)"/>
+					<WTATTRIBUTE value="ATTR(Downline.EnrollDate)"/>
+					<WTATTRIBUTE value="ATTR(Downline.Status)"/>
+					<WTATTRIBUTE value="ATTR(Downline.Title)"/>
+					<WTATTRIBUTE value="ATTR(Downline.Location)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="ListChild" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(ChildID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Downline.DownlineID)"/>
+					<WTATTRIBUTE value="ATTR(Downline.Line)"/>
+					<WTATTRIBUTE value="ATTR(Downline.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Downline.ChildName)"/> <!-- Parent Name -->
+					<WTJOIN name="Downline" lock="false"/>
+					<WTCONDITION expr="ATTR(Downline.ChildID)" oper="equal" value="PARAM(ChildID)"/>
+					<WTORDER name="ATTR(Downline.Line)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Update" type="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="UpdateStatus" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="ATTR(ChildID)" direction="input"/>
+			<WTPARAM name="ATTR(Old)" direction="input"/>  <!-- Old Status -->
+			<WTPARAM name="ATTR(Status)" direction="input"/>  <!-- New Status -->
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="UpdateTitle" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="ATTR(ChildID)" direction="input"/>
+			<WTPARAM name="ATTR(Old)" direction="input"/>  <!-- Old Title -->
+			<WTPARAM name="ATTR(Title)" direction="input"/>  <!-- New Title -->
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetParent" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(ChildID)" direction="input"/>
+			<WTPARAM name="ParentID" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Promote" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetCount" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+			<WTPARAM name="Old" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="GetCounts" type="Fetch" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="ATTR(Dec)" direction="output"/>
+			<WTPARAM name="ATTR(Old)" direction="output"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="GetCustom" type="Fetch" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Status)" direction="input"/>
+			<WTPARAM name="ATTR(Line)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="ATTR(Dec)" direction="output"/>
+			<WTPARAM name="ATTR(Old)" direction="output"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==========================================================================================-->
+		<WTWEBPAGE name="5403" wrapper="false" header="false" navbar="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==========================================================================================-->
+			<WTPARAM name="DownlineID" datatype="number"/>
+			<WTPARAM name="Txn" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DownlineID" direction="input" value="PARAM(DownlineID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDownline" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DownlineID" direction="input" value="PARAM(DownlineID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDownline" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(Txn)" value="CONST(1)">
+					<WTCONDITION expr="NoErrors"/>
+				</WTSETATTRIBUTE>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="DownlineID" direction="input" value="PARAM(DownlineID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(Txn)" value="CONST(2)">
+					<WTCONDITION expr="NoErrors"/>
+				</WTSETATTRIBUTE>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="200" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC tag="Downline" value="ATTR(Downline.DownlineID)" space="2"/>
+						<WTSTATIC fontcolor="red">
+							<WTSTATIC label="Updated">
+								<WTCONDITION expr="PARAM(Txn)" oper="equal" value="CONST(1)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Deleted">
+								<WTCONDITION expr="PARAM(Txn)" oper="equal" value="CONST(2)"/>
+							</WTSTATIC>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Txn)" oper="less" value="CONST(2)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Line"/>
+						<WTSTATIC col="2" value="ATTR(Downline.Line)" height="18"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="ParentID"/>
+						<WTTEXT col="2" value="ATTR(Downline.ParentID)" size="4"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="ChildID"/>
+						<WTTEXT col="2" value="ATTR(Downline.ChildID)" size="4"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Position"/>
+						<WTTEXT col="2" value="ATTR(Downline.Position)" size="4"/>
+					</WTROW>
+	<!--
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTCHECK col="2" value="ATTR(Downline.IsLocked)"/>
+					</WTROW>
+	-->
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="PARAM(Txn)" oper="less" value="CONST(2)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="PARAM(Txn)" oper="less" value="CONST(2)"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="5404" page-width="100%" caption="Downline Sponsors" navbar="false" header="false" footer="false"  viewport="width=device-width"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+		   
+			<WTSUB name="LoadList">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Downlines" project="ptsDownlineUser" class="CDownlines">
+					<WTMETHOD name="ListChild">
+						<WTPARAM name="ChildID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDownlines" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadList"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Rebuild" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpReferralID)" value="ATTR(ReferralID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="Rebuild">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ParentID" direction="input" value="CONST(tmpReferralID)"/>
+						<WTPARAM name="ChildID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" class="PageHeading" align="center">
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)"/>
+					</WTSTATIC>
+				</WTROW>
+<!--				
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+-->
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Downline">
+						<WTCOLUMN width="50" align="left" valign="top" label="Team"/>
+						<WTCOLUMN width="50" align="left" valign="top" label="Leader"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Line)">
+									<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(5)"/>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(9)" connector="and"/>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(13)" connector="and"/>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(14)" connector="and"/>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(17)" connector="and"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(5)"/>
+									<WTSTATIC label="ManagerTeam">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="DirectorTeam">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="ExecutiveTeam">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(9)"/>
+									<WTSTATIC label="Team9_7">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(7)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team9_8">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(8)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team9_9">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(9)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team9_10">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(10)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team9_11">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(11)"/>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/>
+									<WTSTATIC label="Team13_5">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(5)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team13_6">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(6)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team13_7">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(7)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team13_9">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(9)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team13_10">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(10)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team13_11">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(11)"/>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+									<WTSTATIC label="Team14_6">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(6)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team14_7">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(7)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team14_8">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(8)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team14_9">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(9)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team14_10">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(10)"/>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(17)"/>
+									<WTSTATIC label="Team17_6">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(6)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team17_7">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(7)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Team17_8">
+										<WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(8)"/>
+									</WTSTATIC>
+								</WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="SYSCON(SILVERHEART)"/>
+                  <WTSTATIC label="Team20_2">
+                    <WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(2)"/>
+                  </WTSTATIC>
+                  <WTSTATIC label="Team20_3">
+                    <WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(3)"/>
+                  </WTSTATIC>
+                  <WTSTATIC label="Team20_4">
+                    <WTCONDITION expr="DATA(Line)" oper="equal" value="CONST(4)"/>
+                  </WTSTATIC>
+                </WTCODEGROUP>
+              </WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Downline.ChildName)"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="5405">
+											<WTPARAM name="DownlineID" value="DATA(DownlineID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>						
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="5" value="CONST(Rebuild)" align="center" msg="ConfirmRebuild">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==========================================================================================-->
+		<WTWEBPAGE name="5405" page-width="100%" header="false" navbar="false" footer="false" viewport="width=device-width"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==========================================================================================-->
+			<WTPARAM name="DownlineID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DownlineID" direction="input" value="PARAM(DownlineID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDownline" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DownlineID" direction="input" value="PARAM(DownlineID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlDownline" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="200" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Line"/>
+					<WTSTATIC col="2" value="ATTR(Downline.Line)" height="18"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ParentID"/>
+					<WTTEXT col="2" value="ATTR(Downline.ParentID)" size="4"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+<!-- View TV Sales Team Summary -->
+		<!--==========================================================================================-->
+		<WTWEBPAGE name="5406" page-width="100%" header="false" navbar="false" footer="false" viewport="width=device-width"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==========================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Title" datatype="number"/>
+			<WTPARAM name="NextTitle" datatype="number"/>
+			<WTPARAM name="NextTitle0" datatype="number"/>
+			<WTPARAM name="NextTitle1" datatype="number"/>
+			<WTPARAM name="NextTitle2" datatype="number"/>
+			<WTPARAM name="NextTitle3" datatype="number"/>
+			<WTPARAM name="NextTitle4" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="ATTR(Title)"/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Advance" project="ptsAdvanceUser" class="CAdvance">
+					<WTMETHOD name="FetchMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+		If reqTitle &lt; 4 Then
+			reqNextTitle = reqTitle + 1
+			Select Case reqNextTitle
+				Case 2:
+					reqNextTitle0 = 3 - CLng(.Personal)
+					reqNextTitle1 = 12 - CLng(.Group)
+				Case 3:
+					reqNextTitle0 = 5 - CLng(.Personal) - 4
+					reqNextTitle2 = 10 - ( CLng(.Title2) + CLng(.Title3) + CLng(.Title4) ) 
+				Case 4:
+					reqNextTitle0 = 8 - CLng(.Personal)
+					reqNextTitle3 = 10 - ( CLng(.Title3) + CLng(.Title4) ) 
+			End Select
+		End If
+</WTCUSTOM>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAdvance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="50" align="right"/>
+				<WTCOLUMN width="30" align="left"/>
+				<WTCOLUMN width="20" align="left"/>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="3" class="PageHeading" align="center">
+						<WTCODEGROUP><WTIMAGE value="CONST(Title&lt;xsl:value-of select=&quot;/DATA/PARAM/@title&quot;/&gt;.gif)" imgalign="absmiddle" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)" space="1"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(NextTitle)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" merge="3" align="center">
+							<WTSTATIC bold="true">
+								<WTSTATIC label="NextTitleAdvancement" space="1"/>
+								<WTSTATIC label="Manager">
+									<WTCONDITION expr="PARAM(NextTitle)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Director">
+									<WTCONDITION expr="PARAM(NextTitle)" oper="equal" value="CONST(3)"/>
+								</WTSTATIC>
+								<WTSTATIC label="NationalDirector">
+									<WTCONDITION expr="PARAM(NextTitle)" oper="equal" value="CONST(4)"/>
+								</WTSTATIC>
+								<WTSTATIC newline="1"/>
+							</WTSTATIC>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(NextTitle0)" oper="greater" value="CONST(0)"/>
+								<WTSTATIC value="PARAM(NextTitle0)" space="1"/>
+								<WTSTATIC label="MorePersonal" newline="1"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(NextTitle1)" oper="greater" value="CONST(0)"/>
+								<WTSTATIC value="PARAM(NextTitle1)" space="1"/>
+								<WTSTATIC label="MoreAffiliates" newline="1"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(NextTitle2)" oper="greater" value="CONST(0)"/>
+								<WTSTATIC value="PARAM(NextTitle2)" space="1"/>
+								<WTSTATIC label="MoreManagers" newline="1"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(NextTitle3)" oper="greater" value="CONST(0)"/>
+								<WTSTATIC value="PARAM(NextTitle3)" space="1"/>
+								<WTSTATIC label="MoreDirectors" newline="1"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(NextTitle4)" oper="greater" value="CONST(0)"/>
+								<WTSTATIC value="PARAM(NextTitle4)" space="1"/>
+								<WTSTATIC label="MoreNationalDirectors" newline="1"/>
+							</WTCODEGROUP>
+							
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW height="18">
+					<WTSTATIC col="1" tag="PersonalEnrolled" bold="true"/>
+					<WTSTATIC col="2" value="ATTR(Advance.Personal)"/>
+				</WTROW>
+				<WTROW height="18">
+					<WTSTATIC col="1" tag="GroupEnrolled" bold="true"/>
+					<WTSTATIC col="2" value="ATTR(Advance.Group)"/>
+				</WTROW>
+				<WTROW height="18">
+					<WTSTATIC col="1" tag="Affiliates" bold="true"/>
+					<WTSTATIC col="2" value="ATTR(Advance.Title1)"/>
+				</WTROW>
+				<WTROW height="18">
+					<WTSTATIC col="1" tag="Managers" bold="true"/>
+					<WTSTATIC col="2" value="ATTR(Advance.Title2)"/>
+				</WTROW>
+				<WTROW height="18">
+					<WTSTATIC col="1" tag="Directors" bold="true"/>
+					<WTSTATIC col="2" value="ATTR(Advance.Title3)"/>
+				</WTROW>
+				<WTROW height="18">
+					<WTSTATIC col="1" tag="NationalDirectors" bold="true"/>
+					<WTSTATIC col="2" value="ATTR(Advance.Title4)"/>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+<!-- Wealth Resource Network Sales Team Summary -->
+		<!--==========================================================================================-->
+		<WTWEBPAGE name="5407" page-width="100%" header="false" navbar="false" footer="false" viewport="width=device-width"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==========================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ManagerTeam" datatype="number"/>
+			<WTPARAM name="DirectorTeam" datatype="number"/>
+			<WTPARAM name="ExecutiveTeam" datatype="number"/>
+			<WTPARAM name="Title" datatype="number"/>
+			<WTPARAM name="NextTitle" datatype="number"/>
+			<WTPARAM name="NextTitle0" datatype="number"/>
+			<WTPARAM name="NextTitle1" datatype="number"/>
+			<WTPARAM name="NextTitle2" datatype="number"/>
+			<WTPARAM name="NextTitle3" datatype="number"/>
+			<WTPARAM name="NextTitle4" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="ATTR(Title)"/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Advance" project="ptsAdvanceUser" class="CAdvance">
+					<WTMETHOD name="FetchMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+		If reqTitle &lt; 4 Then
+			reqNextTitle = reqTitle + 1
+			Select Case reqNextTitle
+				Case 2:
+					reqNextTitle0 = 2 - CLng(.Personal)
+					reqNextTitle1 = 6 - CLng(.Group)
+				Case 3:
+					reqNextTitle0 = 4 - CLng(.Personal) - 4
+					reqNextTitle2 = 5 - ( CLng(.Title2) + CLng(.Title3) + CLng(.Title4) ) 
+				Case 4:
+					reqNextTitle0 = 6 - CLng(.Personal)
+					reqNextTitle3 = 5 - ( CLng(.Title3) + CLng(.Title4) ) 
+			End Select
+		End If
+</WTCUSTOM>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAdvance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="GetCount">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(2)"/>
+						<WTPARAM name="Line" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqManagerTeam" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="GetCount">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(3)"/>
+						<WTPARAM name="Line" direction="input" value="CONST(2)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqDirectorTeam" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="GetCount">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(4)"/>
+						<WTPARAM name="Line" direction="input" value="CONST(3)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqExecutiveTeam" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="50" align="right"/>
+				<WTCOLUMN width="30" align="left"/>
+				<WTCOLUMN width="20" align="left"/>
+
+				<WTFUNCTION name="ViewTeam(line)">
+					var url, win;
+					url = "5411.asp?memberid=" + document.getElementById('MemberID').value + "&amp;companyid=" + document.getElementById('CompanyID').value + "&amp;line=" + line
+		            win = window.open(url,"TeamMembers","top=50,left=100,height=500,width=500,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="3" class="PageHeading" align="center">
+						<WTCODEGROUP><WTIMAGE value="CONST(Title&lt;xsl:value-of select=&quot;/DATA/PARAM/@title&quot;/&gt;.gif)" imgalign="absmiddle" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)" space="1"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Member.Level)" oper="not-equal" value="CONST(3)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(NextTitle)" oper="not-equal" value="CONST(0)"/>
+						<WTROW>
+							<WTSTATIC col="1" merge="3" align="center">
+								<WTSTATIC bold="true">
+									<WTSTATIC label="NextTitleAdvancement" space="1"/>
+									<WTSTATIC label="Manager">
+										<WTCONDITION expr="PARAM(NextTitle)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Director">
+										<WTCONDITION expr="PARAM(NextTitle)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Executive">
+										<WTCONDITION expr="PARAM(NextTitle)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+									<WTSTATIC newline="1"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(NextTitle0)" oper="greater" value="CONST(0)"/>
+									<WTSTATIC value="PARAM(NextTitle0)" space="1"/>
+									<WTSTATIC label="MorePersonal" newline="1"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(NextTitle1)" oper="greater" value="CONST(0)"/>
+									<WTSTATIC value="PARAM(NextTitle1)" space="1"/>
+									<WTSTATIC label="MoreMembers" newline="1"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(NextTitle2)" oper="greater" value="CONST(0)"/>
+									<WTSTATIC value="PARAM(NextTitle2)" space="1"/>
+									<WTSTATIC label="MoreManagers" newline="1"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(NextTitle3)" oper="greater" value="CONST(0)"/>
+									<WTSTATIC value="PARAM(NextTitle3)" space="1"/>
+									<WTSTATIC label="MoreDirectors" newline="1"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(NextTitle4)" oper="greater" value="CONST(0)"/>
+									<WTSTATIC value="PARAM(NextTitle4)" space="1"/>
+									<WTSTATIC label="MoreExecutives" newline="1"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW margin-top="12" margin-bottom="12">
+							<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTCODEGROUP>
+
+					<WTROW height="18">
+						<WTSTATIC col="1" tag="PersonalEnrolled" bold="true"/>
+						<WTSTATIC col="2" value="ATTR(Advance.Personal)"/>
+					</WTROW>
+					<WTROW height="18">
+						<WTSTATIC col="1" tag="GroupEnrolled" bold="true"/>
+						<WTSTATIC col="2" value="ATTR(Advance.Group)"/>
+					</WTROW>
+					<WTROW height="18">
+						<WTSTATIC col="1" tag="Members" bold="true"/>
+						<WTSTATIC col="2" value="ATTR(Advance.Title1)"/>
+					</WTROW>
+					<WTROW height="18">
+						<WTSTATIC col="1" tag="Managers" bold="true"/>
+						<WTSTATIC col="2" value="ATTR(Advance.Title2)"/>
+					</WTROW>
+					<WTROW height="18">
+						<WTSTATIC col="1" tag="Directors" bold="true"/>
+						<WTSTATIC col="2" value="ATTR(Advance.Title3)"/>
+					</WTROW>
+					<WTROW height="18">
+						<WTSTATIC col="1" tag="Executives" bold="true"/>
+						<WTSTATIC col="2" value="ATTR(Advance.Title4)"/>
+					</WTROW>
+					
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+					<WTROW height="18">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(2)"/>
+						<WTSTATIC col="1" tag="ManagerTeam" bold="true"/>
+						<WTSTATIC col="2" value="PARAM(ManagerTeam)" space="5"/>
+						<WTBUTTON col="3" value="CONST(View)" btnclass="smbutton">
+							<WTCONDITION expr="PARAM(ManagerTeam)" oper="greater" value="CONST(0)"/>
+							<WTCLICK>ViewTeam(1)</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW height="18">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(3)"/>
+						<WTSTATIC col="1" tag="DirectorTeam" bold="true"/>
+						<WTSTATIC col="2" value="PARAM(DirectorTeam)" space="5"/>
+						<WTBUTTON col="3" value="CONST(View)" btnclass="smbutton">
+							<WTCONDITION expr="PARAM(DirectorTeam)" oper="greater" value="CONST(0)"/>
+							<WTCLICK>ViewTeam(2)</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW height="18">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(4)"/>
+						<WTSTATIC col="1" tag="ExecutiveTeam" bold="true"/>
+						<WTSTATIC col="2" value="PARAM(ExecutiveTeam)" space="5"/>
+						<WTBUTTON col="3" value="CONST(View)" btnclass="smbutton">
+							<WTCONDITION expr="PARAM(ExecutiveTeam)" oper="greater" value="CONST(0)"/>
+							<WTCLICK>ViewTeam(3)</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+<!-- CloudZow Sales Team Summary -->
+		<!--==========================================================================================-->
+		<WTWEBPAGE name="5408" page-width="100%" header="false" navbar="false" footer="false" viewport="width=device-width"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==========================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ManagerTeam" datatype="number"/>
+			<WTPARAM name="DirectorTeam" datatype="number"/>
+			<WTPARAM name="ExecutiveTeam" datatype="number"/>
+			<WTPARAM name="Title" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="ATTR(Title)"/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+					<WTMETHOD name="GetCount">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(2)"/>
+						<WTPARAM name="Line" direction="input" value="CONST(2)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqManagerTeam" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="GetCount">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(3)"/>
+						<WTPARAM name="Line" direction="input" value="CONST(3)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqDirectorTeam" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="GetCount">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(4)"/>
+						<WTPARAM name="Line" direction="input" value="CONST(4)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqExecutiveTeam" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="50" align="right"/>
+				<WTCOLUMN width="30" align="left"/>
+				<WTCOLUMN width="20" align="left"/>
+
+				<WTFUNCTION name="ViewTeam(line)">
+					var url, win;
+					url = "5411.asp?memberid=" + document.getElementById('MemberID').value + "&amp;companyid=" + document.getElementById('CompanyID').value + "&amp;line=" + line
+		            win = window.open(url,"TeamMembers","top=50,left=100,height=500,width=500,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="3" class="PageHeading" align="center">
+						<WTCODEGROUP><WTIMAGE value="CONST(Title&lt;xsl:value-of select=&quot;/DATA/PARAM/@title&quot;/&gt;.gif)" imgalign="absmiddle" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)" space="1"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTROW height="18">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(2)"/>
+						<WTSTATIC col="1" tag="ManagerTeam" bold="true"/>
+						<WTSTATIC col="2" value="PARAM(ManagerTeam)" space="5"/>
+						<WTBUTTON col="3" value="CONST(View)" btnclass="smbutton">
+							<WTCONDITION expr="PARAM(ManagerTeam)" oper="greater" value="CONST(0)"/>
+							<WTCLICK>ViewTeam(2)</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW height="18">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(3)"/>
+						<WTSTATIC col="1" tag="DirectorTeam" bold="true"/>
+						<WTSTATIC col="2" value="PARAM(DirectorTeam)" space="5"/>
+						<WTBUTTON col="3" value="CONST(View)" btnclass="smbutton">
+							<WTCONDITION expr="PARAM(DirectorTeam)" oper="greater" value="CONST(0)"/>
+							<WTCLICK>ViewTeam(3)</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW height="18">
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(4)"/>
+						<WTSTATIC col="1" tag="ExecutiveTeam" bold="true"/>
+						<WTSTATIC col="2" value="PARAM(ExecutiveTeam)" space="5"/>
+						<WTBUTTON col="3" value="CONST(View)" btnclass="smbutton">
+							<WTCONDITION expr="PARAM(ExecutiveTeam)" oper="greater" value="CONST(0)"/>
+							<WTCLICK>ViewTeam(4)</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!-- Coded Team Summary -->
+		<!--==========================================================================================-->
+		<WTWEBPAGE name="5409" page-width="100%" header="false" navbar="false" footer="false" viewport="width=device-width"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+			<!--==========================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+      <WTPARAM name="Team2" datatype="number"/>
+      <WTPARAM name="Team3" datatype="number"/>
+      <WTPARAM name="Team4" datatype="number"/>
+      <WTPARAM name="Team5" datatype="number"/>
+      <WTPARAM name="Team6" datatype="number"/>
+			<WTPARAM name="Team7" datatype="number"/>
+			<WTPARAM name="Team8" datatype="number"/>
+			<WTPARAM name="Team9" datatype="number"/>
+			<WTPARAM name="Team10" datatype="number"/>
+			<WTPARAM name="Team11" datatype="number"/>
+      <WTPARAM name="Team2a" datatype="number"/>
+      <WTPARAM name="Team3a" datatype="number"/>
+      <WTPARAM name="Team4a" datatype="number"/>
+      <WTPARAM name="Team5a" datatype="number"/>
+      <WTPARAM name="Team6a" datatype="number"/>
+			<WTPARAM name="Team7a" datatype="number"/>
+			<WTPARAM name="Team8a" datatype="number"/>
+			<WTPARAM name="Team9a" datatype="number"/>
+			<WTPARAM name="Team10a" datatype="number"/>
+			<WTPARAM name="Team11a" datatype="number"/>
+			<WTPARAM name="Title" datatype="number"/>
+			<WTPARAM name="Teams" datatype="text"/>
+
+			<WTPARAM name="Team6b" datatype="number"/>
+			<WTPARAM name="Team7b" datatype="number"/>
+			<WTPARAM name="Team8b" datatype="number"/>
+			<WTPARAM name="Team9b" datatype="number"/>
+			<WTPARAM name="Team10b" datatype="number"/>
+			<WTPARAM name="Team6c" datatype="number"/>
+			<WTPARAM name="Team7c" datatype="number"/>
+			<WTPARAM name="Team8c" datatype="number"/>
+			<WTPARAM name="Team9c" datatype="number"/>
+			<WTPARAM name="Team10c" datatype="number"/>
+
+			<WTCODEGROUP>
+				<!-- SET COMPANY CODED TEAMS-->
+				<WTSETATTRIBUTE name="PARAM(Teams)" value="CONST(&quot;7,8,9,10,11,&quot;)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(9)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(Teams)" value="CONST(&quot;5,6,7,9,10,11,&quot;)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(Teams)" value="CONST(&quot;6,7,8,9,10,&quot;)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+				</WTSETATTRIBUTE>
+        <WTSETATTRIBUTE name="PARAM(Teams)" value="CONST(&quot;6,7,8,&quot;)">
+          <WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(17)"/>
+        </WTSETATTRIBUTE>
+        <WTSETATTRIBUTE name="PARAM(Teams)" value="CONST(&quot;2,3,4,&quot;)">
+          <WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="SYSCON(SILVERHEART)"/>
+        </WTSETATTRIBUTE>
+      </WTCODEGROUP>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="ATTR(Title)"/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Downline" project="ptsDownlineUser" class="CDownline">
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(2)"/>
+            <WTCONDITION expr="CONST(InStr(reqTeams,&quot;2,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+            <WTMETHOD name="GetCounts">
+              <WTPARAM name="Line" direction="input" value="CONST(2)"/>
+              <WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="PARAM(Team2)" value="ATTR(Old)"/>
+            <WTSETATTRIBUTE name="PARAM(Team2a)" value="ATTR(Dec)"/>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(3)"/>
+            <WTCONDITION expr="CONST(InStr(reqTeams,&quot;3,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+            <WTMETHOD name="GetCounts">
+              <WTPARAM name="Line" direction="input" value="CONST(3)"/>
+              <WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="PARAM(Team3)" value="ATTR(Old)"/>
+            <WTSETATTRIBUTE name="PARAM(Team3a)" value="ATTR(Dec)"/>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(4)"/>
+            <WTCONDITION expr="CONST(InStr(reqTeams,&quot;4,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+            <WTMETHOD name="GetCounts">
+              <WTPARAM name="Line" direction="input" value="CONST(4)"/>
+              <WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="PARAM(Team4)" value="ATTR(Old)"/>
+            <WTSETATTRIBUTE name="PARAM(Team4a)" value="ATTR(Dec)"/>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(5)"/>
+            <WTCONDITION expr="CONST(InStr(reqTeams,&quot;5,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+            <WTMETHOD name="GetCounts">
+              <WTPARAM name="Line" direction="input" value="CONST(5)"/>
+              <WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="PARAM(Team5)" value="ATTR(Old)"/>
+            <WTSETATTRIBUTE name="PARAM(Team5a)" value="ATTR(Dec)"/>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(6)"/>
+						<WTCONDITION expr="CONST(InStr(reqTeams,&quot;6,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTMETHOD name="GetCounts">
+							<WTPARAM name="Line" direction="input" value="CONST(6)"/>
+							<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Team6)" value="ATTR(Old)"/>
+						<WTSETATTRIBUTE name="PARAM(Team6a)" value="ATTR(Dec)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTMETHOD name="GetCustom">
+								<WTPARAM name="CompanyID" direction="input" value="CONST(14)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(1)"/>
+								<WTPARAM name="Line" direction="input" value="CONST(6)"/>
+								<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Team6b)" value="ATTR(Dec)"/>
+							<WTSETATTRIBUTE name="PARAM(Team6c)" value="ATTR(Old)"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(7)"/>
+						<WTCONDITION expr="CONST(InStr(reqTeams,&quot;7,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTMETHOD name="GetCounts">
+							<WTPARAM name="Line" direction="input" value="CONST(7)"/>
+							<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Team7)" value="ATTR(Old)"/>
+						<WTSETATTRIBUTE name="PARAM(Team7a)" value="ATTR(Dec)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTMETHOD name="GetCustom">
+								<WTPARAM name="CompanyID" direction="input" value="CONST(14)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(1)"/>
+								<WTPARAM name="Line" direction="input" value="CONST(7)"/>
+								<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Team7b)" value="ATTR(Dec)"/>
+							<WTSETATTRIBUTE name="PARAM(Team7c)" value="ATTR(Old)"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(8)"/>
+						<WTCONDITION expr="CONST(InStr(reqTeams,&quot;8,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTMETHOD name="GetCounts">
+							<WTPARAM name="Line" direction="input" value="CONST(8)"/>
+							<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Team8)" value="ATTR(Old)"/>
+						<WTSETATTRIBUTE name="PARAM(Team8a)" value="ATTR(Dec)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTMETHOD name="GetCustom">
+								<WTPARAM name="CompanyID" direction="input" value="CONST(14)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(1)"/>
+								<WTPARAM name="Line" direction="input" value="CONST(8)"/>
+								<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Team8b)" value="ATTR(Dec)"/>
+							<WTSETATTRIBUTE name="PARAM(Team8c)" value="ATTR(Old)"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(9)"/>
+						<WTCONDITION expr="CONST(InStr(reqTeams,&quot;9,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTMETHOD name="GetCounts">
+							<WTPARAM name="Line" direction="input" value="CONST(9)"/>
+							<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Team9)" value="ATTR(Old)"/>
+						<WTSETATTRIBUTE name="PARAM(Team9a)" value="ATTR(Dec)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTMETHOD name="GetCustom">
+								<WTPARAM name="CompanyID" direction="input" value="CONST(14)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(1)"/>
+								<WTPARAM name="Line" direction="input" value="CONST(9)"/>
+								<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Team9b)" value="ATTR(Dec)"/>
+							<WTSETATTRIBUTE name="PARAM(Team9c)" value="ATTR(Old)"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(10)"/>
+						<WTCONDITION expr="CONST(InStr(reqTeams,&quot;10,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTMETHOD name="GetCounts">
+							<WTPARAM name="Line" direction="input" value="CONST(10)"/>
+							<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Team10)" value="ATTR(Old)"/>
+						<WTSETATTRIBUTE name="PARAM(Team10a)" value="ATTR(Dec)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTMETHOD name="GetCustom">
+								<WTPARAM name="CompanyID" direction="input" value="CONST(14)"/>
+								<WTPARAM name="Status" direction="input" value="CONST(1)"/>
+								<WTPARAM name="Line" direction="input" value="CONST(10)"/>
+								<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="PARAM(Team10b)" value="ATTR(Dec)"/>
+							<WTSETATTRIBUTE name="PARAM(Team10c)" value="ATTR(Old)"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(11)"/>
+						<WTCONDITION expr="CONST(InStr(reqTeams,&quot;11,&quot;))" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTMETHOD name="GetCounts">
+							<WTPARAM name="Line" direction="input" value="CONST(11)"/>
+							<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(Team11)" value="ATTR(Old)"/>
+						<WTSETATTRIBUTE name="PARAM(Team11a)" value="ATTR(Dec)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="50" align="right"/>
+				<WTCOLUMN width="17" align="center"/>
+				<WTCOLUMN width="17" align="center"/>
+				<WTCOLUMN width="16" align="center"/>
+
+				<WTFUNCTION name="ViewTeam(line)">
+					var url, win;
+					url = "5411.asp?memberid=" + document.getElementById('MemberID').value + "&amp;companyid=" + document.getElementById('CompanyID').value + "&amp;line=" + line
+					win = window.open(url,"TeamMembers","top=50,left=100,height=500,width=500,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="4" class="PageHeading" align="center">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(Title&lt;xsl:value-of select=&quot;/DATA/PARAM/@title&quot;/&gt;.gif)" imgalign="absmiddle" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)" space="1"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="4" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW height="18">
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2">
+						<WTSTATIC label="Active"/>
+					</WTSTATIC>
+					<WTSTATIC col="3">
+						<WTSTATIC label="Total"/>
+					</WTSTATIC>
+					<WTSTATIC col="4"/>
+				</WTROW>
+				<WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(2)"/>
+            <WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '2,'))" connector="and"/>
+            <WTROW margin-top="6">
+              <WTSTATIC col="1" bold="true">
+              </WTSTATIC>
+              <WTSTATIC col="2" value="PARAM(Team2a)"/>
+              <WTSTATIC col="3" value="PARAM(Team2)"/>
+              <WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+                <WTCONDITION expr="PARAM(Team2)" oper="greater" value="CONST(0)"/>
+                <WTCLICK>ViewTeam(2)</WTCLICK>
+              </WTBUTTON>
+            </WTROW>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(3)"/>
+            <WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '3,'))" connector="and"/>
+            <WTROW margin-top="6">
+              <WTSTATIC col="1" bold="true">
+              </WTSTATIC>
+              <WTSTATIC col="2" value="PARAM(Team3a)"/>
+              <WTSTATIC col="3" value="PARAM(Team3)"/>
+              <WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+                <WTCONDITION expr="PARAM(Team3)" oper="greater" value="CONST(0)"/>
+                <WTCLICK>ViewTeam(3)</WTCLICK>
+              </WTBUTTON>
+            </WTROW>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(4)"/>
+            <WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '4,'))" connector="and"/>
+            <WTROW margin-top="6">
+              <WTSTATIC col="1" bold="true">
+              </WTSTATIC>
+              <WTSTATIC col="2" value="PARAM(Team4a)"/>
+              <WTSTATIC col="3" value="PARAM(Team4)"/>
+              <WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+                <WTCONDITION expr="PARAM(Team4)" oper="greater" value="CONST(0)"/>
+                <WTCLICK>ViewTeam(4)</WTCLICK>
+              </WTBUTTON>
+            </WTROW>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(5)"/>
+						<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '5,'))" connector="and"/>
+						<WTROW margin-top="6">
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC tag="Team13_5">
+									<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="PARAM(Team5a)"/>
+							<WTSTATIC col="3" value="PARAM(Team5)"/>
+							<WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+								<WTCONDITION expr="PARAM(Team5)" oper="greater" value="CONST(0)"/>
+								<WTCLICK>ViewTeam(5)</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(6)"/>
+						<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '6,'))" connector="and"/>
+						<WTROW>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTSTATIC col="1" tag="Team14_Diamonds" align="right" class="prompt"/>
+							<WTSTATIC col="2" value="PARAM(Team6b)" class="prompt"/>
+							<WTSTATIC col="3" value="PARAM(Team6c)" class="prompt"/>
+							<WTSTATIC col="4"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC tag="Team13_6"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/></WTSTATIC>
+								<WTSTATIC tag="Team14_6"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/></WTSTATIC>
+								<WTSTATIC tag="Team17_6"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(17)"/></WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="PARAM(Team6a)"/>
+							<WTSTATIC col="3" value="PARAM(Team6)"/>
+							<WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+								<WTCONDITION expr="PARAM(Team6)" oper="greater" value="CONST(0)"/>
+								<WTCLICK>ViewTeam(6)</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(7)"/>
+						<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '7,'))" connector="and"/>
+						<WTROW>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTSTATIC col="1" tag="Team14_Diamonds" align="right" class="prompt"/>
+							<WTSTATIC col="2" value="PARAM(Team7b)" class="prompt"/>
+							<WTSTATIC col="3" value="PARAM(Team7c)" class="prompt"/>
+							<WTSTATIC col="4"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC tag="Team9_7"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(9)"/></WTSTATIC>
+								<WTSTATIC tag="Team13_7"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/></WTSTATIC>
+								<WTSTATIC tag="Team14_7"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/></WTSTATIC>
+								<WTSTATIC tag="Team17_7"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(17)"/></WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="PARAM(Team7a)"/>
+							<WTSTATIC col="3" value="PARAM(Team7)"/>
+							<WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+								<WTCONDITION expr="PARAM(Team7)" oper="greater" value="CONST(0)"/>
+								<WTCLICK>ViewTeam(7)</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(8)"/>
+						<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '8,'))" connector="and"/>
+						<WTROW>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTSTATIC col="1" tag="Team14_Diamonds" align="right" class="prompt"/>
+							<WTSTATIC col="2" value="PARAM(Team8b)" class="prompt"/>
+							<WTSTATIC col="3" value="PARAM(Team8c)" class="prompt"/>
+							<WTSTATIC col="4"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC tag="Team9_8"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(9)"/></WTSTATIC>
+								<WTSTATIC tag="Team14_8"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/></WTSTATIC>
+								<WTSTATIC tag="Team17_8"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(17)"/></WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="PARAM(Team8a)"/>
+							<WTSTATIC col="3" value="PARAM(Team8)"/>
+							<WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+								<WTCONDITION expr="PARAM(Team8)" oper="greater" value="CONST(0)"/>
+								<WTCLICK>ViewTeam(8)</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(9)"/>
+						<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '9,'))" connector="and"/>
+						<WTROW>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTSTATIC col="1" tag="Team14_Diamonds" align="right" class="prompt"/>
+							<WTSTATIC col="2" value="PARAM(Team9b)" class="prompt"/>
+							<WTSTATIC col="3" value="PARAM(Team9c)" class="prompt"/>
+							<WTSTATIC col="4"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC tag="Team9_9"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(9)"/></WTSTATIC>
+								<WTSTATIC tag="Team13_9"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/></WTSTATIC>
+								<WTSTATIC tag="Team14_9"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/></WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="PARAM(Team9a)"/>
+							<WTSTATIC col="3" value="PARAM(Team9)"/>
+							<WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+								<WTCONDITION expr="PARAM(Team9)" oper="greater" value="CONST(0)"/>
+								<WTCLICK>ViewTeam(9)</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(10)"/>
+						<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '10,'))" connector="and"/>
+						<WTROW>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/>
+							<WTSTATIC col="1" tag="Team14_Diamonds" align="right" class="prompt"/>
+							<WTSTATIC col="2" value="PARAM(Team10b)" class="prompt"/>
+							<WTSTATIC col="3" value="PARAM(Team10c)" class="prompt"/>
+							<WTSTATIC col="4"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC tag="Team9_10"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(9)"/></WTSTATIC>
+								<WTSTATIC tag="Team13_10"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/></WTSTATIC>
+								<WTSTATIC tag="Team14_10"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(14)"/></WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="PARAM(Team10a)"/>
+							<WTSTATIC col="3" value="PARAM(Team10)"/>
+							<WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+								<WTCONDITION expr="PARAM(Team10)" oper="greater" value="CONST(0)"/>
+								<WTCLICK>ViewTeam(10)</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Title)" oper="greater-equal" value="CONST(11)"/>
+						<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@teams, '11,'))" connector="and"/>
+						<WTROW margin-top="6">
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC tag="Team9_11"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(9)"/></WTSTATIC>
+								<WTSTATIC tag="Team13_11"><WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(13)"/></WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="PARAM(Team11a)"/>
+							<WTSTATIC col="3" value="PARAM(Team11)"/>
+							<WTBUTTON col="4" value="CONST(View)" btnclass="smbutton">
+								<WTCONDITION expr="PARAM(Team11)" oper="greater" value="CONST(0)"/>
+								<WTCLICK>ViewTeam(11)</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="4" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="5411" wrapper="false" caption="Find" action="5" header="false" navbar="false" footer="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Line" datatype="number"/>
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(ChildName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Downlines" project="ptsDownlineUser" class="CDownlines">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDownlines" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Downlines" project="ptsDownlineUser" class="CDownlines">
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="Line" direction="input" value="PARAM(Line)"/>
+					<WTPARAM name="ParentID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlDownlines" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="left"/>
+
+				<WTFUNCTION name="ViewTeams(id)">
+					var url, win;
+					url = "5404.asp?memberid=" + id
+					win = window.open(url,"MemberTeams","top=100,left=100,height=200,width=320,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading">
+						<WTSTATIC label="Team2Members">
+							<WTCONDITION expr="PARAM(Line)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Team3Members">
+							<WTCONDITION expr="PARAM(Line)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Team4Members">
+							<WTCONDITION expr="PARAM(Line)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Downlines.FindTypeID)" translate="true" prespace="false"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="15" focus="true" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(View)" default="true" btnclass="smbutton"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Downline">
+						<WTCOLUMN width="50" align="left" valign="top" label="ChildName"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Title"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Teams"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="EnrollDate"/>
+						<WTROW>
+
+							<WTSTATIC col="1" value="DATA(ChildName)"/>
+							<WTIMAGE col="2" value="CONST(Title&lt;xsl:value-of select=&quot;@title&quot;/&gt;.gif)" imgalign="absmiddle" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;"/>
+							<WTIMAGE col="3" value="CONST(Status&lt;xsl:value-of select=&quot;@status&quot;/&gt;.gif)" imgalign="absmiddle"/>
+							<WTSTATIC col="4">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(genealogy.gif)" alt="ViewTeams" imgalign="absmiddle">
+										<WTLINK name="ViewTeams(&lt;xsl:value-of select=&quot;@childid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="5" value="DATA(EnrollDate)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

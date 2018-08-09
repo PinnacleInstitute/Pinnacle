@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="NotAvailable">Oops! The selected function is not currently available.</LABEL>
+	<LABEL name="BillingTokens">CREATE BILLING TOKENS: Click the "Process" button below to create billing token for new members.</LABEL>
+	<LABEL name="CreatePayments">CREATE MONTHLY PAYMENTS: Click the "Process" button below to create monthly payments for members due to be billed on or before the date specified below.</LABEL>
+	<LABEL name="PaymentFile">PROCESS PAYMENTS: Click the "Process" button below to process payments with a submitted status.</LABEL>
+	<LABEL name="DeclinedTokens">LIST DECLINED TOKENS: Click the "Process" button below to view a list of members with declined tokens.</LABEL>
+	<LABEL name="DeclinedPayments">LIST DECLINED PAYMENTS: Click the "Process" button below to view a list of members with declined payments.</LABEL>
+	<LABEL name="UpdateDeclined">UPDATE DECLINED PAYMENTS: Click the "Process" button below to update declined payments with recently provided billing info.</LABEL>
+	<LABEL name="BonusQualified">VERIFY BONUS QUALIFIED MEMBERS: Click the "Process" button below to calculate all active
+		members that are qualified to earn bonuses or that are "Qualify" locked after the date specified below.</LABEL>
+	<LABEL name="CalcBonuses">CALCULATE BONUSES: Click the "Process" button below to calculate commissions and bonuses
+		for all member payments in the specified date range below.</LABEL>
+	<LABEL name="DisplayBonuses">UNHIDE NEW BONUSES: Click the "Process" button below to display all hidden new commissions and bonuses.</LABEL>
+	<LABEL name="CreatePayouts">CREATE PAYOUTS: Click the "Process" button below to create payouts for all unpaid
+		bonuses totalling more that their autoship amount up to the date specified below.</LABEL>
+	<LABEL name="PaymentCredits">CREAT PAYMENT CREDITS: Click the "Process" button below to create payment credits
+		for all members with bill dates due within the next 30 days that have sufficient earned bonuses that have not been paid yet.</LABEL>
+	<LABEL name="PayoutQualified">VERIFY QUALIFIED PAYOUTS: Click the "Process" button below to calculate all active
+		members that are qualified to receive a payout.</LABEL>
+	<LABEL name="PayoutFile">CREATE PAYOUT EXPORT FILES: Click the "Process" button below to create payout files for CoinBase and STP. Submitted payouts will be processed up to the date specified below and marked paid.</LABEL>
+	<LABEL name="PayoutPaid">MARK SUBMITTED PAYOUTS PAID: Click the "Process" button below to update the status of all
+		submitted payouts to paid, up to the date specified below.</LABEL>
+	<LABEL name="DisplayPayouts">UNHIDE NEW PAYOUTS: Click the "Process" button below to display all hidden new payouts.</LABEL>
+	<LABEL name="MaintainSales">RECALCULATE GROUP SALES VOLUME: Click the "Process" button below to recalculate all group sales volume and check for new promotions.</LABEL>
+	<LABEL name="MaintainSummary">POST SALES SUMMARY: Click the "Process" button below to post the current personal and group sales volume for all active members with personal sales volume. The sales summary will be posted with the date below.</LABEL>
+	<LABEL name="ListReferralOrphans">LIST ENROLLER ORPHANED MEMBERS: Click the "Process" button below to view a list of members without active enrollers.</LABEL>
+	<LABEL name="CreateWallets">CREATE NEW eWALLETS: Click the "Process" button below to list all eWallets for all new active International members to be imported into iPayout.</LABEL>
+	<LABEL name="AssignWallets">ASSIGN NEW eWALLETS: Click the "Process" button below to set the eWallet identifier for all new active International members.</LABEL>
+	<LABEL name="SetAlerts">SET MEMBER ALERTS: Click the "Process" button below to set declined payment alerts for all members.</LABEL>
+	<LABEL name="CleanupData">CLEANUP OLD DATA: Click the "Process" button below to delete incomplete enrollments and other old data.</LABEL>
+	<LABEL name="ExportOrdersSubmitted">EXPORT ORDERS: Click the "Process" button below to export all submitted orders up to the date specified below and change their status to Inprocess.</LABEL>
+	<LABEL name="ExportOrdersInprocess">ExportOrdersInprocess</LABEL>
+	<LABEL name="UpdateOrdersSubmitted">UPDATE EXPORTED ORDERS: Click the "Process" button below to update all exported orders to Complete.</LABEL>
+	<LABEL name="UpdateOrdersInprocess">UpdateOrdersInprocess</LABEL>
+	<LABEL name="EmailCommissions">EMAIL EARNED BONUSES: Click the "Process" button below to email all members that earned bonuses created in the specified date range below.</LABEL>
+	<LABEL name="TitleAdvancements">RECALCULATE TITLE ADVANCEMENTS: Click the "Process" button below to recalculate title advancements for all members.</LABEL>
+	<LABEL name="ExportPayments">EXPORT PAYMENTS: Click the "Process" button below to export payments with a submitted status.</LABEL>
+	<LABEL name="UpdateBinaryCount">UPDATE BINARY COUNT: Click the "Process" button below to update the member counts in the binary downline.</LABEL>
+	<LABEL name="TopRecruiters">TOP RECRUITERS: Click the "Process" button below to view a list of the top 50 recruiters.</LABEL>
+	<LABEL name="TopEarners">TOP EARNERS: Click the "Process" button below to view a list of the top 50 earners.</LABEL>
+	<LABEL name="TopCountries">TOP COUNTRIES: Click the "Process" button below to view a list of the top countries.</LABEL>
+	<LABEL name="DeclineEmail">EMAIL DECLINED PAYMENTS: Click the "Process" button below to email every member with a declined payment in the specified date range below.</LABEL>
+	<LABEL name="DeclineSuspend">SUSPEND DECLINED PAYMENTS: Click the "Process" button below to Suspend every member with a declined payment older that the date below.</LABEL>
+	<LABEL name="DeclineCancel">CANCEL DECLINED PAYMENTS: Click the "Process" button below to Cancel every suspended member with a declined payment older that the date below.</LABEL>
+	<LABEL name="AllMemberList">ALL MEMBER LIST: Click the "Process" button below to view a list of all members.</LABEL>
+	<LABEL name="EnrollMemberList">ENROLLED MEMBER LIST: Click the "Process" button below to view a list of all enrolled downline members for the specified Member # below.</LABEL>
+	<LABEL name="BinaryMemberList">BINARY MEMBER LIST: Click the "Process" button below to view a list of all binary downline members for the specified Member # below.</LABEL>
+	<LABEL name="CashPayments">CASH PAYMENTS TO BE PROCESSED: Click the "Process" button below to view a list of all cash payments to be processed.</LABEL>
+	<LABEL name="ListSalesOrders">LIST SALES ORDERS: Click the "Process" button below to view a list of all Inprocess or Complete Sales Orders for the specified date range below.</LABEL>
+	<LABEL name="ListBinaryOrphans">LIST BINARY ORPHANED MEMBERS: Click the "Process" button below to view a list of members without active binary sponsors.</LABEL>
+	<LABEL name="ListMissingWallets">LIST DEALERS WITH MISSING GRC WALLETS: Click the "Process" button below to view a list of all dealers with missing GCR Wallets.</LABEL>
+	<LABEL name="CancelTrialDealers">MOVE TRIAL DEALERS: Click the "Process" button below to move all trial dealers over 40 days old to a free dealer.  Their enroller and matrix downline will be moved up.</LABEL>
+	<LABEL name="LockPayouts">LOCK PAYOUT METHODS: Click the "Process" button below to lock all payout methods.</LABEL>
+	<LABEL name="UnlockPayouts">UNLOCK PAYOUT METHODS: Click the "Process" button below to unlock all payout methods.</LABEL>
+	<LABEL name="ListOrderErrors">LIST DEALERS WITH ORDER ERRORS: Click the "Process" button below to view a list of all dealers with order errors.</LABEL>
+	<LABEL name="WalletPayouts">ALL WALLET PAYOUT REQUESTS: Click the "Process" button below to view a list of all Payout Requests up to the date specified below.</LABEL>
+	<LABEL name="ClearLostBonuses">CLEAR LOST BONUSES: Click the "Process" button below to clear all lost bonuses.</LABEL>
+	<LABEL name="ListLostBonuses">LIST LOST BONUSES: Click the "Process" button below to list all lost bonuses greater or equal to the amount specified below.</LABEL>
+	<LABEL name="EmailLostBonuses">EMAIL LOST BONUSES: Click the "Process" button below to email all lost bonuses greater or equal to the amount specified below.</LABEL>
+	<LABEL name="ReconcileWallets">RECONCILE COMPANY WALLETS: Click the "Process" button below to reconcile all company wallets.</LABEL>
+	<LABEL name="ListSponsorOrphans">LIST MATRIX MISSING MEMBERS: Click the "Process" button below to view a list of members not in the matrix.</LABEL>
+	<LABEL name="SalesTeamExceptions">SALES TEAM EXCEPTIONS LIST: Click the "Process" button below to view a list of all Sales Team related exceptions.</LABEL>
+	<LABEL name="BillingExceptions">BILLING EXCEPTIONS LIST: Click the "Process" button below to view a list of all Billing related exceptions.</LABEL>
+	<LABEL name="OrderExceptions">ORDER EXCEPTIONS LIST: Click the "Process" button below to view a list of all Order related exceptions.</LABEL>
+	<LABEL name="PayoutExceptions">WALLET EXCEPTIONS LIST: Click the "Process" button below to view a list of all Wallet related exceptions.</LABEL>
+  <LABEL name="CoinOrderSummary">GCR COIN ORDER SUMMARY: Click the "Process" button below to view a summary of all GCR Coin Orders to Fulfill.</LABEL>
+  <LABEL name="CoinOrderDetail">GCR COIN ORDER DETAILS: Click the "Process" button below to view a list of all GCR Coin Orders to Fulfill.</LABEL>
+  <LABEL name="WalletOrderSummary">HARDWARE WALLET ORDER SUMMARY: Click the "Process" button below to view a summary of all Hardware Wallet Orders to Fulfill.</LABEL>
+  <LABEL name="WalletOrderDetail">HARDWARE WALLET ORDER DETAIL: Click the "Process" button below to view a list of all Hardware Wallet Orders to Fulfill.</LABEL>
+  <LABEL name="From">From</LABEL>
+	<LABEL name="To">To</LABEL>
+	<LABEL name="eWalletHdr">UserName,FirstName,LastName,CompanyName,Address1,Address2,City,State,ZipCode,Country2xFormat,PhoneNumber,CellPhoneNumber,EmailAddress,SSN,CompanyTaxID,GovernmentID,MilitaryID,PassportNumber,DriversLicense,DateOfBirth,WebsitePassword,DefaultCurrency,PreferredLanguage</LABEL>
+	<LABEL name="MemberID">Member #</LABEL>
+	<LABEL name="MinLostBonus">Minimum Lost Bonus Amount</LABEL>
+	<LABEL name="Total">Total</LABEL>
+	<LABEL name="Process">Process</LABEL>
+	<LABEL name="Close">Close</LABEL>
+</LANGUAGE>

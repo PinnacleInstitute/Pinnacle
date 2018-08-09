@@ -1,0 +1,24 @@
+function validateEmail( strValue) {
+/************************************************
+DESCRIPTION: Validates that a string contains a
+  valid email pattern.
+
+ PARAMETERS:
+   strValue - String to be tested for validity
+
+RETURNS:
+   True if valid, otherwise false.
+
+REMARKS: Accounts for email with country appended
+  does not validate that email contains valid URL
+  type (.com, .gov, etc.) or valid country suffix.
+*************************************************/
+var objRegExp  =
+ /(^[a-z]([a-z_\.]*)@([a-z_\.]*)([.][a-z]{3})$)|(^[a-z]([a-z_\.]*)@([a-z_\.]*)
+  (\.[a-z]{3})(\.[a-z]{2})*$)/i;
+
+  //check for valid email
+  return objRegExp.test(strValue);
+}
+
+  

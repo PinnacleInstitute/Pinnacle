@@ -1,0 +1,905 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="87" name="Emailee" alias="eme" log="false">
+		<!--Identity-->
+		<WTATTRIBUTE id="8701" name="EmaileeID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="8702" name="CompanyID" type="number" min="1" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="8703" name="EmailListID" type="number" min="1" source="entity" required="true"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="8705" name="Email" type="text" length="80" min="1" max="80" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="8706" name="FirstName" type="text" length="30" source="entity"/>
+		<WTATTRIBUTE id="8707" name="LastName" type="text" length="30" source="entity"/>
+		<WTATTRIBUTE id="8708" name="EmaileeName" type="text" length="62" source="entity">
+			<WTCOMPUTE name="LastName"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="FirstName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="8709" name="Data1" type="text" length="80" source="entity"/>
+		<WTATTRIBUTE id="8710" name="Data2" type="text" length="80" source="entity"/>
+		<WTATTRIBUTE id="8711" name="Data3" type="text" length="80" source="entity"/>
+		<WTATTRIBUTE id="8712" name="Data4" type="text" length="80" source="entity"/>
+		<WTATTRIBUTE id="8713" name="Data5" type="text" length="80" source="entity"/>
+		<WTATTRIBUTE id="8714" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="InActive"/>
+			<WTENUM id="3" name="Unsubscribed"/>
+		</WTATTRIBUTE>
+
+		<!--Indexes-->
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+		</WTINDEX>
+
+		<WTINDEX name="EmailListID">
+			<WTATTRIBUTE name="EmailListID"/>
+			<WTATTRIBUTE name="LastName"/>
+		</WTINDEX>
+		
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Emailee" entity="Emailee" alias="eme"/>
+			<WTRELATIONSHIP name="Common" entity="Emailee" alias="eme"/>
+		</WTRELATIONSHIPS>
+		
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="Email" default="true" contains="true"/>
+			<WTATTRIBUTE name="EmaileeName" contains="true"/>
+			<WTATTRIBUTE name="EmailListID"/>
+		</WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="EMAILEE-ACTIVE" value="1"/>
+			<WTSYSCON name="EMAILEE-INACTIVE" value="2"/>
+			<WTSYSCON name="EMAILEE-UNSUBSCRIBED" value="3"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Emailee.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->				
+		<WTPROCEDURE name="ListStandard" type="List" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(Emailee.EmailListID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Emailee.EmaileeID)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Email)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.FirstName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.LastName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data1)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data2)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data3)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data4)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data5)"/>
+					<WTJOIN name="Emailee"/>
+					<WTCONDITION expr="ATTR(Emailee.EmailListID)" oper="equal" value="PARAM(EmailListID)"/>	
+					<WTCONDITION expr="ATTR(Emailee.Status)" oper="equal" value="CONST(1)" connector="and"/>	
+					<WTORDER name="ATTR(Emailee.LastName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>					
+		<!--================================================================================================-->					
+		<WTPROCEDURE name="ListCustom" type="List" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.EmailListID)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data1)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data2)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data3)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data4)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data5)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Emailee.EmaileeID)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Email)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.FirstName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.LastName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data1)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data2)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data3)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data4)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data5)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>	
+		<!--================================================================================================-->					
+		<WTPROCEDURE name="ListUserDefined" type="List" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTSQL name="UserDefinedEmailListSQL(bvData1, bvData2, bvData3)"/>
+			<WTPARAM name="ATTR(Emailee.Data1)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data2)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data3)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Emailee.EmaileeID)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Email)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.FirstName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.LastName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data1)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data2)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data3)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data4)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data5)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="ListTeam" type="List" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/> <!-- MemberID -->
+			<WTPARAM name="ATTR(Emailee.Data1)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data2)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data3)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data4)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Data5)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Emailee.EmaileeID)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Email)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.FirstName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.LastName)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data1)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data2)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data3)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data4)"/>
+					<WTATTRIBUTE value="ATTR(Emailee.Data5)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->					
+		<WTPROCEDURE name="Unsubscribe" type="Check" style="GenerateDataProc.xsl" novalidate="true" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(Emailee.EmaileeID)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.EmailListID)" direction="input"/>
+			<WTPARAM name="ATTR(Emailee.Status)" direction="input" zero="true"/> <!-- EmailList.SourceType -->
+			<WTPARAM name="Return" datatype="number" direction="output"/>
+		</WTPROCEDURE>			
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==========================================================================================================-->
+		<WTWEBPAGE name="8701" caption="Find" action="5" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==========================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(EmaileeName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Emailees" project="ptsEmaileeUser" class="CEmailees">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailees" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Emailees" project="ptsEmaileeUser" class="CEmailees">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlEmailees" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="FindEmailee" class="PageHeading"/>
+<!--							
+							<WTLINKGROUP  col="2" align="right" >
+								<WTLINK name="8702" label="NewEmailee" class="PageHeadingLink"/>
+							</WTLINKGROUP>
+-->							
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Emailees.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Emailee">
+						<WTCOLUMN width="50" align="left" valign="top" label="Email"/>
+						<WTCOLUMN width="30" align="left" valign="top" label="EmaileeName"/>
+						<WTCOLUMN width="7" align="left" valign="top" label="List"/>
+						<WTCOLUMN width="13" align="left" valign="top" label="Status"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Emailee.Email)">
+								<WTLINK name="8703"><WTPARAM name="EmaileeID" value="DATA(Emailee.EmaileeID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Emailee.EmaileeName)"/>
+							<WTSTATIC col="3" value="DATA(Emailee.EmailListID)"/>
+							<WTSTATIC col="4" value="DATA(Emailee.Status)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-bottom="12"/>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+ 		<!--============================================================================================-->
+		<WTWEBPAGE name="8702" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="EmailListID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="0"/>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)"/>
+			</WTCODEGROUP>
+
+			<WTSUB name="NewEmailee">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmaileeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Emailee.EmailListID)" value="PARAM(EmailListID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailee" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="AddEmailee">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmaileeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Emailee.EmailListID)" value="PARAM(EmailListID)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(Emailee.CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(Emailee.Status)" value="CONST(1)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="EmaileeID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsErrors"/>
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlEmailee" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="NewEmailee"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTCALLSUB name="AddEmailee"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="AddAnother" type="Add">
+				<WTCALLSUB name="AddEmailee"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCALLSUB name="NewEmailee"/>
+				</WTCODEGROUP>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewEmailee" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Email)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="FirstName"/>
+					<WTTEXT col="2" value="ATTR(Emailee.FirstName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LastName"/>
+					<WTTEXT col="2" value="ATTR(Emailee.LastName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data1"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data1)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data2"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data2)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data3"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data3)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data4"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data4)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data5"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data5)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="4" value="CONST(AddAnother)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+ 		<!--============================================================================================-->
+		<WTWEBPAGE name="8703" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="EmaileeID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSUB name="LoadEmailee">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmaileeID" direction="input" value="PARAM(EmaileeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(Emailee.CompanyID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEmailListID)" value="ATTR(Emailee.EmailListID)"/>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailee" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="EmailList" project="ptsEmailListUser" class="CEmailList">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmailListID" direction="input" value="CONST(tmpEmailListID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailList" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="SaveEmailee">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmaileeID" direction="input" value="PARAM(EmaileeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsErrors"/>
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlEmailee" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+						<WTCALLSUB name="LoadEmailee"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadEmailee"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="SaveEmailee"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="EmaileeID" direction="input" value="PARAM(EmaileeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsErrors"/>
+					<WTCALLSUB name="LoadEmailee"/>
+				</WTCODEGROUP>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Emailee" value="ATTR(Emailee.EmaileeName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="EmailList" value="ATTR(EmailList.EmailListName)" bold="true" align="left">
+						<WTLINK name="8903">
+							<WTPARAM name="EmailListID" value="ATTR(Emailee.EmailListID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="EmaileeText" align="left" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="EmailListID"/>
+					<WTTEXT col="2" value="ATTR(Emailee.EmailListID)" size="4"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Email)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="FirstName"/>
+					<WTTEXT col="2" value="ATTR(Emailee.FirstName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LastName"/>
+					<WTTEXT col="2" value="ATTR(Emailee.LastName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data1"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data1)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data2"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data2)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data3"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data3)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data4"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data4)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Data5"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Data5)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Emailee.Status)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)"  align="center" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		 <!--============================================================================================-->
+		<WTWEBPAGE name="8704" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLReport.xsl" >
+ 		<!--============================================================================================-->
+			<WTPARAM name="EmailListID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="Source" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="EmailList" project="ptsEmailListUser" class="CEmailList">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmailListID" direction="input" value="PARAM(EmailListID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(EmailList.CompanyID)"/>
+					<WTSETATTRIBUTE name="PARAM(Source)" value="ATTR(EmailList.SourceType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParam1)" value="ATTR(EmailList.Param1)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParam2)" value="ATTR(EmailList.Param2)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParam3)" value="ATTR(EmailList.Param3)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParam4)" value="ATTR(EmailList.Param4)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParam5)" value="ATTR(EmailList.Param5)"/>
+					<WTSETATTRIBUTE name="CONST(tmpQuery)" value="ATTR(EmailList.Query)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEmailSourceID)" value="ATTR(EmailList.EmailSourceID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCustomID)" value="ATTR(EmailList.CustomID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailList" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="EmailSource" project="ptsEmailSourceUser" class="CEmailSource">
+					<WTCONDITION expr="PARAM(Source)" oper="equal" value="CONST(1)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmailSourceID" direction="input" value="CONST(tmpEmailSourceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>			
+					<WTSETATTRIBUTE name="CONST(tmpSourceFields)" value="ATTR(EmailSource.EmailSourceFields)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSourceFrom)" value="ATTR(EmailSource.EmailSourceFrom)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Emailees" project="ptsEmaileeUser" class="CEmailees">
+					<WTMETHOD name="ListStandard">
+						<WTCONDITION expr="PARAM(Source)" oper="equal" value="CONST(0)"/>
+<!--					<WTPARAM name="CompanyID" direction="input" value="CONST(tmpCompanyID)"/>-->
+						<WTPARAM name="EmailListID" direction="input" value="PARAM(EmailListID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListUserDefined">
+						<WTCONDITION expr="PARAM(Source)" oper="equal" value="CONST(1)"/>
+<!--					<WTPARAM name="CompanyID" direction="input" value="CONST(tmpCompanyID)"/>-->
+						<WTPARAM name="Query" direction="input" value="CONST(tmpQuery)"/>
+						<WTPARAM name="EmailSourceFields" direction="input" value="CONST(tmpSourceFields)"/>
+						<WTPARAM name="EmailSourceFrom" direction="input" value="CONST(tmpSourceFrom)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListCustom">
+						<WTCONDITION expr="PARAM(Source)" oper="equal" value="CONST(2)"/>
+						<WTPARAM name="CompanyID" direction="input" value="CONST(tmpCompanyID)"/>						
+						<WTPARAM name="EmailListID" direction="input" value="CONST(tmpCustomID)"/>
+						<WTPARAM name="Param1" direction="input" value="CONST(tmpParam1)"/>
+						<WTPARAM name="Param2" direction="input" value="CONST(tmpParam2)"/>
+						<WTPARAM name="Param3" direction="input" value="CONST(tmpParam3)"/>
+						<WTPARAM name="Param4" direction="input" value="CONST(tmpParam4)"/>
+						<WTPARAM name="Param5" direction="input" value="CONST(tmpParam5)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailees" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="650" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="EmailList" value="ATTR(EmailList.EmailListName)" class="PageHeading" />
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="Emailee">
+							<WTCOLUMN width="40" align="left" valign="top" label="Email"/>
+							<WTCOLUMN width="60" align="left" valign="top" label="Name"/>
+
+							<WTROW>
+								<WTCONDITION expr="PARAM(Source)" oper="equal" value="CONST(0)"/>
+								<WTSTATIC col="1" value="DATA(Emailee.Email)">
+									<WTLINK name="8703"><WTPARAM name="EmaileeID" value="DATA(Emailee.EmaileeID)"/></WTLINK>
+								</WTSTATIC>
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(Emailee.FirstName)" space="1"/>
+									<WTSTATIC value="DATA(Emailee.LastName)"/>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW>
+								<WTCONDITION expr="PARAM(Source)" oper="greater" value="CONST(0)"/>
+								<WTSTATIC col="1" value="DATA(Emailee.Email)"/>
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(Emailee.FirstName)" space="1"/>
+									<WTSTATIC value="DATA(Emailee.LastName)"/>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW>
+								<WTCONDITION expr="DATA(Emailee.Data1)" oper="not-equal" value="CONST('')"/>
+								<WTCONDITION expr="DATA(Emailee.Data2)" oper="not-equal" value="CONST('')" connector="or"/>
+								<WTCONDITION expr="DATA(Emailee.Data3)" oper="not-equal" value="CONST('')" connector="or"/>
+								<WTCONDITION expr="DATA(Emailee.Data4)" oper="not-equal" value="CONST('')" connector="or"/>
+								<WTCONDITION expr="DATA(Emailee.Data5)" oper="not-equal" value="CONST('')" connector="or"/>
+								<WTSTATIC col="1" merge="2" fontcolor="gray">
+									<WTSTATIC value="DATA(Emailee.Data1)" space="1"/>
+									<WTSTATIC value="DATA(Emailee.Data2)" space="1"/>
+									<WTSTATIC value="DATA(Emailee.Data3)" space="1"/>
+									<WTSTATIC value="DATA(Emailee.Data4)" space="1"/>
+									<WTSTATIC value="DATA(Emailee.Data5)" space="1"/>
+								</WTSTATIC>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW margin-top="4" margin-bottom="12">
+						<WTSTATIC col="1" tag="Total" value="PARAM(Count)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8705" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="EmailListID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="0"/>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)"/>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmaileeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Emailee.EmailListID)" value="PARAM(EmailListID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEmailListID)" value="ATTR(Emailee.EmailListID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailee" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="EmailList" project="ptsEmailListUser" class="CEmailList">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmailListID" direction="input" value="CONST(tmpEmailListID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlEmailList" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Load">
+						<WTPARAM name="EmaileeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Emailee.EmailListID)" value="PARAM(EmailListID)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(Emailee.CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(Emailee.Status)" value="CONST(1)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="EmaileeID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsErrors"/>
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlEmailee" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="8703" skipreturn="true">
+						<WTPARAM name="EmaileeID" value="CONST(EmaileeID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" value="ATTR(EmailList.EmailListName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="SubscribeText" align="left" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Emailee.Email)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="EmaileeName"/>
+					<WTTEXT col="2" value="ATTR(Emailee.FirstName)" width="200" label="FirstName" size="25"/>
+					<WTTEXT col="2" value="ATTR(Emailee.LastName)" width="240" label="LastName" size="25"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="8706" caption="Upload Library" header="false" footer="false" navbar="false" action="false" submit="8706Upload.asp" type="multi" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="UploadImageFile" datatype="text"/>
+			<WTPARAM name="DeleteFile" datatype="text"/>
+			<WTPARAM name="EmailListID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+	
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadImageFile)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadImageFile + " Successfully Uploaded!"
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="EMAILLISTID" value="PARAM(EmailListID)"/>
+				<WTSETCACHE name="COMPANYID" value="PARAM(CompanyID)"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cance1">
+				<WTRETURN>
+					<WTLINK name="8903" skipreturn="true">
+						<WTPARAM name="EmailListID" value="CONST(EmailListID)"/>
+						<WTPARAM name="CompanyID" value="CONST(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="200" align="left"/>
+				<WTCOLUMN width="50" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" merge="3" label="UploadEmailees" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="5" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="5" label="UploadEmaileesText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="5" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTFILE col="1" merge="5" value="upload" align="center" size="40"/>
+					<WTBUTTON col="1" merge="5" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8707" caption="Unsubscribe" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="EmaileeID" datatype="number"/>
+			<WTPARAM name="EmailListID" datatype="number"/>
+			<WTPARAM name="Source" datatype="number"/>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Emailee" project="ptsEmaileeUser" class="CEmailee">
+					<WTMETHOD name="Unsubscribe">
+						<WTPARAM name="EmaileeID" direction="input" value="PARAM(EmaileeID)"/>
+						<WTPARAM name="EmailListID" direction="input" value="PARAM(EmailListID)"/>
+						<WTPARAM name="Status" direction="input" value="PARAM(Source)"/>
+						<WTPARAM name="tmpReturn" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="center"/>
+				
+				<WTROW margin-top="24" margin-bottom="96">
+					<WTSTATIC col="1" class="PageHeading" label="UnsubscribeText"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,282 @@
+<H4 align=center><FONT size=4>Designing Tables</FONT></H4>
+<P><FONT size=3>In Access, there are five steps to designing a table. 
+<BR>
+<BR><IMG style="WIDTH: 783px; HEIGHT: 330px" height=330 alt=datatable.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/datatable.gif" width=783 border=0></FONT> 
+<OL>
+<LI><FONT size=3>The first step is to develop a thorough understanding of the system, including all the data that will be entered and all the reports, statistics, labels, and other output that will be generated. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>The second step is to determine how many tables you need and what information you will store in each table. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>The third step is to design the tables by selecting the fields you want to include, the type of data you want to store in each field, and the size of the fields. If the data will be sorted or selected, it should be in a separate field; if the data can be calculated from other fields, you do not need to store it in its own field; and, if the table will be linked to another table, the tables should contain common fields. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>The fourth step is to create the table structures by defining the name, data type, and size of the fields. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>The fifth and final step is to enter sample data to test your table structures.</FONT>
+</OL><H4 align=center><FONT size=4>Creating a Table in Design View</FONT></H4>
+<P><FONT size=3>When you create a new table, the <B>New Table</B> dialog box provides you with several options. You can choose to create a table in either Datasheet or Design view, use the Table Wizard, import data from another data source, or link to data from another data source.</FONT> 
+<P><FONT size=3><IMG height=331 alt=" " src="http://www.jmu.edu/computing/tutorials/microsoft/access/images/NewTableWindow.gif" width=441></FONT> 
+<P><FONT size=3></FONT>
+<P><FONT size=3>Usually, a table is created in <B>Design</B> view, which gives you the most control over the design of the database.</FONT> 
+<P><FONT size=3>The Design view window is split into two panes. The top pane of the window contains the design grid. You use the rows and columns to enter field names, data types, and field descriptions. The small box to the left of each field name is the row selector. When you select a row, a black triangle appears in the row selector for that row to indicate the current field. 
+<BR>
+<BR><IMG height=403 alt=" " src="http://www.jmu.edu/computing/tutorials/microsoft/access/images/Using%203.gif" width=556></FONT> 
+<P><FONT size=3>The bottom pane of the window displays the properties of the selected field. A property is a characteristic of a field, such as the number of characters a field can contain. Access automatically assigns default field properties you can modify, if desired.</FONT> 
+<P><FONT size=3><B>Read through the steps:</B> If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><FONT size=3>&nbsp; The following steps assume the Access program is already open.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the New button on the Database window toolbar. <IMG height=33 alt=" " src="http://www.jmu.edu/computing/tutorials/microsoft/access/images/NewButton.gif" width=69> 
+<BR></FONT><I><FONT size=3>The New Table dialog box opens. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Design View. 
+<BR></FONT><I><FONT size=3>Design View is selected and a description of Design view appears in the left panel of the New Table dialog box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select OK. 
+<BR><I>The New Table dialog box closes and the new table is created in Design view.</I></FONT>
+</OL><H4 align=center><FONT size=4>Saving a New Table</FONT></H4>
+<P><FONT size=3>You can save a new table either before or after you define its fields. When you save a new table, you should give it a name that describes the records it stores. You can use up to 64 characters, including spaces. These characters can include letters, numbers, and spaces. They cannot contain a period (.), an exclamation point (!), a back quote (`), brackets ([]), or ASCII control characters. 
+<BR>
+<BR><IMG style="WIDTH: 533px; HEIGHT: 250px" height=250 alt=Saving2.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Saving2.gif" width=533 border=0> 
+<BR>
+<BR></FONT>
+<P><A href="http://www.jmu.edu/computing/tutorials/microsoft/access/creatingtables/creating.shtml"><FONT color=#996600 size=3></FONT></A>&nbsp;<H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Click the Save button on the Table Design toolbar. 
+<BR>
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Saving1.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Saving1.gif" width=33 border=0> 
+<BR><I>The Save As dialog box opens with the insertion point in the Table Name text box.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type a name for the table. 
+<BR><I>The name appears in the Table Name text box.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select OK. 
+<BR><I>The Save As dialog closes and an icon with the table name appears in the Tables object list in the Database window.</I></FONT>
+</OL><H4 align=center><FONT size=4>Adding Field Names and Assigning Data Types</FONT></H4>
+<P><FONT size=3>In the Design view window, you can add field names. Field names identify the data in a field, such as <B>Employee ID</B> , representing a field containing an identification number for an employee. Field names can be up to 64 characters long and can include letters, numbers, and spaces (field names cannot begin with spaces). Field names cannot contain a period (.), an exclamation point (!), a back quote (`), brackets ([ ]), or ASCII control characters. In addition, field names within a table must be unique. 
+<BR>
+<BR><IMG style="WIDTH: 549px; HEIGHT: 419px" height=419 alt=addingfields.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/addingfields.gif" width=549 border=0> 
+<BR>
+<BR></FONT>
+<P><FONT size=3>Every field has a data type. The data type tells Access what kind of values you plan to store in the field and how much storage space to set aside for the field. While you can change a data type after a field contains data, this procedure may erase some or all the information in that field. 
+<BR>
+<BR></FONT><H5><FONT size=3>Data Types</FONT></H5>
+<UL>
+<LI><FONT size=3>A <B>Text</B> field is the default data type and can contain any combination of letters, numbers, punctuation marks, and spaces. The default width is 50 characters and the maximum length is 255 characters. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>A <B>Memo</B> field is similar to a <B>Text</B> field, except that a <B>Memo</B> field can contain up to 65,535 characters. You can use <B>Memo</B> fields for notes or long descriptions in a database. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>A <B>Number</B> field can contain only numeric characters, a comma (used as a thousands separator), a period (used as a decimal point), and a hyphen (used as a negative number sign). You use a <B>Number</B> field only when you want to perform calculations using the values in the field. For example, even though zip codes and telephone numbers consist of numeric characters, you would not want to use them in calculations. Therefore, they should not be <B>Number</B> fields. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>A <B>Date/Time</B> field contains a date and/or a time. Access automatically validates the entry, ensuring that it is a valid date and/or time. For example, Access does not allow you to enter 2/31/99 since February does not have 31 days. <B>Date/Time</B> fields are useful in performing calculations on dates and times. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>A <B>Currency</B> field is similar to a <B>Number</B> field and can be used in calculations. However, the values in a <B>Currency</B> field can only have four decimal places, and they automatically appear with dollar signs and thousands separators (commas). You should use <B>Currency</B> fields whenever possible because they use fixed point calculation, which is faster than the floating point calculation used in <B>Number</B> fields. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>An <B>AutoNumber</B> data type means that Access automatically assigns a unique number (consecutively from 1) to each record in the database. You cannot manually enter a value into the field or change the number once Access assigns it. You use this data type when you want a unique identification number for every record. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>A <B>Yes/No</B> field signifies one of two conditions, Yes or No. You use a <B>Yes/No</B> field when only two possibilities (i.e., True or False) exist for a field value. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>An <B>OLE object</B> field connects a field to other Windows applications. You use an <B>OLE object</B> data type for graphics, spreadsheets, or sound files. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>A <B>Hyperlink</B> field stores a link to anywhere you choose. The link could go to an Internet page, a Word document on an intranet, or even a form in the current database. A <B>Hyperlink</B> field can contain a description, an address, and a sub-address. Each part is separated by a number sign (#) and can contain 2,048 characters. However, only the address is mandatory. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Selecting the <B>Lookup Wizard</B> data type guides you through steps to create a <B>Lookup</B> field. A <B>Lookup</B> field contains a list of selected values from another table or a list of values that you provide. You can choose values from the list to reduce repetitive data entry. </FONT><FONT size=3>
+<BR></FONT>
+</UL><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Create a new table in Design view. Click in the first cell under Field Name. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type in the field name <B>EmployeeNumber</B> . 
+<BR></FONT><I><FONT size=3>EmployeeNumber appears in the next field in the Field Name column. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Press the Tab key. 
+<BR></FONT><I><FONT size=3>The insertion point moves to Data Type and a default data type (Text) appears next to the EmployeeNumber field. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Click the drop down arrow. 
+<BR><IMG style="WIDTH: 19px; HEIGHT: 19px" height=19 alt=Assign3.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Assign3.gif" width=19 border=0> 
+<BR><I>A list of data types appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>AutoNumber</B> data type. 
+<BR></FONT><I><FONT size=3>The AutoNumber data type replaces the Text data type in the <B>Data Type</B> column for the Employee field. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Continue to add fields and assign data types as shown: </FONT>
+<TABLE>
+<TBODY>
+<TR>
+<TD><FONT size=3>Department</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR><TR>
+<TD><FONT size=3>FirstName</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR><TR>
+<TD><FONT size=3>LastName</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR><TR>
+<TD><FONT size=3>Address</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR><TR>
+<TD><FONT size=3>City</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR><TR>
+<TD><FONT size=3>State</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR><TR>
+<TD><FONT size=3>ZipCode</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR><TR>
+<TD><FONT size=3>PhoneNumber</FONT></TD>
+<TD><FONT size=3>Text</FONT></TD>
+</TR></TBODY></TABLE>
+<BR>
+<BR>
+<LI><FONT size=3>Press the Save button. Name the table <B>University Employees</B> . 
+<BR><I>All changes made in Design view must be saved before the Design view window is closed.</I></FONT>
+</OL><H4 align=center><FONT size=4>Adding a Field Description</FONT></H4>
+<P><FONT size=3>You can enter an optional description for each field in the <B>Description</B> column in the design grid. The description appears on the status bar when the field is accessed on a form. You can enter brief comments as to the purpose of the field or the data that should be stored in it. 
+<BR>
+<BR><IMG style="WIDTH: 574px; HEIGHT: 225px" height=225 alt=descrip.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/descrip.gif" width=574 border=0> 
+<BR>
+<BR></FONT>
+<P><FONT size=3><B>Read through the steps:</B> If you would like to complete these steps in an actual Access file, please click the link to the data file below and move between the Access and Web windows until you are satisfied you have mastered the skill. (If a dialog box appears while you are trying to open the exercise, select <I>Open this file from its current location</I> , and click OK.)</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the University Employees table in Design view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the Description column of the field to which you want to add a description. 
+<BR></FONT><I><FONT size=3>The insertion point appears in the desired location in the Description column. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Type the desired description. 
+<BR></FONT><I><FONT size=3>The text appears in the Description column. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Press the Save button and Close the University Employees table. 
+<BR><I>All changes made in Design view must be saved before the Design view window is closed.</I></FONT>
+</OL><H4 align=center><FONT size=4>Setting a Primary Key</FONT></H4>
+<P><FONT size=3>Access works most efficiently if you specify a primary key for a table. The primary key is a field or group of fields that uniquely identifies each record. Therefore, the value of the key field, or the combined values of a group of key fields, must not be found in more than one record.</FONT> 
+<P><FONT size=3>There are several advantages to setting a primary key for a table. First, the primary key is automatically indexed, which makes information retrieval faster. Second, when you open a table, the records are automatically sorted in order by the primary key. Finally, a primary key prevents entry of duplicate data because Access does not allow duplicates in the primary key field. 
+<BR>
+<BR><IMG style="WIDTH: 574px; HEIGHT: 225px" height=225 alt=descrip.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/descrip.gif" width=574 border=0> 
+<BR>
+<BR></FONT>
+<P><FONT size=3><B>Read through the steps:</B> If you would like to complete these steps in an actual Access file, please click the link to the data file below and move between the Access and Web windows until you are satisfied you have mastered the skill. (If a dialog box appears while you are trying to open the exercise, select <I>Open this file from its current location</I> , and click OK.)</FONT> 
+<P><FONT size=3></FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Open the University Employees table in Design view. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>EmployeeNumber </B>field. 
+<BR><I>The insertion point appears in the field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the <B>Primary Key</B> button on the <B>Table Design</B> toolbar. 
+<BR>
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Settin8.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Settin8.gif" width=33 border=0> 
+<BR></FONT><I><FONT size=3>The <B>EmployeeNumber</B> field is set as the primary key and a key appears in the row selector for the designated field. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Press the Save button and close the University Employees table. 
+<BR><I>All changes made in Design view must be saved before the Design view window is closed.</I></FONT>
+</OL><H4 align=center><FONT size=4>Using the Table Wizard</FONT></H4>
+<P><FONT size=3>When you create a new table, the New Table dialog box provides you with several options. You can choose to create a table in either <B>Datasheet</B> or <B>Design</B> view, use the <B>Table Wizard</B> , import data from another data source, or link to data from another data source.</FONT> 
+<P><FONT size=3>You can use the Table Wizard to lead you through the steps to create a new table. The Table Wizard contains a set of models or templates for typical business and personal tables. You select the type of table you want to create, then select the predefined fields you want to add to the table. 
+<BR>
+<BR><IMG style="WIDTH: 441px; HEIGHT: 294px" height=294 alt=Using2059.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Using2059.gif" width=441 border=0> 
+<BR>
+<BR></FONT>
+<P><FONT size=3><B>Read through the steps:</B> If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><FONT size=3> The following steps assume the Access program is already open.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the New button on the Database window toolbar. <IMG style="WIDTH: 69px; HEIGHT: 33px" height=33 alt=Using2058.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Using2058.gif" width=69 border=0> 
+<BR></FONT><I><FONT size=3>The New Table dialog box opens. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Table Wizard. 
+<BR></FONT><I><FONT size=3>Table Wizard is selected and a description of the Table Wizard appears in the left panel of the New Table dialog box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select OK. 
+<BR></FONT><I><FONT size=3>The New Table dialog box closes and the first page of the Table Wizard appears. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the Business or Personal option. 
+<BR></FONT><I><FONT size=3>The appropriate option is selected. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select a sample table from the Sample Tables list box. 
+<BR></FONT><I><FONT size=3>The fields in the sample table appear in the Sample Fields list box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the first field you want to add to the table in the Sample Fields list box. 
+<BR></FONT><I><FONT size=3>The appropriate field is selected. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select <IMG style="WIDTH: 39px; HEIGHT: 25px" height=25 alt=Using2057.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Using2057.gif" width=39 border=0>&nbsp;to the right of the Sample Fields list box. 
+<BR></FONT><I><FONT size=3>The field name appears in the Fields in my new table list box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Add other fields, as desired. 
+<BR>T</FONT><I> <FONT size=3>he field names appear in the Fields in my new table list box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Next. 
+<BR><I>The next&nbsp; page of the Table Wizard appears with the insertion point in the </I>What do you want to name your table?</FONT><I> <FONT size=3>text box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Type a name for the table in the What do you want to name your table? text box. 
+<BR><I>The new name replaces the default name in the </I>What do you want to name your table?</FONT><I> <FONT size=3>text box. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the desired option for the primary key. 
+<BR></FONT><I><FONT size=3>The desired option is selected. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Next. 
+<BR></FONT><I><FONT size=3>The next page of the Table Wizard appears. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the What field will hold data that is unique for each record? list.</FONT><I> 
+<BR><FONT size=3>A list of fields appears. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the desired field. 
+<BR></FONT><I><FONT size=3>The desired field is selected. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the desired option for creating the data in the primary key field. 
+<BR></FONT><I><FONT size=3>The desired option is selected. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Next. 
+<BR></FONT><I><FONT size=3>The next page of the Table Wizard appears. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Next. 
+<BR></FONT><I><FONT size=3>The next page of the Table Wizard appears. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select the option corresponding to the view you want to appear after you exit the wizard. 
+<BR></FONT><I><FONT size=3>The appropriate option is selected. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Select Finish. 
+<BR><I>The Table Wizard closes and the table appears.</I></FONT>
+</OL>

@@ -1,0 +1,65 @@
+/* 9.2. GK Social
+==================================== */
+
+#gk-social-icons {
+	float: right;
+	margin-left: 24px;
+}
+
+.gk-facebook-icon,
+.gk-twitter-icon,
+.gk-gplus-icon,
+.gk-pinterest-icon {
+	display: block;
+	float: left;
+	height: 22px;
+	line-height: 22px;
+	padding: 0;
+	text-indent: -9999px;
+	-webkit-transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear;
+	   -moz-transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear;
+ 	     -o-transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear;
+	        transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear;
+	width: 28px;
+}
+
+.gk-facebook-icon {
+	background: transparent url('../images/company/12/social_icons.png') no-repeat -28px 0;
+}
+
+.gk-twitter-icon {
+	background: transparent url('../images/company/12/social_icons.png') no-repeat 0 0;
+}
+
+.gk-gplus-icon {
+	background: transparent url('images/company/12/social_icons.png') no-repeat -84px 0;
+}
+
+.gk-pinterest-icon {
+	background: transparent url('images/company/12/social_icons.png') no-repeat -56px 0;
+}
+
+.gk-facebook-icon:active,
+.gk-facebook-icon:focus,
+.gk-facebook-icon:hover {
+	background: transparent url('../images/company/12/social_icons.png') no-repeat -28px -22px;
+}
+
+.gk-twitter-icon:active,
+.gk-twitter-icon:focus,
+.gk-twitter-icon:hover {
+	background: transparent url('../images/company/12/social_icons.png') no-repeat 0 -22px;
+}
+
+.gk-gplus-icon:active,
+.gk-gplus-icon:focus,
+.gk-gplus-icon:hover {
+	background: transparent url('images/company/12/social_icons.png') no-repeat -84px -22px;
+}
+
+.gk-pinterest-icon:active,
+.gk-pinterest-icon:focus,
+.gk-pinterest-icon:hover {
+	background: transparent url('images/company/12/social_icons.png') no-repeat -56px -22px;
+}
+

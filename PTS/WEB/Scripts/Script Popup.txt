@@ -1,0 +1,17 @@
+Impact Popup Setup Instructions
+-------------------------------
+1. Create Impact Popup
+	ImpactPopup.exe
+2. Create script directory
+	/Scripts/Leadx/
+3. Copy all three files to new directory
+	script.js
+	logo.png
+	pix.gif
+4. Update path variable in script.js
+	Path = "Scripts/Leadx/"
+5. Insert code in html file
+	<SCRIPT src="Scripts/Leadx/script.js"></SCRIPT>
+
+
+NOTE: replace Leadx with Lead Page #.  For example, if the Lead page = 5 then, Lead5.

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<MENU name="EcoQuest International">
+	<ITEM name="Dashboard" code="i" type="dashboard" image="Dashboard.png" description="Dashboard">
+		<ITEM name="10:30am Call John Smith"/>
+		<ITEM name="4:30pm Team Conference Call"/>
+		<ITEM type="Divider"/>
+		<ITEM name="Getting Started Track"/>
+		<ITEM type="Divider"/>
+		<ITEM name="7 Mentorees"/>
+		<ITEM type="Divider"/>
+		<ITEM name="3 New Prospects"/>
+		<ITEM name="12 Total Prospects"/>
+		<ITEM name="41 Total Customers"/>
+	</ITEM>
+	<ITEM name="Shortcuts" code="s" type="shortcut" image="Shortcuts.png" description="Shortcuts">
+		<ITEM name="Lead Manager" code="h" link="2201.asp"/>
+		<ITEM name="Sales System" code="E" link="8101.asp?contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="E"/>
+		<ITEM name="ACME Corporation" link="8103.asp?ProspectID=236%26ContentPage=3%26popup=1"/>
+		<ITEM name="Allergies Lead Page" link="lp.asp?p=63%26m=84%26Preview=1"/>
+		<ITEM name="Opportunity Presentation" link="pp.asp?p=69%26m=84%26Preview=1"/>
+	</ITEM>
+	<ITEM name="Training" code="B" image="Training.png" description="Training and Development">
+		<ITEM name="Jump Start" code="5" link="0420.asp"/>
+		<ITEM name="Business Evaluation" link="P.asp?p=276"/>
+		<ITEM type="Divider"/>
+		<ITEM name="Classes" code="K" link="1311.asp?contentpage=3"/>
+		<ITEM name="Course Catalog" code="M" link="1212.asp?mode=2%26contentpage=3"/>
+		<ITEM name="Training Buddy" code="J" link="0440.asp?contentpage=3"/>
+		<ITEM type="Divider" code="K"/>
+		<ITEM name="Assessments" code="L" link="3411.asp?contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="L"/>
+		<ITEM name="ESN Tutorial" link="1330.asp?CourseID=1288%26Register=1%26contentpage=3%26popup=1"/>
+		<ITEM name="ESN Conference Calls" link="P.asp?p=246"/>
+	</ITEM>
+	<ITEM name="Sales" code="A" image="Sales.png" description="Sales and Marketing">
+		<ITEM name="Sales Team" code="o" link="0470.asp"/>
+		<ITEM type="Divider" code="o"/>
+		<ITEM name="Lead Manager" code="h" link="2201.asp"/>
+		<ITEM name="Sales System" code="E" link="8101.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Customer Service" code="6" link="8151.asp?contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="E"/>
+		<ITEM name="Lead Pages" code="Z" link="1412.asp?pagetype=1%26contentpage=3%26popup=1"/>
+		<ITEM name="Presentations" code="z" link="1412.asp?pagetype=2%26contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="Z"/>
+		<ITEM name="Retailing Diagram" link="P.asp?p=254"/>
+		<ITEM name="Recruiting Diagram" link="P.asp?p=253"/>
+	</ITEM>
+	<ITEM name="Finance" code="j" image="Finance.png" description="Financial Information">
+		<ITEM name="Orders" code="j" link="0475.asp?code=1%26contentpage=3%26popup=1"/>
+		<ITEM name="Payments" code="j" link="0475.asp?code=2%26contentpage=3%26popup=1"/>
+		<ITEM type="Divider"/>
+		<ITEM name="Commissions" code="p" link="0475.asp?code=3%26contentpage=3%26popup=1"/>
+		<ITEM name="Pay Checks" code="x" link="0475.asp?code=4%26contentpage=3%26popup=1"/>
+	</ITEM>
+	<ITEM name="Personal" code="n" image="Personal.png" description="Personal Administration">
+		<ITEM name="Mentoring" code="G" link="0410.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Goals" code="H" link="7001.asp?contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="H"/>
+		<ITEM name="Calendars" code="2" link="Calendar.asp"/>
+		<ITEM name="Meeting Plans" code="7" link="2511.asp?contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="2"/>
+		<ITEM name="Personal Profile" code="I" link="0403.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Membership Info" code="~;" link="0419.asp"/>
+		<ITEM type="Divider" code="I"/>
+		<ITEM name="Resource Center" code="a" link="9304.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Newsletters" code="W" link="1813.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Projects" code="F" link="7501.asp?contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="a"/>
+		<ITEM name="Change Logon" link="0103.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Change Password" link="0106.asp?contentpage=3%26popup=1"/>
+	</ITEM>
+	<ITEM name="Communication" code="C" image="Communication.png" description="Messages and Communication">
+		<ITEM name="Personal Messages" type="msgs" code="z"/>
+		<ITEM name="News Channels" type="news" code="y">
+			<ITEM name="Air Products" file="news1.xml"/>
+			<ITEM name="Water Products" file="news2.xml"/>
+			<ITEM name="Commercial Products" file="news3.xml"/>
+			<ITEM name="Nutritional Products" file="news4.xml"/>
+			<ITEM name="Skin Care Products" file="news5.xml"/>
+			<ITEM name="Personal Development" file="news6.xml"/>
+		</ITEM>
+		<ITEM type="Divider"/>
+		<ITEM name="Conferencing" code="4" link="0416.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Discussions" code="O" link="8414.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Chat Rooms" code="N" link="8413.asp?contentpage=3%26popup=1"/>
+		<ITEM type="Divider" code="4"/>
+		<ITEM name="Suggestion Boxes" code="P" link="4511.asp?contentpage=3%26popup=1"/>
+		<ITEM name="Company Surveys" code="Q" link="4011.asp?contentpage=3%26popup=1"/>
+	</ITEM>
+	<ITEM name="Support" code="D" image="Support.png" description="Business Support">
+		<ITEM name="Live Desktop Help" link="Page.asp?Page=LiveDesktopHelp"/>
+		<ITEM name="Live Person Support" link="0404.asp"/>
+		<ITEM type="Divider"/>
+		<ITEM name="Documents" code="R" link="8013.asp?contentpage=3"/>
+		<ITEM name="Company Q&amp;A" code="S" link="1713.asp?contentpage=3"/>
+		<ITEM type="Divider" code="R"/>
+		<ITEM name="Support Tickets" code="m" link="9506.asp?contentpage=3"/>
+		<ITEM name="Conference Lines" link="Page.asp?Page=telecommunications%26company=13"/>
+		<ITEM name="Toll-Free Numbers" link="Page.asp?Page=telecommunications%26company=13"/>
+	</ITEM>
+</MENU>

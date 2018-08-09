@@ -1,0 +1,2062 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="137" name="Profile" alias="pro" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="13701" name="ProfileID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="13702" name="MemberID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="13703" name="ProfileDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="13704" name="ProfileType" type="number" source="entity">
+			<WTENUM id="1" name="ProfileType1"/>
+			<WTENUM id="2" name="ProfileType2"/>
+			<WTENUM id="3" name="ProfileType3"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13705" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="Inactive"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13706" name="VQResponse" type="text" length="50" source="entity" />
+		<WTATTRIBUTE id="13707" name="SQResponse" type="text" length="50" source="entity" />
+
+		<WTATTRIBUTE id="13709" name="VQDiff" type="number" source="entity"/>
+		<WTATTRIBUTE id="13710" name="VQDimPerc" type="number" source="entity"/>
+		<WTATTRIBUTE id="13711" name="VQDimPos_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13712" name="VQDimPos_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13713" name="VQDimPos_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13714" name="VQDimNeg_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13715" name="VQDimNeg_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13716" name="VQDimNeg_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13717" name="VQIntCate_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13718" name="VQIntCate_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13719" name="VQIntCate_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13720" name="VQInt" type="number" source="entity"/>
+		<WTATTRIBUTE id="13721" name="VQIntPerc" type="number" source="entity"/>
+		<WTATTRIBUTE id="13722" name="VQDI" type="number" source="entity"/>
+		<WTATTRIBUTE id="13723" name="VQDIS" type="number" source="entity"/>
+		<WTATTRIBUTE id="13724" name="VQLeft" type="number" source="entity"/>
+		<WTATTRIBUTE id="13725" name="VQRight" type="number" source="entity"/>
+		<WTATTRIBUTE id="13726" name="VQAI" type="number" source="entity"/>
+
+		<WTATTRIBUTE id="13727" name="SQDiff" type="number" source="entity"/>
+		<WTATTRIBUTE id="13728" name="SQDimPerc" type="number" source="entity"/>
+		<WTATTRIBUTE id="13729" name="SQDimPos_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13730" name="SQDimPos_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13731" name="SQDimPos_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13732" name="SQDimNeg_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13733" name="SQDimNeg_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13734" name="SQDimNeg_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13735" name="SQIntCate_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13736" name="SQIntCate_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13737" name="SQIntCate_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13738" name="SQInt" type="number" source="entity"/>
+		<WTATTRIBUTE id="13739" name="SQIntPerc" type="number" source="entity"/>
+		<WTATTRIBUTE id="13740" name="SQDI" type="number" source="entity"/>
+		<WTATTRIBUTE id="13741" name="SQDIS" type="number" source="entity"/>
+		<WTATTRIBUTE id="13742" name="SQLeft" type="number" source="entity"/>
+		<WTATTRIBUTE id="13743" name="SQRight" type="number" source="entity"/>
+		<WTATTRIBUTE id="13744" name="SQAI" type="number" source="entity"/>
+
+		<WTATTRIBUTE id="13745" name="BQrLeft" type="currency" source="entity">
+			<WTFORMAT value="##0.0" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13746" name="BQrRight" type="currency" source="entity">
+			<WTFORMAT value="##0.0" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13747" name="BQaLeft" type="number" source="entity"/>
+		<WTATTRIBUTE id="13748" name="BQaRight" type="number" source="entity"/>
+		<WTATTRIBUTE id="13749" name="CQLeft" type="number" source="entity"/>
+		<WTATTRIBUTE id="13750" name="CQRight" type="number" source="entity"/>
+		<WTATTRIBUTE id="13751" name="RQLeft" type="currency" source="entity">
+			<WTFORMAT value="##0.00" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13752" name="RQRight" type="currency" source="entity">
+			<WTFORMAT value="##0.00" />
+		</WTATTRIBUTE>
+
+		<WTATTRIBUTE id="13753" name="VQClarity_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13754" name="VQClarity_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13755" name="VQClarity_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13756" name="VQBias_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13757" name="VQBias_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13758" name="VQBias_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13759" name="SQClarity_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13760" name="SQClarity_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13761" name="SQClarity_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13762" name="SQBias_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13763" name="SQBias_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13764" name="SQBias_S" type="number" source="entity"/>
+
+		<WTATTRIBUTE id="13765" name="xVQClarity_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13766" name="xVQClarity_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13767" name="xVQClarity_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13768" name="xVQBias_I" type="currency" source="entity">
+			<WTFORMAT value="#0.0" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13769" name="xVQBias_E" type="currency" source="entity">
+			<WTFORMAT value="#0.0" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13770" name="xVQBias_S" type="currency" source="entity">
+			<WTFORMAT value="#0.0" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13771" name="xSQClarity_I" type="number" source="entity"/>
+		<WTATTRIBUTE id="13772" name="xSQClarity_E" type="number" source="entity"/>
+		<WTATTRIBUTE id="13773" name="xSQClarity_S" type="number" source="entity"/>
+		<WTATTRIBUTE id="13774" name="xSQBias_I" type="currency" source="entity">
+			<WTFORMAT value="#0.0" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13775" name="xSQBias_E" type="currency" source="entity">
+			<WTFORMAT value="#0.0" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="13776" name="xSQBias_S" type="currency" source="entity">
+			<WTFORMAT value="#0.0" />
+		</WTATTRIBUTE>
+
+		<!-- Indexes-->
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Profile" entity="Profile" alias="pro"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Profile.ProfileID)"/>
+					<WTATTRIBUTE value="ATTR(Profile.ProfileDate)"/>
+					<WTATTRIBUTE value="ATTR(Profile.ProfileType)"/>
+					<WTATTRIBUTE value="ATTR(Profile.Status)"/>
+					<WTATTRIBUTE value="ATTR(Profile.VQClarity_I)"/>
+					<WTATTRIBUTE value="ATTR(Profile.VQClarity_E)"/>
+					<WTATTRIBUTE value="ATTR(Profile.VQClarity_S)"/>
+					<WTATTRIBUTE value="ATTR(Profile.VQBias_I)"/>
+					<WTATTRIBUTE value="ATTR(Profile.VQBias_E)"/>
+					<WTATTRIBUTE value="ATTR(Profile.VQBias_S)"/>
+					<WTATTRIBUTE value="ATTR(Profile.SQClarity_I)"/>
+					<WTATTRIBUTE value="ATTR(Profile.SQClarity_E)"/>
+					<WTATTRIBUTE value="ATTR(Profile.SQClarity_S)"/>
+					<WTATTRIBUTE value="ATTR(Profile.SQBias_I)"/>
+					<WTATTRIBUTE value="ATTR(Profile.SQBias_E)"/>
+					<WTATTRIBUTE value="ATTR(Profile.SQBias_S)"/>
+					<WTJOIN name="Profile"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(Profile.ProfileDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+    
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="13700" caption="Profile Instructions" page-left="5" page-top="5" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASPOpen.xsl" xslstyle="GenerateWebXSLOpen.xsl" focus="false">
+			<!--==================================================================-->
+			<WTPARAM name="ProfileID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ProfileType" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(PEOPLEEDGE)"/>
+				<WTSETATTRIBUTE name="PARAM(ProfileType)" value="CONST(1)">
+					<WTCONDITION expr="PARAM(ProfileType)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Instructions.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; + CStr(reqCompanyID) + &quot;/Profile&quot; + CStr(reqProfileType))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Continue" type="Update">
+				<WTRETURN>
+					<WTLINK name="13703" return="false">
+						<WTPARAM name="ProfileID" value="PARAM(ProfileID)"/>
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ProfileType" value="PARAM(ProfileType)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCODEGROUP>
+					<WTSTATIC value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTBUTTON action="1" value="CONST(StartProfile)" align="center"/>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="13703" caption="Profile" header="false" footer="false" navbar="false" wrapper="wrapper650"
+			page-width="600" margin-width="0" navbar-width="0" content-width="600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ProfileID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ProfileType" datatype="number"/>
+
+			<WTINCLUDE name="Profile.asp" />
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(PEOPLEEDGE)"/>
+			</WTCODEGROUP>
+
+			<WTSUB function="LoadProfile(list)">
+				<WTOBJECT name="Profile" project="ptsProfileUser" class="CProfile">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProfileID" direction="input" value="PARAM(ProfileID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ProfileID)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(ProfileDate)" value="SYS(Now)"/>
+					</WTCODEGROUP>
+					<WTSETATTRIBUTE name="PARAM(MemberID)" value="ATTR(MemberID)">
+						<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="PARAM(ProfileType)" value="ATTR(ProfileType)">
+						<WTCONDITION expr="ATTR(ProfileType)" oper="not-equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpListA)" value="ATTR(VQResponse)"/>
+					<WTSETATTRIBUTE name="CONST(tmpListB)" value="ATTR(SQResponse)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProfile" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ProfileType)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="PARAM(ProfileType)" value="CONST(1)">
+							<WTCONDITION expr="CONST(InStr(.Options2,&quot;P1&quot;))" oper="not-equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<WTSETATTRIBUTE name="PARAM(ProfileType)" value="CONST(2)">
+							<WTCONDITION expr="CONST(InStr(.Options2,&quot;P2&quot;))" oper="not-equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<WTSETATTRIBUTE name="PARAM(ProfileType)" value="CONST(3)">
+							<WTCONDITION expr="CONST(InStr(.Options2,&quot;P3&quot;))" oper="not-equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<WTSETATTRIBUTE name="PARAM(ProfileType)" value="CONST(4)">
+							<WTCONDITION expr="CONST(InStr(.Options2,&quot;P4&quot;))" oper="not-equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<WTSETATTRIBUTE name="PARAM(ProfileType)" value="CONST(1)">
+							<WTCONDITION expr="PARAM(ProfileType)" oper="equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Profile&quot; + CStr(list) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; + CStr(reqCompanyID) + &quot;/Profile&quot; + CStr(reqProfileType))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						xmlHTMLFile = Replace( xmlHTMLFile, "{listA}", tmpListA )
+						xmlHTMLFile = Replace( xmlHTMLFile, "{listB}", tmpListB )
+					</WTCUSTOM>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB function="SaveProfile(list)">
+        <WTSETATTRIBUTE name="CONST(tmpNewProfile)" value="CONST(0)"/>
+        <WTOBJECT name="Profile" project="ptsProfileUser" class="CProfile">
+					<WTSETATTRIBUTE name="PARAM(ProfileID)" value="FORM(ProfileID)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProfileID" direction="input" value="PARAM(ProfileID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ProfileID)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+						<WTSETATTRIBUTE name="ATTR(ProfileDate)" value="SYS(Now)"/>
+						<WTSETATTRIBUTE name="ATTR(ProfileType)" value="PARAM(ProfileType)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="CONST(tmpNewProfile)" value="CONST(1)"/>
+          </WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(list)" oper="equal" value="CONST(1)"/>
+						<WTSETATTRIBUTE name="ATTR(VQResponse)" value="FORM(ListA)"/>
+						<WTSETATTRIBUTE name="CONST(Error)" value="CONST(0)"/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(list)" oper="equal" value="CONST(2)"/>
+						<WTSETATTRIBUTE name="ATTR(SQResponse)" value="FORM(ListB)"/>
+						<WTSETATTRIBUTE name="CONST(Error)" value="CONST(ReportAnalysis( oProfile ))"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(Error)" oper="equal" value="CONST(1)"/>
+							<WTERROR number="-1" message="Oops, Too few responses in first list."/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(Error)" oper="equal" value="CONST(2)"/>
+							<WTERROR number="-1" message="Oops, Too few responses in second list."/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(Error)" oper="equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(2)"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(Error)" oper="equal" value="CONST(0)"/>
+						<WTMETHOD name="Add">
+							<WTCONDITION expr="PARAM(ProfileID)" oper="equal" value="CONST(0)"/>
+							<WTPARAM name="reqProfileID" direction="return" datatype="number"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTMETHOD name="Save">
+							<WTCONDITION expr="PARAM(ProfileID)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(list)" oper="equal" value="CONST(2)"/>
+<!--              <WTSETATTRIBUTE name="CONST(Ret)" value="CONST(CreateProfilePDF( reqProfileID, 0 ))"/>-->
+              <WTSETATTRIBUTE name="CONST(Ret)" value="CONST(CreateProfilePDF( reqProfileID, 1 ))"/>
+              <WTCUSTOM>
+                If err.number &lt;&gt; 0 Then
+                  response.write err.description
+                  response.end
+                End If
+              </WTCUSTOM>              
+            </WTCODEGROUP>
+					</WTCODEGROUP>
+				</WTOBJECT>
+        <WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+          <WTCONDITION expr="CONST(Error)" oper="equal" value="CONST(0)"/>
+          <WTCONDITION expr="CONST(tmpNewProfile)" oper="not-equal" value="CONST(0)" connector="and"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(GroupID)" value="ATTR(GroupID)"/>
+          <WTSETATTRIBUTE name="CONST(Credit)" value="CONST(CLNG(.Process))"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="CONST(Credit)" oper="greater" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(Process)" value="CONST(Credit-1)"/>
+            <WTMETHOD name="Save">
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+            <WTCONDITION expr="CONST(Error)" oper="equal" value="CONST(0)"/>
+            <WTCONDITION expr="CONST(tmpNewProfile)" oper="not-equal" value="CONST(0)" connector="and"/>
+            <WTCONDITION expr="CONST(GroupID)" oper="not-equal" value="CONST(0)" connector="and"/>
+            <WTCONDITION expr="CONST(Credit)" oper="equal" value="CONST(0)" connector="and"/>
+            <WTMETHOD name="Load">
+              <WTPARAM name="MemberID" direction="input" value="CONST(GroupID)"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="CONST(Credit)" value="CONST(CLNG(.Process))"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="CONST(Credit)" oper="greater" value="CONST(0)"/>
+              <WTSETATTRIBUTE name="ATTR(Process)" value="CONST(Credit-1)"/>
+              <WTMETHOD name="Save">
+                <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+              </WTMETHOD>
+            </WTCODEGROUP>
+          </WTOBJECT>
+      </WTSUB>
+			
+			<WTACTION id="0" name="Step1" type="New">
+				<WTCALLSUB name="LoadProfile(1)"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Step2" type="New">
+				<WTCALLSUB name="SaveProfile(1)"/>
+				<WTCALLSUB name="LoadProfile(2)"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTCALLSUB name="SaveProfile(2)"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="13711" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Back" type="New">
+				<WTCALLSUB name="SaveProfile(2)"/>
+				<WTCALLSUB name="LoadProfile(1)"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="13711" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="center"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(ProfileID)"/>
+					<WTHIDDEN value="PARAM(ProfileType)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" class="PageHeading">
+						<WTSTATIC tag="Profile"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)" space="1"/>
+						<WTSTATIC value="CONST(-)" space="1"/>
+						<WTSTATIC value="ATTR(Profile.ProfileDate)"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" align="center" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+						<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCONDITION expr="IsMemberOnly"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+					
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="13710" caption="Profile Report" header="false" footer="false" navbar="false" wrapper="false" stylesheet="StyleSheet.css" top="/DATA/TXN/TOP/comment()"
+			   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLOpen.xsl" commonlabels="false" langpath="LanguageFile" translate="google">
+			<!--===============================================================================-->
+			<WTPARAM name="ProfileID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="ProfileType" datatype="number"/>
+			<WTPARAM name="Detail" datatype="number"/>
+			<WTPARAM name="Print" datatype="number"/>
+			<WTPARAM name="SampleGraphName" datatype="text"/>
+			<WTPARAM name="SampleGraphPath" datatype="text"/>
+
+			<WTPARAM name="VQITop" datatype="number"/>
+			<WTPARAM name="VQILeft" datatype="number"/>
+			<WTPARAM name="VQETop" datatype="number"/>
+			<WTPARAM name="VQELeft" datatype="number"/>
+			<WTPARAM name="VQSTop" datatype="number"/>
+			<WTPARAM name="VQSLeft" datatype="number"/>
+			<WTPARAM name="SQITop" datatype="number"/>
+			<WTPARAM name="SQILeft" datatype="number"/>
+			<WTPARAM name="SQETop" datatype="number"/>
+			<WTPARAM name="SQELeft" datatype="number"/>
+			<WTPARAM name="SQSTop" datatype="number"/>
+			<WTPARAM name="SQSLeft" datatype="number"/>
+
+			<WTDATATXN name="Cover"/>
+			<WTDATATXN name="Congrats"/>
+			<WTDATATXN name="Contents"/>
+			<WTDATATXN name="Thinking"/>
+			<WTDATATXN name="Definitions"/>
+			<WTDATATXN name="Strength"/>
+			<WTDATATXN name="Weakness"/>
+			<WTDATATXN name="ActionPlan"/>
+
+			<WTDATATXN name="TOP"/>
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(PEOPLEEDGE)"/>
+				<WTCUSTOM>xmlTOP = "&lt;TOP&gt;&lt;!--" + "&lt;HEAD&gt;&lt;TITLE&gt;Profile Report&lt;/TITLE&gt;&lt;/HEAD&gt;" + "--&gt;&lt;/TOP&gt;"</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="CONST(tmpMemberName)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="CONST(tmpMemberFirst)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="CONST(tmpProfileDate)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupName)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupEmail)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupPhone)" value="CONST(&quot;&quot;)"/>
+				<WTOBJECT name="Profile" project="ptsProfileUser" class="CProfile">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProfileID" direction="input" value="PARAM(ProfileID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(MemberID)" value="ATTR(MemberID)"/>
+					<WTSETATTRIBUTE name="PARAM(ProfileType)" value="ATTR(ProfileType)"/>
+					<WTSETATTRIBUTE name="PARAM(ProfileType)" value="CONST(1)">
+						<WTCONDITION expr="PARAM(ProfileType)" oper="less" value="CONST(1)"/>
+						<WTCONDITION expr="PARAM(ProfileType)" oper="greater" value="CONST(4)" connector="or"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpProfileDate)" value="ATTR(ProfileDate)"/>
+					<WTSETATTRIBUTE name="PARAM(SampleGraphName)" value="CONST(&quot;Graph[&quot; + reqSysLanguage + &quot;].jpg&quot;)"/>
+					<WTSETATTRIBUTE name="CONST(Path)" value="CONST(&quot;Sections/Company/&quot; + CStr(reqCompanyID) + &quot;/Profile&quot; + CStr(reqProfileType))"/>
+					<WTSETATTRIBUTE name="PARAM(SampleGraphPath)" value="CONST(Path + &quot;/&quot;)"/>
+					<WTSETATTRIBUTE name="CONST(LanguageFile)" value="CONST(Path)"/>
+					<WTCUSTOM>
+						pos = InStr( tmpProfileDate, " " )
+						If pos &gt; 0 Then tmpProfileDate = Left(tmpProfileDate, pos-1)
+
+						reqVQILeft = 75 - (26 + (2 * CLng(.VQClarity_I)))
+						reqVQELeft = 75 - (26 + (2 * CLng(.VQClarity_E)))
+						reqVQSLeft = 75 - (26 + (2 * CLng(.VQClarity_S)))
+						reqSQILeft = 75 - (26 + (2 * CLng(.SQClarity_I)))
+						reqSQELeft = 75 - (26 + (2 * CLng(.SQClarity_E)))
+						reqSQSLeft = 75 - (26 + (2 * CLng(.SQClarity_S)))
+
+						reqVQITop = (88 - (6 + (2 * CLng(.VQClarity_I)))) - (CLng(.xVQBias_I) * 8)
+						reqVQETop = (88 - (6 + (2 * CLng(.VQClarity_E)))) - (CLng(.xVQBias_E) * 8)
+						reqVQSTop = (88 - (6 + (2 * CLng(.VQClarity_S)))) - (CLng(.xVQBias_S) * 8)
+						reqSQITop = (88 - (6 + (2 * CLng(.SQClarity_I)))) - (CLng(.xSQBias_I) * 8)
+						reqSQETop = (88 - (6 + (2 * CLng(.SQClarity_E)))) - (CLng(.xSQBias_E) * 8)
+						reqSQSTop = (88 - (6 + (2 * CLng(.SQClarity_S)))) - (CLng(.xSQBias_S) * 8)
+					</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProfile" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID)" value="ATTR(GroupID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMemberName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMemberFirst)" value="ATTR(NameFirst)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(tmpGroupID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="MemberID" direction="input" value="CONST(tmpGroupID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(tmpGroupName)" value="ATTR(CompanyName)"/>
+						<WTSETATTRIBUTE name="CONST(tmpGroupEmail)" value="ATTR(Email)"/>
+						<WTSETATTRIBUTE name="CONST(tmpGroupPhone)" value="ATTR(Phone1)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; + CStr(reqCompanyID) + &quot;/Profile&quot; + CStr(reqProfileType))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Cover.htm&quot;)"/>
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCover" direction="return" datatype="text"/>
+						<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Cover&quot;)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						xmlCover = Replace( xmlCover, "{name}", tmpMemberName )
+						xmlCover = Replace( xmlCover, "{date}", tmpProfileDate )
+						xmlCover = Replace( xmlCover, "{g-name}", tmpGroupName )
+						xmlCover = Replace( xmlCover, "{g-email}", tmpGroupEmail )
+						xmlCover = Replace( xmlCover, "{g-phone}", tmpGroupPhone )
+					</WTCUSTOM>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Thinking.htm&quot;)"/>
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlThinking" direction="return" datatype="text"/>
+						<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Thinking&quot;)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Definitions.htm&quot;)"/>
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDefinitions" direction="return" datatype="text"/>
+						<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Definitions&quot;)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;ActionPlan.htm&quot;)"/>
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlActionPlan" direction="return" datatype="text"/>
+						<WTPARAM name="ElementName" direction="input" value="CONST(&quot;ActionPlan&quot;)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Detail)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Contents2.htm&quot;)"/>
+						<WTMETHOD name="Load" />
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlContents" direction="return" datatype="text"/>
+							<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Contents&quot;)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Detail)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Congrats.htm&quot;)"/>
+						<WTMETHOD name="Load" />
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlCongrats" direction="return" datatype="text"/>
+							<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Congrats&quot;)"/>
+						</WTMETHOD>
+						<WTCUSTOM>
+							xmlCongrats = Replace( xmlCongrats, "{firstname}", tmpMemberFirst )
+							xmlCongrats = Replace( xmlCongrats, "{date}", tmpProfileDate )
+							xmlCongrats = Replace( xmlCongrats, "{g-name}", tmpGroupName )
+							xmlCongrats = Replace( xmlCongrats, "{g-email}", tmpGroupEmail )
+							xmlCongrats = Replace( xmlCongrats, "{g-phone}", tmpGroupPhone )
+						</WTCUSTOM>
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Contents.htm&quot;)"/>
+						<WTMETHOD name="Load" />
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlContents" direction="return" datatype="text"/>
+							<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Contents&quot;)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Strength.htm&quot;)"/>
+						<WTMETHOD name="Load" />
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlStrength" direction="return" datatype="text"/>
+							<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Strength&quot;)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Weakness.htm&quot;)"/>
+						<WTMETHOD name="Load" />
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlWeakness" direction="return" datatype="text"/>
+							<WTPARAM name="ElementName" direction="input" value="CONST(&quot;Weakness&quot;)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCODEGROUP>
+
+					<!-- *** COVER PAGE *********************************************  -->
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="48">
+							<WTSTATIC col="1" value="ATTR(Cover.Data)" embedhtml="true"/>
+						</WTROW>
+						<WTROW margin-top="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+					<WTCODEGROUP division="1" style="page-break-after:always">
+						<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC space="1"/>
+					</WTCODEGROUP>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Detail)" oper="not-equal" value="CONST(0)"/>
+						<!-- *** CONGRATS PAGE ******************************************  -->
+						<WTTABLE>
+							<WTCOLUMN width="750" align="left"/>
+							<WTROW margin-top="24">
+								<WTSTATIC col="1" value="ATTR(Congrats.Data)" embedhtml="true"/>
+							</WTROW>
+							<WTROW margin-top="12">
+								<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+								<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+							</WTROW>
+						</WTTABLE>
+						<WTCODEGROUP division="1" style="page-break-after:always">
+							<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="1"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+
+					<!-- *** CONTENTS PAGE ******************************************  -->
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="24">
+							<WTSTATIC col="1" value="ATTR(Contents.Data)" embedhtml="true"/>
+						</WTROW>
+						<WTROW margin-top="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+					<WTCODEGROUP division="1" style="page-break-after:always">
+						<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC space="1"/>
+					</WTCODEGROUP>
+
+					<!-- *** THINKING PAGE ******************************************  -->
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="24">
+							<WTSTATIC col="1" value="ATTR(Thinking.Data)" embedhtml="true"/>
+						</WTROW>
+						<WTROW margin-top="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+					<WTCODEGROUP division="1" style="page-break-after:always">
+						<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC space="1"/>
+					</WTCODEGROUP>
+
+					<!-- *** SAMPLE GRAPH PAGE **************************************  -->
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="24">
+							<WTIMAGE col="1" value="PARAM(SampleGraphName)" imgpath="&lt;xsl:value-of select=&quot;/DATA/PARAM/@samplegraphpath&quot;/&gt;"/>
+						</WTROW>
+						<WTROW margin-top="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+					<WTCODEGROUP division="1" style="page-break-after:always">
+						<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC space="1"/>
+					</WTCODEGROUP>
+
+					<!-- ************************************************************  -->
+					<!-- *** PERSONAL GRAPH *****************************************  -->
+					<!-- ************************************************************  -->
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="24">
+							<WTSTATIC col="1" align="center" class="PageHeading">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" space="1"/>
+								<WTSTATIC value="CONST(-)" space="1"/>
+								<WTSTATIC label="ThinkingGraph"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW margin-bottom="12">
+							<WTSTATIC col="1" label="YourPerspective" align="center" fontsize="2" bold="true"/>
+						</WTROW>
+
+						<WTVARIABLE name="MiniVQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Mini-VQ-I-', /DATA/TXN/PTSPROFILE/@vqclarity_i, '-', /DATA/TXN/PTSPROFILE/@vqbias_i)&quot;/&gt;)"/>
+						<WTVARIABLE name="MiniVQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Mini-VQ-E-', /DATA/TXN/PTSPROFILE/@vqclarity_e, '-', /DATA/TXN/PTSPROFILE/@vqbias_e)&quot;/&gt;)"/>
+						<WTVARIABLE name="MiniVQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Mini-VQ-S-', /DATA/TXN/PTSPROFILE/@vqclarity_s, '-', /DATA/TXN/PTSPROFILE/@vqbias_s)&quot;/&gt;)"/>
+						<WTVARIABLE name="MiniSQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Mini-SQ-I-', /DATA/TXN/PTSPROFILE/@sqclarity_i, '-', /DATA/TXN/PTSPROFILE/@sqbias_i)&quot;/&gt;)"/>
+						<WTVARIABLE name="MiniSQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Mini-SQ-E-', /DATA/TXN/PTSPROFILE/@sqclarity_e, '-', /DATA/TXN/PTSPROFILE/@sqbias_e)&quot;/&gt;)"/>
+						<WTVARIABLE name="MiniSQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Mini-SQ-S-', /DATA/TXN/PTSPROFILE/@sqclarity_s, '-', /DATA/TXN/PTSPROFILE/@sqbias_s)&quot;/&gt;)"/>
+
+						<WTROW>
+							<WTTABLE col="1">
+								<WTCOLUMN width="600" align="center"/>
+								<WTCOLUMN width="12"  align="center"/>
+								<WTCOLUMN width="138" align="center"/>
+								<WTROW>
+									<WTTABLE col="1" valign="top" padding="0" style="border: 1px #5084A2 solid">
+										<WTCOLUMN width="600" align="center"/>
+										<WTROW>
+											<WTTABLE col="1" padding="5">
+												<WTCOLUMN width="200" align="center"/>
+												<WTCOLUMN width="200" align="center"/>
+												<WTCOLUMN width="200" align="center"/>
+
+												<WTROW height="24">
+													<WTSTATIC col="1" align="center" label="Empathy" bold="true"/>
+													<WTSTATIC col="2" align="center" label="Practical" bold="true"/>
+													<WTSTATIC col="3" align="center" label="Structured" bold="true"/>
+												</WTROW>
+												<WTROW height="24">
+													<WTSTATIC col="1" align="left" valign="top" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$MiniVQI]&quot;/&gt;)" style="font-size: 8pt"/>
+													<WTSTATIC col="2" align="left" valign="top" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$MiniVQE]&quot;/&gt;)" style="font-size: 8pt"/>
+													<WTSTATIC col="3" align="left" valign="top" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$MiniVQS]&quot;/&gt;)" style="font-size: 8pt"/>
+												</WTROW>
+
+												<WTROW>
+													<WTSTATIC col="1" align="center">
+														<WTCODEGROUP>
+															<WTDIVISION style="position:relative; width:77px;">
+																<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																<WTCODEGROUP division="vqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqileft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqitop&quot;/&gt;px; z-index:1;">
+																	<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@vqclarity_i&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																</WTCODEGROUP>
+															</WTDIVISION>
+														</WTCODEGROUP>
+													</WTSTATIC>
+													<WTSTATIC col="2" align="center">
+														<WTCODEGROUP>
+															<WTDIVISION style="position:relative; width:77px;">
+																<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																<WTCODEGROUP division="vqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqeleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqetop&quot;/&gt;px; z-index:1;">
+																	<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@vqclarity_e&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																</WTCODEGROUP>
+															</WTDIVISION>
+														</WTCODEGROUP>
+													</WTSTATIC>
+													<WTSTATIC col="3" align="center">
+														<WTCODEGROUP>
+															<WTDIVISION style="position:relative; width:77px;">
+																<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																<WTCODEGROUP division="vqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqsleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqstop&quot;/&gt;px; z-index:1;">
+																	<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@vqclarity_s&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																</WTCODEGROUP>
+															</WTDIVISION>
+														</WTCODEGROUP>
+													</WTSTATIC>
+												</WTROW>
+
+												<WTROW height="10">
+													<WTSTATIC col="1" merge="3" align="center" label="WorldView" style="font-size:10pt; color:white; background:#085d8d;"/>
+												</WTROW>
+												<WTROW height="36">
+													<WTSTATIC col="1" align="center" label="Relator" style="font-size: 9pt; background: #89c8ec; font-weight:bold;"/>
+													<WTSTATIC col="2" align="center" label="Doer" style="font-size: 9pt; background: #89c8ec; font-weight:bold;"/>
+													<WTSTATIC col="3" align="center" label="Thinker" style="font-size: 9pt; background: #89c8ec; font-weight:bold;"/>
+												</WTROW>
+												<WTROW height="10">
+													<WTSTATIC col="1" merge="3" align="center" label="SelfView" style="font-size:10pt; color:white; background:#085d8d;"/>
+												</WTROW>
+
+												<WTROW>
+													<WTSTATIC col="1" align="center">
+														<WTCODEGROUP>
+															<WTDIVISION style="position:relative; width:77px;">
+																<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																<WTCODEGROUP division="sqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqileft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqitop&quot;/&gt;px; z-index:1;">
+																	<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@sqclarity_i&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																</WTCODEGROUP>
+															</WTDIVISION>
+														</WTCODEGROUP>
+													</WTSTATIC>
+													<WTSTATIC col="2" align="center">
+														<WTCODEGROUP>
+															<WTDIVISION style="position:relative; width:77px;">
+																<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																<WTCODEGROUP division="sqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqeleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqetop&quot;/&gt;px; z-index:1;">
+																	<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@sqclarity_e&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																</WTCODEGROUP>
+															</WTDIVISION>
+														</WTCODEGROUP>
+													</WTSTATIC>
+													<WTSTATIC col="3" align="center">
+														<WTCODEGROUP>
+															<WTDIVISION style="position:relative; width:77px;">
+																<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																<WTCODEGROUP division="sqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqsleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqstop&quot;/&gt;px; z-index:1;">
+																	<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@sqclarity_s&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+																</WTCODEGROUP>
+															</WTDIVISION>
+														</WTCODEGROUP>
+													</WTSTATIC>
+												</WTROW>
+
+												<WTROW height="24">
+													<WTSTATIC col="1" align="center" label="SelfEmpathy" bold="true"/>
+													<WTSTATIC col="2" align="center" label="RoleAwareness" bold="true"/>
+													<WTSTATIC col="3" align="center" label="SelfDirection" bold="true"/>
+												</WTROW>
+												<WTROW height="24">
+													<WTSTATIC col="1" align="left" valign="top" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$MiniSQI]&quot;/&gt;)" style="font-size: 8pt"/>
+													<WTSTATIC col="2" align="left" valign="top" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$MiniSQE]&quot;/&gt;)" style="font-size: 8pt"/>
+													<WTSTATIC col="3" align="left" valign="top" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$MiniSQS]&quot;/&gt;)" style="font-size: 8pt"/>
+												</WTROW>
+											</WTTABLE>
+										</WTROW>
+									</WTTABLE>
+									<WTSTATIC col="2" space="1"/>
+									<!-- ******************************************************************************* -->
+									<WTTABLE col="3" padding="0" firstrow="false">
+										<WTCOLUMN width="138" align="center"/>
+										<WTROW margin-bottom="24">
+											<WTTABLE col="1" valign="top" padding="0" style="border: 1px #5084A2 solid" firstrow="false">
+												<WTCOLUMN width="138" align="center"/>
+												<WTROW>
+													<WTTABLE col="1">
+														<WTCOLUMN width="50" align="center"/>
+														<WTCOLUMN width="88" align="center"/>
+														<WTROW margin-top="6">
+															<WTIMAGE col="1" value="CONST(Clarity5.png)" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;" align="center"/>
+															<WTSTATIC col="2" label="Outstanding"/>
+														</WTROW>
+														<WTROW margin-top="6">
+															<WTIMAGE col="1" value="CONST(Clarity4.png)" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;" align="center"/>
+															<WTSTATIC col="2" label="Excellent"/>
+														</WTROW>
+														<WTROW margin-top="6">
+															<WTIMAGE col="1" value="CONST(Clarity3.png)" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;" align="center"/>
+															<WTSTATIC col="2" label="VeryGood"/>
+														</WTROW>
+														<WTROW margin-top="6">
+															<WTIMAGE col="1" value="CONST(Clarity2.png)" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;" align="center"/>
+															<WTSTATIC col="2" label="Good"/>
+														</WTROW>
+														<WTROW margin-top="6">
+															<WTIMAGE col="1" value="CONST(Clarity1.png)" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;" align="center"/>
+															<WTSTATIC col="2" label="Fair"/>
+														</WTROW>
+														<WTROW margin-top="6" margin-bottom="6">
+															<WTIMAGE col="1" value="CONST(Clarity0.png)" path="Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;" align="center"/>
+															<WTSTATIC col="2" label="Unclear"/>
+														</WTROW>
+													</WTTABLE>
+												</WTROW>
+											</WTTABLE>
+										</WTROW>
+										<WTROW>
+											<WTTABLE col="1" padding="3" style="font-size: 8pt; text-align: center; border: 1px #5084A2 solid; border-collapse:collapse" firstrow="false">
+												<WTCOLUMN width="46" align="center"/>
+												<WTCOLUMN width="46" align="center"/>
+												<WTCOLUMN width="46" align="center"/>
+												<WTROW>
+													<WTSTATIC col="1"/>
+													<WTSTATIC col="2" align="center" valign="middle" style="border: 1px #5084A2 solid">
+														<WTSTATIC  label="Part1" bold="true"/>
+													</WTSTATIC>
+													<WTSTATIC col="3" align="center" valign="middle" style="border: 1px #5084A2 solid">
+														<WTSTATIC  label="Part2" bold="true"/>
+													</WTSTATIC>
+												</WTROW>
+												<WTROW>
+													<WTSTATIC col="1" align="left" style="border: 1px #5084A2 solid">
+														<WTSTATIC label="Dif" newline="1"/>
+														<WTSTATIC label="Dim%" newline="1"/>
+														<WTSTATIC label="Int-I" newline="1"/>
+														<WTSTATIC label="Int-E" newline="1"/>
+														<WTSTATIC label="Int-S" newline="1"/>
+														<WTSTATIC label="Int" newline="1"/>
+														<WTSTATIC label="Int%" newline="1"/>
+														<WTSTATIC label="DI" newline="1"/>
+														<WTSTATIC label="Dis"/>
+													</WTSTATIC>
+													<WTSTATIC col="2" align="center" style="border: 1px #5084A2 solid">
+														<WTSTATIC value="ATTR(Profile.VQDiff)" newline="1"/>
+														<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(/DATA/TXN/PTSPROFILE/@vqdimperc, '%')&quot;/&gt;)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.VQIntCate_I)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.VQIntCate_E)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.VQIntCate_S)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.VQInt)" newline="1"/>
+														<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(/DATA/TXN/PTSPROFILE/@vqintperc, '%')&quot;/&gt;)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.VQDI)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.VQDIS)"/>
+													</WTSTATIC>
+													<WTSTATIC col="3" align="center" style="border: 1px #5084A2 solid">
+														<WTSTATIC value="ATTR(Profile.SQDiff)" newline="1"/>
+														<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(/DATA/TXN/PTSPROFILE/@sqdimperc, '%')&quot;/&gt;)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.SQIntCate_I)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.SQIntCate_E)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.SQIntCate_S)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.SQInt)" newline="1"/>
+														<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(/DATA/TXN/PTSPROFILE/@sqintperc, '%')&quot;/&gt;)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.SQDI)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.SQDIS)"/>
+													</WTSTATIC>
+												</WTROW>
+												<WTROW>
+													<WTSTATIC col="1" align="left" style="border: 1px #5084A2 solid">
+														<WTSTATIC label="VQ" newline="1"/>
+														<WTSTATIC label="SQ" newline="1"/>
+														<WTSTATIC label="BQr" newline="1"/>
+														<WTSTATIC label="BQa" newline="1"/>
+														<WTSTATIC label="CQ" newline="1"/>
+														<WTSTATIC label="RQ"/>
+													</WTSTATIC>
+													<WTSTATIC col="2" merge="2" align="center" style="border: 1px #5084A2 solid">
+														<WTSTATIC value="ATTR(Profile.VQLeft)" space="1"/>
+														<WTSTATIC value="CONST(-)" space="1"/>
+														<WTSTATIC value="ATTR(Profile.VQRight)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.SQLeft)" space="1"/>
+														<WTSTATIC value="CONST(-)" space="1"/>
+														<WTSTATIC value="ATTR(Profile.SQRight)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.BQrLeft)" space="1"/>
+														<WTSTATIC value="CONST(-)" space="1"/>
+														<WTSTATIC value="ATTR(Profile.BQrRight)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.BQaLeft)" space="1"/>
+														<WTSTATIC value="CONST(-)" space="1"/>
+														<WTSTATIC value="ATTR(Profile.BQaRight)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.CQLeft)" space="1"/>
+														<WTSTATIC value="CONST(-)" space="1"/>
+														<WTSTATIC value="ATTR(Profile.CQRight)" newline="1"/>
+														<WTSTATIC value="ATTR(Profile.RQLeft)" space="1"/>
+														<WTSTATIC value="CONST(-)" space="1"/>
+														<WTSTATIC value="ATTR(Profile.RQRight)"/>
+													</WTSTATIC>
+												</WTROW>
+												<WTROW>
+													<WTSTATIC col="1" align="left" style="border: 1px #5084A2 solid">
+														<WTSTATIC label="AI%"/>
+													</WTSTATIC>
+													<WTSTATIC col="2" align="center" style="border: 1px #5084A2 solid">
+														<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(/DATA/TXN/PTSPROFILE/@vqai, '%')&quot;/&gt;)"/>
+													</WTSTATIC>
+													<WTSTATIC col="3" align="center" style="border: 1px #5084A2 solid">
+														<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(/DATA/TXN/PTSPROFILE/@sqai, '%')&quot;/&gt;)"/>
+													</WTSTATIC>
+												</WTROW>
+											</WTTABLE>
+										</WTROW>
+									</WTTABLE>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+
+					<!-- *** DEFINITIONS PAGE ***************************************  -->
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="12">
+							<WTSTATIC col="1" value="ATTR(Definitions.Data)" embedhtml="true" style="border: 1px #5084A2 solid"/>
+						</WTROW>
+						<WTROW margin-top="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+					<WTCODEGROUP division="1" style="page-break-after:always">
+						<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC space="1"/>
+					</WTCODEGROUP>
+
+					<!-- ************************************************************  -->
+					<!-- *** GENERAL DESCRIPTION PAGES ******************************  -->
+					<!-- ************************************************************  -->
+					<WTVARIABLE name="BiasVQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Bias-VQ-I-', /DATA/TXN/PTSPROFILE/@vqclarity_i, '-', /DATA/TXN/PTSPROFILE/@vqbias_i)&quot;/&gt;)"/>
+					<WTVARIABLE name="BiasVQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Bias-VQ-E-', /DATA/TXN/PTSPROFILE/@vqclarity_e, '-', /DATA/TXN/PTSPROFILE/@vqbias_e)&quot;/&gt;)"/>
+					<WTVARIABLE name="BiasVQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Bias-VQ-S-', /DATA/TXN/PTSPROFILE/@vqclarity_s, '-', /DATA/TXN/PTSPROFILE/@vqbias_s)&quot;/&gt;)"/>
+					<WTVARIABLE name="BiasSQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Bias-SQ-I-', /DATA/TXN/PTSPROFILE/@sqclarity_i, '-', /DATA/TXN/PTSPROFILE/@sqbias_i)&quot;/&gt;)"/>
+					<WTVARIABLE name="BiasSQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Bias-SQ-E-', /DATA/TXN/PTSPROFILE/@sqclarity_e, '-', /DATA/TXN/PTSPROFILE/@sqbias_e)&quot;/&gt;)"/>
+					<WTVARIABLE name="BiasSQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Bias-SQ-S-', /DATA/TXN/PTSPROFILE/@sqclarity_s, '-', /DATA/TXN/PTSPROFILE/@sqbias_s)&quot;/&gt;)"/>
+
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="24" margin-bottom="12">
+							<WTSTATIC col="1" align="center" class="PageHeading">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" newline="1"/>
+								<WTSTATIC label="WorldThinkingDescription"/>
+							</WTSTATIC>
+						</WTROW>
+
+						<WTROW margin-bottom="24">
+							<WTTABLE col="1">
+								<WTCOLUMN width="670" align="left"/>
+								<WTCOLUMN width="80" align="center"/>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTSTATIC label="Empathy" fontsize="2" bold="true" newline="2"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$BiasVQI]&quot;/&gt;)"/>
+									</WTSTATIC>
+									<WTSTATIC col="2" align="center" valign="top">
+										<WTCODEGROUP>
+											<WTDIVISION style="position:relative; width:77px;">
+												<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												<WTCODEGROUP division="vqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqileft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqitop&quot;/&gt;px; z-index:1;">
+													<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@vqclarity_i&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												</WTCODEGROUP>
+											</WTDIVISION>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+
+						<WTROW margin-bottom="24">
+							<WTTABLE col="1">
+								<WTCOLUMN width="670" align="left"/>
+								<WTCOLUMN width="80" align="center"/>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTSTATIC label="Practical" fontsize="2" bold="true" newline="2"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$BiasVQE]&quot;/&gt;)"/>
+									</WTSTATIC>
+									<WTSTATIC col="2" align="center" valign="top">
+										<WTCODEGROUP>
+											<WTDIVISION style="position:relative; width:77px;">
+												<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												<WTCODEGROUP division="vqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqeleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqetop&quot;/&gt;px; z-index:1;">
+													<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@vqclarity_e&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												</WTCODEGROUP>
+											</WTDIVISION>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+
+						<WTROW margin-bottom="24">
+							<WTTABLE col="1">
+								<WTCOLUMN width="670" align="left"/>
+								<WTCOLUMN width="80" align="center"/>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTSTATIC label="Structured" fontsize="2" bold="true" newline="2"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$BiasVQS]&quot;/&gt;)"/>
+									</WTSTATIC>
+									<WTSTATIC col="2" align="center" valign="top">
+										<WTCODEGROUP>
+											<WTDIVISION style="position:relative; width:77px;">
+												<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												<WTCODEGROUP division="vqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqsleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@vqstop&quot;/&gt;px; z-index:1;">
+													<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@vqclarity_s&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												</WTCODEGROUP>
+											</WTDIVISION>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+						<WTROW margin-top="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+
+					<WTCODEGROUP division="1" style="page-break-after:always">
+						<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC space="1"/>
+					</WTCODEGROUP>
+
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="24" margin-bottom="12">
+							<WTSTATIC col="1" align="center" class="PageHeading">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" newline="1"/>
+								<WTSTATIC label="SelfThinkingDescription"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW margin-bottom="24">
+							<WTTABLE col="1">
+								<WTCOLUMN width="670" align="left"/>
+								<WTCOLUMN width="80" align="center"/>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTSTATIC label="SelfEmpathy" fontsize="2" bold="true" newline="2"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$BiasSQI]&quot;/&gt;)"/>
+									</WTSTATIC>
+									<WTSTATIC col="2" align="center" valign="top">
+										<WTCODEGROUP>
+											<WTDIVISION style="position:relative; width:77px;">
+												<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												<WTCODEGROUP division="sqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqileft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqitop&quot;/&gt;px; z-index:1;">
+													<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@sqclarity_i&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												</WTCODEGROUP>
+											</WTDIVISION>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+
+						<WTROW margin-bottom="24">
+							<WTTABLE col="1">
+								<WTCOLUMN width="670" align="left"/>
+								<WTCOLUMN width="80" align="center"/>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTSTATIC label="RoleAwareness" fontsize="2" bold="true" newline="2"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$BiasSQE]&quot;/&gt;)"/>
+									</WTSTATIC>
+									<WTSTATIC col="2" align="center" valign="top">
+										<WTCODEGROUP>
+											<WTDIVISION style="position:relative; width:77px;">
+												<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												<WTCODEGROUP division="sqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqeleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqetop&quot;/&gt;px; z-index:1;">
+													<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@sqclarity_e&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												</WTCODEGROUP>
+											</WTDIVISION>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+
+						<WTROW margin-bottom="24">
+							<WTTABLE col="1">
+								<WTCOLUMN width="670" align="left"/>
+								<WTCOLUMN width="80" align="center"/>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTSTATIC label="SelfDirection" fontsize="2" bold="true" newline="2"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$BiasSQS]&quot;/&gt;)"/>
+									</WTSTATIC>
+									<WTSTATIC col="2" align="center" valign="top">
+										<WTCODEGROUP>
+											<WTDIVISION style="position:relative; width:77px;">
+												<WTIMAGE value="CONST(GraphLine.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												<WTCODEGROUP division="sqclarity" style="position:absolute; left:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqsleft&quot;/&gt;px; top:&lt;xsl:value-of select=&quot;/DATA/PARAM/@sqstop&quot;/&gt;px; z-index:1;">
+													<WTIMAGE value="CONST(Clarity&lt;xsl:value-of select=&quot;/DATA/TXN/PTSPROFILE/@sqclarity_s&quot;/&gt;.png)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+												</WTCODEGROUP>
+											</WTDIVISION>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+
+						<WTROW margin-top="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+					
+					<WTCODEGROUP division="1" style="page-break-after:always">
+						<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC space="1"/>
+					</WTCODEGROUP>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Detail)" oper="not-equal" value="CONST(0)"/>
+
+						<!-- *** STRENGTH DESCRIPTION PAGE ******************************  -->
+						<WTTABLE>
+							<WTCOLUMN width="750" align="left"/>
+							<WTROW margin-top="24">
+								<WTSTATIC col="1" value="ATTR(Strength.Data)" embedhtml="true"/>
+							</WTROW>
+							<WTROW margin-top="12">
+								<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+								<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+							</WTROW>
+						</WTTABLE>
+						<WTCODEGROUP division="1" style="page-break-after:always">
+							<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="1"/>
+						</WTCODEGROUP>
+
+						<!-- ************************************************************  -->
+						<!-- *** PERSONAL STRENGTH PAGE *********************************  -->
+						<!-- ************************************************************  -->
+						<WTVARIABLE name="StrgVQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Strg-VQ-I-', /DATA/TXN/PTSPROFILE/@vqclarity_i, '-', /DATA/TXN/PTSPROFILE/@vqbias_i)&quot;/&gt;)"/>
+						<WTVARIABLE name="StrgVQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Strg-VQ-E-', /DATA/TXN/PTSPROFILE/@vqclarity_e, '-', /DATA/TXN/PTSPROFILE/@vqbias_e)&quot;/&gt;)"/>
+						<WTVARIABLE name="StrgVQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Strg-VQ-S-', /DATA/TXN/PTSPROFILE/@vqclarity_s, '-', /DATA/TXN/PTSPROFILE/@vqbias_s)&quot;/&gt;)"/>
+						<WTVARIABLE name="StrgSQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Strg-SQ-I-', /DATA/TXN/PTSPROFILE/@sqclarity_i, '-', /DATA/TXN/PTSPROFILE/@sqbias_i)&quot;/&gt;)"/>
+						<WTVARIABLE name="StrgSQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Strg-SQ-E-', /DATA/TXN/PTSPROFILE/@sqclarity_e, '-', /DATA/TXN/PTSPROFILE/@sqbias_e)&quot;/&gt;)"/>
+						<WTVARIABLE name="StrgSQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Strg-SQ-S-', /DATA/TXN/PTSPROFILE/@sqclarity_s, '-', /DATA/TXN/PTSPROFILE/@sqbias_s)&quot;/&gt;)"/>
+						<WTVARIABLE name="TextStrgVQI" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$StrgVQI]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextStrgVQE" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$StrgVQE]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextStrgVQS" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$StrgVQS]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextStrgSQI" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$StrgSQI]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextStrgSQE" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$StrgSQE]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextStrgSQS" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$StrgSQS]&quot;/&gt;)"/>
+
+						<WTTABLE>
+							<WTCOLUMN width="750" align="left"/>
+							<WTROW margin-top="24" margin-bottom="12">
+								<WTSTATIC col="1" align="center" class="PageHeading">
+									<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+									<WTSTATIC value="ATTR(Member.NameLast)" newline="1"/>
+									<WTSTATIC label="NaturalSources"/>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextStrgVQI)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextStrgVQI&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextStrgVQE)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextStrgVQE&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextStrgVQS)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextStrgVQS&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextStrgSQI)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextStrgSQI&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextStrgSQE)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextStrgSQE&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextStrgSQS)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextStrgSQS&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+
+							<WTROW margin-top="12">
+								<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+								<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+							</WTROW>
+						</WTTABLE>
+						<WTCODEGROUP division="1" style="page-break-after:always">
+							<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="1"/>
+						</WTCODEGROUP>
+
+						<!-- *** WEAKNESS DESCRIPTION PAGE ******************************  -->
+						<WTTABLE>
+							<WTCOLUMN width="750" align="left"/>
+							<WTROW margin-top="24">
+								<WTSTATIC col="1" value="ATTR(Weakness.Data)" embedhtml="true"/>
+							</WTROW>
+							<WTROW margin-top="12">
+								<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+								<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+							</WTROW>
+						</WTTABLE>
+						<WTCODEGROUP division="1" style="page-break-after:always">
+							<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="1"/>
+						</WTCODEGROUP>
+
+						<!-- ************************************************************  -->
+						<!-- *** PERSONAL WEAKNESS PAGE *********************************  -->
+						<!-- ************************************************************  -->
+						<WTVARIABLE name="WeakVQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Weak-VQ-I-', /DATA/TXN/PTSPROFILE/@vqclarity_i, '-', /DATA/TXN/PTSPROFILE/@vqbias_i)&quot;/&gt;)"/>
+						<WTVARIABLE name="WeakVQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Weak-VQ-E-', /DATA/TXN/PTSPROFILE/@vqclarity_e, '-', /DATA/TXN/PTSPROFILE/@vqbias_e)&quot;/&gt;)"/>
+						<WTVARIABLE name="WeakVQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Weak-VQ-S-', /DATA/TXN/PTSPROFILE/@vqclarity_s, '-', /DATA/TXN/PTSPROFILE/@vqbias_s)&quot;/&gt;)"/>
+						<WTVARIABLE name="WeakSQI" value="CONST(&lt;xsl:value-of select=&quot;concat('Weak-SQ-I-', /DATA/TXN/PTSPROFILE/@sqclarity_i, '-', /DATA/TXN/PTSPROFILE/@sqbias_i)&quot;/&gt;)"/>
+						<WTVARIABLE name="WeakSQE" value="CONST(&lt;xsl:value-of select=&quot;concat('Weak-SQ-E-', /DATA/TXN/PTSPROFILE/@sqclarity_e, '-', /DATA/TXN/PTSPROFILE/@sqbias_e)&quot;/&gt;)"/>
+						<WTVARIABLE name="WeakSQS" value="CONST(&lt;xsl:value-of select=&quot;concat('Weak-SQ-S-', /DATA/TXN/PTSPROFILE/@sqclarity_s, '-', /DATA/TXN/PTSPROFILE/@sqbias_s)&quot;/&gt;)"/>
+						<WTVARIABLE name="TextWeakVQI" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$WeakVQI]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextWeakVQE" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$WeakVQE]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextWeakVQS" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$WeakVQS]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextWeakSQI" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$WeakSQI]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextWeakSQE" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$WeakSQE]&quot;/&gt;)"/>
+						<WTVARIABLE name="TextWeakSQS" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name=$WeakSQS]&quot;/&gt;)"/>
+
+						<WTTABLE>
+							<WTCOLUMN width="750" align="left"/>
+							<WTROW margin-top="24" margin-bottom="12">
+								<WTSTATIC col="1" align="center" class="PageHeading">
+									<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+									<WTSTATIC value="ATTR(Member.NameLast)" newline="1"/>
+									<WTSTATIC label="PotentialInterferers"/>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextWeakVQI)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextWeakVQI&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextWeakVQE)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextWeakVQE&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextWeakVQS)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextWeakVQS&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextWeakSQI)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextWeakSQI&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextWeakSQE)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextWeakSQE&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+							<WTROW margin-bottom="12">
+								<WTCONDITION expr="CONST($TextWeakSQS)" oper="not-equal" value="CONST('')"/>
+								<WTSTATIC col="1" align="left" value="CONST(&lt;xsl:value-of select=&quot;$TextWeakSQS&quot; disable-output-escaping=&quot;yes&quot;/&gt;)"/>
+							</WTROW>
+
+							<WTROW margin-top="12">
+								<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+								<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+							</WTROW>
+						</WTTABLE>
+						<WTCODEGROUP division="1" style="page-break-after:always">
+							<WTCONDITION expr="PARAM(Print)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="1"/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+
+					<!-- *** ACTION PLAN PAGE ***************************************  -->
+					<WTTABLE>
+						<WTCOLUMN width="750" align="left"/>
+						<WTROW margin-top="24">
+							<WTSTATIC col="1" value="ATTR(ActionPlan.Data)" embedhtml="true"/>
+						</WTROW>
+						<WTROW margin-top="12" margin-bottom="12">
+							<WTCONDITION expr="PARAM(Print)" oper="equal" value="CONST(0)"/>
+							<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+						</WTROW>
+					</WTTABLE>
+
+				</WTCODEGROUP>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="13704" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+			<!--============================================================================================-->
+			<WTPARAM name="ProfileID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Profile" project="ptsProfileUser" class="CProfile">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProfileID" direction="input" value="PARAM(ProfileID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProfile" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Profile" project="ptsProfileUser" class="CProfile">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProfileID" direction="input" value="PARAM(ProfileID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlProfile" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Profile" project="ptsProfileUser" class="CProfile">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ProfileID" direction="input" value="PARAM(ProfileID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Profile" project="ptsProfileUser" class="CProfile">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProfileID" direction="input" value="PARAM(ProfileID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProfile" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Profile" value="ATTR(Profile.ProfileDate)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTTEXT col="2" value="ATTR(Profile.MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ProfileDate"/>
+					<WTTEXT col="2" value="ATTR(Profile.ProfileDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Profile.Status)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="13711" caption="Profiles" header="false" footer="false" navbar="false" wrapper="wrapper800"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Go" datatype="number"/>
+			<WTPARAM name="URL" datatype="text"/>
+      <WTPARAM name="Credit" datatype="number"/>
+      <WTPARAM name="Count" datatype="number"/>
+
+      <WTSETATTRIBUTE name="PARAM(URL)" value="CONST(&quot;http://&quot; + reqSysServerName + reqSysServerPath + &quot;Profile/&quot;)"/>
+
+      <WTSUB function="GoToProfile(id)">
+        <WTRETURN>
+          <WTLINK name="13703" return="false">
+            <WTPARAM name="ProfileID" value="CONST(id)"/>
+          </WTLINK>
+        </WTRETURN>
+      </WTSUB>
+
+      <WTSUB function="StartProfile()">
+        <WTRETURN>
+          <WTLINK name="13700">
+            <WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+          </WTLINK>
+        </WTRETURN>
+      </WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(GroupID)" value="ATTR(GroupID)"/>
+          <WTSETATTRIBUTE name="PARAM(Credit)" value="ATTR(Process)"/>
+          <WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+        <WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+          <WTCONDITION expr="PARAM(Credit)" oper="equal" value="CONST(0)"/>
+          <WTCONDITION expr="CONST(GroupID)" oper="not-equal" value="CONST(0)" connector="and"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MemberID" direction="input" value="CONST(GroupID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Credit)" value="ATTR(Process)"/>
+        </WTOBJECT>
+        <WTOBJECT name="Profiles" project="ptsProfileUser" class="CProfiles">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+            reqCount = 0
+            For Each oItem in oProfiles
+              reqCount = reqCount + 1
+              With oItem
+                If .Status = 1 And reqG0 > 0 Then GoToProfile(.ProfileID)
+              End With
+            Next
+'            If reqCount = 0 And reqCredit > 0 Then StartProfile()
+          </WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProfiles" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+      <WTACTION id="3" name="Cancel" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <WTACTION id="5" name="StartProfile" type="Update">
+        <WTCALLSUB name="StartProfile()"/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="800" align="left"/>
+
+        <WTFUNCTION name="PreviewReport(id,detail)">
+          var url, win;
+          url = "13710.asp?profileid=" + id + "&amp;detail=" + detail
+          win = window.open(url,'ProfileReport');
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="DownloadPDF(id,detail)">
+          var url, win
+          url = document.getElementById('URL').value + id
+          if( detail == 0 ) { url = url + "S.pdf" } else { url = url + "D.pdf" }
+          win = window.open(url,'DownloadPDF');
+          win.focus();
+        </WTFUNCTION>
+
+        <WTROW>
+					<WTHIDDEN value="PARAM(URL)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="400" align="left"/>
+						<WTCOLUMN width="400" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTSTATIC tag="Profiles"/>
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)"/>
+							</WTSTATIC>
+							<WTSTATIC col="2" class="PageHeader">
+								<WTCODEGROUP>
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+									<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="NewProfile">
+										<WTLINK name="13700"><WTPARAM name="MemberID" value="PARAM(MemberID)"/></WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTCONDITION expr="PARAM(Credit)" oper="not-equal" value="CONST(0)"/>
+          <WTBUTTON col="1" action="5" value="CONST(StartProfile)" align="center" btnclass="lgbutton"/>
+        </WTROW>
+
+        <WTSTATIC label="TakeProfile"/>
+				<WTSTATIC label="PreviewReport"/>
+				<WTSTATIC label="DownloadReport"/>
+
+				<WTCODEGROUP>
+          <WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+          <WTROW>
+            <WTRECORDSET col="1" graybar="true" entity="Profile">
+              <WTCOLUMN width="100" align="left" valign="top"/>
+              <WTROW height="48">
+                <WTSTATIC col="1" fontsize="4">
+                  <WTSTATIC space="3"/>
+                  <WTSTATIC value="DATA(ProfileDate)" fontcolor="green">
+                    <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/>
+                  </WTSTATIC>
+                  <WTSTATIC value="DATA(ProfileDate)">
+                    <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+                  </WTSTATIC>
+                  <WTSTATIC value="DATA(ProfileDate)" fontcolor="red">
+                    <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+                  </WTSTATIC>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="IsEmployee"/>
+                    <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                    <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+                    <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)" connector="or"/>
+                    <WTSTATIC space="1"/>
+                    <WTIMAGE value="CONST(DocumentEdit32.gif)" alt="TakeProfile" imgalign="absmiddle">
+                      <WTLINK name="13703">
+                        <WTPARAM name="ProfileID" value="DATA(ProfileID)"/>
+                      </WTLINK>
+                    </WTIMAGE>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+                    <WTCODEGROUP>
+                      <WTSTATIC space="3"/>
+                      <WTBUTTON value="CONST(PreviewReport)">
+                        <WTCLICK escape="false">PreviewReport(&lt;xsl:value-of select=&quot;@profileid&quot;/&gt;,1)</WTCLICK>
+                      </WTBUTTON>
+<!--                      
+                      <WTIMAGE value="CONST(DocumentPreview32.gif)" alt="PreviewReport" imgalign="absmiddle">
+                        <WTLINK name="13710" target="ProfileReport">
+                          <WTPARAM name="ProfileID" value="DATA(ProfileID)"/>
+                          <WTPARAM name="Detail" value="CONST(1)"/>
+                        </WTLINK>
+                      </WTIMAGE>
+-->                      
+                    </WTCODEGROUP>
+                    <WTCODEGROUP>
+                      <WTSTATIC space="3"/>
+                      <WTBUTTON value="CONST(DownloadReport)">
+                        <WTCLICK escape="false">DownloadPDF(&lt;xsl:value-of select=&quot;@profileid&quot;/&gt;,1)</WTCLICK>
+                      </WTBUTTON>
+<!--
+                      <WTIMAGE value="CONST(DocumentDownload32.gif)" alt="DownloadReport" imgalign="absmiddle">
+                        <WTLINK name="DownloadPDF(&lt;xsl:value-of select=&quot;@profileid&quot;/&gt;,1)" click="true" />
+                      </WTIMAGE>
+-->                      
+                    </WTCODEGROUP>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="IsEmployee"/>
+                    <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                    <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+                    <WTSTATIC space="1"/>
+                    <WTIMAGE value="CONST(edit.gif)" imgalign="absmiddle">
+                      <WTLINK name="13704">
+                        <WTPARAM name="ProfileID" value="DATA(ProfileID)"/>
+                      </WTLINK>
+                    </WTIMAGE>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+            </WTRECORDSET>
+          </WTROW>
+          <!--
+          <WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="Profile">
+							<WTCOLUMN width="15" align="left" valign="top" label="ProfileDate"/>
+							<WTCOLUMN width="15" align="center" valign="top" label="Empathy"/>
+							<WTCOLUMN width="15" align="center" valign="top" label="Practical"/>
+							<WTCOLUMN width="15" align="center" valign="top" label="Structured"/>
+							<WTCOLUMN width="15" align="center" valign="top" label="SelfEmpathy"/>
+							<WTCOLUMN width="15" align="center" valign="top" label="RoleAwareness"/>
+							<WTCOLUMN width="15" align="center" valign="top" label="SelfDirection"/>
+							<WTROW height="24">
+								<WTSTATIC col="1">
+									<WTSTATIC value="DATA(ProfileDate)" fontcolor="green">
+										<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(ProfileDate)">
+										<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(ProfileDate)" fontcolor="red">
+										<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTCODEGROUP>
+										<WTCONDITION expr="IsEmployee"/>
+										<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+										<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+										<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)" connector="or"/>
+										<WTSTATIC space="1"/>
+										<WTIMAGE value="CONST(DocumentEdit32.gif)" alt="TakeProfile" imgalign="absmiddle">
+											<WTLINK name="13703"><WTPARAM name="ProfileID" value="DATA(ProfileID)"/></WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+										<WTCODEGROUP>
+											<WTSTATIC space="1"/>
+										<WTIMAGE value="CONST(DocumentPreview32.gif)" alt="PreviewReport" imgalign="absmiddle">
+											<WTLINK name="13710" target="ProfileReport">
+                        <WTPARAM name="ProfileID" value="DATA(ProfileID)"/>
+                        <WTPARAM name="Detail" value="CONST(1)"/>
+                      </WTLINK>
+										</WTIMAGE>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTSTATIC space="1"/>
+											<WTIMAGE value="CONST(DocumentDownload32.gif)" alt="DownloadReport" imgalign="absmiddle">
+                        <WTLINK name="DownloadPDF(&lt;xsl:value-of select=&quot;@profileid&quot;/&gt;,1)" click="true" />
+                      </WTIMAGE>
+										</WTCODEGROUP>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="IsEmployee"/>
+										<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+										<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+										<WTSTATIC space="1"/>
+										<WTIMAGE value="CONST(edit.gif)" imgalign="absmiddle">
+											<WTLINK name="13704"><WTPARAM name="ProfileID" value="DATA(ProfileID)"/></WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="2">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+										<WTSTATIC label="Unclear" fontcolor="purple">
+											<WTCONDITION expr="DATA(VQClarity_I)" oper="equal" value="CONST(0)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Fair" fontcolor="darkorange">
+											<WTCONDITION expr="DATA(VQClarity_I)" oper="equal" value="CONST(1)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Good" fontcolor="darkyellow">
+											<WTCONDITION expr="DATA(VQClarity_I)" oper="equal" value="CONST(2)"/>
+										</WTSTATIC>
+										<WTSTATIC label="VeryGood" fontcolor="red">
+											<WTCONDITION expr="DATA(VQClarity_I)" oper="equal" value="CONST(3)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Excellent" fontcolor="green">
+											<WTCONDITION expr="DATA(VQClarity_I)" oper="equal" value="CONST(4)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Outstanding" fontcolor="blue">
+											<WTCONDITION expr="DATA(VQClarity_I)" oper="equal" value="CONST(5)"/>
+										</WTSTATIC>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="3">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+										<WTSTATIC label="Unclear" fontcolor="purple">
+											<WTCONDITION expr="DATA(VQClarity_E)" oper="equal" value="CONST(0)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Fair" fontcolor="darkorange">
+											<WTCONDITION expr="DATA(VQClarity_E)" oper="equal" value="CONST(1)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Good" fontcolor="darkyellow">
+											<WTCONDITION expr="DATA(VQClarity_E)" oper="equal" value="CONST(2)"/>
+										</WTSTATIC>
+										<WTSTATIC label="VeryGood" fontcolor="red">
+											<WTCONDITION expr="DATA(VQClarity_E)" oper="equal" value="CONST(3)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Excellent" fontcolor="green">
+											<WTCONDITION expr="DATA(VQClarity_E)" oper="equal" value="CONST(4)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Outstanding" fontcolor="blue">
+											<WTCONDITION expr="DATA(VQClarity_E)" oper="equal" value="CONST(5)"/>
+										</WTSTATIC>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="4">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+										<WTSTATIC label="Unclear" fontcolor="purple">
+											<WTCONDITION expr="DATA(VQClarity_S)" oper="equal" value="CONST(0)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Fair" fontcolor="darkorange">
+											<WTCONDITION expr="DATA(VQClarity_S)" oper="equal" value="CONST(1)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Good" fontcolor="darkyellow">
+											<WTCONDITION expr="DATA(VQClarity_S)" oper="equal" value="CONST(2)"/>
+										</WTSTATIC>
+										<WTSTATIC label="VeryGood" fontcolor="red">
+											<WTCONDITION expr="DATA(VQClarity_S)" oper="equal" value="CONST(3)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Excellent" fontcolor="green">
+											<WTCONDITION expr="DATA(VQClarity_S)" oper="equal" value="CONST(4)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Outstanding" fontcolor="blue">
+											<WTCONDITION expr="DATA(VQClarity_S)" oper="equal" value="CONST(5)"/>
+										</WTSTATIC>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="5">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+										<WTSTATIC label="Unclear" fontcolor="purple">
+											<WTCONDITION expr="DATA(SQClarity_I)" oper="equal" value="CONST(0)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Fair" fontcolor="darkorange">
+											<WTCONDITION expr="DATA(SQClarity_I)" oper="equal" value="CONST(1)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Good" fontcolor="darkyellow">
+											<WTCONDITION expr="DATA(SQClarity_I)" oper="equal" value="CONST(2)"/>
+										</WTSTATIC>
+										<WTSTATIC label="VeryGood" fontcolor="red">
+											<WTCONDITION expr="DATA(SQClarity_I)" oper="equal" value="CONST(3)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Excellent" fontcolor="green">
+											<WTCONDITION expr="DATA(SQClarity_I)" oper="equal" value="CONST(4)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Outstanding" fontcolor="blue">
+											<WTCONDITION expr="DATA(SQClarity_I)" oper="equal" value="CONST(5)"/>
+										</WTSTATIC>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="6">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+										<WTSTATIC label="Unclear" fontcolor="purple">
+											<WTCONDITION expr="DATA(SQClarity_E)" oper="equal" value="CONST(0)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Fair" fontcolor="darkorange">
+											<WTCONDITION expr="DATA(SQClarity_E)" oper="equal" value="CONST(1)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Good" fontcolor="darkyellow">
+											<WTCONDITION expr="DATA(SQClarity_E)" oper="equal" value="CONST(2)"/>
+										</WTSTATIC>
+										<WTSTATIC label="VeryGood" fontcolor="red">
+											<WTCONDITION expr="DATA(SQClarity_E)" oper="equal" value="CONST(3)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Excellent" fontcolor="green">
+											<WTCONDITION expr="DATA(SQClarity_E)" oper="equal" value="CONST(4)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Outstanding" fontcolor="blue">
+											<WTCONDITION expr="DATA(SQClarity_E)" oper="equal" value="CONST(5)"/>
+										</WTSTATIC>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="7">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+										<WTSTATIC label="Unclear" fontcolor="purple">
+											<WTCONDITION expr="DATA(SQClarity_S)" oper="equal" value="CONST(0)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Fair" fontcolor="darkorange">
+											<WTCONDITION expr="DATA(SQClarity_S)" oper="equal" value="CONST(1)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Good" fontcolor="darkyellow">
+											<WTCONDITION expr="DATA(SQClarity_S)" oper="equal" value="CONST(2)"/>
+										</WTSTATIC>
+										<WTSTATIC label="VeryGood" fontcolor="red">
+											<WTCONDITION expr="DATA(SQClarity_S)" oper="equal" value="CONST(3)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Excellent" fontcolor="green">
+											<WTCONDITION expr="DATA(SQClarity_S)" oper="equal" value="CONST(4)"/>
+										</WTSTATIC>
+										<WTSTATIC label="Outstanding" fontcolor="blue">
+											<WTCONDITION expr="DATA(SQClarity_S)" oper="equal" value="CONST(5)"/>
+										</WTSTATIC>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW>
+								<WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(1)"/>
+								<WTSTATIC col="1" fontcolor="gray">
+									<WTSTATIC label="ProMen">
+										<WTCONDITION expr="DATA(ProfileType)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="ProWomen">
+										<WTCONDITION expr="DATA(ProfileType)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="TeenMen">
+										<WTCONDITION expr="DATA(ProfileType)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="TeenWomen">
+										<WTCONDITION expr="DATA(ProfileType)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="2">
+									<WTSTATIC label="VeryNegativeBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(VQBias_I)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="NegativeBias" fontcolor="red">
+										<WTCONDITION expr="DATA(VQBias_I)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="BalancedBias" fontcolor="blue">
+										<WTCONDITION expr="DATA(VQBias_I)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="PositiveBias" fontcolor="red">
+										<WTCONDITION expr="DATA(VQBias_I)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+									<WTSTATIC label="VeryPositiveBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(VQBias_I)" oper="equal" value="CONST(5)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="3">
+									<WTSTATIC label="VeryNegativeBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(VQBias_E)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="NegativeBias" fontcolor="red">
+										<WTCONDITION expr="DATA(VQBias_E)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="BalancedBias" fontcolor="blue">
+										<WTCONDITION expr="DATA(VQBias_E)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="PositiveBias" fontcolor="red">
+										<WTCONDITION expr="DATA(VQBias_E)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+									<WTSTATIC label="VeryPositiveBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(VQBias_E)" oper="equal" value="CONST(5)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="4">
+									<WTSTATIC label="VeryNegativeBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(VQBias_S)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="NegativeBias" fontcolor="red">
+										<WTCONDITION expr="DATA(VQBias_S)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="BalancedBias" fontcolor="blue">
+										<WTCONDITION expr="DATA(VQBias_S)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="PositiveBias" fontcolor="red">
+										<WTCONDITION expr="DATA(VQBias_S)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+									<WTSTATIC label="VeryPositiveBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(VQBias_S)" oper="equal" value="CONST(5)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="5">
+									<WTSTATIC label="VeryNegativeBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(SQBias_I)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="NegativeBias" fontcolor="red">
+										<WTCONDITION expr="DATA(SQBias_I)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="BalancedBias" fontcolor="blue">
+										<WTCONDITION expr="DATA(SQBias_I)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="PositiveBias" fontcolor="red">
+										<WTCONDITION expr="DATA(SQBias_I)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+									<WTSTATIC label="VeryPositiveBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(SQBias_I)" oper="equal" value="CONST(5)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="6">
+									<WTSTATIC label="VeryNegativeBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(SQBias_E)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="NegativeBias" fontcolor="red">
+										<WTCONDITION expr="DATA(SQBias_E)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="BalancedBias" fontcolor="blue">
+										<WTCONDITION expr="DATA(SQBias_E)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="PositiveBias" fontcolor="red">
+										<WTCONDITION expr="DATA(SQBias_E)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+									<WTSTATIC label="VeryPositiveBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(SQBias_E)" oper="equal" value="CONST(5)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="7">
+									<WTSTATIC label="VeryNegativeBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(SQBias_S)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="NegativeBias" fontcolor="red">
+										<WTCONDITION expr="DATA(SQBias_S)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC label="BalancedBias" fontcolor="blue">
+										<WTCONDITION expr="DATA(SQBias_S)" oper="equal" value="CONST(3)"/>
+									</WTSTATIC>
+									<WTSTATIC label="PositiveBias" fontcolor="red">
+										<WTCONDITION expr="DATA(SQBias_S)" oper="equal" value="CONST(4)"/>
+									</WTSTATIC>
+									<WTSTATIC label="VeryPositiveBias" fontcolor="purple">
+										<WTCONDITION expr="DATA(SQBias_S)" oper="equal" value="CONST(5)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+-->
+        </WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+
+	</WTWEBPAGES>
+
+</WTROOT>

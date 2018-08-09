@@ -1,0 +1,552 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="78" name="SalesStep" alias="sls" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="7801" name="SalesStepID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="7802" name="SalesCampaignID" type="number" required="true" source="entity"/>
+		<WTATTRIBUTE id="7803" name="EmailID" type="number" source="entity"/>
+		<!--Attributes-->
+		<WTATTRIBUTE id="7805" name="SalesStepName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="7806" name="Description" type="text" length="100" min="1" max="100" source="entity"/>
+		<WTATTRIBUTE id="7807" name="Seq" type="number" min="1" source="entity" seq="10"/>
+		<WTATTRIBUTE id="7808" name="AutoStep" type="number" source="entity">
+			<WTENUM id="1" name="EmailProspect"/>
+			<WTENUM id="2" name="EmailMember"/>
+			<WTENUM id="3" name="EmailCustom"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7809" name="NextStep" type="number" source="entity"/>
+		<WTATTRIBUTE id="7810" name="Delay" type="number" source="entity"/>
+		<WTATTRIBUTE id="7811" name="DateNo" type="number" min="1" max="10" source="entity"/>
+		<WTATTRIBUTE id="7812" name="IsBoard" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="7813" name="BoardRate" type="currency" source="entity">
+			<WTFORMAT value="###,###.000" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7814" name="Length" type="number" source="entity"/>
+		<WTATTRIBUTE id="7815" name="Email" type="text" length="100" min="1" max="100" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="7890" name="Data" type="date" source="entity" persist="false" />
+		<WTATTRIBUTE id="7891" name="Count" type="number" source="entity" persist="false" />
+		<WTATTRIBUTE id="7892" name="Potential" type="currency" source="entity" persist="false" />
+		<WTATTRIBUTE id="7893" name="Current" type="currency" source="entity" persist="false" />
+
+		<WTINDEX name="SalesCampaignID">
+			<WTATTRIBUTE name="SalesCampaignID"/>
+			<WTATTRIBUTE name="Seq"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="SalesStep" entity="SalesStep" alias="sls"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(SalesCampaignID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SalesStep.SalesStepID)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.SalesStepName)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.Description)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.Seq)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.AutoStep)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.NextStep)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.Delay)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.DateNo)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.IsBoard)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.BoardRate)"/>
+					<WTATTRIBUTE value="ATTR(SalesStep.Length)"/>
+					<WTJOIN name="SalesStep"/>
+					<WTCONDITION expr="ATTR(SalesCampaignID)" oper="equal" value="PARAM(SalesCampaignID)"/>
+					<WTCONDITION expr="ATTR(SalesCampaignID)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(SalesStep.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetNextStep" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(SalesStepID)" direction="input"/>
+			<WTPARAM name="NextStep" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetFirstStep" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(SalesCampaignID)" direction="input"/>
+			<WTPARAM name="FirstStep" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7802" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="SalesCampaignID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTSUB name="LoadEmails">
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(SalesCampaign.CompanyID)" />
+				</WTOBJECT>
+				<WTOBJECT name="Emails" project="ptsEmailUser" class="CEmails">
+					<WTMETHOD name="EnumProspect">
+						<WTPARAM name="xmlEmails" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ItemID" direction="input" value="CONST()"/>
+						<WTPARAM name="Element" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="SalesStep" project="ptsSalesStepUser" class="CSalesStep">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesStepID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesStep" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadEmails"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="SalesStep" project="ptsSalesStepUser" class="CSalesStep">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesStepID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(SalesCampaignID)" value="PARAM(SalesCampaignID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="SalesStepID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSalesStep" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadEmails">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewSalesStep" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesStepName"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.SalesStepName)" size="20"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Description"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.Description)" size="70"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Length"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.Length)" size="4" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="DateHelp" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.DateNo)" size="2"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="BoardHelp" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(SalesStep.IsBoard)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="BoardRate"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.BoardRate)" size="3"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" align="left" label="AutoStepHelp" class="Prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="AutoStep"/>
+						<WTCOMBO col="2" value="ATTR(SalesStep.AutoStep)"/>
+						<WTCOMBO col="2" value="ATTR(SalesStep.EmailID)" datapath="/DATA/TXN/PTSEMAILS/ENUM"/>
+						<WTBUTTON col="2" value="CONST(View)" class="smbutton">
+							<WTCLICK>var URL="8810.asp?Popup=1&amp;EmailID=" + document.getElementById('EmailID').value; window.open( URL);</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Email"/>
+						<WTTEXT col="2" value="ATTR(SalesStep.Email)" size="60"/>
+					</WTROW>
+
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" align="left" label="NextStepHelp" class="Prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Delay"/>
+						<WTTEXT col="2" value="ATTR(SalesStep.Delay)" size="4"/>
+						<WTSTATIC col="2" tag="NextStep"/>
+						<WTTEXT col="2" value="ATTR(SalesStep.NextStep)" size="4" prespace="false"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7803" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="SalesStepID" datatype="number"/>
+			<WTPARAM name="AttachmentCount" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="SalesCampaignID" datatype="number"/>
+			<WTPARAM name="EmailID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTSUB name="LoadSalesStep">
+				<WTOBJECT name="SalesStep" project="ptsSalesStepUser" class="CSalesStep">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesStepID" direction="input" value="PARAM(SalesStepID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(SalesCampaignID)" value="ATTR(SalesStep.SalesCampaignID)" />
+					<WTSETATTRIBUTE name="PARAM(EmailID)" value="ATTR(SalesStep.EmailID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesStep" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadAttachments"/>
+			</WTSUB>
+
+			<WTSUB name="LoadAttachments">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(SalesStepID)"/>
+						<WTPARAM name="ParentType" direction="input" value="ENTITY(SalesStep)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqAttachmentCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="SalesCampaign" project="ptsSalesCampaignUser" class="CSalesCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesCampaignID" direction="input" value="PARAM(SalesCampaignID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(SalesCampaign.CompanyID)" />
+				</WTOBJECT>
+				<WTOBJECT name="Emails" project="ptsEmailUser" class="CEmails">
+					<WTMETHOD name="EnumProspect">
+						<WTPARAM name="xmlEmails" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ItemID" direction="input" value="PARAM(EmailID)"/>
+						<WTPARAM name="Element" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadSalesStep"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="SalesStep" project="ptsSalesStepUser" class="CSalesStep">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesStepID" direction="input" value="PARAM(SalesStepID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(SalesCampaignID)" value="ATTR(SalesStep.SalesCampaignID)" />
+					<WTSETATTRIBUTE name="PARAM(EmailID)" value="ATTR(SalesStep.EmailID)" />
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSalesStep" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadAttachments">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="SalesStep" project="ptsSalesStepUser" class="CSalesStep">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SalesStepID" direction="input" value="PARAM(SalesStepID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadSalesStep">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="SalesStep" value="ATTR(SalesStep.SalesStepName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesStepName"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.SalesStepName)" size="20"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Description"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.Description)" size="50"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Length"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.Length)" size="4" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="DateHelp" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.DateNo)" size="2"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="BoardHelp" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(SalesStep.IsBoard)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="BoardRate"/>
+					<WTTEXT col="2" value="ATTR(SalesStep.BoardRate)" size="3"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" align="left" label="AutoStepHelp" class="Prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="AutoStep"/>
+						<WTCOMBO col="2" value="ATTR(SalesStep.AutoStep)"/>
+						<WTCOMBO col="2" value="ATTR(SalesStep.EmailID)" datapath="/DATA/TXN/PTSEMAILS/ENUM"/>
+						<WTBUTTON col="2" value="CONST(View)" btnclass="smbutton">
+							<WTCLICK>var URL="8810.asp?Popup=1&amp;EmailID=" + document.getElementById('EmailID').value; window.open( URL);</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Email"/>
+						<WTTEXT col="2" value="ATTR(SalesStep.Email)" size="60"/>
+					</WTROW>
+
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" align="left" label="NextStepHelp" class="Prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Delay"/>
+						<WTTEXT col="2" value="ATTR(SalesStep.Delay)" size="4"/>
+						<WTSTATIC col="2" tag="NextStep"/>
+						<WTTEXT col="2" value="ATTR(SalesStep.NextStep)" size="4" prespace="false"/>
+					</WTROW>
+
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+						<WTSTATIC col="1" merge="2" align="left" label="MyAttachmentsText" class="prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="PARAM(AttachmentCount)" oper="equal" value="CONST(0)"/>
+						<WTSTATIC col="1" merge="2" align="left" label="NoAttachments" class="prompt"/>
+					</WTROW>
+					<WTROW >
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" label="NewAttachment" align="right" bold="true">
+							<WTLINK name="8002">
+								<WTPARAM name="ParentID" value="PARAM(SalesStepID)"/>
+								<WTPARAM name="ParentType" value="ENTITY(SalesStep)"/>
+								<WTPARAM name="Mini" value="CONST(1)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+
+					<WTROW margin-bottom="6">
+						<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+						<WTRECORDSET col="1" merge="2" graybar="true" entity="Attachment">
+							<WTCOLUMN width="44" align="left" valign="top" label="AttachName"/>
+							<WTCOLUMN width="22" align="left" valign="top" label="File"/>
+							<WTCOLUMN width="12" align="left" valign="top" label="Status"/>
+							<WTCOLUMN width="10" align="left" valign="top" label="AttachSize"/>
+							<WTCOLUMN width="12" align="left" valign="top" label="AttachDate"/>
+							<WTROW>
+								<WTSTATIC col="1" value="DATA(Attachment.AttachName)" bold="true">
+									<WTLINK name="8003">
+										<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+										<WTPARAM name="Mini" value="CONST(1)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(Attachment.FileName)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+					 						<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Attachment.FileName)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTLINK name="CONST(Attachments/78/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@salesstepid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="3">
+									<WTSTATIC label="Active">
+										<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Inactive" fontcolor="red">
+										<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)"/>
+									</WTSTATIC>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="red"/>
+								</WTSTATIC>
+								<WTSTATIC col="4">
+									<WTSTATIC value="DATA(Attachment.AttachSize)">
+											<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="5" value="DATA(Attachment.AttachDate)"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1" merge="5" value="DATA(Attachment.Description)" fontcolor="gray"/>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>		
+					<WTROW margin-bottom="6">
+						<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+						<WTSTATIC col="1" merge="2" align="left" class="prompt">
+							<WTSTATIC value="PARAM(AttachmentCount)" space="1"/>
+							<WTSTATIC label="Attachments"/>
+						</WTSTATIC>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

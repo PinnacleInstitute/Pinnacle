@@ -1,0 +1,1603 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="126" name="Contest" alias="con" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="12601" name="ContestID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="12602" name="CompanyID" type="number" source="entity"/>
+		<WTATTRIBUTE id="12603" name="MemberID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="12605" name="ContestName" type="text" length="40" min="1" max="40" required="true" source="entity"/>
+		<WTATTRIBUTE id="12606" name="Description" type="text" length="1000" min="1" max="1000" source="entity"/>
+
+		<WTATTRIBUTE id="12607" name="Status" type="number" source="entity" blankrow="false">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Open"/>
+			<WTENUM id="3" name="Closed"/>
+			<WTENUM id="4" name="Locked"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="12608" name="Metric" type="number" source="entity" blankrow="false">
+			<WTENUM id="1" name="Result"/>
+			<WTENUM id="2" name="Activity"/>
+			<WTENUM id="3" name="ResultActivity"/>
+			<WTENUM id="0" name="Custom"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="12609" name="StartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="12610" name="EndDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="12611" name="IsPrivate" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="12612" name="Custom1" type="number" source="entity"/>
+		<WTATTRIBUTE id="12613" name="Custom2" type="number" source="entity"/>
+		<WTATTRIBUTE id="12614" name="Custom3" type="number" source="entity"/>
+		<WTATTRIBUTE id="12615" name="Custom4" type="number" source="entity"/>
+		<WTATTRIBUTE id="12616" name="Custom5" type="number" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="12691" name="MemberContestID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Contest" entity="Contest" alias="con"/>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="StartDate" default="true"/>
+			<WTATTRIBUTE name="ContestName"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumContest" enumname="EnumContestList" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumContestList" style="GenerateDataProc.xsl" column="ContestName" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(Contest.ContestID)" />
+					<WTATTRIBUTE alias="Name" value="ATTR(Contest.ContestName)" />
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Find" name="FindCompany" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Contest.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Contest.MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+			<WTJOIN name="Contest"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Find" name="FindMember" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Contest.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Contest.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+			<WTJOIN name="Contest"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberContest.ContestID)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.ContestName)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.Description)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.Status)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.Metric)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.IsPrivate)"/>
+					<WTATTRIBUTE value="ATTR(MemberContest.MemberContestID)"/>
+					<WTJOIN name="Contest"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(MemberContest.ContestName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE name="Locked" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(StartDate)" direction="input" required="false"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE name="Active" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ContestID" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="12601" caption="Find" action="5" navbar="false" header="false" footer="false" wrapper="wrapper750"
+				aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="date"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Private" datatype="number"/>
+			<WTPARAM name="Return" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(StartDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTGETCACHE name="CONST(tmpGroupID)" value="GROUPID" datatype="number"/>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="CONST(tmpGroupID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID)" value="ATTR(GroupID)" />
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="CONST(tmpGroupID)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(Private)" value="CONST(1)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(tmpGroupID)"/>
+				</WTSETATTRIBUTE>
+
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Contests" project="ptsContestUser" class="CContests">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContests" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Contests" project="ptsContestUser" class="CContests">
+				<WTMETHOD name="FindMember">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindCompany">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlContests" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+        <WTFUNCTION name="NewContest()">
+          var mid = document.getElementById('MemberID').value
+          var cid = document.getElementById('CompanyID').value
+          var pri = document.getElementById('Private').value
+          var ret = '12601.asp?memberid=' + mid + "%26companyid=" + cid + "%26private=" + pri
+          window.location = "12602.asp?return=1&amp;memberid=" + mid + "&amp;companyid=" + cid + "&amp;returnurl=" + ret;
+        </WTFUNCTION>
+
+        <WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+					<WTHIDDEN value="PARAM(Private)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTTABLE col="1">
+						<WTCOLUMN width="375" align="left"/>
+						<WTCOLUMN width="375" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTCODEGROUP><WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="FindContest"/>
+							</WTSTATIC>
+							<WTSTATIC col="2" class="PageHeader">
+                <WTCODEGROUP>
+                  <WTBUTTON value="CONST(NewContest)">
+                    <WTCLICK>NewContest()</WTCLICK>
+                  </WTBUTTON>
+                </WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ContestCreaterText" class="prompt" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="left"/>
+					<WTCOMBO col="1" value="ATTR(Contests.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Contest">
+						<WTCOLUMN width="40" align="left" valign="top" label="ContestName"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Duration"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Metric"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Private"/>
+
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ContestName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="12603">
+											<WTPARAM name="ContestID" value="DATA(Contest.ContestID)"/>
+											<WTPARAM name="Private" value="PARAM(Private)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Preview.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="11710" target="OwnerLeaderboard">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+											<WTPARAM name="OwnerContestID" value="DATA(ContestID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Status)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC  label="Indefinite">
+									<WTCONDITION expr="DATA(StartDate)" oper="not-exist" value="CONST()"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(StartDate)" oper="exist" value="CONST()"/>
+									<WTSTATIC value="DATA(StartDate)"/>
+									<WTSTATIC value="CONST(-)"/>
+									<WTSTATIC value="DATA(EndDate)"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Metric)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC value="DATA(IsPrivate)">
+									<WTCONDITION expr="DATA(IsPrivate)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="CONST(#&lt;xsl:value-of select=&quot;@contestid&quot;/&gt;)" fontcolor="purple">
+									<WTCONDITION expr="DATA(IsPrivate)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="6" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTCONDITION expr="PARAM(Return)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="12602" navbar="false" header="false" footer="false" wrapper="wrapper600"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Private" datatype="number"/>
+			<WTPARAM name="Duration" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Metric)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(IsPrivate)" value="PARAM(Private)"/>
+					<WTSETATTRIBUTE name="ATTR(StartDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(EndDate)" value="CONST(DateAdd(&quot;m&quot;,1,reqSysDate))"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Duration)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(StartDate)" oper="equal" value="CONST(&quot;&quot;)" connector="or"/>
+						<WTSETATTRIBUTE name="ATTR(StartDate)" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(EndDate)" value="CONST(0)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ContestID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="ToggleDates()">
+					var duration = document.getElementById('Duration').value
+					if (duration == 0) {
+					document.getElementById('StartDateRow').style.display = 'none';
+					document.getElementById('EndDateRow').style.display = 'none';
+					}
+					else {
+					document.getElementById('StartDateRow').style.display = '';
+					document.getElementById('EndDateRow').style.display = '';
+					}
+				</WTFUNCTION>
+				<WTLOAD>ToggleDates()</WTLOAD>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewContest"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ContestText" class="prompt" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="ContestName"/>
+					<WTTEXT col="2" value="ATTR(Contest.ContestName)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Status)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Metric"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Metric)"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" merge="2" label="Customtext" class="prompt" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Custom"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom1)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom2)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom3)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom4)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom5)" size="4"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Duration"/>
+					<WTCOMBO col="2" value="PARAM(Duration)">
+						<WTCHANGE>ToggleDates();</WTCHANGE>
+						<WTOPTION id="0" label="Indefinite"/>
+						<WTOPTION id="1" label="DateRange"/>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW id="StartDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.StartDate)"/>
+				</WTROW>
+				<WTROW id="EndDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.EndDate)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Private)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Contest.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(Private)" oper="not-equal" value="CONST(0)"/>
+					<WTHIDDEN value="ATTR(Contest.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" value="ATTR(Contest.Description)" rows="5" cols="60" align="left"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12603" navbar="false" header="false" footer="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="ContestID" datatype="number"/>
+			<WTPARAM name="Private" datatype="number"/>
+			<WTPARAM name="Duration" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(StartDate)" oper="not-equal" value="CONST(&quot;0&quot;)"/>
+						<WTSETATTRIBUTE name="PARAM(Duration)" value="CONST(1)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Duration)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(StartDate)" oper="equal" value="CONST(&quot;&quot;)" connector="or"/>
+						<WTSETATTRIBUTE name="ATTR(StartDate)" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(EndDate)" value="CONST(0)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="ToggleDates()">
+					var duration = document.getElementById('Duration').value
+					if (duration == 0) {
+					document.getElementById('StartDateRow').style.display = 'none';
+					document.getElementById('EndDateRow').style.display = 'none';
+					}
+					else {
+					document.getElementById('StartDateRow').style.display = '';
+					document.getElementById('EndDateRow').style.display = '';
+					}
+				</WTFUNCTION>
+				<WTLOAD>ToggleDates()</WTLOAD>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC tag="Contest"/>
+						<WTSTATIC value="ATTR(Contest.ContestName)"/>
+					</WTSTATIC>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ContestText" class="prompt" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="ContestCode" bold="true"/>
+					<WTSTATIC col="2" value="ATTR(Contest.ContestID)" bold="true"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" tag="CompanyID"/>
+						<WTTEXT col="2" value="ATTR(Contest.CompanyID)" size="2"/>
+						<WTSTATIC col="2" tag="MemberID"/>
+						<WTTEXT col="2" value="ATTR(Contest.MemberID)" noprespace="true" size="5"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Contest.CompanyID)"/>
+					<WTHIDDEN value="ATTR(Contest.MemberID)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="ContestName"/>
+					<WTTEXT col="2" value="ATTR(Contest.ContestName)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Status)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Metric"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Metric)"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" merge="2" label="Customtext" class="prompt" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Custom"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom1)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom2)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom3)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom4)" size="4"/>
+					<WTTEXT col="2" value="ATTR(Contest.Custom5)" size="4"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Duration"/>
+					<WTCOMBO col="2" value="PARAM(Duration)">
+						<WTCHANGE>ToggleDates();</WTCHANGE>
+						<WTOPTION id="0" label="Indefinite"/>
+						<WTOPTION id="1" label="DateRange"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW id="StartDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.StartDate)"/>
+				</WTROW>
+				<WTROW id="EndDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.EndDate)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Private)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Contest.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(Private)" oper="not-equal" value="CONST(0)"/>
+					<WTHIDDEN value="ATTR(Contest.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" value="ATTR(Contest.Description)" rows="5" cols="60" align="left"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="m_12601" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" action="5" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="98">
+			<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="date"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Private" datatype="number"/>
+			<WTPARAM name="Return" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(StartDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTGETCACHE name="CONST(tmpGroupID)" value="GROUPID" datatype="number"/>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="CONST(tmpGroupID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID)" value="ATTR(GroupID)" />
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="CONST(tmpGroupID)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(Private)" value="CONST(1)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(tmpGroupID)"/>
+				</WTSETATTRIBUTE>
+
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Contests" project="ptsContestUser" class="CContests">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContests" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Contests" project="ptsContestUser" class="CContests">
+				<WTMETHOD name="FindMember">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindCompany">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlContests" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="center"/>
+
+        <WTFUNCTION name="NewContest()">
+          var mid = document.getElementById('MemberID').value
+          var cid = document.getElementById('CompanyID').value
+          var pri = document.getElementById('Private').value
+          var ret = 'm_12601.asp?memberid=' + mid + "%26companyid=" + cid + "%26private=" + pri
+          window.location = "m_12602.asp?return=1&amp;memberid=" + mid + "&amp;companyid=" + cid + "&amp;returnurl=" + ret;
+        </WTFUNCTION>
+
+        <WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+					<WTHIDDEN value="PARAM(Private)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" class="PageHeading">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="FindContest"/>
+            <WTSTATIC space="5"/>
+            <WTCODEGROUP>
+              <WTBUTTON value="CONST(NewContest)" btnclass="bigbutton">
+                <WTCLICK>NewContest()</WTCLICK>
+              </WTBUTTON>
+            </WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ContestCreaterText" class="prompt" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Contests.FindTypeID)" translate="true"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader" align="center"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true" btnclass="bigbutton"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Contest">
+						<WTCOLUMN width="85" align="left" valign="top" label="ContestName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Status"/>
+
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ContestName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="m_12603">
+											<WTPARAM name="ContestID" value="DATA(Contest.ContestID)"/>
+											<WTPARAM name="Private" value="PARAM(Private)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Preview.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="m_11710" target="OwnerLeaderboard">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+											<WTPARAM name="OwnerContestID" value="DATA(ContestID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Status)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" fontcolor="gray">
+								<WTSTATIC  label="Indefinite">
+									<WTCONDITION expr="DATA(StartDate)" oper="not-exist" value="CONST()"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(StartDate)" oper="exist" value="CONST()"/>
+									<WTSTATIC value="DATA(StartDate)"/>
+									<WTSTATIC value="CONST(-)"/>
+									<WTSTATIC value="DATA(EndDate)"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="CONST(-)"/>
+								<WTSTATIC value="DATA(Metric)"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTCONDITION expr="PARAM(Return)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center" btnclass="bigbutton"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_12602" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" mobile="MobileHome.asp" secured="98">
+			<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Private" datatype="number"/>
+			<WTPARAM name="Duration" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Metric)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(IsPrivate)" value="PARAM(Private)"/>
+					<WTSETATTRIBUTE name="ATTR(StartDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(EndDate)" value="CONST(DateAdd(&quot;m&quot;,1,reqSysDate))"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Duration)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(StartDate)" oper="equal" value="CONST(&quot;&quot;)" connector="or"/>
+						<WTSETATTRIBUTE name="ATTR(StartDate)" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(EndDate)" value="CONST(0)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ContestID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="25" align="right"/>
+				<WTCOLUMN width="75" align="left"/>
+
+				<WTFUNCTION name="ToggleDates()">
+					var duration = document.getElementById('Duration').value
+					if (duration == 0) {
+					document.getElementById('StartDateRow').style.display = 'none';
+					document.getElementById('EndDateRow').style.display = 'none';
+					}
+					else {
+					document.getElementById('StartDateRow').style.display = '';
+					document.getElementById('EndDateRow').style.display = '';
+					}
+				</WTFUNCTION>
+				<WTLOAD>ToggleDates()</WTLOAD>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewContest"/>
+					</WTSTATIC>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ContestText" class="prompt" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="ContestName"/>
+					<WTTEXT col="2" value="ATTR(Contest.ContestName)" size="30"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Status)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Metric"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Metric)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Duration"/>
+					<WTCOMBO col="2" value="PARAM(Duration)">
+						<WTCHANGE>ToggleDates();</WTCHANGE>
+						<WTOPTION id="0" label="Indefinite"/>
+						<WTOPTION id="1" label="DateRange"/>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW id="StartDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.StartDate)"/>
+				</WTROW>
+				<WTROW id="EndDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.EndDate)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Private)" oper="equal" value="CONST(0)"/>
+					<WTCHECK col="1" merge="2" value="ATTR(Contest.IsPrivate)" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(Private)" oper="not-equal" value="CONST(0)"/>
+					<WTHIDDEN value="ATTR(Contest.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="center"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" value="ATTR(Contest.Description)" rows="8" cols="35" align="center"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center" btnclass="bigbutton"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" btnclass="bigbutton"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="m_12603" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" action="5" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" mobile="MobileHome.asp" secured="98">
+			<!--============================================================================================-->
+			<WTPARAM name="ContestID" datatype="number"/>
+			<WTPARAM name="Private" datatype="number"/>
+			<WTPARAM name="Duration" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(StartDate)" oper="not-equal" value="CONST(&quot;0&quot;)"/>
+						<WTSETATTRIBUTE name="PARAM(Duration)" value="CONST(1)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Duration)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(StartDate)" oper="equal" value="CONST(&quot;&quot;)" connector="or"/>
+						<WTSETATTRIBUTE name="ATTR(StartDate)" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(EndDate)" value="CONST(0)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlContest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Contest" project="ptsContestUser" class="CContest">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="25" align="right"/>
+				<WTCOLUMN width="75" align="left"/>
+
+				<WTFUNCTION name="ToggleDates()">
+					var duration = document.getElementById('Duration').value
+					if (duration == 0) {
+					document.getElementById('StartDateRow').style.display = 'none';
+					document.getElementById('EndDateRow').style.display = 'none';
+					}
+					else {
+					document.getElementById('StartDateRow').style.display = '';
+					document.getElementById('EndDateRow').style.display = '';
+					}
+				</WTFUNCTION>
+				<WTLOAD>ToggleDates()</WTLOAD>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC tag="Contest"/>
+						<WTSTATIC value="ATTR(Contest.ContestName)"/>
+					</WTSTATIC>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="ContestText" class="prompt" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" tag="ContestCode" bold="true" align="center"/>
+					<WTSTATIC col="1" value="ATTR(Contest.ContestID)" bold="true"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" tag="CompanyID"/>
+						<WTTEXT col="2" value="ATTR(Contest.CompanyID)" size="2"/>
+						<WTSTATIC col="2" tag="MemberID"/>
+						<WTTEXT col="2" value="ATTR(Contest.MemberID)" noprespace="true" size="5"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Contest.CompanyID)"/>
+					<WTHIDDEN value="ATTR(Contest.MemberID)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="ContestName"/>
+					<WTTEXT col="2" value="ATTR(Contest.ContestName)" size="30"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Status)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Metric"/>
+					<WTCOMBO col="2" value="ATTR(Contest.Metric)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Duration"/>
+					<WTCOMBO col="2" value="PARAM(Duration)">
+						<WTCHANGE>ToggleDates();</WTCHANGE>
+						<WTOPTION id="0" label="Indefinite"/>
+						<WTOPTION id="1" label="DateRange"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW id="StartDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.StartDate)"/>
+				</WTROW>
+				<WTROW id="EndDateRow" margin-bottom="6">
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Contest.EndDate)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Private)" oper="equal" value="CONST(0)"/>
+					<WTCHECK col="1" merge="2" value="ATTR(Contest.IsPrivate)" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(Private)" oper="not-equal" value="CONST(0)"/>
+					<WTHIDDEN value="ATTR(Contest.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="center"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" value="ATTR(Contest.Description)" rows="8" cols="35" align="center"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center" btnclass="bigbutton">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" btnclass="bigbutton"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete" btnclass="bigbutton">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+			<WTWEBPAGE name="12610" caption="Contest List" navbar="false" header="false" footer="false" wrapper="wrapper750"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" track="0">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="ContestID" datatype="number"/>
+			<WTPARAM name="MemberContestID" datatype="number"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ContestID)" oper="not-equal" value="CONST(0)"/>
+					<WTOBJECT name="MemberContest" project="ptsMemberContestUser" class="CMemberContest">
+						<WTMETHOD name="Add">
+							<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							<WTPARAM name="Result" direction="return" datatype="number"/>
+						</WTMETHOD>
+					</WTOBJECT>
+					<WTRETURN>
+						<WTLINK name="12610" return="false">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(MemberContestID)" oper="not-equal" value="CONST(0)"/>
+					<WTOBJECT name="MemberContest" project="ptsMemberContestUser" class="CMemberContest">
+						<WTMETHOD name="Delete">
+							<WTPARAM name="MemberContestID" direction="input" value="PARAM(MemberContestID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>
+					<WTRETURN>
+						<WTLINK name="12610" return="false">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+						<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+						<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTCODEGROUP>
+
+				<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Contests" project="ptsContestUser" class="CContests">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContests" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="550" align="left"/>
+				<WTCOLUMN width="200" align="left"/>
+
+        <WTFUNCTION name="ManageContests()">
+          var mid = document.getElementById('MemberID').value
+          var cid = document.getElementById('CompanyID').value
+          var ret = '12610.asp?memberid=' + mid + "%26companyid=" + cid
+          window.location = "12601.asp?return=1&amp;memberid=" + mid + "&amp;companyid=" + cid + "&amp;returnurl=" + ret;
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(MemberID)"/>
+          <WTHIDDEN value="PARAM(CompanyID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" class="PageHeading" align="left">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="MyContests"/>
+					</WTSTATIC>
+          <WTBUTTON col="2" value="CONST(ManageContests)" align="center" class="PageHeader">
+            <WTCONDITION expr="_IsContestCreater"/>
+            <WTCLICK>ManageContests()</WTCLICK>
+          </WTBUTTON>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTCONDITION expr="CONST(/DATA/TXN/PTSCONTESTS/PTSCONTEST[(@isprivate = 0)])" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Contest">
+						<WTFILTER name="DATA(IsPrivate)" oper="equal" value="CONST(0)"/>
+						<WTCOLUMN width="40" align="left" valign="top" label="PublicContests"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Duration"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Metric"/>
+						<WTCOLUMN width="10" align="center" valign="top"/>
+						<WTROW height="24">
+							<WTSTATIC col="1" value="DATA(ContestName)"/>
+							<WTSTATIC col="2" value="DATA(Status)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC  label="Indefinite">
+									<WTCONDITION expr="DATA(StartDate)" oper="not-exist" value="CONST()"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(StartDate)" oper="exist" value="CONST()"/>
+									<WTSTATIC value="DATA(StartDate)"/>
+									<WTSTATIC value="CONST(-)"/>
+									<WTSTATIC value="DATA(EndDate)"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Metric)"/>
+							<WTSTATIC col="5"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="6" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTSTATIC label="RemoveContest"/>
+
+				<WTROW margin-top="18">
+					<WTCONDITION expr="CONST(/DATA/TXN/PTSCONTESTS/PTSCONTEST[(@isprivate != 0)])" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Contest">
+						<WTFILTER name="DATA(IsPrivate)" oper="not-equal" value="CONST(0)"/>
+						<WTCOLUMN width="40" align="left" valign="top" label="PrivateContests"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Duration"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Metric"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Unregister"/>
+						<WTROW height="24">
+							<WTSTATIC col="1" value="DATA(ContestName)"/>
+							<WTSTATIC col="2" value="DATA(Status)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC  label="Indefinite">
+									<WTCONDITION expr="DATA(StartDate)" oper="not-exist" value="CONST()"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(StartDate)" oper="exist" value="CONST()"/>
+									<WTSTATIC value="DATA(StartDate)"/>
+									<WTSTATIC value="CONST(-)"/>
+									<WTSTATIC value="DATA(EndDate)"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Metric)"/>
+							<WTSTATIC col="5">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Trash.gif)" alt="RemoveContest" imgalign="absmiddle">
+										<WTLINK name="12610" class="PageHeadingLink" return="false">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+											<WTPARAM name="MemberContestID" value="DATA(MemberContestID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="5" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" tag="RegisterContest" align="center"/>
+					<WTTEXT col="1" value="PARAM(ContestID)" size="2" required="false" noprespace="true"/>
+					<WTBUTTON col="1" action="0" value="CONST(PrivateRegistration)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="m_12610" caption="Contest List" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" action="5" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="98" track="0">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="ContestID" datatype="number"/>
+			<WTPARAM name="MemberContestID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(ContestID)" oper="not-equal" value="CONST(0)"/>
+				<WTOBJECT name="MemberContest" project="ptsMemberContestUser" class="CMemberContest">
+					<WTMETHOD name="Add">
+						<WTPARAM name="ContestID" direction="input" value="PARAM(ContestID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTLINK name="12610" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(MemberContestID)" oper="not-equal" value="CONST(0)"/>
+				<WTOBJECT name="MemberContest" project="ptsMemberContestUser" class="CMemberContest">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MemberContestID" direction="input" value="PARAM(MemberContestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTLINK name="12610" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Contests" project="ptsContestUser" class="CContests">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlContests" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="center"/>
+
+        <WTFUNCTION name="ManageContests()">
+          var mid = document.getElementById('MemberID').value
+          var cid = document.getElementById('CompanyID').value
+          var ret = 'm_12610.asp?memberid=' + mid + "%26companyid=" + cid
+          window.location = "m_12601.asp?return=1&amp;memberid=" + mid + "&amp;companyid=" + cid + "&amp;returnurl=" + ret;
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(MemberID)"/>
+          <WTHIDDEN value="PARAM(CompanyID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" class="PageHeading">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(contest.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="MyContests"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="_IsContestCreater"/>
+              <WTSTATIC space="5"/>
+              <WTBUTTON value="CONST(ManageContests)" btnclass="bigbutton">
+                <WTCONDITION expr="_IsContestCreater"/>
+                <WTCLICK>ManageContests()</WTCLICK>
+              </WTBUTTON>
+            </WTCODEGROUP>
+          </WTSTATIC>
+				</WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTCONDITION expr="CONST(/DATA/TXN/PTSCONTESTS/PTSCONTEST[(@isprivate = 0)])" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Contest">
+						<WTFILTER name="DATA(IsPrivate)" oper="equal" value="CONST(0)"/>
+						<WTCOLUMN width="85" align="left" valign="top" label="PublicContests"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Status"/>
+						<WTROW height="30">
+							<WTSTATIC col="1" value="DATA(ContestName)"/>
+							<WTSTATIC col="2" value="DATA(Status)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" fontcolor="gray">
+								<WTSTATIC  label="Indefinite">
+									<WTCONDITION expr="DATA(StartDate)" oper="not-exist" value="CONST()"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(StartDate)" oper="exist" value="CONST()"/>
+									<WTSTATIC value="DATA(StartDate)"/>
+									<WTSTATIC value="CONST(-)"/>
+									<WTSTATIC value="DATA(EndDate)"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="CONST(-)"/>
+								<WTSTATIC value="DATA(Metric)"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTSTATIC label="RemoveContest"/>
+
+				<WTROW margin-top="18">
+					<WTCONDITION expr="CONST(/DATA/TXN/PTSCONTESTS/PTSCONTEST[(@isprivate != 0)])" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Contest">
+						<WTFILTER name="DATA(IsPrivate)" oper="not-equal" value="CONST(0)"/>
+						<WTCOLUMN width="85" align="left" valign="top" label="PrivateContests"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Status"/>
+						<WTROW height="30">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ContestName)" spacex="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Trash.gif)" alt="RemoveContest" imgalign="absmiddle">
+										<WTLINK name="12610" class="PageHeadingLink" return="false">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+											<WTPARAM name="MemberContestID" value="DATA(MemberContestID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Status)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" fontcolor="gray">
+								<WTSTATIC  label="Indefinite">
+									<WTCONDITION expr="DATA(StartDate)" oper="not-exist" value="CONST()"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(StartDate)" oper="exist" value="CONST()"/>
+									<WTSTATIC value="DATA(StartDate)"/>
+									<WTSTATIC value="CONST(-)"/>
+									<WTSTATIC value="DATA(EndDate)"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="CONST(-)"/>
+								<WTSTATIC value="DATA(Metric)"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" value="DATA(Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="RegisterContest"/>
+					<WTTEXT col="1" value="PARAM(ContestID)" size="2" required="false" noprespace="true"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTBUTTON col="1" action="0" value="CONST(PrivateRegistration)" btnclass="bigbutton"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,38 @@
+
+<HEAD>
+	<link rel="stylesheet" type="text/css" href="include/StyleSheet.css" />
+	<link rel="alternate" media="print" href="1107.asp" />
+	<TITLE>Print Certificate</TITLE>
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache" />
+</HEAD>
+
+<BODY topmargin="0" leftmargin="10" onLoad="document.factory.printing.header=''; document.factory.printing.footer=''; document.factory.printing.portrait=false; document.factory.printing.leftMargin=0.5; document.factory.printing.topMargin=0.5; document.factory.printing.rightMargin=0.5; document.factory.printing.bottomMargin=0.5; document.factory.printing.Print();">
+<TABLE border="0" cellpadding="0" cellspacing="0" width="750" align="left">
+<FORM name="MemberAssess" method="post">
+<SCRIPT language="JavaScript"> function ViewCertificate(){ 
+   var url, win;
+   url = "1107.asp"
+   win = window.open(url,"Certificate");
+   win.focus();
+}</SCRIPT>
+<TABLE border="0" cellpadding="0" cellspacing="0" width="750">
+<TR><TD colspan="1" height="48" /></TR>
+<TR><TD width="750" align="center" valign="center" class="PageHeading">Printing Certificate...</TD></TR>
+<TR><TD colspan="1" height="48" /></TR>
+<TR><TD width="750" align="center" valign="center"><INPUT type="button" value="Close" onclick="window.close()" /></TD></TR>
+<TR><TD colspan="1" height="12" /></TR>
+<TR><TD colspan="2" width="750" align="left" valign="center">
+	<font color="red">CERTIFICATE DOES NOT PRINT: If you have problems with printing this certificate, you can click the "Preview Certificate" 
+	button below and manually set the printing options by selecting the "File / Page Setup" menu option in your browser, and remove the header 
+	and footer, select "Landscape" and set all margins to 1/2 inch.</font>
+</TD></TR>
+<TR><TD colspan="1" height="12" /></TR>
+<TR><TD width="750" align="center" valign="center"><INPUT type="button" value="Preview Certificate" onclick="ViewCertificate()" /></TD></TR>
+<TR><TD colspan="1" height="12" /></TR>
+<TR><TD width="750" align="center" valign="center">
+<OBJECT classid="clsid:1663ed61-23eb-11d2-b92f-008048fdd814" codebase="http://www.meadroid.com/scriptx/smsx.cab#Version=6,3,435,20" id="factory" style="display:none" viewastext="1" width="14" height="14">Error: could not load applet or object.</OBJECT>
+</TD></TR>
+</TABLE>
+</FORM>
+</TABLE>
+</BODY>

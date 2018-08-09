@@ -1,0 +1,145 @@
+<H4 align=center><FONT size=4>Creating a Make Table Query</FONT></H4>
+<P><FONT size=3>A make-table query creates a new table consisting of data from existing tables and queries. Make-table queries have many uses. The new table can be a duplicate of an existing table and serve as a backup for the data. The backup can then be used to store old records that can then be deleted from the current table. </FONT>
+<P><FONT size=3>Make-table queries can create a compact version of an existing table, displaying only the fields you need to see. They can also bring fields from many tables into one table, making reports and queries on the single table run faster. </FONT>
+<P><FONT size=3>You can limit both records and fields in a new table. If you use criteria in a make-table query, only those records that meet the criteria will be added to the new table. </FONT>
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>From the database window, create a new query in Design view adding fields from tables as desired. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type any desired criteria. 
+<BR><I>The criteria appears in the <B>Criteria</B> row under the appropriate field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Query</B> menu. 
+<BR><I>The <B>Query</B> menu appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Make-Table</B> <B>Query </B>command. 
+<BR><I>The Make Table dialog box opens with the insertion point in the <B>Table</B> <B>Name</B> text box</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type a table name. 
+<BR><I>The table name appears in the </I><I><B>Table</B> <B>Name</B> text box</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>OK</B> . 
+<BR><I>The Make Table dialog box closes and the table is saved</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Run the query. <IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Runnin4.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Runnin4.gif" width=33 border=0> 
+<BR><I>A Microsoft Access warning box opens, stating that you cannot undo your changes.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Yes</B> . 
+<BR><I>The Microsoft Access warning box closes, and Access runs the make-table query and pastes the records into the new table.</I></FONT>
+</OL><H4 align=center><FONT size=4>Creating an Update Query</FONT></H4>
+<P><FONT size=3>You can use an update query to change the values of data in an existing table. Update queries save time by updating a large number of records in a table at once. For example, you can use an update query to increase the values in a Unit Price field by 10%.</FONT> 
+<P><FONT size=3>You can also create a new field in the table and use an update query to provide the values for the field based on a calculation. For example, you could create a Sale Price field in a table and then use an update query to add the values to the field based on 75% of the Unit Price field.</FONT> 
+<P><FONT size=3>If you do not want to update all the records in the table, you can select the records you want to update by adding criteria to the query. For example, you can use an update query with criteria to increase the unit price on only one line of products, instead of on all the products.</FONT> 
+<P><FONT size=3>In an update query, you do not need to include all the fields from the table in the design grid. You only need to include the fields you want to update and the fields you want to limit with criteria. 
+<BR>
+<BR><IMG style="WIDTH: 293px; HEIGHT: 82px" height=82 alt=UpdateWindow.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/UpdateWindow.gif" width=293 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Using the University Employees database, create an Update Query to increase the cost of courses from $25.00 to $35.00. <I>Open the <B>Create Update Query </B>in Design view.</I></FONT> 
+<OL>
+<LI><FONT size=3>Select the drop down arrow to the right of the Query type button. <IMG style="WIDTH: 39px; HEIGHT: 24px" height=24 alt=SelectQueryButon.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/SelectQueryButon.gif" width=39 border=0> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the Update Query button. <IMG style="WIDTH: 100px; HEIGHT: 22px" height=22 alt=UpdateQuery.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/UpdateQuery.gif" width=100 border=0> 
+<BR><I>An <B>Update To</B> row is added to the design grid</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Update To</B> row under the desired field and type the expression required to perform the update. 
+<BR><I>Type <B>[Cost]+10</B> into the <B>Update To</B> row.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Run the query. 
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Runnin4.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Runnin4.gif" width=33 border=0> 
+<BR><I>A Microsoft Access warning box opens, stating that you cannot undo the command.</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Yes</B> . 
+<BR><I>The Microsoft Access warning box closes, and Access runs the update query and updates the records in the table.</I></FONT>
+</OL><H4 align=center><FONT size=4>Creating and Append Query</FONT></H4>
+<P><FONT size=3>An append query copies records from a table or query and adds them to the end of another table. Append queries are useful if you want to transfer data from one table to another. You can also use an append query to archive all or part of a table's contents. For example, you have two tables, <B>Current Orders</B> and <B>Old Orders</B> . You can use an append query to copy the records from the <B>Current Orders</B> table to the <B>Old Orders</B> table. This query prevents you from having to manually add the records to the <B>Old Orders</B> table.&nbsp;</FONT> 
+<P><FONT size=3>If the fields in both tables have the same names, the data is added automatically to the table. If the fields have different names, you must specify the fields to which you want to "append" the data. The data is copied to the field(s) indicated in the <B>Append To</B> row of the appropriate field(s) in the design grid. </FONT>
+<P><FONT size=3>You can also use criteria to select the records you want to append. Only those records that meet the criteria are appended to the table. 
+<BR>
+<BR><IMG style="WIDTH: 349px; HEIGHT: 100px" height=100 alt=AppendQuery.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/AppendQuery.gif" width=349 border=0>&nbsp;
+<BR>
+<BR></FONT><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual Access file, please click on the link to the left and move between the Access and Web windows until you are satisfied you have mastered the skill. (If a dialog box appears while you are trying to open the exercise, click <I>Open It.</I> )</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Using the <B>University Employees</B> database, create an <B>Append Query</B> to add new workshops to the<B> Workshop List</B> table. 
+<BR><I>Create a new Query in Design view and add the <B>Append to Workshop List</B> table.</I></FONT> 
+<OL>
+<LI><FONT size=3>Select the drop down arrow to the right of the Query type button. 
+<BR><IMG style="WIDTH: 39px; HEIGHT: 24px" height=24 alt=SelectQueryButon.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/SelectQueryButon.gif" width=39 border=0> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the Append Query Button. <IMG style="WIDTH: 112px; HEIGHT: 23px" height=23 alt=AppendQueryButton.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/AppendQueryButton.gif" width=112 border=0> 
+<BR><I>The Append dialog box opens with the insertion point in the <B>Table Name</B> text box</I> . 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type the name of the table to which you want to append data. 
+<BR><I>Type <B>Workshop List</B> . (You may also use the drop down arrow to select the table name.)</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>OK</B> . 
+<BR></FONT><I><FONT size=3>The Append dialog box closes and an <B>Append To</B> row is added to the design grid. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Add the fields you want to append to the <B>Field</B> row in the design grid. 
+<BR></FONT><I><FONT size=3>Add Workshop and Cost to the Design grid. 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Run the query. 
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Runnin4.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Runnin4.gif" width=33 border=0> 
+<BR><I>A Microsoft Access warning box opens, stating that you cannot undo your changes.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Yes</B> . 
+<BR><I>The Microsoft Access warning box closes, and Access runs the append query and appends the records meeting the criteria to the table.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>View your changes in the Workshop List Table. 
+<BR><I>The new workshops should added to the Workshop List table.</I></FONT>
+</OL><H4 align=center><FONT size=4>Creating a Delete Query</FONT></H4>
+<P><FONT size=3>You can use delete queries to maintain the appearance, usefulness, and efficiency of tables in a database. When records have been appended or archived to another table, or they are simply no longer of use to you, it is a good idea to delete them from the table. Deleting records saves disk space and makes tables more efficient. The more data in a table, the more time it takes to save, sort, and query. </FONT>
+<P><FONT size=3>Delete queries enable you to delete specific groups of records at one time by applying criteria to the appropriate fields in a table. You cannot delete data in specific fields because a delete query always deletes entire records. 
+<BR>
+<BR><IMG style="WIDTH: 93px; HEIGHT: 24px" height=24 alt=DeleteQueryButton.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/DeleteQueryButton.gif" width=93 border=0> 
+<BR><B>Delete Query button</B> 
+<BR>
+<BR><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Create a Delete Query using Design view and add the desired table from which you would like to delete entire records. 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the drop down arrow to the right of the Query type button. <IMG style="WIDTH: 39px; HEIGHT: 24px" height=24 alt=SelectQueryButon.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/SelectQueryButon.gif" width=39 border=0> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the Delete Query Button <IMG style="WIDTH: 93px; HEIGHT: 24px" height=24 alt=DeleteQueryButton.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/DeleteQueryButton.gif" width=93 border=0> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Add the field(s) you want to add to the query to the appropriate column(s) of the <B>Field</B> row in the design grid. 
+<BR><I>The field and table names appear in the design grid.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Add the field you want to use to set the criteria to the appropriate column of the <B>Field</B> row in the design grid. 
+<BR><I>The field and table names appear in the design grid.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Criteria</B> row under the desired field. 
+<BR><I>The insertion point appears in the <B>Criteria</B> row under the appropriate field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type the desired criteria. 
+<BR><I>The text appears in the <B>Criteria</B> row under the appropriate field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Run the query. <IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Runnin4.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Runnin4.gif" width=33 border=0> 
+<BR><I>A Microsoft Access warning box opens, stating that you cannot undo your changes.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>View your changes in the appropriate table. 
+<BR><I>The records should be deleted according to the criteria you selected.</I></FONT>
+</OL>

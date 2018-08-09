@@ -1,0 +1,715 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="167" name="SalesArea" alias="sla" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="16701" name="SalesAreaID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+    <!--Foreign Keys-->
+    <WTATTRIBUTE id="16702" name="ParentID" type="number" source="entity"/>
+    <WTATTRIBUTE id="16703" name="MemberID" type="number" source="entity"/>
+
+    <!--Foreign Table Fields-->
+    <WTATTRIBUTE id="16705" name="NameLast" type="text" length="30" source="join">
+      <WTJOIN entity="Member" name="NameLast"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16706" name="NameFirst" type="text" length="30" source="join">
+      <WTJOIN entity="Member" name="NameFirst"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16707" name="MemberName" type="text" length="61" min="1" max="61" source="entity">
+      <WTCOMPUTE name="NameFirst"/>
+      <WTCOMPUTE text=" "/>
+      <WTCOMPUTE name="NameLast"/>
+    </WTATTRIBUTE>
+
+    <!--Attributes-->
+    <WTATTRIBUTE id="16710" name="SalesAreaName" type="text" length="40" title="true" source="entity" language="false"/>
+    <WTATTRIBUTE id="16711" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Phase1"/>
+      <WTENUM id="2" name="Phase2"/>
+      <WTENUM id="3" name="Open"/>
+      <WTENUM id="4" name="Closed"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16712" name="StatusDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="16713" name="Level" type="number" source="entity">
+      <WTENUM id="1" name="Level1"/>
+      <WTENUM id="2" name="Level2"/>
+      <WTENUM id="3" name="Level3"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16714" name="Density" type="number" source="entity"/>
+    <WTATTRIBUTE id="16715" name="Population" type="number" source="entity">
+      <WTFORMAT value="###,###,##0" />
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16716" name="FTE" type="currency" source="entity">
+      <WTFORMAT value="###,###,##0.00" />
+    </WTATTRIBUTE>
+
+    <!-- Non Persist Fields -->
+
+    <!--Indexes-->
+    <WTINDEX name="ParentID">
+      <WTATTRIBUTE name="ParentID"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="SalesArea" entity="SalesArea" alias="sla"/>
+      <WTRELATIONSHIP name="Common" entity="SalesArea" alias="sla">
+        <WTENTITY name="Member" entity="Member" alias="me">
+          <WTATTRIBUTE alias="sla" name="MemberID" relalias="me" relname="MemberID"/>
+        </WTENTITY>
+      </WTRELATIONSHIP>
+    </WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+    <WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(ParentID)" direction="input" required="false" passthru="true"/>
+      <WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SalesArea.SalesAreaID)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.ParentID)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.MemberID)"/>
+          <WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.SalesAreaName)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.Status)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.StatusDate)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.Level)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.Density)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.Population)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.FTE)"/>
+          <WTJOIN name="Common"/>
+          <WTCONDITION expr="ATTR(ParentID)" oper="equal" value="PARAM(ParentID)"/>
+          <WTORDER name="ATTR(SalesArea.SalesAreaName)"/>
+        </WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="16703" caption="SalesArea" header="false" footer="false" navbar="false"  wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--============================================================================================-->
+      <WTPARAM name="SalesAreaID" datatype="number"/>
+      <WTPARAM name="ParentID" datatype="number"/>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+          <WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(ParentID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpDensity)" value="ATTR(Density)"/>
+          <WTSETATTRIBUTE name="CONST(tmpLevel)" value="ATTR(Level)"/>
+				</WTOBJECT>
+        <WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(SalesAreaID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(ParentID)" value="PARAM(ParentID)"/>
+            <WTSETATTRIBUTE name="ATTR(MemberID)" value="CONST(37702)"/>
+            <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="ATTR(StatusDate)" value="SYS(Date)"/>
+            <WTSETATTRIBUTE name="ATTR(Level)" value="CONST(tmpLevel + 1)"/>
+            <WTSETATTRIBUTE name="ATTR(Density)" value="CONST(tmpDensity)"/>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesArea" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSalesArea" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+      <WTACTION id="2" name="Add" type="Add">
+        <WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesAreaID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Add">
+            <WTPARAM name="SalesAreaID" direction="return" datatype="number"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlSalesArea" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+      
+      <WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesArea" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+        <WTROW>
+          <WTCONDITION expr="PARAM(SalesAreaID)" oper="equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" label="NewSalesArea" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTCONDITION expr="PARAM(SalesAreaID)" oper="not-equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" tag="SalesArea" value="ATTR(SalesArea.SalesAreaName)" class="PageHeading" align="left"/>
+        </WTROW>
+
+        <WTCODEGROUP>
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="ParentID"/>
+            <WTTEXT col="2" value="ATTR(SalesArea.ParentID)" size="3"/>
+          </WTROW>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="MemberID"/>
+            <WTTEXT col="2" value="ATTR(SalesArea.MemberID)" size="3"/>
+            <WTSTATIC col="2" value="ATTR(SalesArea.MemberName)"/>
+          </WTROW>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="NotEmployee"/>
+          <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+          <WTROW margin-bottom="3">
+            <WTHIDDEN value="ATTR(SalesArea.ParentID)"/>
+            <WTHIDDEN value="ATTR(SalesArea.MemberID)"/>
+          </WTROW>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="MemberName"/>
+            <WTSTATIC col="2" value="ATTR(SalesArea.MemberName)"/>
+          </WTROW>
+        </WTCODEGROUP>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="SalesAreaName"/>
+          <WTTEXT col="2" value="ATTR(SalesArea.SalesAreaName)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(SalesArea.Status)"/>
+          <WTTEXT col="2" value="ATTR(SalesArea.StatusDate)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Level"/>
+          <WTCOMBO col="2" value="ATTR(SalesArea.Level)"/>
+          <WTSTATIC col="2" tag="Density"/>
+          <WTTEXT col="2" value="ATTR(SalesArea.Density)" size="2" prespace="false"/>
+          <WTSTATIC col="2" label="%"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(SalesAreaID)" oper="equal" value="CONST(0)"/>
+          <WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(SalesAreaID)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+      <!--============================================================================================-->
+    <WTWEBPAGE name="16704" caption="Local Area Summary" header="false" footer="false" navbar="false"  wrapper="wrapper1000"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+      <!--============================================================================================-->
+      <WTPARAM name="SalesAreaID" datatype="number"/>
+      <WTPARAM name="Edit" datatype="number"/>
+      <WTPARAM name="TotalZip" datatype="number"/>
+      <WTPARAM name="TotalPeople" datatype="number"/>
+      <WTPARAM name="Population" datatype="number"/>
+      <WTPARAM name="FTE" datatype="number"/>
+
+      <WTCODEGROUP>
+        <WTSETATTRIBUTE name="PARAM(Edit)" value="CONST(1)">
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+        </WTSETATTRIBUTE>
+      </WTCODEGROUP>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesArea" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="SalesZips" project="ptsSalesZipUser" class="CSalesZips">
+          <WTMETHOD name="List">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesZips" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              reqTotalZip = 0
+              reqPopulation = 0
+              For Each oItem in oSalesZips
+              reqTotalZip = reqTotalZip + 1
+              With oItem
+              reqPopulation = reqPopulation + CLng(.Population)
+              End With
+              Next
+              reqPopulation = FormatNumber(reqPopulation,0)
+            </WTCUSTOM>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="SalesMembers" project="ptsSalesMemberUser" class="CSalesMembers">
+          <WTMETHOD name="List">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesMembers" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              reqTotalPeople = 0
+              reqFTE = 0
+              For Each oItem in oSalesMembers
+              reqTotalPeople = reqTotalPeople + 1
+              With oItem
+              reqFTE = reqFTE + CLNG(.FTE)
+              End With
+              Next
+              reqFTE = FormatNumber(reqFTE/100,2)
+            </WTCUSTOM>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="450" align="center"/>
+        <WTCOLUMN width="50" align="center"/>
+        <WTCOLUMN width="500" align="center"/>
+
+        <WTFUNCTION name="NewSalesZip()">
+          var sid = document.getElementById('SalesAreaID').value
+          var url = "16803.asp?SalesAreaID=" + sid
+          window.location = url + "&amp;returnurl=16704.asp?SalesAreaID=" + sid
+        </WTFUNCTION>
+        <WTFUNCTION name="NewSalesMember()">
+          var sid = document.getElementById('SalesAreaID').value
+          var url = "16903.asp?SalesAreaID=" + sid
+          window.location = url + "&amp;returnurl=16704.asp?SalesAreaID=" + sid
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(SalesAreaID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" merge="3" class="PageHeading" align="left">
+            <WTCODEGROUP>
+              <WTIMAGE value="CONST(smallmap.gif)" imgalign="absmiddle"/>
+            </WTCODEGROUP>
+            <WTSTATIC space="1"/>
+            <WTSTATIC label="SalesAreaManager"/>
+            <WTSTATIC space="5"/>
+            <WTSTATIC tag="Level3" value="ATTR(SalesArea.SalesAreaName)" space="5"/>
+            <WTSTATIC tag="MemberName" value="ATTR(SalesArea.MemberName)"/>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTSTATIC label="Pending"/>
+        <WTSTATIC label="Open"/>
+        <WTSTATIC label="Closed"/>
+
+        <WTROW margin-bottom="12">
+          <WTRECORDSET col="1" graybar="true" entity="SalesZip" valign="top">
+            <WTCOLUMN width="40" align="left" label="ZipName"/>
+            <WTCOLUMN width="20" align="center" label="ZipCode"/>
+            <WTCOLUMN width="20" align="center" label="Population"/>
+            <WTCOLUMN width="20" align="center" label="Status"/>
+            <WTROW height="24">
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(ZipName)"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(Edit)" oper="equal" value="CONST(1)"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="16803">
+                      <WTPARAM name="SalesZipID" value="DATA(SalesZipID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(ZipCode)"/>
+              <WTSTATIC col="3" value="DATA(Population)"/>
+              <WTSTATIC col="4" value="DATA(Status)"/>
+            </WTROW>
+          </WTRECORDSET>
+
+          <WTSTATIC col="2"/>
+
+          <WTRECORDSET col="3" graybar="true" entity="SalesMember" valign="top">
+            <WTCOLUMN width="80" align="left" label="SalesMemberName"/>
+            <WTCOLUMN width="20" align="center" label="FTE"/>
+            <WTROW height="24">
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(MemberName)"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(Edit)" oper="equal" value="CONST(1)"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="16903">
+                      <WTPARAM name="SalesMemberID" value="DATA(SalesMemberID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTSTATIC space="1"/>
+                <WTSTATIC value="DATA(Assignment)" fontcolor="blue"/>
+              </WTSTATIC>
+              <WTSTATIC col="2">
+                <WTSTATIC value="DATA(FTE)"/>
+                <WTSTATIC label="%"/>
+              </WTSTATIC>
+            </WTROW>
+          </WTRECORDSET>
+
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" class="PageHeading">
+            <WTSTATIC tag="Total" value="PARAM(TotalZip)" space="5"/>
+            <WTSTATIC tag="Population" value="PARAM(Population)"/>
+          </WTSTATIC>
+          <WTSTATIC col="2"/>
+          <WTSTATIC col="3" class="PageHeading">
+            <WTSTATIC tag="Total" value="PARAM(TotalPeople)" space="5"/>
+            <WTSTATIC tag="FTE" value="PARAM(FTE)"/>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" merge="3" value="CONST(NewSalesZip)" align="center">
+            <WTCONDITION expr="PARAM(Edit)" oper="equal" value="CONST(1)"/>
+            <WTCLICK>NewSalesZip()</WTCLICK>
+          </WTBUTTON>
+          <WTSTATIC col="1" space="3"/>
+          <WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+          <WTSTATIC col="1" space="3"/>
+          <WTBUTTON col="1" merge="3" value="CONST(NewSalesMember)" align="center">
+            <WTCONDITION expr="PARAM(Edit)" oper="equal" value="CONST(1)"/>
+            <WTCLICK>NewSalesMember()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+		<WTWEBPAGE name="16711" caption="Sales Manager" header="false" footer="false" navbar="false" wrapper="wrapper1000"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--============================================================================================-->
+      <WTPARAM name="ParentID" datatype="number"/>
+      <WTPARAM name="Level1ID" datatype="number"/>
+      <WTPARAM name="Level2ID" datatype="number"/>
+      <WTPARAM name="Edit" datatype="number"/>
+      <WTPARAM name="Total" datatype="number"/>
+      <WTPARAM name="Population" datatype="number"/>
+      <WTPARAM name="FTE" datatype="number"/>
+
+      <WTCODEGROUP>
+        <WTSETATTRIBUTE name="PARAM(Edit)" value="CONST(1)">
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+        </WTSETATTRIBUTE>
+      </WTCODEGROUP>
+      
+      <WTSUB name="LoadSalesAreas">
+        <WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+          <WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(ParentID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Level1ID)" value="ATTR(SalesAreaID)">
+            <WTCONDITION expr="ATTR(Level)" oper="equal" value="CONST(1)"/>
+          </WTSETATTRIBUTE>
+          <WTSETATTRIBUTE name="PARAM(Level2ID)" value="ATTR(SalesAreaID)">
+            <WTCONDITION expr="ATTR(Level)" oper="equal" value="CONST(2)"/>
+          </WTSETATTRIBUTE>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesArea" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="SalesAreas" project="ptsSalesAreaUser" class="CSalesAreas">
+          <WTMETHOD name="List">
+            <WTPARAM name="ParentID" direction="input" value="PARAM(ParentID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesAreas" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              reqTotal = 0
+              reqPopulation = 0
+              reqFTE = 0
+              For Each oItem in oSalesAreas
+              reqTotal = reqTotal + 1
+              With oItem
+              reqPopulation = reqPopulation + CLng(.Population)
+              reqFTE = reqFTE + CCUR(.FTE)
+              End With
+              Next
+              reqPopulation = FormatNumber(reqPopulation,0)
+              reqFTE = FormatNumber(reqFTE,2)
+            </WTCUSTOM>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTCALLSUB name="LoadSalesAreas"/>
+      </WTACTION>
+      
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="1000" align="left"/>
+
+        <WTFUNCTION name="NewSalesArea()">
+          var pid = document.getElementById('ParentID').value
+          var l1 = document.getElementById('Level1ID').value
+          var l2 = document.getElementById('Level2ID').value
+          var url = "16703.asp?parentid=" + pid + "&amp;returnurl=16711.asp?parentid=" + pid + "%26level1id=" + l1 + "%26level2id=" + l2
+          window.location = url
+        </WTFUNCTION>
+
+        <WTFUNCTION name="ListSalesArea(id)">
+          var l1 = document.getElementById('Level1ID').value
+          var l2 = document.getElementById('Level2ID').value
+          var url = "16711.asp?parentid=" + id  + "&amp;level1id=" + l1 + "&amp;level2id=" + l2
+          window.location = url
+        </WTFUNCTION>
+
+        <WTFUNCTION name="BackSalesArea(opt)">
+          var l1 = document.getElementById('Level1ID').value
+          var l2 = document.getElementById('Level2ID').value
+          var url;
+          if( opt == 0 ) {
+          url = "16711.asp?parentid=0&amp;level1id=0&amp;level2id=0";
+          }
+          if( opt == 1 ) {
+          url = "16711.asp?parentid=" + l1 + "&amp;level1id=" + l1 + "0&amp;level2id=0";
+          }
+          window.location = url
+        </WTFUNCTION>
+
+        <WTFUNCTION name="ShowSummary(id)">
+          var url = "16704.asp?salesareaid=" + id
+          window.open( url );
+        </WTFUNCTION>
+
+        <WTFUNCTION name="SearchMembers()">
+          window.open( "16901.asp" );
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(ParentID)"/>
+          <WTHIDDEN value="PARAM(Level1ID)"/>
+          <WTHIDDEN value="PARAM(Level2ID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" class="PageHeading">
+            <WTCODEGROUP>
+              <WTIMAGE value="CONST(smallmap.gif)" imgalign="absmiddle"/>
+            </WTCODEGROUP>
+            <WTSTATIC space="1"/>
+            <WTSTATIC label="SalesAreaManager"/>
+            <WTSTATIC space="5"/>
+            <WTSTATIC label="Corporate">
+                  <WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>
+            </WTSTATIC>
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="CONST(0)"/>
+              <WTSTATIC tag="Level1">
+                <WTCONDITION expr="ATTR(SalesArea.Level)" oper="equal" value="CONST(1)"/>
+              </WTSTATIC>
+              <WTSTATIC tag="Level2">
+                <WTCONDITION expr="ATTR(SalesArea.Level)" oper="equal" value="CONST(2)"/>
+              </WTSTATIC>
+              <WTSTATIC tag="Level3">
+                <WTCONDITION expr="ATTR(SalesArea.Level)" oper="equal" value="CONST(3)"/>
+              </WTSTATIC>
+              <WTSTATIC value="ATTR(SalesArea.SalesAreaName)" space="5"/>
+              <WTSTATIC tag="MemberName" value="ATTR(SalesArea.MemberName)"/>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTSTATIC label="ViewSummary"/>
+
+        <WTROW margin-bottom="6">
+					<WTRECORDSET col="1" graybar="true" entity="SalesArea">
+            <WTCOLUMN width="30" align="left" label="SalesAreaName"/>
+            <WTCOLUMN width="20" align="left" label="MemberName"/>
+            <WTCOLUMN width="8" align="center" label="Population"/>
+            <WTCOLUMN width="8" align="center" label="FTE"/>
+            <WTCOLUMN width="8" align="center" label="Level"/>
+            <WTCOLUMN width="10" align="center" label="Status"/>
+            <WTCOLUMN width="8" align="center" label="StatusDate"/>
+            <WTCOLUMN width="8" align="center" label="Density"/>
+
+            <WTROW height="30">
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(SalesAreaName)"/>
+                <WTSTATIC space="1"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Level)" oper="less" value="CONST(3)"/>
+                  <WTIMAGE value="CONST(preview24.gif)" alt="ViewSalesAreas" imgalign="absmiddle">
+                    <WTLINK name="ListSalesArea(&lt;xsl:value-of select=&quot;@salesareaid&quot;/&gt;)" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Level)" oper="equal" value="CONST(3)"/>
+                  <WTIMAGE value="CONST(preview24.gif)" alt="ViewSummary" imgalign="absmiddle">
+                    <WTLINK name="ShowSummary(&lt;xsl:value-of select=&quot;@salesareaid&quot;/&gt;)" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(Edit)" oper="equal" value="CONST(1)"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="16703">
+                      <WTPARAM name="SalesAreaID" value="DATA(SalesAreaID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(MemberName)"/>
+              <WTSTATIC col="3" value="DATA(Population)"/>
+              <WTSTATIC col="4" value="DATA(FTE)"/>
+              <WTSTATIC col="5" value="DATA(Level)"/>
+              <WTSTATIC col="6" value="DATA(Status)"/>
+              <WTSTATIC col="7" value="DATA(StatusDate)"/>
+              <WTSTATIC col="8" value="DATA(Density)"/>
+            </WTROW>
+          </WTRECORDSET>
+				</WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" class="PageHeading" align="center">
+            <WTSTATIC tag="Total" value="PARAM(Total)" space="5"/>
+            <WTSTATIC tag="Population" value="PARAM(Population)" space="5"/>
+            <WTSTATIC tag="FTE" value="PARAM(FTE)"/>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" value="CONST(GoLevel0)" align="center">
+            <WTCONDITION expr="PARAM(Level1ID)" oper="not-equal" value="CONST(0)"/>
+            <WTCLICK>BackSalesArea(0)</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(GoLevel1)" align="center">
+            <WTCONDITION expr="PARAM(Level2ID)" oper="not-equal" value="CONST(0)"/>
+            <WTCLICK>BackSalesArea(1)</WTCLICK>
+          </WTBUTTON>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(Edit)" oper="equal" value="CONST(1)"/>
+          </WTCODEGROUP>
+          <WTBUTTON col="1" value="CONST(SearchMembers)" align="center">
+            <WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>
+            <WTCLICK>SearchMembers()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(NewLevel1)" align="center">
+            <WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>
+            <WTCLICK>NewSalesArea()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(NewLevel2)" align="center">
+            <WTCONDITION expr="ATTR(SalesArea.Level)" oper="equal" value="CONST(1)"/>
+            <WTCLICK>NewSalesArea()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(NewLevel3)" align="center">
+            <WTCONDITION expr="ATTR(SalesArea.Level)" oper="equal" value="CONST(2)"/>
+            <WTCLICK>NewSalesArea()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" action="0" value="CONST(Refresh)" align="center"/>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+      </WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

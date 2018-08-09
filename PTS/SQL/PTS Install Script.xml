@@ -1,0 +1,2611 @@
+<ROOT>
+	<PROC name="pts_CheckProc" path="Custom"/>
+	<PROC name="pts_CheckForeignKey" path="Custom"/>
+
+	<PROC name="pts_System_GetSeed" path="Custom"/>
+	<PROC name="pts_System_GetLogon" path="Custom"/>
+	<PROC name="pts_System_GetPassword" path="Custom"/>
+
+	<PROC name="pts_Ad_Add"/>
+	<PROC name="pts_Ad_Count"/>
+	<PROC name="pts_Ad_Delete"/>
+	<PROC name="pts_Ad_Fetch"/>
+	<PROC name="pts_Ad_Update"/>
+	<PROC name="pts_Ad_FindAdName"/>
+	<PROC name="pts_Ad_FindMemberName"/>
+	<PROC name="pts_Ad_FindPlacement"/>
+	<PROC name="pts_Ad_FindMemberAdName"/>
+	<PROC name="pts_Ad_FindMemberMemberName"/>
+	<PROC name="pts_Ad_FindMemberPlacement"/>
+	<PROC name="pts_Ad_ListAds" path="Custom"/>
+	<PROC name="pts_Ad_Custom" path="Custom"/>
+
+	<PROC name="pts_AdTrack_Add"/>
+	<PROC name="pts_AdTrack_FindAdID"/>
+	<PROC name="pts_AdTrack_FindPlace"/>
+	<PROC name="pts_AdTrack_FindRefID"/>
+	<PROC name="pts_AdTrack_Click"/>
+
+	<PROC name="pts_Address_Add"/>
+	<PROC name="pts_Address_Delete"/>
+	<PROC name="pts_Address_Fetch"/>
+	<PROC name="pts_Address_FetchOwner"/>
+	<PROC name="pts_Address_Update"/>
+	<PROC name="pts_Address_ListOwner"/>
+	<PROC name="pts_Address_ListOwnerType"/>
+	<PROC name="pts_Address_Copy" path="Custom"/>
+	<PROC name="pts_Address_Activate" path="Custom"/>
+
+	<PROC name="pts_Advance_FetchMember"/>
+	<PROC name="pts_Advance_UpdateTitle" path="Custom"/>
+
+	<PROC name="pts_Affiliate_Add"/>
+	<PROC name="pts_Affiliate_Count"/>
+	<PROC name="pts_Affiliate_Delete"/>
+	<PROC name="pts_Affiliate_Fetch"/>
+	<PROC name="pts_Affiliate_FetchIDs"/>
+	<PROC name="pts_Affiliate_FindAffiliateName"/>
+	<PROC name="pts_Affiliate_FindContactName"/>
+	<PROC name="pts_Affiliate_FindAffiliateID"/>
+	<PROC name="pts_Affiliate_FindEmail"/>
+	<PROC name="pts_Affiliate_FindMemberAffiliateName"/>
+	<PROC name="pts_Affiliate_FindMemberContactName"/>
+	<PROC name="pts_Affiliate_FindMemberAffiliateID"/>
+	<PROC name="pts_Affiliate_FindMemberEmail"/>
+	<PROC name="pts_Affiliate_LoadAuthUser"/>
+	<PROC name="pts_Affiliate_LoadLogon"/>
+	<PROC name="pts_Affiliate_Update"/>
+
+	<PROC name="pts_Appt_Add"/>
+	<PROC name="pts_Appt_Delete"/>
+	<PROC name="pts_Appt_Fetch"/>
+	<PROC name="pts_Appt_Update"/>
+	<PROC name="pts_Appt_ListCalendar" path="Custom"/>
+	<PROC name="pts_Appt_ListCalendarAll" path="Custom"/>
+	<PROC name="pts_Appt_ListCalendarOptions" path="Custom"/>
+	<PROC name="pts_Appt_ListDayOptions" path="Custom"/>
+	<PROC name="pts_Appt_ListToday" path="Custom"/>
+	<PROC name="pts_Appt_ListReminder" path="Custom"/>
+	<PROC name="pts_Appt_ClearReminder" path="Custom"/>
+	<PROC name="pts_Appt_CalendarEmail" path="Custom"/>
+
+	<PROC name="pts_AssessAnswer_Add"/>
+	<PROC name="pts_AssessAnswer_Count"/>
+	<PROC name="pts_AssessAnswer_Update"/>
+	<PROC name="pts_AssessAnswer_Fetch"/>
+	<PROC name="pts_AssessAnswer_Delete"/>
+	<PROC name="pts_AssessAnswer_ListGroup"/>
+	<PROC name="pts_AssessAnswer_ListAnswers"/>
+	<PROC name="pts_AssessAnswer_ListQuestionText" path="Custom"/>
+
+	<PROC name="pts_AssessChoice_Add"/>
+	<PROC name="pts_AssessChoice_Delete"/>
+	<PROC name="pts_AssessChoice_Fetch"/>
+	<PROC name="pts_AssessChoice_ListAssessment"/>
+	<PROC name="pts_AssessChoice_ListAssessQuestion"/>
+	<PROC name="pts_AssessChoice_Update"/>
+	<PROC name="pts_AssessChoice_ListGroup"/>
+	<PROC name="pts_AssessChoice_ListQuestionText" path="Custom"/>
+
+	<PROC name="pts_Assessment_Add"/>
+	<PROC name="pts_Assessment_Count"/>
+	<PROC name="pts_Assessment_Delete"/>
+	<PROC name="pts_Assessment_Fetch"/>
+	<PROC name="pts_Assessment_FindAssessmentName"/>
+	<PROC name="pts_Assessment_FindStatus"/>
+	<PROC name="pts_Assessment_ListTrainer"/>
+	<PROC name="pts_Assessment_ListCompany"/>
+	<PROC name="pts_Assessment_EnumCompany"/>
+	<PROC name="pts_Assessment_Update"/>
+	<PROC name="pts_Assessment_ListAssessment"/>
+	<PROC name="pts_Assessment_ListAssessmentType"/>
+	<PROC name="pts_Assessment_ListAssessmentTrial"/>
+	<PROC name="pts_Assessment_ListAssessmentTrialType"/>
+	<PROC name="pts_Assessment_CheckCourseFormula" path="Custom"/>
+	<PROC name="pts_Assessment_TestTakes" path="Custom"/>
+	<PROC name="pts_Assessment_TestDelay" path="Custom"/>
+	<PROC name="pts_Assessment_ListTB" path="Custom"/>
+	<PROC name="pts_Assessment_ListAssessmentText" path="Custom"/>
+	<PROC name="pts_Assessment_Valid" path="Custom"/>
+	<PROC name="pts_Assessment_Copy" path="Custom"/>
+
+	<PROC name="pts_AssessQuestion_Add"/>
+	<PROC name="pts_AssessQuestion_Count"/>
+	<PROC name="pts_AssessQuestion_Delete"/>
+	<PROC name="pts_AssessQuestion_Fetch"/>
+	<PROC name="pts_AssessQuestion_LoadQuestionCode"/>
+	<PROC name="pts_AssessQuestion_LoadDefaultQuestion"/>
+	<PROC name="pts_AssessQuestion_Update"/>
+	<PROC name="pts_AssessQuestion_ListAssessment"/>
+	<PROC name="pts_AssessQuestion_ListGroup"/>
+	<PROC name="pts_AssessQuestion_FormulaBasedCourses" path="Custom"/>
+	<PROC name="pts_AssessQuestion_FormulaAssessmentCourses" path="Custom"/>
+	<PROC name="pts_AssessQuestion_GetNextQuestion" path="Custom"/>
+	<PROC name="pts_AssessQuestion_CustomNext" path="Custom"/>
+	<PROC name="pts_AssessQuestion_NextCATQuestion" path="Custom"/>
+	<PROC name="pts_AssessQuestion_CATGroupCount" path="Custom"/>
+	<PROC name="pts_AssessQuestion_CATGroupCorrectCount" path="Custom"/>
+	<PROC name="pts_AssessQuestion_ListQuestionText" path="Custom"/>
+	<PROC name="pts_AssessQuestion_SumResultFormula" path="Custom"/>
+
+	<PROC name="pts_Attachment_Add"/>
+	<PROC name="pts_Attachment_Count"/>
+	<PROC name="pts_Attachment_Delete"/>
+	<PROC name="pts_Attachment_DeleteParent"/>
+	<PROC name="pts_Attachment_Fetch"/>
+	<PROC name="pts_Attachment_Update"/>
+	<PROC name="pts_Attachment_ListOrg"/>
+	<PROC name="pts_Attachment_ListAttachments"/>
+	<PROC name="pts_Attachment_ListActiveAttachments"/>
+	<PROC name="pts_Attachment_ListCompanyAttachments"/>
+	<PROC name="pts_Attachment_FindCompanyAttachName" path="Custom"/>
+	<PROC name="pts_Attachment_FindCompanyDescription" path="Custom"/>
+	<PROC name="pts_Attachment_FindCompanyFileName" path="Custom"/>
+	<PROC name="pts_Attachment_FindCompanyAttachDate" path="Custom"/>
+	<PROC name="pts_Attachment_FindTrainerAttachName" path="Custom"/>
+	<PROC name="pts_Attachment_FindTrainerDescription" path="Custom"/>
+	<PROC name="pts_Attachment_FindTrainerFileName" path="Custom"/>
+	<PROC name="pts_Attachment_FindTrainerAttachDate" path="Custom"/>
+	<PROC name="pts_Attachment_FindCourseAttachName" path="Custom"/>
+	<PROC name="pts_Attachment_FindCourseDescription" path="Custom"/>
+	<PROC name="pts_Attachment_FindCourseFileName" path="Custom"/>
+	<PROC name="pts_Attachment_FindCourseAttachDate" path="Custom"/>
+	<PROC name="pts_Attachment_Search" path="Custom"/>
+	<PROC name="pts_Attachment_SearchDate" path="Custom"/>
+	<PROC name="pts_Attachment_GetCompanyID" path="Custom"/>
+	<PROC name="pts_Attachment_UpdateCompanyID" path="Custom"/>
+	<PROC name="pts_Attachment_CountParent" path="Custom"/>
+	<PROC name="pts_Attachment_CheckFile" path="Custom"/>
+	<PROC name="pts_Attachment_UpdateFT" path="Custom"/>
+
+	<PROC name="pts_Audit_Add"/>
+	<PROC name="pts_Audit_Fetch"/>
+	<PROC name="pts_Audit_FindUserName"/>
+	<PROC name="pts_Audit_FindPage"/>
+	<PROC name="pts_Audit_FindActionUserName"/>
+	<PROC name="pts_Audit_FindActionPage"/>
+	<PROC name="pts_Audit_FindActionIP"/>
+
+	<PROC name="pts_AuthLog_Add"/>
+	<PROC name="pts_AuthLog_Delete"/>
+	<PROC name="pts_AuthLog_Fetch"/>
+	<PROC name="pts_AuthLog_Update"/>
+	<PROC name="pts_AuthLog_ListAuthUser"/>
+	<PROC name="pts_AuthLog_LogAuthUser" path="Custom"/>
+
+	<PROC name="pts_AuthUser_Add"/>
+	<PROC name="pts_AuthUser_IsLogon"/>
+	<PROC name="pts_AuthUser_ChangeLogon"/>
+	<PROC name="pts_AuthUser_ChangePassword"/>
+	<PROC name="pts_AuthUser_CheckLogon"/>
+	<PROC name="pts_AuthUser_CheckPassword"/>
+	<PROC name="pts_AuthUser_Delete"/>
+	<PROC name="pts_AuthUser_Fetch"/>
+	<PROC name="pts_AuthUser_EmailFetch"/>
+	<PROC name="pts_AuthUser_ResetLogon"/>
+	<PROC name="pts_AuthUser_ResetPassword"/>
+	<PROC name="pts_AuthUser_SignIn"/>
+	<PROC name="pts_AuthUser_Update"/>
+	  <PROC name="pts_AuthUser_UpdateLogonPassword"/>
+	  <PROC name="pts_AuthUser_UpdateUserType"/>
+	  <PROC name="pts_AuthUser_UpdateKey"/>
+	  <PROC name="pts_AuthUser_GetUserCode" path="Custom"/>
+
+  <PROC name="pts_Award_Add"/>
+	<PROC name="pts_Award_Delete"/>
+	<PROC name="pts_Award_EnumUserMerchant"/>
+	<PROC name="pts_Award_Fetch"/>
+	<PROC name="pts_Award_ListAllAwards"/>
+	<PROC name="pts_Award_ListAwards"/>
+	<PROC name="pts_Award_Update"/>
+
+	<PROC name="pts_Billing_Add"/>
+	<PROC name="pts_Billing_Delete"/>
+	<PROC name="pts_Billing_Fetch"/>
+	<PROC name="pts_Billing_Update"/>
+	<PROC name="pts_Billing_CommeCheck" path="Custom"/>
+	<PROC name="pts_Billing_CommpCheck" path="Custom"/>
+	<PROC name="pts_Billing_CommCC" path="Custom"/>
+	<PROC name="pts_Billing_CommWallet" path="Custom"/>
+	<PROC name="pts_Billing_Custom" path="Custom"/>
+
+	<PROC name="pts_Block_Add"/>
+	<PROC name="pts_Block_Delete"/>
+	<PROC name="pts_Block_Fetch"/>
+	<PROC name="pts_Block_Update"/>
+
+	<PROC name="pts_BinarySale_Add"/>
+	<PROC name="pts_BinarySale_Delete"/>
+	<PROC name="pts_BinarySale_Fetch"/>
+	<PROC name="pts_BinarySale_FindSaleDate"/>
+	<PROC name="pts_BinarySale_FindSaleType"/>
+	<PROC name="pts_BinarySale_Update"/>
+	<PROC name="pts_BinarySale_AddCustom" path="Custom"/>
+
+	<PROC name="pts_BoardUser_Add"/>
+	<PROC name="pts_BoardUser_Delete"/>
+	<PROC name="pts_BoardUser_Enum"/>
+	<PROC name="pts_BoardUser_Fetch"/>
+	<PROC name="pts_BoardUser_GetBoardUser"/>
+	<PROC name="pts_BoardUser_Update"/>	
+	<PROC name="pts_BoardUser_ListModerators" path="Custom"/>
+	<PROC name="pts_BoardUser_ListForum" path="Custom"/>
+<!--
+	<PROC name="pts_BoardUser_AddMUC" path="Custom"/>
+	<PROC name="pts_BoardUser_DeleteMUC" path="Custom"/>
+	<PROC name="pts_BoardUser_UpdateMUC" path="Custom"/>	
+-->	
+<!--	
+	<PROC name="pts_BoardUser_Chat_GetData" path="Custom"/>	
+	<PROC name="pts_BoardUser_Chat_SetData" path="Custom"/>	
+-->
+	
+	<PROC name="pts_Bonus_Add"/>
+	<PROC name="pts_Bonus_Count"/>
+	<PROC name="pts_Bonus_Delete"/>
+	<PROC name="pts_Bonus_Fetch"/>
+	<PROC name="pts_Bonus_ListMember"/>
+	<PROC name="pts_Bonus_ListMemberAll"/>
+	<PROC name="pts_Bonus_Update"/>
+
+	<PROC name="pts_Bonus_582_1" path="Custom"/>
+	<PROC name="pts_Bonus_582_2" path="Custom"/>
+	<PROC name="pts_Bonus_582_3" path="Custom"/>
+	<PROC name="pts_Bonus_582_4" path="Custom"/>
+	<PROC name="pts_Bonus_582_5" path="Custom"/>
+	<PROC name="pts_Bonus_582_6" path="Custom"/>
+	<PROC name="pts_Bonus_582_7" path="Custom"/>
+	<PROC name="pts_Bonus_582_8" path="Custom"/>
+	<PROC name="pts_Bonus_Missing" path="Custom"/>
+	<PROC name="pts_Bonus_Totals" path="Custom"/>
+	<PROC name="pts_Bonus_CreateBonuses" path="Custom"/>
+	<PROC name="pts_Bonus_CalcBonuses" path="Custom"/>
+	<PROC name="pts_Bonus_ComputeTotal" path="Custom"/>
+
+	<PROC name="pts_BonusItem_Add"/>
+	<PROC name="pts_BonusItem_Count"/>
+	<PROC name="pts_BonusItem_Delete"/>
+	<PROC name="pts_BonusItem_Fetch"/>
+	<PROC name="pts_BonusItem_FindBonusMemberName"/>
+	<PROC name="pts_BonusItem_FindBonusMemberID"/>
+	<PROC name="pts_BonusItem_FindCommTypeName"/>
+	<PROC name="pts_BonusItem_FindCommType"/>
+	<PROC name="pts_BonusItem_FindAmount"/>
+	<PROC name="pts_BonusItem_Update"/>
+	<PROC name="pts_BonusItem_ListBonus" path="Custom"/>
+	<PROC name="pts_BonusItem_ListSummary" path="Custom"/>
+	<PROC name="pts_BonusItem_GetMemberBonusID" path="Custom"/>
+	<PROC name="pts_BonusItem_ListType" path="Custom"/>
+
+	<PROC name="pts_Broadcast_Add"/>
+	<PROC name="pts_Broadcast_Delete"/>
+	<PROC name="pts_Broadcast_Fetch"/>
+	<PROC name="pts_Broadcast_FindBroadcastDate"/>
+	<PROC name="pts_Broadcast_FindFriendGroupName"/>
+	<PROC name="pts_Broadcast_FindGroupBroadcastDate"/>
+	<PROC name="pts_Broadcast_FindGroupFriendGroupName"/>
+	<PROC name="pts_Broadcast_Update"/>
+	<PROC name="pts_Broadcast_ListNews" path="Custom"/>
+	<PROC name="pts_Broadcast_ListFriends" path="Custom"/>
+	<PROC name="pts_Broadcast_ListEmail" path="Custom"/>
+	<PROC name="pts_Broadcast_SetFriends" path="Custom"/>
+
+	<PROC name="pts_BroadcastNews_Add" path="Custom"/>
+	<PROC name="pts_BroadcastNews_Delete" path="Custom"/>
+	<PROC name="pts_BroadcastNews_List"/>
+
+	<PROC name="pts_Business_Fetch"/>
+	<PROC name="pts_Business_Update"/>	
+	<PROC name="pts_Business_Reports" path="Custom"/>	
+
+	<PROC name="pts_Calendar_Add"/>
+	<PROC name="pts_Calendar_Count"/>
+	<PROC name="pts_Calendar_Delete"/>
+	<PROC name="pts_Calendar_Fetch"/>
+	<PROC name="pts_Calendar_Update"/>
+	<PROC name="pts_Calendar_ListCompany"/>
+	<PROC name="pts_Calendar_ListCompanyPublic"/>
+	<PROC name="pts_Calendar_ListMember"/>
+
+	<PROC name="pts_Cash_Add"/>
+	<PROC name="pts_Cash_Delete"/>
+	<PROC name="pts_Cash_Fetch"/>
+	<PROC name="pts_Cash_FindCashDate"/>
+	<PROC name="pts_Cash_FindTypeCashDate"/>
+	<PROC name="pts_Cash_Update"/>
+
+  <PROC name="pts_Channel_Add"/>
+  <PROC name="pts_Channel_Count"/>
+  <PROC name="pts_Channel_Delete"/>
+  <PROC name="pts_Channel_Fetch"/>
+  <PROC name="pts_Channel_Update"/>
+  <PROC name="pts_Channel_ListChannels"/>
+
+  <PROC name="pts_Coin_Add"/>
+  <PROC name="pts_Coin_Delete"/>
+  <PROC name="pts_Coin_Fetch"/>
+  <PROC name="pts_Coin_Update"/>
+  <PROC name="pts_Coin_FindCoinDate"/>
+  <PROC name="pts_Coin_FindCoinID"/>
+  <PROC name="pts_Coin_FindAmount"/>
+  <PROC name="pts_Coin_FindStatus"/>
+  <PROC name="pts_Coin_FindCoinType"/>
+  <PROC name="pts_Coin_FindReference"/>
+  <PROC name="pts_Coin_FindMemberCoinDate"/>
+  <PROC name="pts_Coin_FindMemberCoinID"/>
+  <PROC name="pts_Coin_FindMemberAmount"/>
+  <PROC name="pts_Coin_FindMemberStatus"/>
+  <PROC name="pts_Coin_FindMemberCoinType"/>
+  <PROC name="pts_Coin_FindMemberReference"/>
+
+  <PROC name="pts_Comment_Add"/>
+	<PROC name="pts_Comment_Delete"/>
+	<PROC name="pts_Comment_Fetch"/>
+	<PROC name="pts_Comment_Update"/>
+	<PROC name="pts_Comment_ListNew" path="Custom"/>
+	<PROC name="pts_Comment_ListOld" path="Custom"/>
+	<PROC name="pts_Comment_ListBest" path="Custom"/>
+	<PROC name="pts_Comment_Stats" path="Custom"/>
+
+	<PROC name="pts_Commission_Add"/>
+	<PROC name="pts_Commission_Count"/>
+	<PROC name="pts_Commission_Delete"/>
+	<PROC name="pts_Commission_Fetch"/>
+	<PROC name="pts_Commission_FindCommDate"/>
+	<PROC name="pts_Commission_FindCommTypeName"/>
+	<PROC name="pts_Commission_FindCommissionID"/>
+	<PROC name="pts_Commission_FindAmount"/>
+	<PROC name="pts_Commission_FindDescription"/>
+	<PROC name="pts_Commission_FindOwnerCommDate"/>
+	<PROC name="pts_Commission_FindOwnerCommTypeName"/>
+	<PROC name="pts_Commission_FindOwnerCommissionID"/>
+	<PROC name="pts_Commission_FindOwnerAmount"/>
+	<PROC name="pts_Commission_FindOwnerDescription"/>
+	<PROC name="pts_Commission_FindOwnerOwnerID"/>
+	<PROC name="pts_Commission_FindOwnerShowCommDate"/>
+	<PROC name="pts_Commission_FindOwnerShowCommTypeName"/>
+	<PROC name="pts_Commission_FindOwnerShowCommissionID"/>
+	<PROC name="pts_Commission_FindOwnerShowAmount"/>
+	<PROC name="pts_Commission_FindOwnerShowDescription"/>
+	<PROC name="pts_Commission_FindOwnerShowOwnerID"/>
+	<PROC name="pts_Commission_FindPayoutCommDate"/>
+	<PROC name="pts_Commission_FindPayoutCommTypeName"/>
+	<PROC name="pts_Commission_FindPayoutCommissionID"/>
+	<PROC name="pts_Commission_FindPayoutAmount"/>
+	<PROC name="pts_Commission_FindPayoutDescription"/>
+	<PROC name="pts_Commission_Update"/>
+	<PROC name="pts_Commission_ListPayout"/>
+	<PROC name="pts_Commission_ListPayoutSummary" path="Custom"/>
+	<PROC name="pts_Commission_Report" path="Custom"/>
+	<PROC name="pts_Commission_TrainerScores" path="Custom"/>
+	<PROC name="pts_Commission_CreateCommissions" path="Custom"/>
+	<PROC name="pts_Commission_CreateReferrals" path="Custom"/>
+	<PROC name="pts_Commission_CompanyCommissions" path="Custom"/>
+	<PROC name="pts_Commission_CustomCommissions" path="Custom"/>
+	<PROC name="pts_Commission_SubmitCommissions" path="Custom"/>
+	<PROC name="pts_Commission_CalcAdvancement" path="Custom"/>
+
+	<PROC name="pts_CommPlan_Add"/>
+	<PROC name="pts_CommPlan_Delete"/>
+	<PROC name="pts_CommPlan_Fetch"/>
+	<PROC name="pts_CommPlan_Update"/>
+	<PROC name="pts_CommPlan_EnumUserCompany"/>
+	<PROC name="pts_CommPlan_List"/>
+
+	<PROC name="pts_CommType_Add"/>
+	<PROC name="pts_CommType_Delete"/>
+	<PROC name="pts_CommType_Fetch"/>
+	<PROC name="pts_CommType_Update"/>
+	<PROC name="pts_CommType_EnumUserCompany"/>
+	<PROC name="pts_CommType_List"/>
+
+	<PROC name="pts_Company_Add"/>
+	<PROC name="pts_Company_Delete"/>
+	<PROC name="pts_Company_Fetch"/>
+	<PROC name="pts_Company_FindCompanyName"/>
+	<PROC name="pts_Company_FindCompanyID"/>
+	<PROC name="pts_Company_FindContactName"/>
+	<PROC name="pts_Company_FindEmail"/>
+	<PROC name="pts_Company_FindEnrollDate"/>
+	<PROC name="pts_Company_FindStatus"/>
+	<PROC name="pts_Company_FindCompanyType"/>
+	<PROC name="pts_Company_ListMember"/>
+	<PROC name="pts_Company_Update"/>
+	<PROC name="pts_Company_Update_Counters" path="Custom"/>
+	<PROC name="pts_Company_GetSubnet" path="Custom"/>
+	<PROC name="pts_Company_Referrals" path="Custom"/>
+	<PROC name="pts_Company_ReferralIDs" path="Custom"/>
+	<PROC name="pts_Company_BillingCycle" path="Custom"/>
+	<PROC name="pts_Company_BillingPayments" path="Custom"/>
+	<PROC name="pts_Company_BillingMaster" path="Custom"/>
+	<PROC name="pts_Company_BillingReferral" path="Custom"/>
+	<PROC name="pts_Company_ReportStatus" path="Custom"/>
+	<PROC name="pts_Company_ReportType" path="Custom"/>
+	<PROC name="pts_Company_ReportTypeMember" path="Custom"/>
+	<PROC name="pts_Company_ReportStats" path="Custom"/>
+	<PROC name="pts_Company_MBCount" path="Custom"/>
+	<PROC name="pts_Company_Custom" path="Custom"/>
+	<PROC name="pts_Company_CustomList" path="Custom"/>
+<!--
+	<PROC name="pts_CompPlan_Count"/>
+	<PROC name="pts_CompPlan_Enum"/>
+	<PROC name="pts_CompPlan_Fetch"/>
+	<PROC name="pts_CompPlan_ListCompPlan"/>
+	<PROC name="pts_CompPlan_Update"/>
+-->
+	<PROC name="pts_Consumer_Add"/>
+	<PROC name="pts_Consumer_Delete"/>
+	<PROC name="pts_Consumer_Fetch"/>
+	<PROC name="pts_Consumer_FetchEmail"/>
+	<PROC name="pts_Consumer_FetchPhone"/>
+	<PROC name="pts_Consumer_FindConsumerName"/>
+	<PROC name="pts_Consumer_FindNameFirst"/>
+	<PROC name="pts_Consumer_FindEmail"/>
+	<PROC name="pts_Consumer_FindPhone"/>
+	<PROC name="pts_Consumer_FindMerchantConsumerName"/>
+	<PROC name="pts_Consumer_FindMerchantNameFirst"/>
+	<PROC name="pts_Consumer_FindMerchantEmail"/>
+	<PROC name="pts_Consumer_FindMerchantPhone"/>
+	<PROC name="pts_Consumer_FindMemberConsumerName"/>
+	<PROC name="pts_Consumer_FindMemberNameFirst"/>
+	<PROC name="pts_Consumer_FindMemberEmail"/>
+	<PROC name="pts_Consumer_FindMemberPhone"/>
+	<PROC name="pts_Consumer_FindReferConsumerName"/>
+	<PROC name="pts_Consumer_FindReferNameFirst"/>
+	<PROC name="pts_Consumer_FindReferEmail"/>
+	<PROC name="pts_Consumer_FindReferPhone"/>
+	<PROC name="pts_Consumer_Update"/>
+	<PROC name="pts_Consumer_Logon" path="Custom"/>
+	<PROC name="pts_Consumer_Logon2" path="Custom"/>
+	<PROC name="pts_Consumer_SetReferral" path="Custom"/>
+	<PROC name="pts_Consumer_SetReferrals" path="Custom"/>
+	<PROC name="pts_Consumer_ListEmail" path="Custom"/>
+
+	<PROC name="pts_Contest_Add"/>
+	<PROC name="pts_Contest_Delete"/>
+	<PROC name="pts_Contest_Fetch"/>
+	<PROC name="pts_Contest_FindCompanyContestName"/>
+	<PROC name="pts_Contest_FindCompanyStartDate"/>
+	<PROC name="pts_Contest_FindMemberContestName"/>
+	<PROC name="pts_Contest_FindMemberStartDate"/>
+	<PROC name="pts_Contest_Update"/>
+	<PROC name="pts_Contest_Active" path="Custom"/>
+	<PROC name="pts_Contest_EnumContestList" path="Custom"/>
+	<PROC name="pts_Contest_ListMember" path="Custom"/>
+	<PROC name="pts_Contest_Locked" path="Custom"/>
+
+	<PROC name="pts_Coption_Add"/>
+	<PROC name="pts_Coption_Delete"/>
+	<PROC name="pts_Coption_Fetch"/>
+	<PROC name="pts_Coption_FetchCompany"/>
+	<PROC name="pts_Coption_Update"/>
+
+	<PROC name="pts_Country_Add"/>
+	<PROC name="pts_Country_Delete"/>
+	<PROC name="pts_Country_Fetch"/>
+	<PROC name="pts_Country_Update"/>
+	<PROC name="pts_Country_EnumUserCompany" path="Custom"/>
+	<PROC name="pts_Country_List"/>
+
+	<PROC name="pts_Course_Add"/>
+	<PROC name="pts_Course_Count"/>
+<!--	<PROC name="pts_Course_CanUpload" path="Custom"/>-->
+	<PROC name="pts_Course_Delete"/>
+	<PROC name="pts_Course_Fetch"/>
+	<PROC name="pts_Course_Update"/>
+	<PROC name="pts_Course_FindCourseName"/>
+	<PROC name="pts_Course_FindCourseID"/>
+	<PROC name="pts_Course_FindStatus"/>
+	<PROC name="pts_Course_FindCourseDate"/>
+	<PROC name="pts_Course_FindCompanyCourseName"/>
+	<PROC name="pts_Course_FindCompanyCourseID"/>
+	<PROC name="pts_Course_FindCompanyStatus"/>
+	<PROC name="pts_Course_FindCompanyCourseDate"/>
+	<PROC name="pts_Course_FindTrainerCourseName"/>
+	<PROC name="pts_Course_FindTrainerCourseID"/>
+	<PROC name="pts_Course_FindTrainerStatus"/>
+	<PROC name="pts_Course_FindTrainerCourseDate"/>
+	<PROC name="pts_Course_ListCourse"/>
+	<PROC name="pts_Course_ListSingleCourse"/>
+	<PROC name="pts_Course_ListCourseCategory"/>
+	<PROC name="pts_Course_ListGrp"/>
+	<PROC name="pts_Course_ListPrivate"/>
+	<PROC name="pts_Course_FindOrgCourseName" path="Custom"/>
+	<PROC name="pts_Course_FindOrgCourseID" path="Custom"/>
+	<PROC name="pts_Course_FindOrgStatus" path="Custom"/>
+	<PROC name="pts_Course_FindOrgCourseDate" path="Custom"/>
+	<PROC name="pts_Course_ListTextCourses" path="Custom"/>
+	<PROC name="pts_Course_ListFavorite" path="Custom"/>
+	<PROC name="pts_Course_ListProgram" path="Custom"/>
+	<PROC name="pts_Course_ListOrg" path="Custom"/>
+	<PROC name="pts_Course_SetContent" path="Custom"/>
+	<PROC name="pts_Course_DeleteFT" path="Custom"/>
+	<PROC name="pts_Course_UpdateFT" path="Custom"/>
+	<PROC name="pts_Course_Search" path="Custom"/>
+	<PROC name="pts_Course_ReportStatus" path="Custom"/>
+	<PROC name="pts_Course_ReportReview" path="Custom"/>
+	<PROC name="pts_Course_TBCompanyDate" path="Custom"/>
+	<PROC name="pts_Course_TBPublicDate" path="Custom"/>
+	<PROC name="pts_Course_TBUnregistered" path="Custom"/>
+	<PROC name="pts_Course_TBFavoritePublic" path="Custom"/>
+	<PROC name="pts_Course_TBFavoriteCompany" path="Custom"/>
+
+	<PROC name="pts_CourseCategory_Add"/>
+	<PROC name="pts_CourseCategory_Count"/>
+	<PROC name="pts_CourseCategory_Delete"/>
+	<PROC name="pts_CourseCategory_Enum"/>
+	<PROC name="pts_CourseCategory_Fetch"/>
+	<PROC name="pts_CourseCategory_Update"/>
+	<PROC name="pts_CourseCategory_ListCourseCategory"/>
+	<PROC name="pts_CourseCategory_ListPublic"/>
+	<PROC name="pts_CourseCategory_ListPrivate" path="Custom"/>
+	<PROC name="pts_CourseCategory_ListAll" path="Custom"/>
+	<PROC name="pts_CourseCategory_ListMember" path="Custom"/>
+	<PROC name="pts_CourseCategory_Update_Counters" path="Custom"/>
+	<PROC name="pts_CourseCategory_ListFavorite" path="Custom"/>
+
+	<PROC name="pts_Credit_Add"/>
+	<PROC name="pts_Credit_Delete"/>
+	<PROC name="pts_Credit_Fetch"/>
+	<PROC name="pts_Credit_Update"/>
+	<PROC name="pts_Credit_ListMember"/>
+	<PROC name="pts_Credit_ListMemberAll"/>
+	<PROC name="pts_Credit_UseCredits" path="Custom"/>
+
+	<PROC name="pts_Debt_Add"/>
+	<PROC name="pts_Debt_Delete"/>
+	<PROC name="pts_Debt_Fetch"/>
+	<PROC name="pts_Debt_FetchConsolidate"/>
+	<PROC name="pts_Debt_Update"/>
+	<PROC name="pts_Debt_ListMember" path="Custom"/>
+
+	<PROC name="pts_Domain_Add"/>
+	<PROC name="pts_Domain_Delete"/>
+	<PROC name="pts_Domain_EnumUserCompany"/>
+	<PROC name="pts_Domain_Fetch"/>
+	<PROC name="pts_Domain_FetchDomain"/>
+	<PROC name="pts_Domain_List"/>
+	<PROC name="pts_Domain_Update"/>
+
+	<PROC name="pts_Downline_Build" path="Custom"/>
+	<PROC name="pts_Downline_Rebuild" path="Custom"/>
+	<PROC name="pts_Downline_BuildAll" path="Custom"/>
+	<PROC name="pts_Downline_Count"/>
+	<PROC name="pts_Downline_Delete"/>
+	<PROC name="pts_Downline_Fetch"/>
+	<PROC name="pts_Downline_FindChildName" path="Custom"/>
+	<PROC name="pts_Downline_FindEnrollDate" path="Custom"/>
+	<PROC name="pts_Downline_Genealogy" path="Custom"/>
+	<PROC name="pts_Downline_ListChild" path="Custom"/>
+	<PROC name="pts_Downline_Update"/>
+	<PROC name="pts_Downline_UpdateStatus" path="Custom"/>
+	<PROC name="pts_Downline_UpdateTitle" path="Custom"/>
+	<PROC name="pts_Downline_GetParent" path="Custom"/>
+	<PROC name="pts_Downline_Promote" path="Custom"/>
+	<PROC name="pts_Downline_GetCount" path="Custom"/>
+<!-- Internal Procedures -->
+	<PROC name="pts_Downline_Add" path="Custom"/>
+	<PROC name="pts_Downline_CalcTitle" path="Custom"/>
+	<PROC name="pts_Downline_CalcTitleAll" path="Custom"/>
+	<PROC name="pts_Downline_NextPosition" path="Custom"/>
+	<PROC name="pts_Downline_Reposition" path="Custom"/>
+	<PROC name="pts_Downline_Rollup" path="Custom"/>
+	<PROC name="pts_Downline_Rolldown" path="Custom"/>
+	<PROC name="pts_Downline_QualifyProduct" path="Custom"/>
+	<PROC name="pts_Downline_QualifyEnrollee" path="Custom"/>
+	<PROC name="pts_Downline_QualifyDownline" path="Custom"/>
+
+<!-- CloudZow -->
+	<PROC name="pts_Downline_Build_5" path="Custom"/>
+<!-- WRN -->
+	<PROC name="pts_Downline_Build_7" path="Custom"/>
+
+<!-- Traverus
+	<PROC name="pts_Downline_Build_1" path="Custom"/>
+	<PROC name="pts_Downline_Build_1_1" path="Custom"/>
+	<PROC name="pts_Downline_Build_1_2" path="Custom"/>
+	<PROC name="pts_Downline_Build_1_3" path="Custom"/>
+	<PROC name="pts_Downline_Build_1_4" path="Custom"/>
+	<PROC name="pts_Downline_Build_1_4a" path="Custom"/>
+	<PROC name="pts_Downline_Build_1_5" path="Custom"/>
+	<PROC name="pts_Downline_UpdateStatus_1" path="Custom"/>
+	<PROC name="pts_Downline_UpdateTitle_1" path="Custom"/>
+	<PROC name="pts_Downline_Qualify_1" path="Custom"/>
+-->
+
+	<PROC name="pts_Downtitle_Adjust" path="Custom"/>
+	<PROC name="pts_Downtitle_Summary" path="Custom"/>
+
+	<PROC name="pts_DripCampaign_Add"/>
+	<PROC name="pts_DripCampaign_Delete"/>
+	<PROC name="pts_DripCampaign_EnumDripList"/>
+	<PROC name="pts_DripCampaign_EnumDripListAll"/>
+	<PROC name="pts_DripCampaign_Fetch"/>
+	<PROC name="pts_DripCampaign_Update"/>
+	<PROC name="pts_DripCampaign_ListCompany"/>
+	<PROC name="pts_DripCampaign_ListGroup"/>
+	<PROC name="pts_DripCampaign_ListActive"/>
+
+	<PROC name="pts_DripPage_Add"/>
+	<PROC name="pts_DripPage_Delete"/>
+	<PROC name="pts_DripPage_Fetch"/>
+	<PROC name="pts_DripPage_Update"/>
+	<PROC name="pts_DripPage_ListAll"/>
+	<PROC name="pts_DripPage_ListActive"/>
+	<PROC name="pts_DripPage_DeleteDripCampaign" path="Custom"/>
+
+	<PROC name="pts_DripTarget_Add"/>
+	<PROC name="pts_DripTarget_Delete"/>
+	<PROC name="pts_DripTarget_Fetch"/>
+	<PROC name="pts_DripTarget_Update"/>
+	<PROC name="pts_DripTarget_ListTarget" path="Custom"/>
+	<PROC name="pts_DripTarget_ListCampaign" path="Custom"/>
+
+	<PROC name="pts_Email_Add"/>
+	<PROC name="pts_Email_Delete"/>
+	<PROC name="pts_Email_Fetch"/>
+	<PROC name="pts_Email_FindEmailName"/>
+	<PROC name="pts_Email_FindSendDate"/>
+	<PROC name="pts_Email_FindStatus"/>
+	<PROC name="pts_Email_FindTeamEmailName"/>
+	<PROC name="pts_Email_FindTeamSendDate"/>
+	<PROC name="pts_Email_FindTeamStatus"/>
+	<PROC name="pts_Email_Update"/>
+	<PROC name="pts_Email_ListEmails"/>
+	<PROC name="pts_Email_ListProspectEmails"/>
+	<PROC name="pts_Email_ListNewsLetterEmails"/>
+	<PROC name="pts_Email_EnumUserProspect"/>
+	<PROC name="pts_Email_ListNewsletter"/>
+	<PROC name="pts_Email_ListNewsletterAll"/>
+	<PROC name="pts_Email_ListSalesStep"/>
+	<PROC name="pts_Email_DeleteNewsLetter" path="Custom"/>
+
+	<PROC name="pts_Emailee_Add"/>
+	<PROC name="pts_Emailee_Count"/>
+	<PROC name="pts_Emailee_Delete"/>
+	<PROC name="pts_Emailee_Fetch"/>
+	<PROC name="pts_Emailee_FindEmail"/>
+	<PROC name="pts_Emailee_FindEmaileeName"/>
+	<PROC name="pts_Emailee_FindEmailListID"/>
+	<PROC name="pts_Emailee_ListStandard"/>
+	<PROC name="pts_Emailee_Update"/>
+	<PROC name="pts_Emailee_ListCustom" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_1_TrialMembership" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_2_MembersLastVisit" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_3_ClassesCompleted" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_4_MemberEnrollment" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_5_AllMembers" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_6_AssessmentsCompleted" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_7_SuggestionsSubmitted" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_8_MemberReference" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_9_PaymentNote" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_10_PaymentStatus" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_11_MemberLogon" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_99" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_98" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_98" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_97" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_96" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_95" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_94" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_93" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_92" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_91" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_90" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_89" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_88" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_87" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_86" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_85" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_84" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_83" path="Custom"/>
+	<PROC name="pts_Emailee_ListCustom_82" path="Custom"/>
+	<PROC name="pts_Emailee_Unsubscribe" path="Custom"/>
+	<PROC name="pts_Emailee_ListTeam" path="Custom"/>
+
+	<PROC name="pts_EmailList_Add"/>
+	<PROC name="pts_EmailList_Delete"/>
+	<PROC name="pts_EmailList_Fetch"/>
+	<PROC name="pts_EmailList_List"/>
+	<PROC name="pts_EmailList_Update"/>
+	<PROC name="pts_EmailList_EnumUserList"/>
+
+	<PROC name="pts_EmailSource_Fetch"/>
+	<PROC name="pts_EmailSource_Add"/>
+	<PROC name="pts_EmailSource_Enum"/>
+	<PROC name="pts_EmailSource_Update"/>
+	<PROC name="pts_EmailSource_Delete"/>
+	<PROC name="pts_EmailSource_List"/>
+	
+	<PROC name="pts_Employee_Add"/>
+	<PROC name="pts_Employee_Delete"/>
+	<PROC name="pts_Employee_Enum"/>
+	<PROC name="pts_Employee_Fetch"/>
+	<PROC name="pts_Employee_FetchAuthUserID"/>
+	<PROC name="pts_Employee_FindEmail"/>
+	<PROC name="pts_Employee_FindEmployeeName"/>
+	<PROC name="pts_Employee_Update"/>
+	<PROC name="pts_Employee_ListActive"/>
+	<PROC name="pts_Employee_GetEmail" path="Custom"/>
+
+	<PROC name="pts_Event_Add"/>
+	<PROC name="pts_Event_Count"/>
+	<PROC name="pts_Event_Delete"/>
+	<PROC name="pts_Event_DeleteOwner"/>
+	<PROC name="pts_Event_Fetch"/>
+	<PROC name="pts_Event_Update"/>
+	<PROC name="pts_Event_ListEvents"/>
+	<PROC name="pts_Event_ListReminder" path="Custom"/>
+	<PROC name="pts_Event_SetRemindDate" path="Custom"/>
+
+	<PROC name="pts_Expense_Add"/>
+	<PROC name="pts_Expense_Delete"/>
+	<PROC name="pts_Expense_Fetch"/>
+	<PROC name="pts_Expense_FindExpDate"/>
+	<PROC name="pts_Expense_FindAmount"/>
+	<PROC name="pts_Expense_FindPurpose"/>
+	<PROC name="pts_Expense_FindNote1"/>
+	<PROC name="pts_Expense_FindNote2"/>
+	<PROC name="pts_Expense_FindTypeExpDate"/>
+	<PROC name="pts_Expense_FindTypeAmount"/>
+	<PROC name="pts_Expense_FindTypePurpose"/>
+	<PROC name="pts_Expense_FindTypeNote1"/>
+	<PROC name="pts_Expense_FindTypeNote2"/>
+	<PROC name="pts_Expense_Update"/>
+	<PROC name="pts_Expense_CalcTotal" path="Custom"/>
+	<PROC name="pts_Expense_Calc" path="Custom"/>
+	<PROC name="pts_Expense_GetVehicleMethod" path="Custom"/>
+	<PROC name="pts_Expense_ReportSummary" path="Custom"/>
+	<PROC name="pts_Expense_ReportDetail" path="Custom"/>
+
+	<PROC name="pts_ExpenseType_Add"/>
+	<PROC name="pts_ExpenseType_Delete"/>
+	<PROC name="pts_ExpenseType_Fetch"/>
+	<PROC name="pts_ExpenseType_EnumUserExpenseType"/>
+	<PROC name="pts_ExpenseType_Update"/>
+	<PROC name="pts_ExpenseType_List"/>
+
+	<PROC name="pts_Favorite_Add"/>
+	<PROC name="pts_Favorite_Count"/>
+	<PROC name="pts_Favorite_Delete"/>
+	<PROC name="pts_Favorite_Fetch"/>
+	<PROC name="pts_Favorite_CheckFavorite"/>
+	<PROC name="pts_Favorite_CheckNumFavType"/>
+	<PROC name="pts_Favorite_ListFavCourseCategory"/>
+	<PROC name="pts_Favorite_ListFavChat"/>
+	<PROC name="pts_Favorite_ListFavForum"/>
+	<PROC name="pts_Favorite_ListFavOrg"/>
+
+	<PROC name="pts_FileUpload_Add" path="Custom"/>
+	<PROC name="pts_FileUpload_Delete" path="Custom"/>
+	<PROC name="pts_FileUpload_Fetch" path="Custom"/>
+	<PROC name="pts_FileUpload_Update" path="Custom"/>
+
+	<PROC name="pts_Finance_Add"/>
+	<PROC name="pts_Finance_Fetch"/>
+	<PROC name="pts_Finance_Update"/>
+	<PROC name="pts_Finance_FetchMemberID"/>
+
+	<PROC name="pts_Folder_Add"/>
+	<PROC name="pts_Folder_Delete"/>
+	<PROC name="pts_Folder_Fetch"/>
+	<PROC name="pts_Folder_Update"/>
+	<PROC name="pts_Folder_EnumFolderList" path="Custom"/>
+	<PROC name="pts_Folder_EnumFolderAllList" path="Custom"/>
+	<PROC name="pts_Folder_ListFolder"/>
+	<PROC name="pts_Folder_ListVirtualFolder" path="Custom"/>
+
+	<PROC name="pts_FolderItem_Add"/>
+	<PROC name="pts_FolderItem_Delete"/>
+	<PROC name="pts_FolderItem_Fetch"/>
+	<PROC name="pts_FolderItem_Update"/>
+	<PROC name="pts_FolderItem_ListFolder" path="Custom"/>
+	<PROC name="pts_FolderItem_ListItem" path="Custom"/>
+	<PROC name="pts_FolderItem_ListDrip" path="Custom"/>
+	<PROC name="pts_FolderItem_ListVirtualDrip" path="Custom"/>
+
+	<PROC name="pts_Forum_Add"/>
+	<PROC name="pts_Forum_Count"/>
+	<PROC name="pts_Forum_Delete"/>
+	<PROC name="pts_Forum_Enum"/>
+	<PROC name="pts_Forum_Fetch"/>
+	<PROC name="pts_Forum_Update"/>
+	<PROC name="pts_Forum_ListForum"/>
+<!--
+	<PROC name="pts_Forum_AddMUC" path="Custom"/>
+	<PROC name="pts_Forum_DeleteMUC" path="Custom"/>
+	<PROC name="pts_Forum_UpdateMUC" path="Custom"/>	
+-->	
+	<PROC name="pts_Forum_ListTB" path="Custom"/>
+	<PROC name="pts_Forum_ListUserForum" path="Custom"/>
+	<PROC name="pts_Forum_ListModerator" path="Custom"/>
+	<PROC name="pts_Forum_ListFavorite" path="Custom"/>
+
+	<PROC name="pts_ForumModerator_Add"/>
+	<PROC name="pts_ForumModerator_Delete"/>
+	<PROC name="pts_ForumModerator_Fetch"/>
+	<PROC name="pts_ForumModerator_GetForumModerator"/>
+	<PROC name="pts_ForumModerator_Update"/>
+
+	<PROC name="pts_Friend_Add"/>
+	<PROC name="pts_Friend_Count"/>
+	<PROC name="pts_Friend_Delete"/>
+	<PROC name="pts_Friend_Fetch"/>
+	<PROC name="pts_Friend_FindFriendName"/>
+	<PROC name="pts_Friend_FindEmail"/>
+	<PROC name="pts_Friend_FindFriendDate"/>
+	<PROC name="pts_Friend_FindFriendGroupName"/>
+	<PROC name="pts_Friend_FindCountryName"/>
+	<PROC name="pts_Friend_Update"/>
+	<PROC name="pts_Friend_UpdateStatus" path="Custom"/>
+
+	<PROC name="pts_FriendGroup_Add"/>
+	<PROC name="pts_FriendGroup_Delete"/>
+	<PROC name="pts_FriendGroup_Fetch"/>
+	<PROC name="pts_FriendGroup_Update"/>
+	<PROC name="pts_FriendGroup_EnumUserMember"/>
+	<PROC name="pts_FriendGroup_List"/>
+
+	<PROC name="pts_Genealogy_Add"/>
+	<PROC name="pts_Genealogy_Delete"/>
+	<PROC name="pts_Genealogy_Fetch"/>
+	<PROC name="pts_Genealogy_Update"/>
+	<PROC name="pts_Genealogy_List"/>
+
+	<PROC name="pts_Goal_Add"/>
+	<PROC name="pts_Goal_Count"/>
+	<PROC name="pts_Goal_Delete"/>
+	<PROC name="pts_Goal_Fetch"/>
+	<PROC name="pts_Goal_FindGoalName"/>
+	<PROC name="pts_Goal_FindDescription"/>
+	<PROC name="pts_Goal_FindGoalID"/>
+	<PROC name="pts_Goal_FindGoalType"/>
+	<PROC name="pts_Goal_FindPriority"/>
+	<PROC name="pts_Goal_FindStatusGoalName"/>
+	<PROC name="pts_Goal_FindStatusDescription"/>
+	<PROC name="pts_Goal_FindStatusGoalID"/>
+	<PROC name="pts_Goal_FindStatusGoalType"/>
+	<PROC name="pts_Goal_FindStatusPriority"/>
+	<PROC name="pts_Goal_FindPrimaryGoalName"/>
+	<PROC name="pts_Goal_FindPrimaryDescription"/>
+	<PROC name="pts_Goal_FindPrimaryGoalID"/>
+	<PROC name="pts_Goal_FindPrimaryGoalType"/>
+	<PROC name="pts_Goal_FindPrimaryPriority"/>
+	<PROC name="pts_Goal_FindPrimaryStatusGoalName"/>
+	<PROC name="pts_Goal_FindPrimaryStatusDescription"/>
+	<PROC name="pts_Goal_FindPrimaryStatusGoalID"/>
+	<PROC name="pts_Goal_FindPrimaryStatusGoalType"/>
+	<PROC name="pts_Goal_FindPrimaryStatusPriority"/>
+	<PROC name="pts_Goal_Update"/>
+	<PROC name="pts_Goal_ListParent"/>
+	<PROC name="pts_Goal_ListProspect"/>
+	<PROC name="pts_Goal_Copy" path="Custom"/>
+	<PROC name="pts_Goal_CopyGoal" path="Custom"/>
+	<PROC name="pts_Goal_ReportMember" path="Custom"/>
+	<PROC name="pts_Goal_ReportBusiness" path="Custom"/>
+	<PROC name="pts_Goal_ReportCompany" path="Custom"/>
+	<PROC name="pts_Goal_EnumUserCompanyList"/>
+	<PROC name="pts_Goal_EnumUserMemberList"/>
+	<PROC name="pts_Goal_Reminder" path="Custom"/>
+	<PROC name="pts_Goal_ListTemplate"/>
+	<PROC name="pts_Goal_ListMemberTrack"/>
+	<PROC name="pts_Goal_ListActiveTrack"/>
+	<PROC name="pts_Goal_ListCompanyTrack"/>
+	<PROC name="pts_Goal_DeleteGoals" path="Custom"/>
+	<PROC name="pts_Goal_Goals" path="Custom"/>
+	<PROC name="pts_Goal_Preview" path="Custom"/>
+	<PROC name="pts_Goal_CheckTrack" path="Custom"/>
+	<PROC name="pts_Goal_CalcChildren" path="Custom"/>
+	<PROC name="pts_Goal_UpdateStatus" path="Custom"/>
+
+	<PROC name="pts_Govid_Add"/>
+	<PROC name="pts_Govid_Delete"/>
+	<PROC name="pts_Govid_Fetch"/>
+	<PROC name="pts_Govid_FetchMember"/>
+	<PROC name="pts_Govid_Update"/>
+	<PROC name="pts_Govid_List"/>
+
+	<PROC name="pts_Guest_Add"/>
+	<PROC name="pts_Guest_Count"/>
+	<PROC name="pts_Guest_Delete"/>
+	<PROC name="pts_Guest_Fetch"/>
+	<PROC name="pts_Guest_FetchPartyID"/>
+	<PROC name="pts_Guest_ListEmail"/>
+	<PROC name="pts_Guest_ListEmailAll"/>
+	<PROC name="pts_Guest_ListGuest"/>
+	<PROC name="pts_Guest_Update"/>
+	<PROC name="pts_Guest_UpdateEmailStatus" path="Custom"/>
+	<PROC name="pts_Guest_CopyList" path="Custom"/>
+
+	<PROC name="pts_HomeTax_Add"/>
+	<PROC name="pts_HomeTax_Fetch"/>
+	<PROC name="pts_HomeTax_Update"/>
+	<PROC name="pts_HomeTax_FetchMember"/>
+
+	<PROC name="pts_Homework_Add"/>
+	<PROC name="pts_Homework_Delete"/>
+	<PROC name="pts_Homework_Fetch"/>
+	<PROC name="pts_Homework_Update"/>
+	<PROC name="pts_Homework_List"/>
+	<PROC name="pts_Homework_ListAttachment" path="Custom"/>
+	<PROC name="pts_Homework_ListSession" path="Custom"/>
+	<PROC name="pts_Homework_ListGrade" path="Custom"/>
+	
+	<PROC name="pts_Inventory_Add"/>
+	<PROC name="pts_Inventory_Delete"/>
+	<PROC name="pts_Inventory_Fetch"/>
+	<PROC name="pts_Inventory_Update"/>
+	<PROC name="pts_Inventory_ListInventory"/>
+
+	<PROC name="pts_Issue_Add"/>
+	<PROC name="pts_Issue_Count"/>
+	<PROC name="pts_Issue_Delete"/>
+	<PROC name="pts_Issue_Fetch"/>
+	<PROC name="pts_Issue_FindIssueCategoryName"/>
+	<PROC name="pts_Issue_FindIssueName"/>
+	<PROC name="pts_Issue_FindIssueID"/>
+	<PROC name="pts_Issue_FindSubmittedBy"/>
+  <PROC name="pts_Issue_FindAssignedTo"/>
+  <PROC name="pts_Issue_FindOutsource"/>
+  <PROC name="pts_Issue_FindIssueDate"/>
+	<PROC name="pts_Issue_FindDueDate"/>
+	<PROC name="pts_Issue_FindDoneDate"/>
+	<PROC name="pts_Issue_FindPriority"/>
+	<PROC name="pts_Issue_FindStatusIssueCategoryName"/>
+	<PROC name="pts_Issue_FindStatusIssueName"/>
+	<PROC name="pts_Issue_FindStatusIssueID"/>
+	<PROC name="pts_Issue_FindStatusSubmittedBy"/>
+  <PROC name="pts_Issue_FindStatusAssignedTo"/>
+  <PROC name="pts_Issue_FindStatusOutsource"/>
+  <PROC name="pts_Issue_FindStatusIssueDate"/>
+	<PROC name="pts_Issue_FindStatusDueDate"/>
+	<PROC name="pts_Issue_FindStatusDoneDate"/>
+	<PROC name="pts_Issue_FindStatusPriority"/>
+	<PROC name="pts_Issue_FindAssignedIssueCategoryName"/>
+	<PROC name="pts_Issue_FindAssignedIssueName"/>
+	<PROC name="pts_Issue_FindAssignedIssueID"/>
+	<PROC name="pts_Issue_FindAssignedSubmittedBy"/>
+	<PROC name="pts_Issue_FindAssignedAssignedTo"/>
+	<PROC name="pts_Issue_FindAssignedIssueDate"/>
+	<PROC name="pts_Issue_FindAssignedDueDate"/>
+	<PROC name="pts_Issue_FindAssignedDoneDate"/>
+	<PROC name="pts_Issue_FindAssignedPriority"/>
+	<PROC name="pts_Issue_FindAssignedStatusIssueCategoryName"/>
+	<PROC name="pts_Issue_FindAssignedStatusIssueName"/>
+	<PROC name="pts_Issue_FindAssignedStatusIssueID"/>
+	<PROC name="pts_Issue_FindAssignedStatusSubmittedBy"/>
+  <PROC name="pts_Issue_FindAssignedStatusAssignedTo"/>
+  <PROC name="pts_Issue_FindAssignedStatusOutsource"/>
+  <PROC name="pts_Issue_FindAssignedStatusIssueDate"/>
+	<PROC name="pts_Issue_FindAssignedStatusDueDate"/>
+	<PROC name="pts_Issue_FindAssignedStatusDoneDate"/>
+	<PROC name="pts_Issue_FindAssignedStatusPriority"/>
+
+	<PROC name="pts_Issue_FindSubmitIssueCategoryName"/>
+	<PROC name="pts_Issue_FindSubmitIssueName"/>
+	<PROC name="pts_Issue_FindSubmitIssueID"/>
+	<PROC name="pts_Issue_FindSubmitSubmittedBy"/>
+  <PROC name="pts_Issue_FindSubmitAssignedTo"/>
+  <PROC name="pts_Issue_FindSubmitOutsource"/>
+  <PROC name="pts_Issue_FindSubmitIssueDate"/>
+	<PROC name="pts_Issue_FindSubmitDueDate"/>
+	<PROC name="pts_Issue_FindSubmitDoneDate"/>
+	<PROC name="pts_Issue_FindSubmitPriority"/>
+	<PROC name="pts_Issue_FindSubmitStatusIssueCategoryName"/>
+	<PROC name="pts_Issue_FindSubmitStatusIssueName"/>
+	<PROC name="pts_Issue_FindSubmitStatusIssueID"/>
+	<PROC name="pts_Issue_FindSubmitStatusSubmittedBy"/>
+  <PROC name="pts_Issue_FindSubmitStatusAssignedTo"/>
+  <PROC name="pts_Issue_FindSubmitStatusOutsource"/>
+  <PROC name="pts_Issue_FindSubmitStatusIssueDate"/>
+	<PROC name="pts_Issue_FindSubmitStatusDueDate"/>
+	<PROC name="pts_Issue_FindSubmitStatusDoneDate"/>
+	<PROC name="pts_Issue_FindSubmitStatusPriority"/>
+
+	<PROC name="pts_Issue_Update"/>
+	<PROC name="pts_Issue_ReportStatus" path="Custom"/>
+	<PROC name="pts_Issue_ReportStatusDetail" path="Custom"/>
+	<PROC name="pts_Issue_ReportStatusAssigned" path="Custom"/>
+	<PROC name="pts_Issue_ReportStatusAssignedDetail" path="Custom"/>
+  <PROC name="pts_Issue_ReportLate" path="Custom"/>
+  <PROC name="pts_Issue_ReportLateAssigned" path="Custom"/>
+  <PROC name="pts_Issue_ReportRating" path="Custom"/>
+  <PROC name="pts_Issue_ReportRatingAssigned" path="Custom"/>
+  <PROC name="pts_Issue_ReportOutsource" path="Custom"/>
+  <PROC name="pts_Issue_ReportOutsourceAssigned" path="Custom"/>
+
+  <PROC name="pts_IssueCategory_Add"/>
+	<PROC name="pts_IssueCategory_Delete"/>
+	<PROC name="pts_IssueCategory_EnumUserList"/>
+	<PROC name="pts_IssueCategory_Fetch"/>
+	<PROC name="pts_IssueCategory_ListAll"/>
+	<PROC name="pts_IssueCategory_Update"/>
+<!--
+	<PROC name="pts_Label_Add"/>
+	<PROC name="pts_Label_Count"/>
+	<PROC name="pts_Label_Delete"/>
+	<PROC name="pts_Label_Fetch"/>
+	<PROC name="pts_Label_FindAttributeName"/>
+	<PROC name="pts_Label_FindEntityName"/>
+	<PROC name="pts_Label_FindLanguageName"/>
+	<PROC name="pts_Label_Update"/>
+	<PROC name="pts_Label_ListAttribute"/>
+	<PROC name="pts_Label_ListItems"/>
+	<PROC name="pts_Label_ListLabel"/>
+	<PROC name="pts_Label_ListItem"/>
+	<PROC name="pts_Label_ListEntity"/>
+
+	<PROC name="pts_LabEnty_Add"/>
+	<PROC name="pts_LabEnty_Delete"/>
+	<PROC name="pts_LabEnty_Enum"/>
+	<PROC name="pts_LabEnty_EnumEntity"/>
+	<PROC name="pts_LabEnty_Fetch"/>
+	<PROC name="pts_LabEnty_List"/>
+	<PROC name="pts_LabEnty_Update"/>
+
+	<PROC name="pts_LabAttr_Add"/>
+	<PROC name="pts_LabAttr_Delete"/>
+	<PROC name="pts_LabAttr_EnumAttribute"/>
+	<PROC name="pts_LabAttr_Fetch"/>
+	<PROC name="pts_LabAttr_List"/>
+	<PROC name="pts_LabAttr_Update"/>
+
+	<PROC name="pts_LabLang_Add"/>
+	<PROC name="pts_LabLang_Delete"/>
+	<PROC name="pts_LabLang_Enum"/>
+	<PROC name="pts_LabLang_EnumLanguage"/>
+	<PROC name="pts_LabLang_Fetch"/>
+	<PROC name="pts_LabLang_List"/>
+	<PROC name="pts_LabLang_Update"/>
+-->	
+<!--	
+	<PROC name="pts_Lead_Add"/>
+	<PROC name="pts_Lead_Count"/>
+	<PROC name="pts_Lead_Delete"/>
+	<PROC name="pts_Lead_Fetch"/>
+	<PROC name="pts_Lead_FindLeadName"/>
+	<PROC name="pts_Lead_FindSalesCampaignName"/>
+	<PROC name="pts_Lead_FindProspectTypeName"/>
+	<PROC name="pts_Lead_FindEmail"/>
+	<PROC name="pts_Lead_FindPhone1"/>
+	<PROC name="pts_Lead_FindPhone2"/>
+	<PROC name="pts_Lead_FindPriority"/>
+	<PROC name="pts_Lead_FindCallTime"/>
+	<PROC name="pts_Lead_FindSource"/>
+	<PROC name="pts_Lead_FindLeadDate"/>
+	<PROC name="pts_Lead_FindCallBackDate"/>
+	<PROC name="pts_Lead_FindStatusLeadName"/>
+	<PROC name="pts_Lead_FindStatusSalesCampaignName"/>
+	<PROC name="pts_Lead_FindStatusProspectTypeName"/>
+	<PROC name="pts_Lead_FindStatusEmail"/>
+	<PROC name="pts_Lead_FindStatusPhone1"/>
+	<PROC name="pts_Lead_FindStatusPhone2"/>
+	<PROC name="pts_Lead_FindStatusPriority"/>
+	<PROC name="pts_Lead_FindStatusCallTime"/>
+	<PROC name="pts_Lead_FindStatusSource"/>
+	<PROC name="pts_Lead_FindStatusLeadDate"/>
+	<PROC name="pts_Lead_FindStatusCallBackDate"/>
+	<PROC name="pts_Lead_FindActiveLeadName"/>
+	<PROC name="pts_Lead_FindActiveSalesCampaignName"/>
+	<PROC name="pts_Lead_FindActiveProspectTypeName"/>
+	<PROC name="pts_Lead_FindActiveEmail"/>
+	<PROC name="pts_Lead_FindActivePhone1"/>
+	<PROC name="pts_Lead_FindActivePhone2"/>
+	<PROC name="pts_Lead_FindActivePriority"/>
+	<PROC name="pts_Lead_FindActiveCallTime"/>
+	<PROC name="pts_Lead_FindActiveSource"/>
+	<PROC name="pts_Lead_FindActiveLeadDate"/>
+	<PROC name="pts_Lead_FindActiveCallBackDate"/>
+	<PROC name="pts_Lead_FindLiveLeadName"/>
+	<PROC name="pts_Lead_FindLiveSalesCampaignName"/>
+	<PROC name="pts_Lead_FindLiveProspectTypeName"/>
+	<PROC name="pts_Lead_FindLiveEmail"/>
+	<PROC name="pts_Lead_FindLivePhone1"/>
+	<PROC name="pts_Lead_FindLivePhone2"/>
+	<PROC name="pts_Lead_FindLivePriority"/>
+	<PROC name="pts_Lead_FindLiveCallTime"/>
+	<PROC name="pts_Lead_FindLiveSource"/>
+	<PROC name="pts_Lead_FindLiveLeadDate"/>
+	<PROC name="pts_Lead_FindLiveCallBackDate"/>
+
+	<PROC name="pts_Lead_ExpMemberLeadName"/>
+	<PROC name="pts_Lead_ExpMemberSalesCampaignName"/>
+	<PROC name="pts_Lead_ExpMemberProspectTypeName"/>
+	<PROC name="pts_Lead_ExpMemberEmail"/>
+	<PROC name="pts_Lead_ExpMemberPhone1"/>
+	<PROC name="pts_Lead_ExpMemberPhone2"/>
+	<PROC name="pts_Lead_ExpMemberPriority"/>
+	<PROC name="pts_Lead_ExpMemberCallTime"/>
+	<PROC name="pts_Lead_ExpMemberSource"/>
+	<PROC name="pts_Lead_ExpMemberLeadDate"/>
+	<PROC name="pts_Lead_ExpMemberCallBackDate"/>
+	<PROC name="pts_Lead_ExpStatusLeadName"/>
+	<PROC name="pts_Lead_ExpStatusSalesCampaignName"/>
+	<PROC name="pts_Lead_ExpStatusProspectTypeName"/>
+	<PROC name="pts_Lead_ExpStatusEmail"/>
+	<PROC name="pts_Lead_ExpStatusPhone1"/>
+	<PROC name="pts_Lead_ExpStatusPhone2"/>
+	<PROC name="pts_Lead_ExpStatusPriority"/>
+	<PROC name="pts_Lead_ExpStatusCallTime"/>
+	<PROC name="pts_Lead_ExpStatusSource"/>
+	<PROC name="pts_Lead_ExpStatusLeadDate"/>
+	<PROC name="pts_Lead_ExpStatusCallBackDate"/>
+	<PROC name="pts_Lead_ExpActiveLeadName"/>
+	<PROC name="pts_Lead_ExpActiveSalesCampaignName"/>
+	<PROC name="pts_Lead_ExpActiveProspectTypeName"/>
+	<PROC name="pts_Lead_ExpActiveEmail"/>
+	<PROC name="pts_Lead_ExpActivePhone1"/>
+	<PROC name="pts_Lead_ExpActivePhone2"/>
+	<PROC name="pts_Lead_ExpActivePriority"/>
+	<PROC name="pts_Lead_ExpActiveCallTime"/>
+	<PROC name="pts_Lead_ExpActiveSource"/>
+	<PROC name="pts_Lead_ExpActiveLeadDate"/>
+	<PROC name="pts_Lead_ExpActiveCallBackDate"/>
+	<PROC name="pts_Lead_ExpLiveLeadName"/>
+	<PROC name="pts_Lead_ExpLiveSalesCampaignName"/>
+	<PROC name="pts_Lead_ExpLiveProspectTypeName"/>
+	<PROC name="pts_Lead_ExpLiveEmail"/>
+	<PROC name="pts_Lead_ExpLivePhone1"/>
+	<PROC name="pts_Lead_ExpLivePhone2"/>
+	<PROC name="pts_Lead_ExpLivePriority"/>
+	<PROC name="pts_Lead_ExpLiveCallTime"/>
+	<PROC name="pts_Lead_ExpLiveSource"/>
+	<PROC name="pts_Lead_ExpLiveLeadDate"/>
+	<PROC name="pts_Lead_ExpLiveCallBackDate"/>
+
+	<PROC name="pts_Lead_Update"/>
+	<PROC name="pts_Lead_TimeZone" path="Custom"/>
+	<PROC name="pts_Lead_UpdateCode" path="Custom"/>
+-->
+
+  <PROC name="pts_LeadAd_Add"/>
+  <PROC name="pts_LeadAd_Delete"/>
+  <PROC name="pts_LeadAd_Fetch"/>
+  <PROC name="pts_LeadAd_FindLeadAdName"/>
+  <PROC name="pts_LeadAd_FindTarget"/>
+  <PROC name="pts_LeadAd_FindLeadAdID"/>
+  <PROC name="pts_LeadAd_FindGroupID"/>
+  <PROC name="pts_LeadAd_Update"/>
+  <PROC name="pts_LeadAd_ListCompany"/>
+  <PROC name="pts_LeadAd_ListGroup"/>
+
+  <PROC name="pts_LeadCampaign_Add"/>
+	<PROC name="pts_LeadCampaign_Delete"/>
+	<PROC name="pts_LeadCampaign_EnumMemberList"/>
+	<PROC name="pts_LeadCampaign_EnumPresentList"/>
+	<PROC name="pts_LeadCampaign_Fetch"/>
+	<PROC name="pts_LeadCampaign_FindLeadCampaignName"/>
+	<PROC name="pts_LeadCampaign_FindLeadCampaignID"/>
+	<PROC name="pts_LeadCampaign_FindObjective"/>
+	<PROC name="pts_LeadCampaign_FindStatus"/>
+	<PROC name="pts_LeadCampaign_FindGroupID"/>
+	<PROC name="pts_LeadCampaign_Update"/>
+	<PROC name="pts_LeadCampaign_ListMember"/>
+	<PROC name="pts_LeadCampaign_ListAffiliate"/>
+	<PROC name="pts_LeadCampaign_ListAffiliateText" path="Custom"/>
+	<PROC name="pts_LeadCampaign_ListPresent"/>
+	<PROC name="pts_LeadCampaign_ListGroup"/>
+
+	<PROC name="pts_LeadLog_Add"/>
+	<PROC name="pts_LeadLog_Delete"/>
+	<PROC name="pts_LeadLog_Fetch"/>
+	<PROC name="pts_LeadLog_Update"/>
+	<PROC name="pts_LeadLog_ClearAll" path="Custom"/>
+	<PROC name="pts_LeadLog_ClearMember" path="Custom"/>
+	<PROC name="pts_LeadLog_ClearAffiliate" path="Custom"/>
+
+	<PROC name="pts_LeadPage_Add"/>
+	<PROC name="pts_LeadPage_Delete"/>
+	<PROC name="pts_LeadPage_Fetch"/>
+	<PROC name="pts_LeadPage_FetchEmail"/>
+	<PROC name="pts_LeadPage_Update"/>
+	<PROC name="pts_LeadPage_List"/>
+	<PROC name="pts_LeadPage_ViewPages"/>
+	<PROC name="pts_LeadPage_DeleteLeadCampaign" path="Custom"/>
+	<PROC name="pts_LeadPage_NextPage" path="Custom"/>
+	<PROC name="pts_LeadPage_GetSeq" path="Custom"/>
+	<PROC name="pts_LeadPage_ThanksPage" path="Custom"/>
+	<PROC name="pts_LeadPage_ReportCompany" path="Custom"/>
+	<PROC name="pts_LeadPage_ReportMember" path="Custom"/>
+	<PROC name="pts_LeadPage_ReportAffiliate" path="Custom"/>
+	<PROC name="pts_LeadPage_Languages" path="Custom"/>
+
+	<PROC name="pts_Lesson_Add"/>
+	<PROC name="pts_Lesson_Count"/>
+	<PROC name="pts_Lesson_Delete"/>
+	<PROC name="pts_Lesson_Fetch"/>
+	<PROC name="pts_Lesson_Update"/>
+	<PROC name="pts_Lesson_ListCourse"/>
+<!--
+	<PROC name="pts_Machine_Add"/>
+	<PROC name="pts_Machine_Delete"/>
+	<PROC name="pts_Machine_Fetch"/>
+	<PROC name="pts_Machine_FetchEmail"/>
+	<PROC name="pts_Machine_FindMachineName"/>
+	<PROC name="pts_Machine_FindEmail"/>
+	<PROC name="pts_Machine_Update"/>
+	<PROC name="pts_Machine_List"/>
+	<PROC name="pts_Machine_ListAll"/>
+	<PROC name="pts_Machine_MemberCount" path="Custom"/>
+	<PROC name="pts_Machine_SetCustomerPrice" path="Custom"/>
+	<PROC name="pts_Machine_GetMemberID" path="Custom"/>
+	<PROC name="pts_Machine_Logon" path="Custom"/>
+-->
+	<PROC name="pts_Mail_Add"/>
+	<PROC name="pts_Mail_Count"/>
+	<PROC name="pts_Mail_Delete"/>
+	<PROC name="pts_Mail_Fetch"/>
+	<PROC name="pts_Mail_Update"/>
+	<PROC name="pts_Mail_ListOwner"/>
+	<PROC name="pts_Mail_Move" path="Custom"/>
+
+	<PROC name="pts_Member_Add"/>
+	<PROC name="pts_Member_AddCustom_7" path="Custom"/>
+	<PROC name="pts_Member_AddCustom" path="Custom"/>
+	<PROC name="pts_Member_Count"/>
+	<PROC name="pts_Member_Delete"/>
+	<PROC name="pts_Member_Fetch"/>
+	<PROC name="pts_Member_FetchAuthUserID"/>
+	<PROC name="pts_Member_FetchRef"/>
+	<PROC name="pts_Member_FetchMasterID"/>
+	<PROC name="pts_Member_FetchLogon" path="Custom"/>
+	<PROC name="pts_Member_FindMemberName"/>
+	<PROC name="pts_Member_FindCompanyName"/>
+	<PROC name="pts_Member_FindMemberID"/>
+	<PROC name="pts_Member_FindReference"/>
+	<PROC name="pts_Member_FindPhone1"/>
+	<PROC name="pts_Member_FindStatus"/>
+	<PROC name="pts_Member_FindEmail"/>
+	<PROC name="pts_Member_FindEnrollDate"/>
+	<PROC name="pts_Member_FindMasterID"/>
+	<PROC name="pts_Member_FindGroupID"/>
+	<PROC name="pts_Member_FindRole"/>
+	<PROC name="pts_Member_FindOrgMemberName"/>
+	<PROC name="pts_Member_FindOrgCompanyName"/>
+	<PROC name="pts_Member_FindOrgMemberID"/>
+	<PROC name="pts_Member_FindOrgReference"/>
+	<PROC name="pts_Member_FindOrgPhone1"/>
+	<PROC name="pts_Member_FindOrgStatus"/>
+	<PROC name="pts_Member_FindOrgEmail"/>
+	<PROC name="pts_Member_FindOrgEnrollDate"/>
+	<PROC name="pts_Member_FindOrgMasterID"/>
+	<PROC name="pts_Member_FindOrgGroupID"/>
+	<PROC name="pts_Member_FindOrgRole"/>
+	<PROC name="pts_Member_FindCustomerMemberName"/>
+	<PROC name="pts_Member_FindCustomerCompanyName"/>
+	<PROC name="pts_Member_FindCustomerMemberID"/>
+	<PROC name="pts_Member_FindCustomerReference"/>
+	<PROC name="pts_Member_FindCustomerPhone1"/>
+	<PROC name="pts_Member_FindCustomerStatus"/>
+	<PROC name="pts_Member_FindCustomerEmail"/>
+	<PROC name="pts_Member_FindCustomerEnrollDate"/>
+	<PROC name="pts_Member_FindCustomerMasterID"/>
+	<PROC name="pts_Member_FindCustomerGroupID"/>
+	<PROC name="pts_Member_FindCustomerRole"/>
+	<PROC name="pts_Member_FindOwnerMemberName"/>
+	<PROC name="pts_Member_FindOwnerCompanyName"/>
+	<PROC name="pts_Member_FindOwnerMemberID"/>
+	<PROC name="pts_Member_FindOwnerReference"/>
+	<PROC name="pts_Member_FindOwnerPhone1"/>
+	<PROC name="pts_Member_FindOwnerStatus"/>
+	<PROC name="pts_Member_FindOwnerEmail"/>
+	<PROC name="pts_Member_FindOwnerEnrollDate"/>
+	<PROC name="pts_Member_FindOwnerMasterID"/>
+	<PROC name="pts_Member_FindOwnerGroupID"/>
+	<PROC name="pts_Member_FindOwnerRole"/>
+	<PROC name="pts_Member_FindMasterMemberName"/>
+	<PROC name="pts_Member_FindMasterCompanyName"/>
+	<PROC name="pts_Member_FindMasterMemberID"/>
+	<PROC name="pts_Member_FindMasterReference"/>
+	<PROC name="pts_Member_FindMasterPhone1"/>
+	<PROC name="pts_Member_FindMasterStatus"/>
+	<PROC name="pts_Member_FindMasterEmail"/>
+	<PROC name="pts_Member_FindMasterEnrollDate"/>
+	<PROC name="pts_Member_FindMasterMasterID"/>
+	<PROC name="pts_Member_FindMasterGroupID"/>
+	<PROC name="pts_Member_FindMasterRole"/>
+	<PROC name="pts_Member_FindGroupMemberName"/>
+	<PROC name="pts_Member_FindGroupCompanyName"/>
+	<PROC name="pts_Member_FindGroupMemberID"/>
+	<PROC name="pts_Member_FindGroupReference"/>
+	<PROC name="pts_Member_FindGroupPhone1"/>
+	<PROC name="pts_Member_FindGroupStatus"/>
+	<PROC name="pts_Member_FindGroupEmail"/>
+	<PROC name="pts_Member_FindGroupEnrollDate"/>
+	<PROC name="pts_Member_FindGroupGroupID"/>
+	<PROC name="pts_Member_FindGroupGroupID"/>
+	<PROC name="pts_Member_FindGroupRole"/>
+	<PROC name="pts_Member_ListOrg"/>
+	<PROC name="pts_Member_ListReferral"/>
+	<PROC name="pts_Member_ListCustomers"/>
+	<PROC name="pts_Member_ListMentor" path="Custom"/>
+	<PROC name="pts_Member_LoadAuthUser"/>
+	<PROC name="pts_Member_Update"/>
+	<PROC name="pts_Member_AddOrgMember" path="Custom"/>
+	<PROC name="pts_Member_DeleteOrgMember" path="Custom"/>
+	<PROC name="pts_Member_CalcMasterPrice" path="Custom"/>
+	<PROC name="pts_Member_ChangeStatus" path="Custom"/>
+	<PROC name="pts_Member_DeleteMaster" path="Custom"/>
+	<PROC name="pts_Member_CheckMaster" path="Custom"/>
+	<PROC name="pts_Member_ActiveCount" path="Custom"/>
+	<PROC name="pts_Member_MaxCount" path="Custom"/>
+	<PROC name="pts_Member_RefRef" path="Custom"/>
+	<PROC name="pts_Member_ReportMembership" path="Custom"/>
+	<PROC name="pts_Member_ReportNewEnrollment" path="Custom"/>
+	<PROC name="pts_Member_ReportTotalEnrollment" path="Custom"/>
+	<PROC name="pts_Member_ReportBilling" path="Custom"/>
+	<PROC name="pts_Member_ReportVisit" path="Custom"/>
+	<PROC name="pts_Member_ReportVisitStatus" path="Custom"/>
+	<PROC name="pts_Member_ReportAuthLog" path="Custom"/>
+	<PROC name="pts_Member_ReportVisitDetail" path="Custom"/>
+	<PROC name="pts_Member_ReportVisitDetailStatus" path="Custom"/>
+	<PROC name="pts_Member_ReportMembershipDetail" path="Custom"/>
+	<PROC name="pts_Member_ReportBillingDetail" path="Custom"/>
+	<PROC name="pts_Member_TBCount" path="Custom"/>
+	<PROC name="pts_Member_DashBoard" path="Custom"/>
+	<PROC name="pts_Member_Performance" path="Custom"/>
+	<PROC name="pts_Member_ExistEmail" path="Custom"/>
+	<PROC name="pts_Member_UpdateStatus" path="Custom"/>
+	<PROC name="pts_Member_ListNewsLetter" path="Custom"/>
+	<PROC name="pts_Member_Genealogy" path="Custom"/>
+<!--	<PROC name="pts_Member_SetCommTitle" path="Custom"/>-->
+	<PROC name="pts_Member_GetSignature" path="Custom"/>
+	<PROC name="pts_Member_GetIsMsg" path="Custom"/>
+	<PROC name="pts_Member_ListEmail" path="Custom"/>
+	<PROC name="pts_Member_CalcQV" path="Custom"/>
+	<PROC name="pts_Member_CalcTitle" path="Custom"/>
+	<PROC name="pts_Member_RemoveMember" path="Custom"/>
+	<PROC name="pts_Member_NewMembers" path="Custom"/>
+	<PROC name="pts_Member_FundRaisingSummary" path="Custom"/>
+	<PROC name="pts_Member_FundRaisingDetail" path="Custom"/>
+	<PROC name="pts_Member_Custom" path="Custom"/>
+	<PROC name="pts_Member_CustomList" path="Custom"/>
+	<PROC name="pts_Member_SearchDownline" path="Custom"/>
+	<PROC name="pts_Member_CheckUpline" path="Custom"/>
+	<PROC name="pts_Member_TotalCustomers" path="Custom"/>
+
+	<PROC name="pts_Member_PlaceSponsor" path="Custom"/>
+	<PROC name="pts_Member_PlaceSponsor2" path="Custom"/>
+	<PROC name="pts_Member_PlaceBinary3" path="Custom"/>
+
+	<PROC name="pts_MemberAssess_Add"/>
+	<PROC name="pts_MemberAssess_Count"/>
+	<PROC name="pts_MemberAssess_Delete"/>
+	<PROC name="pts_MemberAssess_Fetch"/>
+	<PROC name="pts_MemberAssess_Update"/>
+	<PROC name="pts_MemberAssess_ListAssessmentAll"/>
+	<PROC name="pts_MemberAssess_ListAssessment"/>
+	<PROC name="pts_MemberAssess_ListCompany"/>
+	<PROC name="pts_MemberAssess_CalcMaster" path="Custom"/>
+	<PROC name="pts_MemberAssess_CalcResult" path="Custom"/>
+	<PROC name="pts_MemberAssess_CalcResultFormula" path="Custom"/>
+	<PROC name="pts_MemberAssess_CalcResultType" path="Custom"/>
+	<PROC name="pts_MemberAssess_SetPrivate" path="Custom"/>
+	<PROC name="pts_MemberAssess_GetCourses" path="Custom"/>
+	<PROC name="pts_MemberAssess_CertifyMember" path="Custom"/>
+	<PROC name="pts_MemberAssess_CertifyLookup" path="Custom"/>
+	<PROC name="pts_MemberAssess_CertifyBusiness" path="Custom"/>
+	<PROC name="pts_MemberAssess_CertifyCompany" path="Custom"/>
+	<PROC name="pts_MemberAssess_CertifyCompanyGrp" path="Custom"/>
+	<PROC name="pts_MemberAssess_CheckAssessment"/>
+
+	<PROC name="pts_MemberContest_Add" path="Custom"/>
+	<PROC name="pts_MemberContest_Delete"/>
+
+	<PROC name="pts_MemberDomain_Add"/>
+	<PROC name="pts_MemberDomain_Delete"/>
+	<PROC name="pts_MemberDomain_Fetch"/>
+	<PROC name="pts_MemberDomain_List"/>
+	<PROC name="pts_MemberDomain_Update"/>
+	<PROC name="pts_MemberDomain_Website"/>
+
+	<PROC name="pts_MemberNews_Add"/>
+	<PROC name="pts_MemberNews_Delete"/>
+	<PROC name="pts_MemberNews_DeleteMember" path="Custom"/>
+	<PROC name="pts_MemberNews_GetMember" path="Custom"/>
+	<PROC name="pts_MemberNews_Fetch"/>
+	<PROC name="pts_MemberNews_Update"/>
+	<PROC name="pts_MemberNews_ListMember"/>
+
+	<PROC name="pts_MemberSales_Add"/>
+	<PROC name="pts_MemberSales_Delete"/>
+	<PROC name="pts_MemberSales_Fetch"/>
+	<PROC name="pts_MemberSales_Update"/>
+	<PROC name="pts_MemberSales_ListMember"/>
+	<PROC name="pts_MemberSales_Company_12" path="Custom"/>
+	<PROC name="pts_MemberSales_Company_12_Check" path="Custom"/>
+
+	<PROC name="pts_MemberTax_Add"/>
+	<PROC name="pts_MemberTax_Delete"/>
+	<PROC name="pts_MemberTax_Fetch"/>
+	<PROC name="pts_MemberTax_Update"/>
+	<PROC name="pts_MemberTax_List"/>
+	<PROC name="pts_MemberTax_Recalc" path="Custom"/>
+
+	<PROC name="pts_MemberTitle_Add"/>
+	<PROC name="pts_MemberTitle_Delete"/>
+	<PROC name="pts_MemberTitle_Fetch"/>
+	<PROC name="pts_MemberTitle_Update"/>
+	<PROC name="pts_MemberTitle_ListMember"/>
+
+	<PROC name="pts_Merchant_Add"/>
+	<PROC name="pts_Merchant_Delete"/>
+	<PROC name="pts_Merchant_Fetch"/>
+	<PROC name="pts_Merchant_FetchEmail"/>
+	<PROC name="pts_Merchant_Update"/>
+	<PROC name="pts_Merchant_FindMerchantName"/>
+	<PROC name="pts_Merchant_FindNameLast"/>
+	<PROC name="pts_Merchant_FindFirst"/>
+	<PROC name="pts_Merchant_FindEmail"/>
+	<PROC name="pts_Merchant_Logon" path="Custom"/>
+	<PROC name="pts_Merchant_Logon2" path="Custom"/>
+
+	<PROC name="pts_Message_Count"/>
+	<PROC name="pts_Message_Fetch"/>
+	<PROC name="pts_Message_FindMessageTitle"/>
+	<PROC name="pts_Message_FindBody"/>
+	<PROC name="pts_Message_ListThreadTree"/>
+	<PROC name="pts_Message_GetThreadPages"/>
+	<PROC name="pts_Message_GetForumPages"/>
+	<PROC name="pts_Message_ListMessageBoardUser"/>
+	<PROC name="pts_Message_Add" path="Custom"/>
+	<PROC name="pts_Message_CanUserDelete" path="Custom"/>
+	<PROC name="pts_Message_DeleteBranch" path="Custom"/>
+	<PROC name="pts_Message_Update" path="Custom"/>
+	<PROC name="pts_Message_ListThread" path="Custom"/>
+	<PROC name="pts_Message_ListForum" path="Custom"/>
+	<PROC name="pts_Message_GetLastPost" path="Custom"/>
+	<PROC name="pts_Message_UpdateThread" path="Custom"/>
+
+	<PROC name="pts_Metric_Add"/>
+	<PROC name="pts_Metric_Delete"/>
+	<PROC name="pts_Metric_Fetch"/>
+	<PROC name="pts_Metric_Update"/>
+	<PROC name="pts_Metric_ListMember" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderCompany" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderGroup" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderMentor" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderPrivate" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderCompanyCustom" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderGroupCustom" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderMentorCustom" path="Custom"/>
+	<PROC name="pts_Metric_ExpLeaderPrivateCustom" path="Custom"/>
+	<PROC name="pts_Metric_LeaderCompanyPoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderGroupPoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderMentorPoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderPrivatePoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderCompanyCustomPoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderGroupCustomPoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderMentorCustomPoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderPrivateCustomPoints" path="Custom"/>
+	<PROC name="pts_Metric_LeaderSummary" path="Custom"/>
+	<PROC name="pts_Metric_LeaderSummaryCustom" path="Custom"/>
+	<PROC name="pts_Metric_MemberCompany" path="Custom"/>
+	<PROC name="pts_Metric_MemberGroup" path="Custom"/>
+	<PROC name="pts_Metric_MemberMentor" path="Custom"/>
+	<PROC name="pts_Metric_MemberPrivate" path="Custom"/>
+	<PROC name="pts_Metric_MemberCompanyCustom" path="Custom"/>
+	<PROC name="pts_Metric_MemberGroupCustom" path="Custom"/>
+	<PROC name="pts_Metric_MemberMentorCustom" path="Custom"/>
+	<PROC name="pts_Metric_MemberPrivateCustom" path="Custom"/>
+	<PROC name="pts_Metric_MemberTotal" path="Custom"/>
+	<PROC name="pts_Metric_MemberSummary" path="Custom"/>
+	<PROC name="pts_Metric_MemberDetail" path="Custom"/>
+	<PROC name="pts_Metric_Report" path="Custom"/>
+
+	<PROC name="pts_MetricType_Add"/>
+	<PROC name="pts_MetricType_Delete"/>
+	<PROC name="pts_MetricType_Fetch"/>
+	<PROC name="pts_MetricType_Update"/>
+	<PROC name="pts_MetricType_EnumUserCompany"/>
+	<PROC name="pts_MetricType_List"/>
+	<PROC name="pts_MetricType_ListGroup"/>
+
+	<PROC name="pts_Moption_Add"/>
+	<PROC name="pts_Moption_Delete"/>
+	<PROC name="pts_Moption_Fetch"/>
+	<PROC name="pts_Moption_FetchMember"/>
+	<PROC name="pts_Moption_Update"/>
+
+	<PROC name="pts_Msg_Add"/>
+	<PROC name="pts_Msg_Count"/>
+	<PROC name="pts_Msg_Delete"/>
+	<PROC name="pts_Msg_DeleteOwner"/>
+	<PROC name="pts_Msg_Fetch"/>
+	<PROC name="pts_Msg_FindMsgID"/>
+	<PROC name="pts_Msg_FindSubject"/>
+	<PROC name="pts_Msg_FindMessage"/>
+	<PROC name="pts_Msg_Update"/>
+	<PROC name="pts_Msg_ListMsgs"/>
+<!--
+	<PROC name="pts_Msg_MemberMsgs" path="Custom"/>
+	<PROC name="pts_Msg_SetMemberMsgs" path="Custom"/>
+	<PROC name="pts_Msg_GetMemberMsgs" path="Custom"/>
+-->
+	<PROC name="pts_News_Add"/>
+	<PROC name="pts_News_Count"/>
+	<PROC name="pts_News_Delete"/>
+	<PROC name="pts_News_Fetch"/>
+	<PROC name="pts_News_FindActiveDate"/>
+	<PROC name="pts_News_FindTitle"/>
+	<PROC name="pts_News_FindDescription"/>
+	<PROC name="pts_News_FindTags"/>
+	<PROC name="pts_News_FindStatus"/>
+	<PROC name="pts_News_FindTopicActiveDate"/>
+	<PROC name="pts_News_FindTopicTitle"/>
+	<PROC name="pts_News_FindTopicDescription"/>
+	<PROC name="pts_News_FindTopicTags"/>
+	<PROC name="pts_News_FindTopicStatus"/>
+	<PROC name="pts_News_Update"/>
+	<PROC name="pts_News_ListNews" path="Custom"/>
+	<PROC name="pts_News_ListShare" path="Custom"/>
+	<PROC name="pts_News_Avatar" path="Custom"/>
+	<PROC name="pts_News_Search" path="Custom"/>
+
+	<PROC name="pts_NewsLetter_Add"/>
+	<PROC name="pts_NewsLetter_Delete"/>
+	<PROC name="pts_NewsLetter_Fetch"/>
+	<PROC name="pts_NewsLetter_FindNewsLetterName"/>
+	<PROC name="pts_NewsLetter_FindDescription"/>
+	<PROC name="pts_NewsLetter_FindMemberID"/>
+	<PROC name="pts_NewsLetter_Update"/>
+	<PROC name="pts_NewsLetter_EnumUserCompany"/>
+	<PROC name="pts_NewsLetter_ListCompany"/>
+	<PROC name="pts_NewsLetter_ListMember"/>
+	<PROC name="pts_NewsLetter_ListActive"/>
+	<PROC name="pts_NewsLetter_ListFeatured"/>
+	<PROC name="pts_NewsLetter_UpdateMemberCnt" path="Custom"/>
+	<PROC name="pts_NewsLetter_UpdateProspectCnt" path="Custom"/>
+	<PROC name="pts_NewsLetter_CalcSubscribers" path="Custom"/>
+
+	<PROC name="pts_NewsTopic_Add"/>
+	<PROC name="pts_NewsTopic_Delete"/>
+	<PROC name="pts_NewsTopic_Fetch"/>
+	<PROC name="pts_NewsTopic_Update"/>
+	<PROC name="pts_NewsTopic_EnumUserCompany"/>
+	<PROC name="pts_NewsTopic_List"/>
+	<PROC name="pts_NewsTopic_ListMajor"/>
+	<PROC name="pts_NewsTopic_ListMinor"/>
+	<PROC name="pts_NewsTopic_ReSeq" path="Custom"/>
+
+	<PROC name="pts_Note_Add"/>
+	<PROC name="pts_Note_Count"/>
+	<PROC name="pts_Note_Delete"/>
+	<PROC name="pts_Note_DeleteOwner"/>
+	<PROC name="pts_Note_Fetch"/>
+	<PROC name="pts_Note_Update"/>
+	<PROC name="pts_Note_ListNotes"/>
+	<PROC name="pts_Note_ListActivity"/>
+	<PROC name="pts_Note_ListReminder"/>
+	<PROC name="pts_Note_ListNotesStarts"/>
+	<PROC name="pts_Note_ListNotesContains"/>
+	<PROC name="pts_Note_ListActivityOwner" path="Custom"/>
+	<PROC name="pts_Note_ListReminderOwner" path="Custom"/>
+	<PROC name="pts_Note_Summary" path="Custom"/>
+
+	<PROC name="pts_Note_ListCustom_1" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_2" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_3" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_4" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_5" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_6" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_7" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_8" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_11" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_12" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_13" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_14" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_15" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_16" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_17" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_18" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_21" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_22" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_23" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_24" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_25" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_26" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_27" path="Custom"/>
+	<PROC name="pts_Note_ListCustom_28" path="Custom"/>
+	<PROC name="pts_Note_ListCustom" path="Custom"/>
+
+	<PROC name="pts_Org_Add"/>
+	<PROC name="pts_Org_EnumCompanyDocList" path="Custom"/>
+	<PROC name="pts_Org_Fetch"/>
+	<PROC name="pts_Org_FetchAuthUserID"/>
+	<PROC name="pts_Org_ListProgram" path="Custom"/>
+	<PROC name="pts_Org_ListFavoritePrivate"/>
+	<PROC name="pts_Org_LoadAuthUser"/>
+	<PROC name="pts_Org_LoadLogon"/>
+	<PROC name="pts_Org_Update"/>
+	<PROC name="pts_Org_Delete" path="Custom"/>
+	<PROC name="pts_Org_ListTree" path="Custom"/>
+	<PROC name="pts_Org_ListBranch" path="Custom"/>
+	<PROC name="pts_Org_ListMemberHierarchy" path="Custom"/>
+	<PROC name="pts_Org_ListMember" path="Custom"/>
+	<PROC name="pts_Org_UpdateHierarchy" path="Custom"/>
+	<PROC name="pts_Org_IsPublicCatalog" path="Custom"/>
+	<PROC name="pts_Org_ListFavorite" path="Custom"/>
+	<PROC name="pts_Org_ListActiveUsers"/>
+	<PROC name="pts_Org_ListUsers" path="Custom"/>
+	<PROC name="pts_Org_GetEmail" path="Custom"/>
+	
+	<PROC name="pts_OrgCourse_Add"/>
+	<PROC name="pts_OrgCourse_Delete"/>
+	<PROC name="pts_OrgCourse_Fetch"/>
+	<PROC name="pts_OrgCourse_GetOrgCourse"/>
+	<PROC name="pts_OrgCourse_Update"/>
+	<PROC name="pts_OrgCourse_DeleteCourses" path="Custom"/>
+	<PROC name="pts_OrgCourse_Update_Counters" path="Custom"/>
+
+	<PROC name="pts_OrgMember_DeleteMembers" path="Custom"/>
+
+	<PROC name="pts_Page_Add"/>
+	<PROC name="pts_Page_Count"/>
+	<PROC name="pts_Page_Delete"/>
+	<PROC name="pts_Page_EnumPageList"/>
+	<PROC name="pts_Page_EnumPageCategoryList" path="Custom"/>
+	<PROC name="pts_Page_Fetch"/>
+	<PROC name="pts_Page_FindCompanyPageName"/>
+	<PROC name="pts_Page_FindCompanyCategory"/>
+	<PROC name="pts_Page_FindCompanyPageID"/>
+	<PROC name="pts_Page_FindCompanyLanguage"/>
+	<PROC name="pts_Page_FindCompanyCategoryPageName"/>
+	<PROC name="pts_Page_FindCompanyCategoryCategory"/>
+	<PROC name="pts_Page_FindCompanyCategoryPageID"/>
+	<PROC name="pts_Page_FindCompanyCategoryLanguage"/>
+	<PROC name="pts_Page_FindMemberPageName"/>
+	<PROC name="pts_Page_FindMemberCategory"/>
+	<PROC name="pts_Page_FindMemberPageID"/>
+	<PROC name="pts_Page_FindMemberLanguage"/>
+	<PROC name="pts_Page_Update"/>
+	<PROC name="pts_Page_UpdateFT" path="Custom"/>
+	<PROC name="pts_Page_Search" path="Custom"/>
+
+	<!--
+	<PROC name="pts_Page_EnumUserCompany"/>
+	<PROC name="pts_Page_EnumUserCompanyCategory"/>
+	<PROC name="pts_Page_EnumUserMember"/>
+-->	
+	<PROC name="pts_Page_ListForm"/>
+	<PROC name="pts_Page_ListFormPublic"/>
+
+	<PROC name="pts_PageSection_Add"/>
+	<PROC name="pts_PageSection_Count"/>
+	<PROC name="pts_PageSection_Delete"/>
+	<PROC name="pts_PageSection_Fetch"/>
+	<PROC name="pts_PageSection_FindPageSectionName"/>
+	<PROC name="pts_PageSection_FindFileName"/>
+	<PROC name="pts_PageSection_FindLanguage"/>
+	<PROC name="pts_PageSection_Update"/>
+
+	<PROC name="pts_Party_Add"/>
+	<PROC name="pts_Party_Delete"/>
+	<PROC name="pts_Party_DeleteAppt"/>
+	<PROC name="pts_Party_Fetch"/>
+	<PROC name="pts_Party_FetchPartyID"/>
+	<PROC name="pts_Party_FetchMemberID"/>
+	<PROC name="pts_Party_Update"/>
+	<PROC name="pts_Party_ListMember"/>
+	<PROC name="pts_Party_CalcSales" path="Custom"/>
+
+	<PROC name="pts_Payment_Add"/>
+	<PROC name="pts_Payment_Count"/>
+	<PROC name="pts_Payment_Delete"/>
+	<PROC name="pts_Payment_Fetch"/>
+	<PROC name="pts_Payment_FindPayDate"/>
+	<PROC name="pts_Payment_FindPayType"/>
+	<PROC name="pts_Payment_FindAmount"/>
+	<PROC name="pts_Payment_FindReference"/>
+	<PROC name="pts_Payment_FindPaymentID"/>
+	<PROC name="pts_Payment_FindDescription"/>
+	<PROC name="pts_Payment_FindStatusPayDate"/>
+	<PROC name="pts_Payment_FindStatusPayType"/>
+	<PROC name="pts_Payment_FindStatusAmount"/>
+	<PROC name="pts_Payment_FindStatusReference"/>
+	<PROC name="pts_Payment_FindStatusPaymentID"/>
+	<PROC name="pts_Payment_FindStatusDescription"/>
+	<PROC name="pts_Payment_FindOwnerPayDate"/>
+	<PROC name="pts_Payment_FindOwnerPayType"/>
+	<PROC name="pts_Payment_FindOwnerAmount"/>
+	<PROC name="pts_Payment_FindOwnerReference"/>
+	<PROC name="pts_Payment_FindOwnerPaymentID"/>
+	<PROC name="pts_Payment_FindOwnerDescription"/>
+	<PROC name="pts_Payment_FindOwnerStatusPayDate"/>
+	<PROC name="pts_Payment_FindOwnerStatusPayType"/>
+	<PROC name="pts_Payment_FindOwnerStatusAmount"/>
+	<PROC name="pts_Payment_FindOwnerStatusReference"/>
+	<PROC name="pts_Payment_FindOwnerStatusPaymentID"/>
+	<PROC name="pts_Payment_FindOwnerStatusDescription"/>
+	<PROC name="pts_Payment_FindMemberPayDate"/>
+	<PROC name="pts_Payment_FindMemberPayType"/>
+	<PROC name="pts_Payment_FindMemberAmount"/>
+	<PROC name="pts_Payment_FindMemberReference"/>
+	<PROC name="pts_Payment_FindMemberPaymentID"/>
+	<PROC name="pts_Payment_FindMemberDescription"/>
+  <PROC name="pts_Payment_ListOwner"/>
+  <PROC name="pts_Payment_ListOwnerStatus" path="Custom"/>
+  <PROC name="pts_Payment_Update"/>
+	<PROC name="pts_Payment_ListSubmittedCCCK" path="Custom"/>
+	<PROC name="pts_Payment_LastBillingID" path="Custom"/>
+	<PROC name="pts_Payment_SetPendingCCCK" path="Custom"/>
+	<PROC name="pts_Payment_SetCompanyPendingCCCK" path="Custom"/>
+	<PROC name="pts_Payment_ReportStatusAmount" path="Custom"/>
+	<PROC name="pts_Payment_ReportStatusCount" path="Custom"/>
+	<PROC name="pts_Payment_ReportPayTypeAmount" path="Custom"/>
+	<PROC name="pts_Payment_ReportPayTypeCount" path="Custom"/>
+	<PROC name="pts_Payment_GetCompany" path="Custom"/>
+	<PROC name="pts_Payment_ListMemberPayments" path="Custom"/>
+	<PROC name="pts_Payment_CompanyPayments" path="Custom"/>
+	<PROC name="pts_Payment_CompanyDebits" path="Custom"/>
+	<PROC name="pts_Payment_CompanyDebit" path="Custom"/>
+	<PROC name="pts_Payment_CreditPayment" path="Custom"/>
+	<PROC name="pts_Payment_Credit" path="Custom"/>
+	<PROC name="pts_Payment_Custom" path="Custom"/>
+
+	<PROC name="pts_Payout_Add"/>
+	<PROC name="pts_Payout_Count"/>
+	<PROC name="pts_Payout_Delete"/>
+	<PROC name="pts_Payout_Fetch"/>
+	<PROC name="pts_Payout_FindPayDate"/>
+	<PROC name="pts_Payout_FindPaidDate"/>
+	<PROC name="pts_Payout_FindPayoutID"/>
+	<PROC name="pts_Payout_FindAmount"/>
+	<PROC name="pts_Payout_FindOwnerID"/>
+	<PROC name="pts_Payout_FindOwnerPayDate"/>
+	<PROC name="pts_Payout_FindOwnerPaidDate"/>
+	<PROC name="pts_Payout_FindOwnerPayoutID"/>
+	<PROC name="pts_Payout_FindOwnerAmount"/>
+	<PROC name="pts_Payout_FindOwnerOwnerID"/>
+	<PROC name="pts_Payout_FindDateOwnerPayDate"/>
+	<PROC name="pts_Payout_FindDateOwnerPaidDate"/>
+	<PROC name="pts_Payout_FindDateOwnerPayoutID"/>
+	<PROC name="pts_Payout_FindDateOwnerAmount"/>
+	<PROC name="pts_Payout_FindDateOwnerOwnerID"/>
+	<PROC name="pts_Payout_FindDateOwnerShowPayDate"/>
+	<PROC name="pts_Payout_FindDateOwnerShowPaidDate"/>
+	<PROC name="pts_Payout_FindDateOwnerShowPayoutID"/>
+	<PROC name="pts_Payout_FindDateOwnerShowAmount"/>
+	<PROC name="pts_Payout_FindDateOwnerShowOwnerID"/>
+	<PROC name="pts_Payout_Update"/>
+	<PROC name="pts_Payout_CreatePayouts" path="Custom"/>
+	<PROC name="pts_Payout_CompanyPayouts" path="Custom"/>
+	<PROC name="pts_Payout_CompanyStatus" path="Custom"/>
+  <PROC name="pts_Payout_CompanyStatus2" path="Custom"/>
+  <PROC name="pts_Payout_WalletStatus" path="Custom"/>
+  <PROC name="pts_Payout_WalletTotal" path="Custom"/>
+  <PROC name="pts_Payout_WalletExport" path="Custom"/>
+  <PROC name="pts_Payout_ListCompany"/>
+<!--
+	<PROC name="pts_Pool_Add"/>
+	<PROC name="pts_Pool_Delete"/>
+	<PROC name="pts_Pool_Fetch"/>
+	<PROC name="pts_Pool_Update"/>
+	<PROC name="pts_Pool_List"/>
+
+	<PROC name="pts_Prepaid_Add"/>
+	<PROC name="pts_Prepaid_Delete"/>
+	<PROC name="pts_Prepaid_Fetch"/>
+	<PROC name="pts_Prepaid_FindPayDate"/>
+	<PROC name="pts_Prepaid_FindTypePayDate"/>
+	<PROC name="pts_Prepaid_Update"/>
+-->
+	<PROC name="pts_Product_Add"/>
+	<PROC name="pts_Product_Count"/>
+	<PROC name="pts_Product_Delete"/>
+	<PROC name="pts_Product_EnumProductType"/>
+	<PROC name="pts_Product_Fetch"/>
+	<PROC name="pts_Product_FetchCode"/>
+	<PROC name="pts_Product_FindProductName"/>
+	<PROC name="pts_Product_FindProductTypeName"/>
+	<PROC name="pts_Product_FindCode"/>
+	<PROC name="pts_Product_Copy"/>
+	<PROC name="pts_Product_Update"/>
+	<PROC name="pts_Product_ListProductType"/>
+	<PROC name="pts_Product_ListProductPriceLow"/>
+	<PROC name="pts_Product_ListProductPriceHigh"/>
+	<PROC name="pts_Product_ListProductName"/>
+	<PROC name="pts_Product_ListProductTypePublic"/>
+	<PROC name="pts_Product_ListProductPriceLowPublic"/>
+	<PROC name="pts_Product_ListProductPriceHighPublic"/>
+	<PROC name="pts_Product_ListProductNamePublic"/>
+	<PROC name="pts_Product_Summary" path="Custom"/>
+	<PROC name="pts_Product_CheckInventory" path="Custom"/>
+	<PROC name="pts_Product_UpdateInventory" path="Custom"/>
+
+	<PROC name="pts_ProductType_Add"/>
+	<PROC name="pts_ProductType_Delete"/>
+	<PROC name="pts_ProductType_Fetch"/>
+	<PROC name="pts_ProductType_Update"/>
+	<PROC name="pts_ProductType_EnumUserCompany"/>
+	<PROC name="pts_ProductType_EnumUserCompanyPublic"/>
+	<PROC name="pts_ProductType_EnumUserCompanyAll"/>
+	<PROC name="pts_ProductType_List"/>
+
+	<PROC name="pts_Profile_Add"/>
+	<PROC name="pts_Profile_Delete"/>
+	<PROC name="pts_Profile_Fetch"/>
+	<PROC name="pts_Profile_Update"/>
+	<PROC name="pts_Profile_ListMember"/>
+
+	<PROC name="pts_Project_Add"/>
+	<PROC name="pts_Project_Count"/>
+	<PROC name="pts_Project_Delete"/>
+	<PROC name="pts_Project_EnumUserMember"/>
+	<PROC name="pts_Project_Fetch"/>
+	<PROC name="pts_Project_FindProjectName"/>
+	<PROC name="pts_Project_FindDescription"/>
+	<PROC name="pts_Project_FindProjectID"/>
+	<PROC name="pts_Project_FindSecureProjectName"/>
+	<PROC name="pts_Project_FindSecureDescription"/>
+	<PROC name="pts_Project_FindSecureProjectID"/>
+	<PROC name="pts_Project_FindAssignedProjectName"/>
+	<PROC name="pts_Project_FindAssignedDescription"/>
+	<PROC name="pts_Project_FindAssignedProjectID"/>
+	<PROC name="pts_Project_FindStatusProjectName"/>
+	<PROC name="pts_Project_FindStatusDescription"/>
+	<PROC name="pts_Project_FindStatusProjectID"/>
+	<PROC name="pts_Project_FindSecureStatusProjectName"/>
+	<PROC name="pts_Project_FindSecureStatusDescription"/>
+	<PROC name="pts_Project_FindSecureStatusProjectID"/>
+	<PROC name="pts_Project_FindAssignedStatusProjectName"/>
+	<PROC name="pts_Project_FindAssignedStatusDescription"/>
+	<PROC name="pts_Project_FindAssignedStatusProjectID"/>
+	<PROC name="pts_Project_FindTypeProjectName"/>
+	<PROC name="pts_Project_FindTypeDescription"/>
+	<PROC name="pts_Project_FindTypeProjectID"/>
+	<PROC name="pts_Project_FindSecureTypeProjectName"/>
+	<PROC name="pts_Project_FindSecureTypeDescription"/>
+	<PROC name="pts_Project_FindSecureTypeProjectID"/>
+	<PROC name="pts_Project_FindAssignedTypeProjectName"/>
+	<PROC name="pts_Project_FindAssignedTypeDescription"/>
+	<PROC name="pts_Project_FindAssignedTypeProjectID"/>
+	<PROC name="pts_Project_FindStatusTypeProjectName"/>
+	<PROC name="pts_Project_FindStatusTypeDescription"/>
+	<PROC name="pts_Project_FindStatusTypeProjectID"/>
+	<PROC name="pts_Project_FindSecureStatusTypeProjectName"/>
+	<PROC name="pts_Project_FindSecureStatusTypeDescription"/>
+	<PROC name="pts_Project_FindSecureStatusTypeProjectID"/>
+	<PROC name="pts_Project_FindAssignedStatusTypeProjectName"/>
+	<PROC name="pts_Project_FindAssignedStatusTypeDescription"/>
+	<PROC name="pts_Project_FindAssignedStatusTypeProjectID"/>
+	<PROC name="pts_Project_Update"/>
+	<PROC name="pts_Project_ListParent"/>
+	<PROC name="pts_Project_ListCompanyPending"/>
+	<PROC name="pts_Project_ListCompanyStarted"/>
+	<PROC name="pts_Project_ListCompanyCompleted"/>
+	<PROC name="pts_Project_ListMemberPending"/>
+	<PROC name="pts_Project_ListMemberStarted"/>
+	<PROC name="pts_Project_ListMemberCompleted"/>
+	<PROC name="pts_Project_Copy" path="Custom"/>
+	<PROC name="pts_Project_ComputeTotalCost" path="Custom"/>
+	<PROC name="pts_Project_Projects" path="Custom"/>
+	<PROC name="pts_Project_CopyProjects" path="Custom"/>
+	<PROC name="pts_Project_DeleteProjects" path="Custom"/>
+	<PROC name="pts_Project_WhatsNewOwn" path="Custom"/>
+	<PROC name="pts_Project_WhatsNewBelong" path="Custom"/>
+	<PROC name="pts_Project_WhatsNewAccess" path="Custom"/>
+	<PROC name="pts_Project_WhatsNew" path="Custom"/>
+	<PROC name="pts_Project_Access" path="Custom"/>
+	<PROC name="pts_Project_UpdateHierarchy" path="Custom"/>
+	<PROC name="pts_Project_SetHierarchy" path="Custom"/>
+	<PROC name="pts_Project_Change" path="Custom"/>
+
+	<PROC name="pts_ProjectMember_Add"/>
+	<PROC name="pts_ProjectMember_Delete"/>
+	<PROC name="pts_ProjectMember_Fetch"/>
+	<PROC name="pts_ProjectMember_Update"/>
+	<PROC name="pts_ProjectMember_ListProject"/>
+	<PROC name="pts_ProjectMember_ListMember"/>
+	<PROC name="pts_ProjectMember_EnumUserMember"/>
+	<PROC name="pts_ProjectMember_DeleteMembers" path="Custom"/>
+	<PROC name="pts_ProjectMember_Copy" path="Custom"/>
+
+	<PROC name="pts_ProjectType_Add"/>
+	<PROC name="pts_ProjectType_Delete"/>
+	<PROC name="pts_ProjectType_Fetch"/>
+	<PROC name="pts_ProjectType_Update"/>
+	<PROC name="pts_ProjectType_EnumUserCompany"/>
+	<PROC name="pts_ProjectType_List"/>
+
+	<PROC name="pts_Promotion_Add"/>
+	<PROC name="pts_Promotion_Delete"/>
+	<PROC name="pts_Promotion_Fetch"/>
+	<PROC name="pts_Promotion_FindPromotionName"/>
+	<PROC name="pts_Promotion_FindCode"/>
+	<PROC name="pts_Promotion_FindDescription"/>
+	<PROC name="pts_Promotion_FindPromotionID"/>
+	<PROC name="pts_Promotion_FindProductID"/>
+	<PROC name="pts_Promotion_Update"/>
+	<PROC name="pts_Promotion_GetUsed" path="Custom"/>
+	<PROC name="pts_Promotion_ProductsPrice" path="Custom"/>
+
+	<PROC name="pts_Promo_Add"/>
+	<PROC name="pts_Promo_Delete"/>
+	<PROC name="pts_Promo_Fetch"/>
+	<PROC name="pts_Promo_FindPromoName"/>
+	<PROC name="pts_Promo_FindSendDate"/>
+	<PROC name="pts_Promo_FindStatus"/>
+	<PROC name="pts_Promo_Update"/>
+
+	<PROC name="pts_Prospect_Add"/>
+	<PROC name="pts_Prospect_Count"/>
+	<PROC name="pts_Prospect_Delete"/>
+	<PROC name="pts_Prospect_Fetch"/>
+	<PROC name="pts_Prospect_FindUnassignedProspectName"/>
+	<PROC name="pts_Prospect_FindUnassignedContactName"/>
+	<PROC name="pts_Prospect_FindUnassignedRepresenting"/>
+	<PROC name="pts_Prospect_FindUnassignedProspectID"/>
+	<PROC name="pts_Prospect_FindUnassignedEmail"/>
+	<PROC name="pts_Prospect_FindUnassignedPhone1"/>
+	<PROC name="pts_Prospect_FindUnassignedPriority"/>
+	<PROC name="pts_Prospect_FindUnassignedSource"/>
+	<PROC name="pts_Prospect_FindUnassignedCreateDate"/>
+	<PROC name="pts_Prospect_FindUnassignedLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindUnassignedSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindUnassignedDescription"/>
+	<PROC name="pts_Prospect_FindCompanyProspectName"/>
+	<PROC name="pts_Prospect_FindCompanyContactName"/>
+	<PROC name="pts_Prospect_FindCompanyRepresenting"/>
+	<PROC name="pts_Prospect_FindCompanyProspectID"/>
+	<PROC name="pts_Prospect_FindCompanyEmail"/>
+	<PROC name="pts_Prospect_FindCompanyPhone1"/>
+	<PROC name="pts_Prospect_FindCompanyPriority"/>
+	<PROC name="pts_Prospect_FindCompanySource"/>
+	<PROC name="pts_Prospect_FindCompanyCreateDate"/>
+	<PROC name="pts_Prospect_FindCompanyLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanySalesCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanyDescription"/>
+	<PROC name="pts_Prospect_FindCompanyStatusProspectName"/>
+	<PROC name="pts_Prospect_FindCompanyStatusContactName"/>
+	<PROC name="pts_Prospect_FindCompanyStatusRepresenting"/>
+	<PROC name="pts_Prospect_FindCompanyStatusProspectID"/>
+	<PROC name="pts_Prospect_FindCompanyStatusEmail"/>
+	<PROC name="pts_Prospect_FindCompanyStatusPhone1"/>
+	<PROC name="pts_Prospect_FindCompanyStatusPriority"/>
+	<PROC name="pts_Prospect_FindCompanyStatusSource"/>
+	<PROC name="pts_Prospect_FindCompanyStatusCreateDate"/>
+	<PROC name="pts_Prospect_FindCompanyStatusLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanyStatusSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanyStatusDescription"/>
+	<PROC name="pts_Prospect_FindCompanyActiveProspectName"/>
+	<PROC name="pts_Prospect_FindCompanyActiveContactName"/>
+	<PROC name="pts_Prospect_FindCompanyActiveRepresenting"/>
+	<PROC name="pts_Prospect_FindCompanyActiveProspectID"/>
+	<PROC name="pts_Prospect_FindCompanyActiveEmail"/>
+	<PROC name="pts_Prospect_FindCompanyActivePhone1"/>
+	<PROC name="pts_Prospect_FindCompanyActivePriority"/>
+	<PROC name="pts_Prospect_FindCompanyActiveSource"/>
+	<PROC name="pts_Prospect_FindCompanyActiveCreateDate"/>
+	<PROC name="pts_Prospect_FindCompanyActiveLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanyActiveSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanyActiveDescription"/>
+	
+	<PROC name="pts_Prospect_FindMemberProspectName"/>
+	<PROC name="pts_Prospect_FindMemberContactName"/>
+	<PROC name="pts_Prospect_FindMemberRepresenting"/>
+	<PROC name="pts_Prospect_FindMemberProspectID"/>
+	<PROC name="pts_Prospect_FindMemberEmail"/>
+	<PROC name="pts_Prospect_FindMemberPhone1"/>
+	<PROC name="pts_Prospect_FindMemberPriority"/>
+	<PROC name="pts_Prospect_FindMemberSource"/>
+	<PROC name="pts_Prospect_FindMemberCreateDate"/>
+	<PROC name="pts_Prospect_FindMemberLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberDescription"/>
+	<PROC name="pts_Prospect_FindMemberStatusProspectName"/>
+	<PROC name="pts_Prospect_FindMemberStatusContactName"/>
+	<PROC name="pts_Prospect_FindMemberStatusRepresenting"/>
+	<PROC name="pts_Prospect_FindMemberStatusProspectID"/>
+	<PROC name="pts_Prospect_FindMemberStatusEmail"/>
+	<PROC name="pts_Prospect_FindMemberStatusPhone1"/>
+	<PROC name="pts_Prospect_FindMemberStatusPriority"/>
+	<PROC name="pts_Prospect_FindMemberStatusSource"/>
+	<PROC name="pts_Prospect_FindMemberStatusCreateDate"/>
+	<PROC name="pts_Prospect_FindMemberStatusLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberStatusSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberStatusDescription"/>
+	<PROC name="pts_Prospect_FindMemberActiveProspectName"/>
+	<PROC name="pts_Prospect_FindMemberActiveContactName"/>
+	<PROC name="pts_Prospect_FindMemberActiveRepresenting"/>
+	<PROC name="pts_Prospect_FindMemberActiveProspectID"/>
+	<PROC name="pts_Prospect_FindMemberActiveEmail"/>
+	<PROC name="pts_Prospect_FindMemberActivePhone1"/>
+	<PROC name="pts_Prospect_FindMemberActivePriority"/>
+	<PROC name="pts_Prospect_FindMemberActiveSource"/>
+	<PROC name="pts_Prospect_FindMemberActiveCreateDate"/>
+	<PROC name="pts_Prospect_FindMemberActiveLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberActiveSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberActiveDescription"/>
+
+	<PROC name="pts_Prospect_FindLeadProspectName"/>
+	<PROC name="pts_Prospect_FindLeadContactName"/>
+	<PROC name="pts_Prospect_FindLeadRepresenting"/>
+	<PROC name="pts_Prospect_FindLeadProspectID"/>
+	<PROC name="pts_Prospect_FindLeadEmail"/>
+	<PROC name="pts_Prospect_FindLeadPhone1"/>
+	<PROC name="pts_Prospect_FindLeadPriority"/>
+	<PROC name="pts_Prospect_FindLeadSource"/>
+	<PROC name="pts_Prospect_FindLeadCreateDate"/>
+	<PROC name="pts_Prospect_FindLeadLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindLeadSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindLeadDescription"/>
+	<PROC name="pts_Prospect_FindLeadStatusProspectName"/>
+	<PROC name="pts_Prospect_FindLeadStatusContactName"/>
+	<PROC name="pts_Prospect_FindLeadStatusRepresenting"/>
+	<PROC name="pts_Prospect_FindLeadStatusProspectID"/>
+	<PROC name="pts_Prospect_FindLeadStatusEmail"/>
+	<PROC name="pts_Prospect_FindLeadStatusPhone1"/>
+	<PROC name="pts_Prospect_FindLeadStatusPriority"/>
+	<PROC name="pts_Prospect_FindLeadStatusSource"/>
+	<PROC name="pts_Prospect_FindLeadStatusCreateDate"/>
+	<PROC name="pts_Prospect_FindLeadStatusLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindLeadStatusSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindLeadStatusDescription"/>
+	<PROC name="pts_Prospect_FindLeadActiveProspectName"/>
+	<PROC name="pts_Prospect_FindLeadActiveContactName"/>
+	<PROC name="pts_Prospect_FindLeadActiveRepresenting"/>
+	<PROC name="pts_Prospect_FindLeadActiveProspectID"/>
+	<PROC name="pts_Prospect_FindLeadActiveEmail"/>
+	<PROC name="pts_Prospect_FindLeadActivePhone1"/>
+	<PROC name="pts_Prospect_FindLeadActivePriority"/>
+	<PROC name="pts_Prospect_FindLeadActiveSource"/>
+	<PROC name="pts_Prospect_FindLeadActiveCreateDate"/>
+	<PROC name="pts_Prospect_FindLeadActiveLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindLeadActiveSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindLeadActiveDescription"/>
+
+	<PROC name="pts_Prospect_FindMemCustProspectName"/>
+	<PROC name="pts_Prospect_FindMemCustContactName"/>
+	<PROC name="pts_Prospect_FindMemCustRepresenting"/>
+	<PROC name="pts_Prospect_FindMemCustProspectID"/>
+	<PROC name="pts_Prospect_FindMemCustEmail"/>
+	<PROC name="pts_Prospect_FindMemCustPhone1"/>
+	<PROC name="pts_Prospect_FindMemCustPriority"/>
+	<PROC name="pts_Prospect_FindMemCustSource"/>
+	<PROC name="pts_Prospect_FindMemCustCreateDate"/>
+	<PROC name="pts_Prospect_FindMemCustLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustDescription"/>
+	<PROC name="pts_Prospect_FindMemCustCampProspectName"/>
+	<PROC name="pts_Prospect_FindMemCustCampContactName"/>
+	<PROC name="pts_Prospect_FindMemCustCampRepresenting"/>
+	<PROC name="pts_Prospect_FindMemCustCampProspectID"/>
+	<PROC name="pts_Prospect_FindMemCustCampEmail"/>
+	<PROC name="pts_Prospect_FindMemCustCampPhone1"/>
+	<PROC name="pts_Prospect_FindMemCustCampPriority"/>
+	<PROC name="pts_Prospect_FindMemCustCampSource"/>
+	<PROC name="pts_Prospect_FindMemCustCampCreateDate"/>
+	<PROC name="pts_Prospect_FindMemCustCampLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustCampSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustCampDescription"/>
+	<PROC name="pts_Prospect_FindMemCustTypeProspectName"/>
+	<PROC name="pts_Prospect_FindMemCustTypeContactName"/>
+	<PROC name="pts_Prospect_FindMemCustTypeRepresenting"/>
+	<PROC name="pts_Prospect_FindMemCustTypeProspectID"/>
+	<PROC name="pts_Prospect_FindMemCustTypeEmail"/>
+	<PROC name="pts_Prospect_FindMemCustTypePhone1"/>
+	<PROC name="pts_Prospect_FindMemCustTypePriority"/>
+	<PROC name="pts_Prospect_FindMemCustTypeSource"/>
+	<PROC name="pts_Prospect_FindMemCustTypeCreateDate"/>
+	<PROC name="pts_Prospect_FindMemCustTypeLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustTypeSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustTypeDescription"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeProspectName"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeContactName"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeRepresenting"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeProspectID"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeEmail"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypePhone1"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypePriority"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeSource"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeCreateDate"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemCustCampTypeDescription"/>
+	<PROC name="pts_Prospect_FindComCustProspectName"/>
+	<PROC name="pts_Prospect_FindComCustContactName"/>
+	<PROC name="pts_Prospect_FindComCustRepresenting"/>
+	<PROC name="pts_Prospect_FindComCustProspectID"/>
+	<PROC name="pts_Prospect_FindComCustEmail"/>
+	<PROC name="pts_Prospect_FindComCustPhone1"/>
+	<PROC name="pts_Prospect_FindComCustPriority"/>
+	<PROC name="pts_Prospect_FindComCustSource"/>
+	<PROC name="pts_Prospect_FindComCustCreateDate"/>
+	<PROC name="pts_Prospect_FindComCustLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustDescription"/>
+	<PROC name="pts_Prospect_FindComCustCampProspectName"/>
+	<PROC name="pts_Prospect_FindComCustCampContactName"/>
+	<PROC name="pts_Prospect_FindComCustCampRepresenting"/>
+	<PROC name="pts_Prospect_FindComCustCampProspectID"/>
+	<PROC name="pts_Prospect_FindComCustCampEmail"/>
+	<PROC name="pts_Prospect_FindComCustCampPhone1"/>
+	<PROC name="pts_Prospect_FindComCustCampPriority"/>
+	<PROC name="pts_Prospect_FindComCustCampSource"/>
+	<PROC name="pts_Prospect_FindComCustCampCreateDate"/>
+	<PROC name="pts_Prospect_FindComCustCampLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustCampSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustCampDescription"/>
+	<PROC name="pts_Prospect_FindComCustTypeProspectName"/>
+	<PROC name="pts_Prospect_FindComCustTypeContactName"/>
+	<PROC name="pts_Prospect_FindComCustTypeRepresenting"/>
+	<PROC name="pts_Prospect_FindComCustTypeProspectID"/>
+	<PROC name="pts_Prospect_FindComCustTypeEmail"/>
+	<PROC name="pts_Prospect_FindComCustTypePhone1"/>
+	<PROC name="pts_Prospect_FindComCustTypePriority"/>
+	<PROC name="pts_Prospect_FindComCustTypeSource"/>
+	<PROC name="pts_Prospect_FindComCustTypeCreateDate"/>
+	<PROC name="pts_Prospect_FindComCustTypeLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustTypeSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustTypeDescription"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeProspectName"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeContactName"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeRepresenting"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeProspectID"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeEmail"/>
+	<PROC name="pts_Prospect_FindComCustCampTypePhone1"/>
+	<PROC name="pts_Prospect_FindComCustCampTypePriority"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeSource"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeCreateDate"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindComCustCampTypeDescription"/>
+
+	<PROC name="pts_Prospect_FindMemberLiveProspectName"/>
+	<PROC name="pts_Prospect_FindMemberLiveContactName"/>
+	<PROC name="pts_Prospect_FindMemberLiveRepresenting"/>
+	<PROC name="pts_Prospect_FindMemberLiveProspectID"/>
+	<PROC name="pts_Prospect_FindMemberLiveEmail"/>
+	<PROC name="pts_Prospect_FindMemberLivePhone1"/>
+	<PROC name="pts_Prospect_FindMemberLivePriority"/>
+	<PROC name="pts_Prospect_FindMemberLiveSource"/>
+	<PROC name="pts_Prospect_FindMemberLiveCreateDate"/>
+	<PROC name="pts_Prospect_FindMemberLiveLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberLiveSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindMemberLiveDescription"/>
+	<PROC name="pts_Prospect_FindCompanyLiveProspectName"/>
+	<PROC name="pts_Prospect_FindCompanyLiveContactName"/>
+	<PROC name="pts_Prospect_FindCompanyLiveRepresenting"/>
+	<PROC name="pts_Prospect_FindCompanyLiveProspectID"/>
+	<PROC name="pts_Prospect_FindCompanyLiveEmail"/>
+	<PROC name="pts_Prospect_FindCompanyLivePhone1"/>
+	<PROC name="pts_Prospect_FindCompanyLivePriority"/>
+	<PROC name="pts_Prospect_FindCompanyLiveSource"/>
+	<PROC name="pts_Prospect_FindCompanyLiveCreateDate"/>
+	<PROC name="pts_Prospect_FindCompanyLiveLeadCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanyLiveSalesCampaignID"/>
+	<PROC name="pts_Prospect_FindCompanyLiveDescription"/>
+
+	<PROC name="pts_Prospect_ExpMemberProspectName"/>
+	<PROC name="pts_Prospect_ExpMemberContactName"/>
+	<PROC name="pts_Prospect_ExpMemberRepresenting"/>
+	<PROC name="pts_Prospect_ExpMemberProspectID"/>
+	<PROC name="pts_Prospect_ExpMemberEmail"/>
+	<PROC name="pts_Prospect_ExpMemberPhone1"/>
+	<PROC name="pts_Prospect_ExpMemberPriority"/>
+	<PROC name="pts_Prospect_ExpMemberSource"/>
+	<PROC name="pts_Prospect_ExpMemberCreateDate"/>
+	<PROC name="pts_Prospect_ExpMemberLeadCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberSalesCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberDescription"/>
+	<PROC name="pts_Prospect_ExpMemberStatusProspectName"/>
+	<PROC name="pts_Prospect_ExpMemberStatusContactName"/>
+	<PROC name="pts_Prospect_ExpMemberStatusRepresenting"/>
+	<PROC name="pts_Prospect_ExpMemberStatusProspectID"/>
+	<PROC name="pts_Prospect_ExpMemberStatusEmail"/>
+	<PROC name="pts_Prospect_ExpMemberStatusPhone1"/>
+	<PROC name="pts_Prospect_ExpMemberStatusPriority"/>
+	<PROC name="pts_Prospect_ExpMemberStatusSource"/>
+	<PROC name="pts_Prospect_ExpMemberStatusCreateDate"/>
+	<PROC name="pts_Prospect_ExpMemberStatusLeadCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberStatusSalesCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberStatusDescription"/>
+	<PROC name="pts_Prospect_ExpMemberActiveProspectName"/>
+	<PROC name="pts_Prospect_ExpMemberActiveContactName"/>
+	<PROC name="pts_Prospect_ExpMemberActiveRepresenting"/>
+	<PROC name="pts_Prospect_ExpMemberActiveProspectID"/>
+	<PROC name="pts_Prospect_ExpMemberActiveEmail"/>
+	<PROC name="pts_Prospect_ExpMemberActivePhone1"/>
+	<PROC name="pts_Prospect_ExpMemberActivePriority"/>
+	<PROC name="pts_Prospect_ExpMemberActiveSource"/>
+	<PROC name="pts_Prospect_ExpMemberActiveCreateDate"/>
+	<PROC name="pts_Prospect_ExpMemberActiveLeadCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberActiveSalesCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberActiveDescription"/>
+	<PROC name="pts_Prospect_ExpMemberLiveProspectName"/>
+	<PROC name="pts_Prospect_ExpMemberLiveContactName"/>
+	<PROC name="pts_Prospect_ExpMemberLiveRepresenting"/>
+	<PROC name="pts_Prospect_ExpMemberLiveProspectID"/>
+	<PROC name="pts_Prospect_ExpMemberLiveEmail"/>
+	<PROC name="pts_Prospect_ExpMemberLivePhone1"/>
+	<PROC name="pts_Prospect_ExpMemberLivePriority"/>
+	<PROC name="pts_Prospect_ExpMemberLiveSource"/>
+	<PROC name="pts_Prospect_ExpMemberLiveCreateDate"/>
+	<PROC name="pts_Prospect_ExpMemberLiveLeadCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberLiveSalesCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberLiveDescription"/>
+	<PROC name="pts_Prospect_ExpMemberServiceProspectName"/>
+	<PROC name="pts_Prospect_ExpMemberServiceContactName"/>
+	<PROC name="pts_Prospect_ExpMemberServiceRepresenting"/>
+	<PROC name="pts_Prospect_ExpMemberServiceProspectID"/>
+	<PROC name="pts_Prospect_ExpMemberServiceEmail"/>
+	<PROC name="pts_Prospect_ExpMemberServicePhone1"/>
+	<PROC name="pts_Prospect_ExpMemberServicePriority"/>
+	<PROC name="pts_Prospect_ExpMemberServiceSource"/>
+	<PROC name="pts_Prospect_ExpMemberServiceCreateDate"/>
+	<PROC name="pts_Prospect_ExpMemberServiceLeadCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberServiceSalesCampaignID"/>
+	<PROC name="pts_Prospect_ExpMemberServiceDescription"/>
+
+	<PROC name="pts_Prospect_Update"/>
+	<PROC name="pts_Prospect_ScheduleCompany"/>
+	<PROC name="pts_Prospect_ScheduleMember"/>
+	<PROC name="pts_Prospect_BoardCompany"/>
+	<PROC name="pts_Prospect_BoardMember"/>
+	<PROC name="pts_Prospect_BoardGroup"/>
+	<PROC name="pts_Prospect_FallbackCompany"/>
+	<PROC name="pts_Prospect_FallbackMember"/>
+	<PROC name="pts_Prospect_ClosedCompany"/>
+	<PROC name="pts_Prospect_ClosedMember"/>
+	<PROC name="pts_Prospect_FACompany"/>
+	<PROC name="pts_Prospect_FAMember"/>
+	<PROC name="pts_Prospect_MemberDate"/>
+	<PROC name="pts_Prospect_MemberActive"/>
+	<PROC name="pts_Prospect_ChangeStatus" path="Custom"/>
+	<PROC name="pts_Prospect_NewStatus" path="Custom"/>
+	<PROC name="pts_Prospect_NewStep" path="Custom"/>
+	<PROC name="pts_Prospect_ListEmail" path="Custom"/>
+	<PROC name="pts_Prospect_ListNewsLetter" path="Custom"/>
+	<PROC name="pts_Prospect_ReportCompany" path="Custom"/>
+	<PROC name="pts_Prospect_ReportMember" path="Custom"/>
+	<PROC name="pts_Prospect_ReportAffiliate" path="Custom"/>
+	<PROC name="pts_Prospect_Distribution" path="Custom"/>
+	<PROC name="pts_Prospect_DistributionProgram" path="Custom"/>
+	<PROC name="pts_Prospect_Distributed" path="Custom"/>
+	<PROC name="pts_Prospect_ListCustomers"/>
+	<PROC name="pts_Prospect_UpdateCode" path="Custom"/>
+	<PROC name="pts_Prospect_ListReminder" path="Custom"/>
+	<PROC name="pts_Prospect_ClearReminder" path="Custom"/>
+
+	<PROC name="pts_ProspectType_Add"/>
+	<PROC name="pts_ProspectType_Delete"/>
+	<PROC name="pts_ProspectType_Fetch"/>
+	<PROC name="pts_ProspectType_Update"/>
+	<PROC name="pts_ProspectType_EnumUserCompany"/>
+	<PROC name="pts_ProspectType_List"/>
+
+	<PROC name="pts_Question_Add"/>
+	<PROC name="pts_Question_Delete"/>
+	<PROC name="pts_Question_Enum"/>
+	<PROC name="pts_Question_Fetch"/>
+	<PROC name="pts_Question_FindQuestion"/>
+	<PROC name="pts_Question_FindQuestionTypeName"/>
+	<PROC name="pts_Question_Update"/>
+	<PROC name="pts_Question_List"/>
+	<PROC name="pts_Question_InitLabels" path="Custom"/>
+	<PROC name="pts_Question_Search" path="Custom"/>
+	
+	<PROC name="pts_QuestionType_Fetch"/>
+	<PROC name="pts_QuestionType_Add"/>
+	<PROC name="pts_QuestionType_Update"/>
+	<PROC name="pts_QuestionType_Delete"/>
+	<PROC name="pts_QuestionType_EnumUserAll"/>
+	<PROC name="pts_QuestionType_EnumUserOnly"/>
+	<PROC name="pts_QuestionType_FirstAll" path="Custom"/>
+	<PROC name="pts_QuestionType_FirstOnly" path="Custom"/>
+	<PROC name="pts_QuestionType_List"/>
+	
+	<PROC name="pts_QuizAnswer_Add"/>
+	<PROC name="pts_QuizAnswer_Update"/>
+	<PROC name="pts_QuizAnswer_Fetch"/>
+	<PROC name="pts_QuizAnswer_ListQuizAnswer"/>
+	<PROC name="pts_QuizAnswer_ListQuizQuestion"/>
+	<PROC name="pts_QuizAnswer_Grade" path="Custom"/>
+
+	<PROC name="pts_QuizChoice_Add"/>
+	<PROC name="pts_QuizChoice_Delete"/>
+	<PROC name="pts_QuizChoice_EnumUserQuizChoice"/>
+	<PROC name="pts_QuizChoice_Fetch"/>
+	<PROC name="pts_QuizChoice_Update"/>
+	<PROC name="pts_QuizChoice_ListQuizChoice"/>
+
+	<PROC name="pts_QuizQuestion_Add"/>
+	<PROC name="pts_QuizQuestion_Delete"/>
+	<PROC name="pts_QuizQuestion_Fetch"/>
+	<PROC name="pts_QuizQuestion_Update"/>
+	<PROC name="pts_QuizQuestion_ListQuizQuestion"/>
+
+	<PROC name="pts_Resource_Add"/>
+	<PROC name="pts_Resource_Delete"/>
+	<PROC name="pts_Resource_Fetch"/>
+	<PROC name="pts_Resource_Update"/>
+	<PROC name="pts_Resource_ListSharing"/>
+	<PROC name="pts_Resource_ListShared"/>
+	<PROC name="pts_Resource_ListUsed"/>
+	<PROC name="pts_Resource_ListUsing" path="Custom"/>
+
+	<PROC name="pts_Reward_Add"/>
+	<PROC name="pts_Reward_Delete"/>
+	<PROC name="pts_Reward_Fetch"/>
+	<PROC name="pts_Reward_FindMerchantRewardDate"/>
+	<PROC name="pts_Reward_FindMerchantMerchantID"/>
+	<PROC name="pts_Reward_FindMerchantMerchantID"/>
+	<PROC name="pts_Reward_FindConsumerRewardDate"/>
+	<PROC name="pts_Reward_FindConsumerMerchantID"/>
+	<PROC name="pts_Reward_FindConsumerConsumerID"/>
+	<PROC name="pts_Resource_ListCash" path="Custom"/>
+	<PROC name="pts_Resource_ListPointsSummary" path="Custom"/>
+	<PROC name="pts_Resource_ListPointsDetail" path="Custom"/>
+	<PROC name="pts_Reward_Update"/>
+
+	<PROC name="pts_SalesCampaign_Add"/>
+	<PROC name="pts_SalesCampaign_Delete"/>
+	<PROC name="pts_SalesCampaign_Fetch"/>
+	<PROC name="pts_SalesCampaign_FindSalesCampaignName"/>
+	<PROC name="pts_SalesCampaign_FindSalesCampaignID"/>
+	<PROC name="pts_SalesCampaign_FindGroupID"/>
+	<PROC name="pts_SalesCampaign_Update"/>
+	<PROC name="pts_SalesCampaign_EnumUserCompany"/>
+	<PROC name="pts_SalesCampaign_EnumUserCompanyResult" path="Custom"/>
+	<PROC name="pts_SalesCampaign_List"/>
+	<PROC name="pts_SalesCampaign_ListGroup"/>
+	<PROC name="pts_SalesCampaign_Copy" path="Custom"/>
+
+	<PROC name="pts_SalesItem_Add"/>
+	<PROC name="pts_SalesItem_Count"/>
+	<PROC name="pts_SalesItem_Delete"/>
+	<PROC name="pts_SalesItem_DeleteSalesOrder"/>
+	<PROC name="pts_SalesItem_Fetch"/>
+	<PROC name="pts_SalesItem_FindOrderDate"/>
+	<PROC name="pts_SalesItem_FindProductName"/>
+	<PROC name="pts_SalesItem_FindStatus"/>
+	<PROC name="pts_SalesItem_Update"/>
+	<PROC name="pts_SalesItem_ListSalesOrder"/>
+	<PROC name="pts_SalesItem_ComputeSalesTax" path="Custom"/>
+	<PROC name="pts_SalesItem_DuplicateProduct" path="Custom"/>
+	<PROC name="pts_SalesItem_GetSalesOrderID" path="Custom"/>
+
+	<PROC name="pts_SalesOrder_Add"/>
+	<PROC name="pts_SalesOrder_Delete"/>
+	<PROC name="pts_SalesOrder_Fetch"/>
+	<PROC name="pts_SalesOrder_FindOrderDate"/>
+	<PROC name="pts_SalesOrder_FindMemberName"/>
+	<PROC name="pts_SalesOrder_FindProspectName"/>
+	<PROC name="pts_SalesOrder_FindSalesOrderID"/>
+	<PROC name="pts_SalesOrder_FindAffiliateID"/>
+	<PROC name="pts_SalesOrder_FindPromotionID"/>
+	<PROC name="pts_SalesOrder_FindAmount"/>
+	<PROC name="pts_SalesOrder_FindPinnAmount"/>
+	<PROC name="pts_SalesOrder_FindCommAmount"/>
+	<PROC name="pts_SalesOrder_FindNotes"/>
+	<PROC name="pts_SalesOrder_FindStatusOrderDate"/>
+	<PROC name="pts_SalesOrder_FindStatusMemberName"/>
+	<PROC name="pts_SalesOrder_FindStatusProspectName"/>
+	<PROC name="pts_SalesOrder_FindStatusSalesOrderID"/>
+	<PROC name="pts_SalesOrder_FindStatusAffiliateID"/>
+	<PROC name="pts_SalesOrder_FindStatusPromotionID"/>
+	<PROC name="pts_SalesOrder_FindStatusAmount"/>
+	<PROC name="pts_SalesOrder_FindStatusPinnAmount"/>
+	<PROC name="pts_SalesOrder_FindStatusCommAmount"/>
+	<PROC name="pts_SalesOrder_FindStatusNotes"/>
+	<PROC name="pts_SalesOrder_Update"/>
+	<PROC name="pts_SalesOrder_ListDate"/>
+	<PROC name="pts_SalesOrder_ListMember"/>
+	<PROC name="pts_SalesOrder_ListParty"/>
+	<PROC name="pts_SalesOrder_ListProspect"/>
+	<PROC name="pts_SalesOrder_ListAutoShip"/>
+	<PROC name="pts_SalesOrder_ListPromotion"/>
+	<PROC name="pts_SalesOrder_ReportCompany"/>
+	<PROC name="pts_SalesOrder_ReportAffiliate"/>
+	<PROC name="pts_SalesOrder_ComputeTotalPrice" path="Custom"/>
+	<PROC name="pts_SalesOrder_Validate" path="Custom"/>
+	<PROC name="pts_SalesOrder_GetPromotion" path="Custom"/>
+	<PROC name="pts_SalesOrder_ProductEmails" path="Custom"/>
+	<PROC name="pts_SalesOrder_ProductFulfillment" path="Custom"/>
+	<PROC name="pts_SalesOrder_GetShipping" path="Custom"/>
+	<PROC name="pts_SalesOrder_UpdateRecurring" path="Custom"/>
+	<PROC name="pts_SalesOrder_SetAutoShip" path="Custom"/>
+	<PROC name="pts_SalesOrder_Custom" path="Custom"/>
+	<PROC name="pts_SalesOrder_CustomList" path="Custom"/>
+	<PROC name="pts_SalesOrder_DeleteAbandoned" path="Custom"/>
+
+<!--
+	<PROC name="pts_SalesReport_Count"/>
+	<PROC name="pts_SalesReport_Fetch"/>
+	<PROC name="pts_SalesReport_FindMemberID"/>
+	<PROC name="pts_SalesReport_FindReportDate"/>
+	<PROC name="pts_SalesReport_ListSalesReport"/>
+-->
+	<PROC name="pts_SalesStep_Add"/>
+	<PROC name="pts_SalesStep_Delete"/>
+	<PROC name="pts_SalesStep_Fetch"/>
+	<PROC name="pts_SalesStep_Update"/>
+	<PROC name="pts_SalesStep_List"/>
+	<PROC name="pts_SalesStep_DeleteSalesCampaign" path="Custom"/>
+	<PROC name="pts_SalesStep_GetNextStep" path="Custom"/>
+	<PROC name="pts_SalesStep_GetFirstStep" path="Custom"/>
+
+	<PROC name="pts_Session_Add"/>
+	<PROC name="pts_Session_CheckCourse" path="Custom"/>
+	<PROC name="pts_Session_Count"/>
+	<PROC name="pts_Session_Delete"/>
+	<PROC name="pts_Session_EnumUserProgram" path="Custom"/>
+	<PROC name="pts_Session_Fetch"/>
+	<PROC name="pts_Session_Update"/>
+	<PROC name="pts_Session_ListMember"/>
+	<PROC name="pts_Session_ListMemberStatus"/>
+	<PROC name="pts_Session_ListMemberComplete"/>
+	<PROC name="pts_Session_ListMemberAll"/>
+	<PROC name="pts_Session_ListMemberAllStatus"/>
+	<PROC name="pts_Session_ListMemberAllComplete"/>
+	<PROC name="pts_Session_ListOrgMember"/>
+	<PROC name="pts_Session_ListOrgMemberStatus"/>
+	<PROC name="pts_Session_ListOrgMemberComplete"/>
+	<PROC name="pts_Session_ListOrgMemberAll"/>
+	<PROC name="pts_Session_ListOrgMemberAllStatus"/>
+	<PROC name="pts_Session_ListOrgMemberAllComplete"/>
+	<PROC name="pts_Session_ProgramSummary" path="Custom"/>
+	<PROC name="pts_Session_ListCourse"/>
+	<PROC name="pts_Session_ListRatings" path="Custom"/>
+	<PROC name="pts_Session_SetStatus" path="Custom"/>
+	<PROC name="pts_Session_Remove" path="Custom"/>
+	<PROC name="pts_Session_ReportOrg" path="Custom"/>
+	<PROC name="pts_Session_ReportOrgCourse" path="Custom"/>
+	<PROC name="pts_Session_ReportMember" path="Custom"/>
+	<PROC name="pts_Session_MemberAccess" path="Custom"/>
+	<PROC name="pts_Session_RateCourses" path="Custom"/>
+	<PROC name="pts_Session_GradeExam" path="Custom"/>
+	<PROC name="pts_Session_CoursesMember" path="Custom"/>
+	<PROC name="pts_Session_CoursesBusiness" path="Custom"/>
+
+	<PROC name="pts_SessionLesson_Add"/>
+	<PROC name="pts_SessionLesson_Delete"/>
+	<PROC name="pts_SessionLesson_Fetch"/>
+	<PROC name="pts_SessionLesson_GetSessionLesson"/>
+	<PROC name="pts_SessionLesson_Update"/>
+	<PROC name="pts_SessionLesson_DeleteQuiz" path="Custom"/>
+	<PROC name="pts_SessionLesson_ListSession" path="Custom"/>
+	<PROC name="pts_SessionLesson_ListQuiz" path="Custom"/>
+
+	<PROC name="pts_Shortcut_Add"/>
+	<PROC name="pts_Shortcut_Delete"/>
+	<PROC name="pts_Shortcut_DeleteItem"/>
+	<PROC name="pts_Shortcut_Fetch"/>
+	<PROC name="pts_Shortcut_Update"/>
+	<PROC name="pts_Shortcut_List"/>
+	<PROC name="pts_Shortcut_ListPinned"/>
+
+	<PROC name="pts_Signature_Add"/>
+	<PROC name="pts_Signature_Delete"/>
+	<PROC name="pts_Signature_Fetch"/>
+	<PROC name="pts_Signature_Update"/>
+	<PROC name="pts_Signature_List"/>
+	<PROC name="pts_Signature_ListPersonal"/>
+	<PROC name="pts_Signature_GetPersonal" path="Custom"/>
+	<PROC name="pts_Signature_Copy" path="Custom"/>
+
+	<PROC name="pts_Suggestion_Add"/>
+	<PROC name="pts_Suggestion_Count"/>
+	<PROC name="pts_Suggestion_Delete"/>
+	<PROC name="pts_Suggestion_Fetch"/>
+	<PROC name="pts_Suggestion_FindCompanySuggestionDate"/>
+	<PROC name="pts_Suggestion_FindCompanySuggestionID"/>
+	<PROC name="pts_Suggestion_FindCompanySubject"/>
+	<PROC name="pts_Suggestion_FindCompanyResponse"/>
+	<PROC name="pts_Suggestion_FindOrgSuggestionDate"/>
+	<PROC name="pts_Suggestion_FindOrgSuggestionID"/>
+	<PROC name="pts_Suggestion_FindOrgSubject"/>
+	<PROC name="pts_Suggestion_FindOrgResponse"/>
+	<PROC name="pts_Suggestion_FindCompanyStatusSuggestionDate"/>
+	<PROC name="pts_Suggestion_FindCompanyStatusSuggestionID"/>
+	<PROC name="pts_Suggestion_FindCompanyStatusSubject"/>
+	<PROC name="pts_Suggestion_FindCompanyStatusResponse"/>
+	<PROC name="pts_Suggestion_FindOrgStatusSuggestionDate"/>
+	<PROC name="pts_Suggestion_FindOrgStatusSuggestionID"/>
+	<PROC name="pts_Suggestion_FindOrgStatusSubject"/>
+	<PROC name="pts_Suggestion_FindOrgStatusResponse"/>
+	<PROC name="pts_Suggestion_ListReplied"/>
+	<PROC name="pts_Suggestion_ListSubmitted"/>
+	<PROC name="pts_Suggestion_ListDate"/>
+	<PROC name="pts_Suggestion_Update"/>
+
+	<PROC name="pts_Survey_Add"/>
+	<PROC name="pts_Survey_Count"/>
+	<PROC name="pts_Survey_Fetch"/>
+	<PROC name="pts_Survey_FindSurveyName"/>
+	<PROC name="pts_Survey_FindSurveyID"/>
+	<PROC name="pts_Survey_FindStatus"/>
+	<PROC name="pts_Survey_FindOrgSurveyName"/>
+	<PROC name="pts_Survey_FindOrgSurveyID"/>
+	<PROC name="pts_Survey_FindOrgStatus"/>
+	<PROC name="pts_Survey_FindCompanySurveyName"/>
+	<PROC name="pts_Survey_FindCompanySurveyID"/>
+	<PROC name="pts_Survey_FindCompanyStatus"/>
+	<PROC name="pts_Survey_Update"/>
+	<PROC name="pts_Survey_Delete" path="Custom"/>
+	<PROC name="pts_Survey_ListActive" path="Custom"/>
+	<PROC name="pts_Survey_ListTB" path="Custom"/>
+	<PROC name="pts_Survey_CalcResults" path="Custom"/>
+	<PROC name="pts_Survey_Copy" path="Custom"/>
+
+	<PROC name="pts_SurveyAnswer_Add"/>
+	<PROC name="pts_SurveyAnswer_Count"/>
+	<PROC name="pts_SurveyAnswer_Update"/>
+	<PROC name="pts_SurveyAnswer_Fetch"/>
+	<PROC name="pts_SurveyAnswer_ListSurvey"/>
+	<PROC name="pts_SurveyAnswer_ListComments"/>
+	<PROC name="pts_SurveyAnswer_ListComments_SurveyID"/>
+	
+	<PROC name="pts_SurveyChoice_Add"/>
+	<PROC name="pts_SurveyChoice_Delete"/>
+	<PROC name="pts_SurveyChoice_Fetch"/>
+	<PROC name="pts_SurveyChoice_Update"/>
+	<PROC name="pts_SurveyChoice_ListSurvey"/>
+	<PROC name="pts_SurveyChoice_ListSurveyAll"/>
+
+	<PROC name="pts_SurveyQuestion_Add"/>
+	<PROC name="pts_SurveyQuestion_Delete"/>
+	<PROC name="pts_SurveyQuestion_Fetch"/>
+	<PROC name="pts_SurveyQuestion_Update"/>
+	<PROC name="pts_SurveyQuestion_ListSurvey"/>
+	<PROC name="pts_SurveyQuestion_ListSurveyAll"/>
+	
+	<PROC name="pts_Task_Add"/>
+	<PROC name="pts_Task_Count"/>
+	<PROC name="pts_Task_Delete"/>
+	<PROC name="pts_Task_Fetch"/>
+	<PROC name="pts_Task_Update"/>
+	<PROC name="pts_Task_ListParent"/>
+	<PROC name="pts_Task_ListProject"/>
+	<PROC name="pts_Task_ListMemberPending"/>
+	<PROC name="pts_Task_ListMemberStarted"/>
+	<PROC name="pts_Task_ListMemberCompleted"/>
+	<PROC name="pts_Task_ListProjectMemberPending"/>
+	<PROC name="pts_Task_ListProjectMemberStarted"/>
+	<PROC name="pts_Task_ListProjectMemberCompleted"/>
+	<PROC name="pts_Task_ComputeTotalCost" path="Custom"/>
+	<PROC name="pts_Task_Projects" path="Custom"/>
+	<PROC name="pts_Task_CopyTasks" path="Custom"/>
+	<PROC name="pts_Task_DeleteTasks" path="Custom"/>
+	<PROC name="pts_Task_ListProjectUnassigned" path="Custom"/>
+	<PROC name="pts_Task_ListProjectPending" path="Custom"/>
+	<PROC name="pts_Task_ListProjectStarted" path="Custom"/>
+	<PROC name="pts_Task_ListProjectCompleted" path="Custom"/>
+	<PROC name="pts_Task_WhatsNewOwn" path="Custom"/>
+	<PROC name="pts_Task_WhatsNewBelong" path="Custom"/>
+	<PROC name="pts_Task_WhatsNewAccess" path="Custom"/>
+	<PROC name="pts_Task_WhatsNew" path="Custom"/>
+	<PROC name="pts_Task_PastDue" path="Custom"/>
+	
+	<PROC name="pts_TaxRate_Add"/>
+	<PROC name="pts_TaxRate_Delete"/>
+	<PROC name="pts_TaxRate_Fetch"/>
+	<PROC name="pts_TaxRate_Update"/>
+	<PROC name="pts_TaxRate_List"/>
+	<PROC name="pts_TaxRate_FetchRate"/>
+	
+	<PROC name="pts_Title_Add"/>
+	<PROC name="pts_Title_Delete"/>
+	<PROC name="pts_Title_Fetch"/>
+	<PROC name="pts_Title_Update"/>
+	<PROC name="pts_Title_EnumUserCompany"/>
+	<PROC name="pts_Title_List"/>
+
+	<PROC name="pts_Trainer_Add"/>
+	<PROC name="pts_Trainer_Delete"/>
+	<PROC name="pts_Trainer_Count"/>
+	<PROC name="pts_Trainer_Enum"/>
+	<PROC name="pts_Trainer_Fetch"/>
+	<PROC name="pts_Trainer_FetchAuthUserID"/>
+	<PROC name="pts_Trainer_FindCompanyName"/>
+	<PROC name="pts_Trainer_FindTrainerName"/>
+	<PROC name="pts_Trainer_FindTrainerID"/>
+	<PROC name="pts_Trainer_FindTier"/>
+	<PROC name="pts_Trainer_FindStatus"/>
+	<PROC name="pts_Trainer_FindEnrollDate"/>
+	<PROC name="pts_Trainer_LoadAuthUser"/>
+	<PROC name="pts_Trainer_Update"/>
+	<PROC name="pts_Trainer_ListEmail"/>
+	
+</ROOT>

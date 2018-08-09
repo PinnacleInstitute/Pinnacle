@@ -1,0 +1,319 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="155" name="Block" alias="blo">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="15501" name="BlockID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="15502" name="ConsumerID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="15503" name="MerchantID" type="number" min="1" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="15504" name="NameFirst" type="text" length="30" source="join">
+			<WTJOIN entity="Consumer" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="15505" name="NameLast" type="text" length="30" source="join">
+			<WTJOIN entity="Consumer" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="15506" name="ConsumerName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=" "/>
+			<WTCOMPUTE name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="15507" name="MerchantName" type="text" length="80" source="join">
+			<WTJOIN entity="Merchant" name="MerchantName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="15510" name="BlockDate" type="date" source="entity"/>
+
+		<WTINDEX name="MerchantID">
+			<WTATTRIBUTE name="MerchantID"/>
+			<WTATTRIBUTE name="BlockDate"/>
+		</WTINDEX>
+		<WTINDEX name="ConsumerID">
+			<WTATTRIBUTE name="ConsumerID"/>
+			<WTATTRIBUTE name="MerchantID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Block" entity="Block" alias="blo"/>
+			<WTRELATIONSHIP name="Merchant" entity="Block" alias="blo">
+				<WTENTITY name="Consumer" entity="Consumer" alias="csm">
+					<WTATTRIBUTE alias="blo" name="ConsumerID" relalias="csm" relname="ConsumerID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Consumer" entity="Block" alias="blo">
+				<WTENTITY name="Merchant" entity="Merchant" alias="mer">
+					<WTATTRIBUTE alias="blo" name="MerchantID" relalias="mer" relname="MerchantID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="List" name="ListConsumer" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(ConsumerID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Block.BlockID)"/>
+					<WTATTRIBUTE value="ATTR(Merchant.MerchantName)" alias="MerchantName"/>
+					<WTATTRIBUTE value="ATTR(Block.BlockDate)"/>
+					<WTJOIN name="Consumer" lock="false"/>
+					<WTCONDITION expr="ATTR(Block.ConsumerID)" oper="equal" value="PARAM(ConsumerID)"/>
+					<WTORDER name="ATTR(Block.BlockDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="List" name="ListMerchant" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MerchantID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Block.BlockID)"/>
+					<WTATTRIBUTE value="ATTR(Consumer.ConsumerName)" alias="ConsumerName"/>
+					<WTATTRIBUTE value="ATTR(Block.BlockDate)"/>
+					<WTJOIN name="Merchant" lock="false"/>
+					<WTCONDITION expr="ATTR(Block.MerchantID)" oper="equal" value="PARAM(MerchantID)"/>
+					<WTORDER name="ATTR(Block.BlockDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="BlockMsg" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(ConsumerID)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="ATTR(MerchantID)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="Result" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="B" caption="Block" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0%" navbar-width="0%" content-width="100%" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="Mode" datatype="number"/>
+
+			<WTSUB name="GetMerchant">
+				<WTOBJECT name="Merchant" project="ptsMerchantUser" class="CMerchant">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MerchantID" direction="input" value="PARAM(M)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMerchant" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AddBlock">
+				<WTOBJECT name="Block" project="ptsBlockUser" class="CBlock">
+					<WTMETHOD name="BlockMsg">
+            <WTPARAM name="ConsumerID" direction="input" value="PARAM(C)"/>
+            <WTPARAM name="MerchantID" direction="input" value="PARAM(M)"/>
+            <WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Mode)" value="CONST(1)"/>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="GetMerchant"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTCALLSUB name="AddBlock"/>
+				<WTCALLSUB name="GetMerchant"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="center"/>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" value="ATTR(Merchant.MerchantName)" class="PageHeading"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+					<WTROW margin-top="12">
+						<WTSTATIC col="1" label="BlockMerchant" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTBUTTON col="1" action="2" value="CONST(Block)" btnclass="bigbutton"/>
+						<WTBUTTON col="1" value="CONST(Close)">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Mode)" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-top="12">
+						<WTSTATIC col="1" label="MerchantBlock" fontsize="4"/>
+					</WTROW>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTBUTTON col="1" value="CONST(Close)">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="15511" caption="Blocks" navbar="false" header="false" footer="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="RemoveID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Block" project="ptsBlockUser" class="CBlock">
+					<WTCONDITION expr="PARAM(RemoveID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="BlockID" direction="input" value="PARAM(RemoveID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Blocks" project="ptsBlockUser" class="CBlocks">
+					<WTMETHOD name="ListMerchant">
+						<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="MerchantID" direction="input" value="PARAM(M)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListConsumer">
+						<WTCONDITION expr="PARAM(C)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="ConsumerID" direction="input" value="PARAM(C)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBlocks" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" label="BlockedMerchants" class="PageHeading" align="center"/>
+				</WTROW>
+
+				<WTSTATIC label="Unblock"/>
+
+				<WTREPEAT entity="Block">
+					<WTROW height="24">
+						<WTSTATIC col="1">
+							<WTSTATIC>
+								<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC value="DATA(Block.ConsumerName)" space="1" fontsize="4"/>
+							</WTSTATIC>
+							<WTSTATIC>
+								<WTCONDITION expr="PARAM(C)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC value="DATA(Block.MerchantName)" space="1" fontsize="4"/>
+							</WTSTATIC>
+							<WTSTATIC value="DATA(Block.BlockDate)" fontcolor="blue" space="2"/>
+							<WTCODEGROUP>
+								<WTIMAGE value="CONST(CircleX24.png)" alt="Unblock" imgalign="absmiddle">
+									<WTLINK name="15511" class="PageHeadingLink" return="false">
+										<WTPARAM name="C" value="PARAM(C)"/>
+										<WTPARAM name="M" value="PARAM(M)"/>
+										<WTPARAM name="RemoveID" value="DATA(BlockID)"/>
+									</WTLINK>
+								</WTIMAGE>
+							</WTCODEGROUP>
+						</WTSTATIC>
+					</WTROW>
+				</WTREPEAT>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="m_15511" caption="Blocks" page-left="3" page-top="0" navbar="false" header="false" footer="false" wrapper="wrapperMobile"
+			page-width="100%" margin-width="0%" navbar-width="0%" content-width="100%" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="RemoveID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Block" project="ptsBlockUser" class="CBlock">
+					<WTCONDITION expr="PARAM(RemoveID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="BlockID" direction="input" value="PARAM(RemoveID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Blocks" project="ptsBlockUser" class="CBlocks">
+					<WTMETHOD name="ListMerchant">
+						<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="MerchantID" direction="input" value="PARAM(M)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListConsumer">
+						<WTCONDITION expr="PARAM(C)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="ConsumerID" direction="input" value="PARAM(C)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBlocks" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" label="BlockedMerchants" class="PageHeading" align="center"/>
+				</WTROW>
+
+				<WTSTATIC label="Unblock"/>
+
+				<WTREPEAT entity="Block">
+					<WTROW height="24">
+						<WTSTATIC col="1">
+							<WTSTATIC>
+								<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC value="DATA(Block.ConsumerName)" space="1" fontsize="4"/>
+							</WTSTATIC>
+							<WTSTATIC>
+								<WTCONDITION expr="PARAM(C)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC value="DATA(Block.MerchantName)" space="1" fontsize="4"/>
+							</WTSTATIC>
+							<WTSTATIC>
+								<WTSTATIC value="DATA(Block.BlockDate)" fontcolor="blue" space="2"/>
+							</WTSTATIC>
+							<WTCODEGROUP>
+								<WTIMAGE value="CONST(CircleX24.png)" alt="Unblock" imgalign="absmiddle">
+									<WTLINK name="m_15511" class="PageHeadingLink" return="false">
+										<WTPARAM name="C" value="PARAM(C)"/>
+										<WTPARAM name="M" value="PARAM(M)"/>
+										<WTPARAM name="RemoveID" value="DATA(BlockID)"/>
+									</WTLINK>
+								</WTIMAGE>
+							</WTCODEGROUP>
+						</WTSTATIC>
+					</WTROW>
+				</WTREPEAT>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

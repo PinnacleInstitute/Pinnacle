@@ -1,0 +1,82 @@
+PTS SETUP
+------------------
+Create PTS Folder
+Copy LIB Folder to PTS Folder
+Copy Chart to LIB
+Copy System DLLs to LIB
+   wtFileUpload
+   wtHTMLFile
+   wtPayment
+   wtSystem
+Copy SQL Folder to PTS Folder
+Create WEB Folders in PTS
+   Attachments
+   Billing
+   Goals
+   Images
+      Affiliate
+      Charts
+      Company
+      Member
+      Trainer
+   img
+   Include
+   Language
+   Library
+   Pages
+   Sections
+      Assessment
+      Billing
+      Company
+      Course
+      Promotion
+      SalesCampaign
+      Trainer
+
+Copy Images only to Image Folder
+Copy img to img Folder
+Copy Include to Include Folder
+Copy Language to Language Folder
+Copy Sections Only to Sections Folder
+Copy Tasks Folder to PTS
+Copy WEB Files to WEB
+
+Create Tools Folder in PTS
+Copy SQLScripter.exe to Tools
+
+Copy wtHTTP.exe to PTS
+
+Copy Registry.reg file to PTS
+
+Create Folder Options for LIB
+   Register  regsvr32.exe /s %1
+   Unregister  regsvr32.exe /s /u %1
+
+Register All DLLs in LIB Folder
+
+Run Registry.reg File
+
+Create PTS Database
+Create User Account:sapts  pswd:sapts
+
+RUN PTS Table Script
+RUN PTS Install Script
+
+Script @PTS AuthUser_populate.sql
+Script @PTS Business_populate.sql
+Script @PTS Populate Jive Tables
+
+Script All SQL Functions
+
+Create Web Site in IIS
+Setup SMTP in IIS
+
+Make WEB Folder writable by Users
+
+Copy Windows Scheduled Tasks to Windows/Tasks
+Set Password to execute jobs
+
+Update WEB1 machine name for SQL Job Scripts
+Script SQL Jobs
+
+

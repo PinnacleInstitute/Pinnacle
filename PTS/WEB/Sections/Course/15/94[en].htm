@@ -1,0 +1,76 @@
+Cascading Style Sheets (CSS) allow you to format a web page by setting font attributes such as small caps and changing the character spacing, paragraph properties, and borders and shading for text boxes. Style sheets can be applied to a web page in three ways:
+<UL>
+<LI><B>Embed a style sheet</B> on a web page by listing the style attributes at the top of the page. 
+<LI>Apply <B>inline styles</B> within the web page to add a style to individual elements of a page. 
+<LI>Link to an <B>external style sheet</B> if several pages will have the same styles. By using this method, style attributes are only changed in one location and the changes are reflected on many pages. These external style sheets are saved as a separate file with the file extension .css. 
+</UL>
+<P><B> Create an Embedded Style</B>
+<OL>
+<LI>Select <B>Format|Style</B> from the menu bar. 
+<LI>Click the <B>New</B> button to create a new style. 
+<LI>Type a period (.) followed by a name containing no spaces for the new style in the <B>Name (selector)</B> field. Below is an example of a style that will create red text.
+<BR><IMG height=440 alt="[New Style dialog box]" src="http://www.fgcu.edu/support/office2000/frontpage/images/newstyle.gif" width=384 vspace=5> 
+<LI>Click the <B>Format</B> button to select an element the style formatting will apply to. In this example, the font color will be changed first so <B>Font...</B> is selected from the menu. 
+<LI>From the <B>Font</B> dialog box, the font has been changed to Arial, size to 10 point, and color to red. Click <B>OK</B> when the changes have been made.
+<BR><IMG height=437 alt="[Font dialog box]" src="http://www.fgcu.edu/support/office2000/frontpage/images/newstylefont.gif" width=424 vspace=5 border=1> 
+<LI>Select other options from the <B>Format</B> button menu to change more element attributes. When all the styles have been selected, click <B>OK</B> on the New Style window and <B>OK</B> on the Style window. 
+</OL>
+<P><B> Apply the New Style</B>
+<P>To apply the style you have just created, highlight the text that the style will be applied to. The style is listed in the style menu on the formatting toolbar. Click the window and scroll down to select the style.
+<P align=center><IMG height=202 alt="[Apply a style example]" src="http://www.fgcu.edu/support/office2000/frontpage/images/pagestyle.gif" width=337 border=1>
+<P><B> Inline Styles</B>
+<P>Some formatting styles, such as font properties, borders and shading, are automatically applied to certain elements such as portions of text, paragraphs, and divisions. Other styles that are applied to tables and form elements can be manually added as described below:
+<OL>
+<LI>Highlight the table or form element and select <B>Format|Properties</B> from the menu bar. 
+<LI>Click the <B>Style...</B> button on the properties window. 
+<LI>Styles you have already created are listed in the <B>Class</B> drop-down menu. Select one of these styles or click the Format button to change another property. 
+<LI>Press <B>OK</B> when finished. 
+</OL>
+<P>
+<P><B> Using Preset External Style Sheets</B>
+<P>FrontPage comes with several preset styles that can be added to web pages. It is also helpful to review the code of these preset style sheets to gain a better understanding of CSS when you create your own style sheets. Follow the steps outlined below to save one of these styles as an external CSS to use on a web page.
+<OL>
+<LI>Select <B>File|New|Pages</B> from the menu bar and click the <B>Style Sheets</B> tab.
+<BR><IMG height=396 alt="[New style sheet dialog box]" src="http://www.fgcu.edu/support/office2000/frontpage/images/newexternalcss.gif" width=526 vspace=5 border=1> 
+<LI>Highlight the choices to view descriptions for each of the styles and click <B>OK</B>. 
+<LI>The style sheet code will appear in the window. Save the style sheet using the .css extension. 
+</OL>
+<P><B> Create an External Style Sheet</B>
+<P>To create an external style sheet from scratch, follow these steps:
+<OL>
+<LI>Select <B>File|New|Pages</B>, click the <B>Style Sheets</B> tab, and choose <B>Normal Style Sheet</B>.
+<BR><IMG height=49 alt="[Style toolbar]" src="http://www.fgcu.edu/support/office2000/frontpage/images/styletoolbar.gif" width=78 vspace=5 border=1> 
+<LI>A blank page will appear on the screen with a small <B>Style</B> toolbar. Click the <B>Style...</B> button on the toolbar.
+<BR><IMG height=405 alt="[Style dialog box]" src="http://www.fgcu.edu/support/office2000/frontpage/images/stylefromscratch.gif" width=464 vspace=5 border=1> 
+<LI>Highlight an element from the <B>Styles</B> list that the style will be added to and click the <B>Modify...</B> button. For example, select the "body" tag from the list and we will change the default text style for the page. 
+<LI>Click the <B>Format</B> button on the <B>Modify Style</B> window and select the elements that will be formatted. To change the default text style in this example, select "Font...". Choose "Arial" from the font list and "10pt" from the size listing.
+<BR>
+<BR>
+<TABLE cellSpacing=0 cellPadding=3 width="90%" bgColor=#eeeeee border=0>
+<TBODY>
+<TR>
+<TD><B><FONT color=#000066>TIP</FONT></B> - As discussed in the <A href="http://www.fgcu.edu/support/office2000/frontpage/text.html">text tutorial</A>, it is advantageous to include several similar fonts in case a visitor to your site does not have the particular font you chose on their computer or is using a different operating system. Similar sans-serif fonts are Arial, Verdana, Geneva, and sans-serif while serif fonts are Times New Roman and Times. Type the font names in the <B>Font</B> box above the scrolling menu, separating each name with a comma. </TD>
+</TR></TBODY></TABLE>
+<BR>Click <B>OK</B> when finished. 
+<LI>Click <B>OK</B> on the <B>Modify Style</B> window. 
+<LI>Notice on the style window that this style is now listed. Click <B>OK</B> to exit the <B>Style</B> window or select another element to modify. 
+<LI>Save the style sheet in .css format. 
+</OL>
+<P><B> Link to an External Style Sheet</B>
+<P>After you have created an external style sheet, it must be linked to a web page for the styles to be applied to the page. 
+<OL>
+<LI>Open a web page and select <B>Format|Style Sheet Links</B> from the menu bar.
+<BR><IMG height=292 alt="[Link Style Sheet dialog box]" src="http://www.fgcu.edu/support/office2000/frontpage/images/linkstylesheet.gif" width=359 vspace=5 border=1> 
+<LI>Click the <B>Add...</B> button on the <B>Link Style Sheet</B> dialog box. 
+<LI>Select the .css file and click <B>OK</B>. 
+</OL>
+<P>To remove an external style sheet link from a page, highlight the style sheet in the list and click the <B>Remove</B> button.
+<P><B> Edit an External Style Sheet</B>
+<OL>
+<LI>Open the .css file in FrontPage. 
+<LI>Select <B>Format|Style</B> from the menu bar. 
+<LI>Highlight the style from the list that needs to be changed and click the <B>Modify</B> button. 
+<BR><IMG height=405 alt="[Style dialog box]" src="http://www.fgcu.edu/support/office2000/frontpage/images/modifyextcss.gif" width=464 vspace=5 border=1> 
+<LI>Make the necessary changes by selecting options from the <B>Format</B> button menu. 
+<LI>Click <B>OK</B> when finished and save the style sheet. 
+</OL>

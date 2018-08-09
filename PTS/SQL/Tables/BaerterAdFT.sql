@@ -1,0 +1,18 @@
+EXEC [dbo].pts_CheckTable 'BarterAdFT'
+ GO
+
+CREATE TABLE [dbo].[BarterAdFT] (
+   [BarterAdID] int NOT NULL ,
+   [FT] nvarchar (4150) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[BarterAdFT] WITH NOCHECK ADD
+   CONSTRAINT [DF_BarterAd_FT] DEFAULT ('') FOR [FT] 
+GO
+
+ALTER TABLE [dbo].[BarterAdFT] WITH NOCHECK ADD
+   CONSTRAINT [PK_BarterAdFT] PRIMARY KEY NONCLUSTERED
+   ([BarterAdID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

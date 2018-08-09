@@ -1,0 +1,889 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="97" name="Msg" alias="mg" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="9701" name="MsgID" type="number" identity="true" min="1" required="true" source="entity"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="9702" name="OwnerType" type="number" source="entity"/>
+		<WTATTRIBUTE id="9703" name="OwnerID" type="number" source="entity"/>
+		<WTATTRIBUTE id="9704" name="AuthUserID" type="number" source="entity"/>
+		
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="9705" name="NameLast" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="AuthUser" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9706" name="NameFirst" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="AuthUser" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9707" name="UserName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=" "/>
+			<WTCOMPUTE name="NameLast"/>
+		</WTATTRIBUTE>
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="9710" name="MsgDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mmam/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9711" name="Subject" type="text" length="80" min="1" max="80" title="true" required="true" source="entity"/>
+		<WTATTRIBUTE id="9712" name="Message" type="text" length="2000" min="1" max="2000" source="entity" embedhtml="true"/>
+		<WTATTRIBUTE id="9713" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Compose"/>
+			<WTENUM id="2" name="Ready"/>
+			<WTENUM id="3" name="Sent"/>
+		</WTATTRIBUTE>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="9790" name="Num" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="9791" name="MemberID" type="number" source="entity" persist="false" xml="false"/>
+		<WTATTRIBUTE id="9792" name="FromDate" type="date" source="entity" persist="false" xml="false"/>
+		<WTATTRIBUTE id="9793" name="ToDate" type="date" source="entity" persist="false" xml="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="Owner">
+			<WTATTRIBUTE name="OwnerType"/>
+			<WTATTRIBUTE name="OwnerID"/>
+			<WTATTRIBUTE name="MsgDate"/>
+		</WTINDEX>
+		<WTINDEX name="AuthUserID">
+			<WTATTRIBUTE name="AuthUserID"/>
+			<WTATTRIBUTE name="MsgDate"/>
+		</WTINDEX>
+		<WTINDEX name="MsgDate">
+			<WTATTRIBUTE name="MsgDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Msg" entity="Msg" alias="mg"/>
+			<WTRELATIONSHIP name="Common" entity="Msg" alias="mg">
+				<WTENTITY name="AuthUser" entity="AuthUser" alias="au">
+					<WTATTRIBUTE alias="mg" name="AuthUserID" relalias="au" relname="AuthUserID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--List-->
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="MsgID" default="true"/>
+			<WTATTRIBUTE name="Subject"/>
+			<WTATTRIBUTE name="Message" contains="true"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTCODEGROUP>
+				<WTINSERT/>
+				<WTSETVALUE name="NewID" value="SYS(identity)"/>
+				<WTSETVALUE name="PARAM(MsgID)" value="NewID"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="ENTITY(Member)"/>
+					<WTPROCEDURE name="Msg_SetMemberMsgs">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(OwnerID)"/>
+						<WTPARAM name="Num" direction="input" value="CONST(1)"/>
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="DeleteOwner" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(OwnerType)" direction="input"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTDELETE>
+					<WTJOIN name="Msg" lock="true"/>
+					<WTCONDITION expr="ATTR(Msg.OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(Msg.OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Msg.OwnerType)" oper="equal" value="PARAM(OwnerType)" connector="and"/>
+			<WTCONDITION expr="ATTR(Msg.OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Msg.MsgDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Msg.MsgDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListMsgs" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Msg.MsgID)"/>
+					<WTATTRIBUTE value="ATTR(Msg.AuthUserID)"/>
+					<WTATTRIBUTE value="ATTR(Msg.MsgDate)"/>
+					<WTATTRIBUTE value="ATTR(Msg.Subject)"/>
+					<WTATTRIBUTE value="ATTR(Msg.Message)"/>
+					<WTATTRIBUTE value="ATTR(AuthUser.UserName)" alias="UserName"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Msg.OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(Msg.OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTORDER name="ATTR(Msg.MsgDate)" descend="true"/>
+					<WTORDER name="ATTR(Msg.MsgID)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="MemberMsgs" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(MsgDate)" direction="input"/>
+			<WTPARAM name="ATTR(Num)" direction="input"/> <!-- 1 = New Messages Only -->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Msg.MsgID)"/>
+					<WTATTRIBUTE value="ATTR(Msg.MsgDate)"/>
+					<WTATTRIBUTE value="ATTR(Msg.Subject)"/>
+					<WTATTRIBUTE value="ATTR(Msg.Message)"/>
+					<WTATTRIBUTE value="ATTR(AuthUser.UserName)" alias="UserName"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Msg.OwnerType)" oper="equal" value="CONST(4)"/>
+					<WTCONDITION expr="ATTR(Msg.OwnerID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Msg.MsgDate)" oper="greater" value="PARAM(MsgDate)" connector="and"/>
+					<WTORDER name="ATTR(Msg.MsgDate)" descend="true"/>
+					<WTORDER name="ATTR(Msg.MsgID)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE name="SetMemberMsgs" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true" >
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTPARAM name="ATTR(Num)" direction="input"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE name="GetMemberMsgs" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true" >
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="XML" name="XMLMsgs" element="Msg" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true">
+			<WTATTRIBUTE value="MsgID" alias="id" />
+			<WTATTRIBUTE value="MsgDate" alias="date">
+				<WTFORMAT value="m-d-yy h:mmam/pm"/>
+			</WTATTRIBUTE>
+			<WTATTRIBUTE value="Username" alias="from"/>
+			<WTATTRIBUTE value="Subject" />
+			<WTATTRIBUTE value="Message" alias="body" embedhtml="true"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="Msgs" worker="true" aspstyle="GenerateWebASP.xsl" >
+		<!--==================================================================-->
+			<WTPARAM name="MID" datatype="number"/>
+			<WTPARAM name="Date" datatype="number"/>
+			<WTPARAM name="New" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Msgs" project="ptsMsgUser" class="CMsgs">
+					<WTMETHOD name="MemberMsgs">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MID)"/>
+						<WTPARAM name="MsgDate" direction="input" value="PARAM(Date)"/>
+						<WTPARAM name="New" direction="input" value="PARAM(New)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XMLMsgs">
+						<WTPARAM name="xmlMsgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCUSTOM>
+		If xmlError = "" Then
+			Response.Write xmlMsgs
+		Else
+			Response.Write xmlError
+		End If
+		Response.End
+</WTCUSTOM>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT/>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="9701" action="5" page-width="580" page-left="0" margin-width="0" caption="List" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Term" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(Subject)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(FromDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(Term)" value="CONST(2)"/>
+				<WTOBJECT name="Msgs" project="ptsMsgUser" class="CMsgs">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMsgs" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="CONST(tmpToDate)" value="CONST(DATEADD(&quot;d&quot;,1,reqToDate))"/>
+			</WTCODEGROUP>
+			<WTOBJECT name="Msgs" project="ptsMsgUser" class="CMsgs">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+					<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlMsgs" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTCODEGROUP><WTIMAGE value="CONST(msg.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="Msgs"/>
+							</WTSTATIC>
+							<WTSTATIC col="2" align="right">
+								<WTCONDITION expr="IsEmployee"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle">
+										<WTLINK name="9702">
+											<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+											<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="NewMsg" bold="true">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+									<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+									<WTLINK name="9702">
+										<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+										<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="FindMsgText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" align="center" tag="MsgsFrom"/>
+					<WTCOMBO col="1" name="Term" align="center" value="PARAM(Term)" prespace="false">
+						<WTOPTION id="1" label="Yesterday"/>
+						<WTOPTION id="2" label="Today"/>
+						<WTOPTION id="3" label="UptoToday"/>
+						<WTOPTION id="4" label="PrevWeek"/>
+						<WTOPTION id="5" label="PrevMonth"/>
+						<WTOPTION id="6" label="PrevYear"/>
+						<WTOPTION id="7" label="WeekToDate"/>
+						<WTOPTION id="8" label="MonthToDate"/>
+						<WTOPTION id="9" label="YearToDate"/>
+						<WTCHANGE>
+						var ONE_DAY = 1000 * 60 * 60 * 24;
+						var fromdate = new Date();
+						var todate = new Date();
+						switch(Msg.Term.value) {
+						case "0":
+							Msg.FromDate.value = Msg.EnrollDate.value
+							break;
+						case "1":
+							fromdate.setTime(fromdate.getTime() - ONE_DAY ); 
+							todate = fromdate; 
+							break;
+						case "2": 
+							break;
+						case "3":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							fromdate.setYear(2000);
+							break;
+						case "4":
+							todate.setTime(todate.getTime() - ( todate.getDay() * ONE_DAY ) );
+							fromdate.setTime(todate.getTime() - ( 6 * ONE_DAY ) );
+							break;
+						case "5":
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setDate(1);
+							break;
+						case "6":
+							todate.setMonth(0);
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+						case "7":
+							fromdate.setTime(fromdate.getTime() - ( (fromdate.getDay()-1) * ONE_DAY ) );
+							break;
+						case "8":
+							fromdate.setDate(1);
+							break;
+						case "9":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+						}
+						if(Msg.Term.value!="0"){Msg.FromDate.value = fromdate.getMonth()+1 + "/" + fromdate.getDate() + "/" + fromdate.getFullYear();}
+						Msg.ToDate.value = todate.getMonth()+1 + "/" + todate.getDate() + "/" + todate.getFullYear();
+						</WTCHANGE>
+					</WTCOMBO>
+					<WTSTATIC col="1" align="center" tag="From"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true" prespace="false"/>
+					<WTSTATIC col="1" tag="To"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" name="ToDate" type="date" size="8" prespace="false"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Msgs.FindTypeID)" translate="true" prespace="false"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Msg">
+						<WTCOLUMN width="8" align="left" valign="top" label="#" />
+						<WTCOLUMN width="18" align="left" valign="top" label="MsgDate" />
+						<WTCOLUMN width="74" align="left" valign="top" label="Subject" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Msg.MsgID)"/>
+							<WTSTATIC col="2" value="DATA(Msg.MsgDate)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Msg.Subject)" bold="true">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTLINK name="9703"><WTPARAM name="MsgID" value="DATA(Msg.MsgID)"/></WTLINK>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Msg.Subject)" bold="true">
+									<WTCONDITION expr="NotEmployee"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="2" value="DATA(Msg.Message)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="9702" page-width="600" page-left="0" margin-width="0" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Msg" project="ptsMsgUser" class="CMsg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MsgID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(UserID)"/>
+					<WTSETATTRIBUTE name="ATTR(MsgDate)" value="SYS(Now)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMsg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Msg" project="ptsMsgUser" class="CMsg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MsgID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<!-- If we are on the same day, set the time to now -->
+					<WTSETATTRIBUTE name="CONST(tmpDate)" value="CONST(CDATE(MONTH(.MsgDate)&amp;&quot;/&quot;&amp;DAY(.MsgDate)&amp;&quot;/&quot;&amp;YEAR(.MsgDate)))"/>
+					<WTSETATTRIBUTE name="ATTR(MsgDate)" value="SYS(Now)">
+						<WTCONDITION expr="CONST(CDATE(tmpDate))" oper="equal" value="CONST(CDATE(reqSysDate))"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="MsgID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMsg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="450" align="left"/>
+				<WTCOLUMN width="150" align="right"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotManager"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="MsgDate"/>
+						<WTTEXT col="1" value="ATTR(Msg.MsgDate)" size="15" prespace="false"/>
+						<WTSTATIC col="1" label="MsgMax" fontcolor="purple"/>
+						<WTBUTTON col="2" action="2" value="CONST(Add)" align="right" btnclass="smbutton" prespace="false">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="2" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false"/>
+					</WTROW>
+					<WTROW>
+						<WTHIDDEN value="ATTR(Msg.AuthUserID)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsManager"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="MsgDate"/>
+						<WTTEXT col="1" value="ATTR(Msg.MsgDate)" size="15" prespace="false"/>
+						<WTSTATIC col="1" tag="AuthUserID"/>
+						<WTTEXT col="1" value="ATTR(Msg.AuthUserID)" size="4" prespace="false"/>
+						<WTSTATIC col="1" label="MsgMax" fontcolor="purple"/>
+						<WTBUTTON col="2" action="2" value="CONST(Add)" align="right" btnclass="smbutton" prespace="false">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="2" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Subject" align="left"/>
+					<WTTEXT col="1" value="ATTR(Msg.Subject)" size="60" focus="true"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Msg.Message)" cols="72" rows="10" htmleditor="editor_simple" embedhtml="true"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="9703" page-width="600" page-left="0" margin-width="0" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="MsgID" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Msg" project="ptsMsgUser" class="CMsg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MsgID" direction="input" value="PARAM(MsgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(AuthUserID)" oper="equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(3)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMsg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Msg" project="ptsMsgUser" class="CMsg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MsgID" direction="input" value="PARAM(MsgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="or"/>
+						<WTPARAM name="xmlMsg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(2)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTCONDITION expr="IsEmployee"/>
+				<WTOBJECT name="Msg" project="ptsMsgUser" class="CMsg">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MsgID" direction="input" value="PARAM(MsgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(3)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTOBJECT name="Msg" project="ptsMsgUser" class="CMsg">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MsgID" direction="input" value="PARAM(MsgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMsg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="375" align="left"/>
+				<WTCOLUMN width="225" align="right"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(2)"/>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1" merge="2" label="SuccessfullyUpdated" align="center" class="PageHeading" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(3)"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="SuccessfullyDeleted" align="center" class="PageHeading"/>
+					</WTROW>
+					<WTROW>
+						<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Popup)" oper="less" value="CONST(3)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NotManager"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="MsgDate"/>
+							<WTTEXT col="1" value="ATTR(Msg.MsgDate)" size="15" prespace="false"/>
+							<WTSTATIC col="1" label="MsgMax" fontcolor="purple"/>
+							<WTBUTTON col="2" action="1" value="CONST(Update)" align="right" btnclass="smbutton" prespace="false">
+								<WTCONDITION expr="IsActive"/>
+							</WTBUTTON>
+							<WTBUTTON col="2" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false">
+								<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+							</WTBUTTON>
+							<WTBUTTON col="2" value="CONST(Close)" btnclass="smbutton" prespace="false">
+								<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+								<WTCLICK>window.close()</WTCLICK>
+							</WTBUTTON>
+							<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete" btnclass="smbutton" prespace="false">
+								<WTCONDITION expr="IsActive"/>
+							</WTBUTTON>
+						</WTROW>
+						<WTROW>
+							<WTHIDDEN value="ATTR(Msg.AuthUserID)"/>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsManager"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="MsgDate"/>
+							<WTTEXT col="1" value="ATTR(Msg.MsgDate)" size="15" prespace="false"/>
+							<WTSTATIC col="1" tag="AuthUserID"/>
+							<WTTEXT col="1" value="ATTR(Msg.AuthUserID)" size="4" prespace="false"/>
+							<WTSTATIC col="1" label="MsgMax" fontcolor="purple"/>
+							<WTBUTTON col="2" action="1" value="CONST(Update)" align="right" btnclass="smbutton" prespace="false">
+								<WTCONDITION expr="IsActive"/>
+							</WTBUTTON>
+							<WTBUTTON col="2" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false">
+								<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+							</WTBUTTON>
+							<WTBUTTON col="2" value="CONST(Close)" btnclass="smbutton" prespace="false">
+								<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+								<WTCLICK>window.close()</WTCLICK>
+							</WTBUTTON>
+							<WTBUTTON col="2" action="4" value="CONST(Delete)" btnclass="smbutton" msg="ConfirmDelete" prespace="false">
+								<WTCONDITION expr="IsActive"/>
+							</WTBUTTON>
+						</WTROW>
+					</WTCODEGROUP>
+
+					<WTROW>
+						<WTSTATIC col="1" merge="2" tag="Subject" align="left"/>
+						<WTTEXT col="1" value="ATTR(Msg.Subject)" size="60" focus="true"/>
+					</WTROW>
+					<WTROW>
+						<WTMEMO col="1" merge="2" align="left" value="ATTR(Msg.Message)" cols="72" rows="10" htmleditor="editor_simple" embedhtml="true"/>
+					</WTROW>
+					<WTROW>
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+			
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="9705" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="Title" datatype="text"/>
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="center"/>
+				<WTROW>
+					<WTSTATIC col="1" value="PARAM(Title)" class="PageHeading"/>
+				</WTROW>
+				<WTROW>
+					<WTFRAME col="1" src="CONST(9711.asp?OwnerType=&lt;xsl:value-of select=&quot;/DATA/PARAM/@ownertype&quot;/&gt;&amp;amp;OwnerID=&lt;xsl:value-of select=&quot;/DATA/PARAM/@ownerid&quot;/&gt;&amp;amp;Title=&lt;xsl:value-of select=&quot;/DATA/PARAM/@title&quot;/&gt;)" name="MsgsFrame" frmclass="FrameNoScroll" frmwidth="600" frmheight="600" label="NoFrameSupport" border="0"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9710" caption="Print Message" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="Title" datatype="text"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Msgs" project="ptsMsgUser" class="CMsgs">
+					<WTMETHOD name="ListMsgs">
+						<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMsgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="650" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" value="PARAM(Title)" class="PageHeading" align="center"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" noitems="false" entity="Msg">
+						<WTCOLUMN width="100" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Msg.MsgDate)" space="1" fontcolor="purple"/>
+								<WTSTATIC value="DATA(Msg.UserName)" space="1" fontcolor="blue"/>
+								<WTSTATIC value="DATA(Msg.Subject)" space="1" bold="true"/>
+								<WTSTATIC value="DATA(Msg.Message)" space="1"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9711" page-width="580" page-left="0" margin-width="0" caption="List" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="Height" datatype="number"/>
+			<WTPARAM name="Title" datatype="text"/>
+			<WTPARAM name="NewDate" datatype="date"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Msgs" project="ptsMsgUser" class="CMsgs">
+					<WTMETHOD name="ListMsgs">
+						<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				If reqNewDate &lt;&gt; "" Then
+					For Each oMsg in oMsgs
+						With oMsg
+							If CDate(.MsgDate) > CDate(reqNewDate) Then .Num = 1
+						End With
+					Next
+				End If	
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMsgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="280" align="left"/>
+
+				<WTSTATIC label="edit"/>
+				<WTROW>
+					<WTIMAGE col="1" value="CONST(Notes.gif)" imgalign="absmiddle"/>
+					<WTSTATIC col="1" label="Msgs" bold="true"/>
+					<WTLINKGROUP col="2" align="right">
+						<WTLINK name="9702" label="NewMsg" class="PageHeadingLink">
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+							<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+						</WTLINK>
+						<WTLINK name="9710" label="Print" class="PageHeadingLink" target="Print">
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+							<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+							<WTPARAM name="Title" value="PARAM(Title)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" noitems="false" entity="Msg">
+						<WTCOLUMN width="100" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(IsNewNote.gif)">
+										<WTCONDITION expr="DATA(Msg.Num)" oper="equal" value="CONST(1)"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Msg.MsgDate)" space="1" fontcolor="purple"/>
+								<WTSTATIC value="DATA(Msg.UserName)" space="1" fontcolor="blue"/>
+								<WTSTATIC value="DATA(Msg.Subject)" space="1" bold="true"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="IsManager"/>
+									<WTCONDITION expr="DATA(AuthUserID)" oper="equal" value="SYS(UserID)" connector="or"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="9703">
+											<WTPARAM name="MsgID" value="DATA(MsgID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="DATA(Msg.Message)"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

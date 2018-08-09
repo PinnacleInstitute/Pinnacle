@@ -1,0 +1,58 @@
+<FONT face="MS Sans Serif">What is it? and how does it work? </FONT>
+<P>In order to ensure that documents distributed over the Internet via the World Wide Web were platform-independent, Tim Berners-Lee developed the Hypertext Markup Language (HTML). 
+<P>With HTML, the author of a "Web Page" can simply describe the document's structure and contents. Upon delivery, the receiving computer (regardless of type) will convert the author's descriptions into an eye-pleasing, fully formatted document. 
+<P>HTML documents are created in a text editor, such as the Windows Notepad, found in Windows' Accessories group or the Macintosh SimpleText program. An HTML document is quite simple in form: it consists only of text and "HTML tags". HTML tags are used to add structure, graphics, and hypertext links to your HTML document. The rules of HTML are: 
+<P><B>Html is surrounded by brackets</B>
+<BR>All HTML tags are enclosed within <B>< ></B> brackets.
+<BR>Anything that is written between the<B> < </B>and<B> ></B> brackets will be invisible to the visitor, since it does not appear on your page. The tags will be seen and interpreted by your browser. 
+<P><B>Case Sensitivity?</B>
+<BR>HTML tags are NOT case sensitive.
+<BR>So, <B><body></B> is the same as <B><BODY></B> is the same as <B><Body></B>. Please note that XML a newly emerging standard IS case sensitive when it comes to tags. This is not an issue in this class, however if you learn XML later on, remember this difference. 
+<BR>
+<BR><B>Important Exception:</B>web page and image filenames! ... the filename should be written exactly as it appears. For example, if you create a Web page called <B>"resume.html"</B> the linking code (which you will learn in lesson 3) must have this value 
+<P><B><a href="resume.html"></B> 
+<P>these values would not work 
+<P><B><a href="RESUME.HTML"></B><B><a href="Resume.html"></B><B><a href="resume.HTML"></B> 
+<P><B>Opening & Closing Tags</B>
+<BR>Almost all HTML commands have an opening and a closing tag. For example, the opening tag,<B> <center> </B>causes all text and graphics that appear after the tag to be centered on the page. Everything will remain centered until the closing tag<B> </center></B> is used. Think of it as a light switch - <B><center> </B>turns on the centering function of the browser and <B></center></B> turns it off. 
+<P><B>Standalone Tags</B>There are some exceptions to this rule: <BR>, <HR>, and <IMG>, just to name a few. Up until recently the fact that these tags had no ending tag was not a problem. Now that XML is emerging on the Web scene, we need to add a space and an ending slash to these standalone tags so they will conform to XML browsers that will be created in the future. 
+<P>The correct representation of the standalone tags listed above is: <br />, <hr />, and <IMG /> 
+<P><B>Order Matters</B> 
+<BR>All HTML documents should follow the same basic format - otherwise some commands may not function properly.
+<BR>The pattern for beginning and ending tags is "first on, last off". Here are 2 examples: 
+<BR>
+<TABLE>
+<TBODY>
+<TR bgColor=#cccccc>
+<TD>Correct!!</TD>
+</TR><TR>
+<TD><B><html>
+<BR><head> <title> </title> </head>
+<BR><body>
+<BR>contents of web page
+<BR></body>
+<BR></html> </B></TD>
+</TR><TR bgColor=#ffcccc>
+<TD>Incorrect</TD>
+</TR><TR>
+<TD><B><html>
+<BR><head> <title> </head> </title>
+<BR><body>
+<BR>contents of web page
+<BR></html>
+<BR></body> </B></TD>
+</TR></TBODY></TABLE><B>Browser Tag Support</B> 
+<BR>Not all HTML tags are supported by all browsers. If a tag is not recognized by a browser, it will simply ignore it. Some browsers are text only and will not support images, others will not support tables or frames. 
+<P>The 2 major browsers are Internet Explorer and Netscape Navigator, they support the majority of tags contained in the HTML standard. The major problem is that they will sometimes interpret these tags differently. For example, the code for creating lists will produce a list which is indented about 2 spaces more in Netscape than it is in Internet Explorer. To avoid unexpected results when creating Web pages, test your site in a under a variety of conditions. 
+<P><B>Breaks and Spacing</B>
+<BR>HTML documents take no notice of any line breaks or paragraphs that you type into your text. You have to write a specific command for line breaks and for paragraphs. <B>File Naming Conventions</B>
+<BR>When creating HTML documents there are certain guidelines I recommend you follow. 
+<UL>
+<LI>all files MUST have an ".html" or ".htm" extension 
+<LI>no spaces or forward slashes (/) in filenames 
+<LI>use a dash (-) underscore (_) or Capitalization to denote 2 word filenames 
+<LI>be consistent when naming files, having files named "resume.html", "Family.htm", and Passions.HTML is very confusing.
+</UL>
+<P>
+<P><B><CENTER></CENTER></B>
+<P>          

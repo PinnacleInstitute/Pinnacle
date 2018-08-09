@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="LeadPage">Page</LABEL>
+	<LABEL name="LeadPages">Pages</LABEL>
+	<LABEL name="NewLeadPage">Add New Page</LABEL>
+	<LABEL name="FindLeadPage">Find Page</LABEL>
+	<LABEL name="LeadPageID">Page #</LABEL>
+	<LABEL name="LeadCampaignID">Campaign #</LABEL>
+	<LABEL name="LeadPageName">Name</LABEL>
+	<LABEL name="Status">Status</LABEL>
+	<LABEL name="Seq">Page #</LABEL>
+	<LABEL name="IsInput">Display the custom fields defined below after the page content</LABEL>
+	<LABEL name="IsCapture">Collect the defined custom fields from the page</LABEL>
+	<LABEL name="IsProspect">Save this lead as a new contact/prospect</LABEL>
+	<LABEL name="IsNext">Display a button to go to the next page if there is one</LABEL>
+	<LABEL name="NextCaption">Next Button Caption</LABEL>
+	<LABEL name="Inputs">Custom Fields</LABEL>
+	<LABEL name="Language">Language</LABEL>
+	<LABEL name="IsLeadURL">Send the new lead information to the following URL for processing.</LABEL>
+	<LABEL name="IsRedirectURL">Redirect the user to the following URL after processing the new lead.</LABEL>
+	<LABEL name="LeadURL">Processing URL</LABEL>
+	<LABEL name="RedirectURL">Redirect URL</LABEL>
+	<LABEL name="TopCode">Insert this code at the top of the HTML Page</LABEL>
+	<LABEL name="ReportFromDate">ReportFromDate</LABEL>
+	<LABEL name="ReportToDate">ReportToDate</LABEL>
+	<LABEL name="MemberID">Member</LABEL>
+	<LABEL name="AffiliateID">Affiliate</LABEL>
+	<LABEL name="Pending">Pending</LABEL>
+	<LABEL name="Active">Active</LABEL>
+	<LABEL name="InActive">Inactive</LABEL>
+	<LABEL name="Thanks">Thanks</LABEL>
+	<LABEL name="Email">Email</LABEL>
+	<LABEL name="IsInputTrue">Yes</LABEL>
+	<LABEL name="IsInputFalse">No</LABEL>
+	<LABEL name="IsCaptureTrue">Yes</LABEL>
+	<LABEL name="IsCaptureFalse">No</LABEL>
+	<LABEL name="IsProspectTrue">Yes</LABEL>
+	<LABEL name="IsProspectFalse">No</LABEL>
+	<LABEL name="IsNextTrue">Yes</LABEL>
+	<LABEL name="IsNextFalse">No</LABEL>
+	<LABEL name="IsLeadURLTrue">Yes</LABEL>
+	<LABEL name="IsLeadURLFalse">No</LABEL>
+	<LABEL name="IsRedirectURLTrue">Yes</LABEL>
+	<LABEL name="IsRedirectURLFalse">No</LABEL>
+	<LABEL name="DataCaptureThanksText">
+		QUESTIONAIRE DATA CAPTURE: Specify the desired information below to request from the user. Defined field names must match the corresponding HTML
+		name and id attributes.  Click the "Help" link below to view instructions on defining custom fields.  All defined fields will be stored in the description field. The HTML must include a button with onclick="doSubmit(1,'')"</LABEL>
+	<LABEL name="DataCaptureText">PROSPECT DATA CAPTURE: Specify the desired information below to request from the user.
+		If the Display option below is checked the custom fields will be displayed on the bottom of the page following the page content.</LABEL>
+	<LABEL name="DataCaptureText2">If the Collect option below is checked the defined custom fields will be collected from the page. The custom fields may be defined in the page content.
+	Click the "Help" link below to view instructions on defining custom fields.</LABEL>
+	<LABEL name="DataCaptureText3">Custom fields with standard names (Company, Last Name, First Name, Title, Email, Phone,
+	Phone2, Street, Unit, City, State, Zip, Country, Website) will be stored in the corresponding prospect fields.  All other custom fields will be stored in the prospect description field.</LABEL>
+	<LABEL name="LeadURLText">PROCESSING URL: After the user submits their information, send their information to the following URL for processing.
+	 The URL may contain replaceable tags in curly brackets corresponding to the custom fields above. For example:</LABEL>
+	<LABEL name="LeadURLText2">http://www.mydomain.com/Subscribe.asp?email={email}</LABEL>
+	<LABEL name="RedirectURLText">REDIRECT URL: After the user submits their information, redirect them to the following URL.
+	 The URL may contain replaceable tags in curly brackets corresponding to the custom fields above. For example:</LABEL>
+	<LABEL name="RedirectURLText2">http://www.mydomain.com/Thankyou.asp?name={firstname}</LABEL>
+	<LABEL name="LeadPageContent">Lead Page</LABEL>
+	<LABEL name="PresentationContent">Presentation Page</LABEL>
+	<LABEL name="MemberTags">You can include replacable tags enclosed in curly brackets for
+		the prospect's first name {firstname}, last name {lastname}, email {email}, phone {phone}, company name {companyname}, street {street}, city {city}, state {state}, zip {zip}, country {country}, unique identifier {id}, AND the member's name {m-name},
+		member's email address {m-email}, member's phone number {m-phone}, member's picture {m-image}, member's id {m-id}, member's reference # {m-ref}, member's username {m-logon} and the member's signature {signature}.</LABEL>
+	<LABEL name="ViewPagesText">Viewed pages = black : Unviewed pages = gray</LABEL>
+	<LABEL name="#">#</LABEL>
+	<LABEL name="UploadPage">Upload Page</LABEL>
+	<LABEL name="UploadPageText">Click the Browse button to select a web page (.htm file) from your personal computer. 
+	After you have selected the desired web page, click the Submit button to upload it to the system.</LABEL>
+	<LABEL name="UploadPageSuccessful">Page Uploaded Successfully!</LABEL>
+	<LABEL name="EditPage">Edit Page Content</LABEL>
+	<LABEL name="Submit">Submit</LABEL>
+</LANGUAGE>

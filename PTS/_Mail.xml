@@ -1,0 +1,824 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="05" name="Mail" alias="ml" log="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="0501" name="MailID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="0502" name="MemberID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="0503" name="OwnerType" type="number" source="entity"/>
+		<WTATTRIBUTE id="0504" name="OwnerID" type="number" min="1" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="0506" name="Subject" type="text" length="80" min="1" max="80" source="entity" required="true" title="true"/>
+		<WTATTRIBUTE id="0507" name="MailFrom" type="text" length="80" min="1" max="80" source="entity" required="true"/>
+		<WTATTRIBUTE id="0508" name="MailTo" type="text" length="80" min="1" max="80" source="entity" required="true"/>
+		<WTATTRIBUTE id="0509" name="CC" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="0510" name="BCC" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="0511" name="MailDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mmam/pm"/>
+		</WTATTRIBUTE>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="0590" name="MoveOwnerType" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="0591" name="MoveOwnerID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="OwnerID">
+			<WTATTRIBUTE name="OwnerType"/>
+			<WTATTRIBUTE name="OwnerID"/>
+			<WTATTRIBUTE name="MailDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Mail" entity="Mail" alias="ml"/>
+			<WTRELATIONSHIP name="Common" entity="Mail" alias="ml"/>
+		</WTRELATIONSHIPS>
+		
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListOwner" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Mail.MailID)"/>
+					<WTATTRIBUTE value="ATTR(Mail.Subject)"/>
+					<WTATTRIBUTE value="ATTR(Mail.MailDate)"/>
+					<WTJOIN name="Mail"/>
+					<WTCONDITION expr="ATTR(OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTORDER name="ATTR(Mail.MailDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="Move" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true" >
+			<WTPARAM name="ATTR(OwnerType)" direction="input"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTPARAM name="ATTR(MoveOwnerType)" direction="input"/>
+			<WTPARAM name="ATTR(MoveOwnerID)" direction="input"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+ 		<!--============================================================================================-->
+		<WTWEBPAGE name="0502" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="TemplateID" datatype="number"/>
+			<WTPARAM name="Sent" datatype="number"/>
+
+			<WTINCLUDE name="Resources.asp"/>
+			<WTINCLUDE name="Comm.asp"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadList">
+				<!-- Get The Group, Shared or Company Resources -->
+				<WTGETCACHE name="CONST(tmpGroupID)" value="GROUPID" datatype="number"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(22)" />
+					<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-CONTACTEMAIL)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPageType)" value="SYSCON(PAGETYPE-EMAIL-CONTACT)"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(81)" />
+					<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-PROSPECTEMAIL)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPageType)" value="SYSCON(PAGETYPE-EMAIL-PROSPECT)"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(-81)" />
+					<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-CUSTOMEREMAIL)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPageType)" value="SYSCON(PAGETYPE-EMAIL-CUSTOMER)"/>
+				</WTCODEGROUP>
+				<WTSETATTRIBUTE name="CONST(tmpGroupID1)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupID2)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="CONST(tmpGroupID3)" value="CONST(0)"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotMemberOnly" />
+					<WTSETATTRIBUTE name="CONST(tmpGroupID)" value="PARAM(MemberID)"/>
+					<WTCALLSUB name="GetResources tmpGroupID"/>
+				</WTCODEGROUP>
+				<WTCALLSUB name="GetResource tmpResource, tmpGroupID1, tmpGroupID2, tmpGroupID3">
+					<WTCONDITION expr="CONST(tmpGroupID)" oper="not-equal" value="CONST(0)" />
+				</WTCALLSUB>
+				<WTOBJECT name="Pages" project="ptsPageUser" class="CPages">
+					<WTMETHOD name="EnumPage">
+						<WTPARAM name="xmlPages" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="GroupID1" direction="input" value="CONST(tmpGroupID1)" />
+						<WTPARAM name="GroupID2" direction="input" value="CONST(tmpGroupID2)" />
+						<WTPARAM name="GroupID3" direction="input" value="CONST(tmpGroupID3)" />
+						<WTPARAM name="PageType" direction="input" value="CONST(tmpPageType)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadMail">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="AuthUser" project="ptsAuthUser" class="CAuthUser">
+					<WTCONDITION expr="SYS(UserID)" oper="not-equal" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(UserID)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(Email)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Prospect" project="ptsProspectUser" class="CProspect">
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(22)"/>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="ENTITY(Prospect)" connector="or"/>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(-81)" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(Prospect.CompanyID)" />
+					<WTSETATTRIBUTE name="CONST(tmpTo)" value="ATTR(Prospect.Email)" />
+					<WTSETATTRIBUTE name="CONST(tmpID)" value="ATTR(Prospect.ProspectID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpName)" value="ATTR(ProspectName)" />
+					<WTSETATTRIBUTE name="CONST(tmpStreet)" value="CONST(.Street + &quot; &quot; + .Unit)" />
+					<WTSETATTRIBUTE name="CONST(tmpCity)" value="ATTR(City)" />
+					<WTSETATTRIBUTE name="CONST(tmpState)" value="ATTR(State)" />
+					<WTSETATTRIBUTE name="CONST(tmpZip)" value="ATTR(Zip)" />
+					<WTSETATTRIBUTE name="CONST(tmpCountry)" value="ATTR(Country)" />
+					<WTSETATTRIBUTE name="CONST(tmpFirstName)" value="ATTR(Prospect.NameFirst)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLastName)" value="ATTR(Prospect.NameLast)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEmail)" value="ATTR(Prospect.Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPhone)" value="ATTR(Prospect.Phone1)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSource)" value="ATTR(Prospect.Source)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEvent)" value="CONST(.NextDate + &quot; &quot; + .NextTime)">
+						<WTCONDITION expr="ATTR(NextEvent)" oper="not-equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSignature)" value="ATTR(Signature)" />
+					<WTSETATTRIBUTE name="CONST(tmpMID)" value="ATTR(Member.MemberID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMFirstName)" value="ATTR(Member.NameFirst)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMLastName)" value="ATTR(Member.NameLast)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMEmail)" value="ATTR(Member.Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMPhone)" value="ATTR(Member.Phone1)"/>
+
+					<WTSETATTRIBUTE name="CONST(tmpUseType)" value="SYSCON(SIGNATURE-EMAIL-LEAD)">
+						<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="ENTITY(Lead)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpUseType)" value="SYSCON(SIGNATURE-EMAIL-PROSPECT)">
+						<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="ENTITY(Prospect)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpUseType)" value="SYSCON(SIGNATURE-EMAIL-CUSTOMER)">
+						<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(-81)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="GetSignature">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="UseType" direction="input" value="CONST(tmpUseType)" />
+						<WTPARAM name="UseID" direction="input" value="CONST(0)" />
+						<WTPARAM name="Language" direction="input" value="SYS(Language)" />
+						<WTPARAM name="Signature" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSignature)" value="CONST(Signature)">
+						<WTCONDITION expr="CONST(Signature)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="PARAM(TemplateID)" oper="equal" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="CONST(&quot;&lt;BR&gt;&lt;BR&gt;&quot; + tmpSignature)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="CONST(tmpSubject)" value="CONST(&quot;&quot;)"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(TemplateID)" oper="not-equal" value="CONST(0)"/>
+					<WTOBJECT name="Page" project="ptsPageUser" class="CPage">
+						<WTMETHOD name="Load">
+							<WTPARAM name="PageID" direction="input" value="PARAM(TemplateID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(tmpSubject)" value="ATTR(Page.PageName)"/>
+					</WTOBJECT>
+					<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqTemplateID &amp; &quot;.htm&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Pages\&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+						<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+						<WTMETHOD name="Load"/>
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+						</WTMETHOD>
+<WTCUSTOM>
+	tmpSubject = Replace( tmpSubject, "{firstname}", CleanXMLComment(tmpFirstName) )
+	tmpSubject = Replace( tmpSubject, "{lastname}", CleanXMLComment(tmpLastName) )
+
+	xmlHTMLFile = Replace( xmlHTMLFile, "{signature}", CleanXMLComment(tmpSignature) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{companyname}", CleanXMLComment(tmpName) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{street}", CleanXMLComment(tmpStreet) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{city}", CleanXMLComment(tmpCity) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{state}", CleanXMLComment(tmpState) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{zip}", CleanXMLComment(tmpZip) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{country}", CleanXMLComment(tmpCountry) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{firstname}", CleanXMLComment(tmpFirstName) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{lastname}", CleanXMLComment(tmpLastName) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{email}", CleanXMLComment(tmpEmail) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{phone}", CleanXMLComment(tmpPhone) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{source}", CleanXMLComment(tmpSource) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{id}", tmpID )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{event}", CleanXMLComment(tmpEvent) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{m-firstname}", CleanXMLComment(tmpMFirstName) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{m-lastname}", CleanXMLComment(tmpMLastName) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{m-email}", CleanXMLComment(tmpMEmail) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{m-phone}", CleanXMLComment(tmpMPhone) )
+	xmlHTMLFile = Replace( xmlHTMLFile, "{m-id}", tmpMID )
+</WTCUSTOM>
+					</WTOBJECT>
+				</WTCODEGROUP>
+				<WTOBJECT name="Mail" project="ptsMailUser" class="CMail">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MailID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MailFrom)" value="CONST(tmpFrom)"/>
+					<WTSETATTRIBUTE name="ATTR(MailTo)" value="CONST(tmpTo)"/>
+					<WTSETATTRIBUTE name="ATTR(Subject)" value="CONST(tmpSubject)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMail" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="ReloadMail">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Mail" project="ptsMailUser" class="CMail">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MailID" direction="input" value="PARAM(TemplateID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMail" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadMail"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Send" type="Update">
+<!--
+				<WTOBJECT name="Business" project="ptsBusinessUser" class="CBusiness">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BusinessID" direction="input" value="CONST(1)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Business.SystemEmail)"/>
+				</WTOBJECT>
+-->				
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Company.Email)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Mail" project="ptsMailUser" class="CMail">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MailID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(MailDate)" value="SYS(Now)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(Mail.MailFrom)"/>
+					<WTSETATTRIBUTE name="CONST(tmpTo)" value="ATTR(Mail.MailTo)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCC)" value="ATTR(Mail.CC)"/>
+					<WTSETATTRIBUTE name="CONST(tmpBCC)" value="ATTR(Mail.BCC)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSubject)" value="ATTR(Mail.Subject)"/>
+					<WTSETATTRIBUTE name="CONST(tmpBody)" value="FORM(Data)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="MailID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="SendEmail reqCompanyid, tmpSender, tmpFrom, tmpTo, tmpCC, tmpBCC, tmpSubject, tmpBody"/>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(FileName)" value="CONST(&quot;Mail&quot; &amp; MailID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; &amp; reqCompanyID &amp; &quot;\Mail\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="CONST(&quot;en&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="CONST(tmpBody)"/>
+					<WTMETHOD name="Save"/>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(Sent)" value="CONST(1)">
+					<WTCONDITION expr="NoErrors"/>
+				</WTSETATTRIBUTE>
+				<WTCALLSUB name="ReloadMail">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="60" align="right"/>
+				<WTCOLUMN width="540" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTSTATIC label="Mail" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(count(/DATA/TXN/PTSPAGES/ENUM))" oper="greater" value="CONST(1)"/>
+							<WTSTATIC tag="Templates"/>
+							<WTCOMBO value="PARAM(TemplateID)" datapath="/DATA/TXN/PTSPAGES/ENUM" setselected="true">
+								<WTCHANGE>doSubmit(0,"")</WTCHANGE>
+							</WTCOMBO>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="24">
+					<WTCONDITION expr="PARAM(Sent)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" label="MsgSent" align="center" class="PageHeading"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Sent)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTCONDITION expr="IsManager"/>
+						<WTSTATIC col="1" tag="MailFrom"/>
+						<WTTEXT col="2" value="ATTR(Mail.MailFrom)" size="75"/>
+					</WTROW>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NotManager"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="MailFrom"/>
+							<WTSTATIC col="2" value="ATTR(Mail.MailFrom)"/>
+						</WTROW>
+						<WTROW>
+							<WTHIDDEN value="ATTR(Mail.MailFrom)"/>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTROW>
+						<WTSTATIC col="1" tag="MailTo"/>
+						<WTTEXT col="2" value="ATTR(Mail.MailTo)" size="75"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="CC"/>
+						<WTTEXT col="2" value="ATTR(Mail.CC)" size="75"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="BCC"/>
+						<WTTEXT col="2" value="ATTR(Mail.BCC)" size="75"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Subject"/>
+						<WTTEXT col="2" value="ATTR(Mail.Subject)" size="75" focus="true"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="72" rows="15" htmleditor="editor_simple" embedhtml="true"/>
+					</WTROW>
+					<WTROW margin-bottom="3">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(medium)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" merge="2" align="left" label="MailText" class="prompt" />
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Send)" align="center">
+						<WTCONDITION expr="PARAM(Sent)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!-- Auto Mail Sender -->
+		<!--============================================================================================-->
+		<WTWEBPAGE name="0502a" worker="true" aspstyle="GenerateWebASP.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="TemplateID" datatype="number"/>
+
+			<WTINCLUDE name="Comm.asp"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="AuthUser" project="ptsAuthUser" class="CAuthUser">
+					<WTCONDITION expr="SYS(UserID)" oper="not-equal" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(UserID)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(Email)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Prospect" project="ptsProspectUser" class="CProspect">
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(22)"/>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="ENTITY(Prospect)" connector="or"/>
+					<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(-81)" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(Prospect.CompanyID)" />
+					<WTSETATTRIBUTE name="CONST(tmpTo)" value="ATTR(Prospect.Email)" />
+					<WTSETATTRIBUTE name="CONST(tmpID)" value="ATTR(Prospect.ProspectID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpName)" value="ATTR(ProspectName)" />
+					<WTSETATTRIBUTE name="CONST(tmpStreet)" value="CONST(.Street + &quot; &quot; + .Unit)" />
+					<WTSETATTRIBUTE name="CONST(tmpCity)" value="ATTR(City)" />
+					<WTSETATTRIBUTE name="CONST(tmpState)" value="ATTR(State)" />
+					<WTSETATTRIBUTE name="CONST(tmpZip)" value="ATTR(Zip)" />
+					<WTSETATTRIBUTE name="CONST(tmpCountry)" value="ATTR(Country)" />
+					<WTSETATTRIBUTE name="CONST(tmpFirstName)" value="ATTR(Prospect.NameFirst)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLastName)" value="ATTR(Prospect.NameLast)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEmail)" value="ATTR(Prospect.Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPhone)" value="ATTR(Prospect.Phone1)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSource)" value="ATTR(Prospect.Source)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEvent)" value="CONST(.NextDate + &quot; &quot; + .NextTime)">
+						<WTCONDITION expr="ATTR(NextEvent)" oper="not-equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSignature)" value="ATTR(Signature)" />
+					<WTSETATTRIBUTE name="CONST(tmpMID)" value="ATTR(Member.MemberID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMFirstName)" value="ATTR(Member.NameFirst)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMLastName)" value="ATTR(Member.NameLast)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMEmail)" value="ATTR(Member.Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMPhone)" value="ATTR(Member.Phone1)"/>
+
+					<WTSETATTRIBUTE name="CONST(tmpUseType)" value="SYSCON(SIGNATURE-EMAIL-LEAD)">
+						<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="ENTITY(Lead)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpUseType)" value="SYSCON(SIGNATURE-EMAIL-PROSPECT)">
+						<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="ENTITY(Prospect)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpUseType)" value="SYSCON(SIGNATURE-EMAIL-CUSTOMER)">
+						<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(-81)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="GetSignature">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="UseType" direction="input" value="CONST(tmpUseType)" />
+						<WTPARAM name="UseID" direction="input" value="CONST(0)" />
+						<WTPARAM name="Language" direction="input" value="SYS(Language)" />
+						<WTPARAM name="Signature" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSignature)" value="CONST(Signature)">
+						<WTCONDITION expr="CONST(Signature)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="CONST(tmpSubject)" value="CONST(&quot;&quot;)"/>
+				<WTCODEGROUP>
+					<WTOBJECT name="Page" project="ptsPageUser" class="CPage">
+						<WTMETHOD name="Load">
+							<WTPARAM name="PageID" direction="input" value="PARAM(TemplateID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(tmpSubject)" value="ATTR(Page.PageName)"/>
+					</WTOBJECT>
+					<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+						<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqTemplateID &amp; &quot;.htm&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Pages\&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+						<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+						<WTMETHOD name="Load"/>
+						<WTSETATTRIBUTE name="CONST(tmpBody)" value="ATTR(Data)"/>
+						<WTCUSTOM>
+							tmpSubject = Replace( tmpSubject, "{firstname}", tmpFirstName )
+							tmpSubject = Replace( tmpSubject, "{lastname}", tmpLastName )
+
+							tmpBody = Replace( tmpBody, "{signature}", tmpSignature )
+							tmpBody = Replace( tmpBody, "{companyname}", tmpName )
+							tmpBody = Replace( tmpBody, "{street}", tmpStreet )
+							tmpBody = Replace( tmpBody, "{city}", tmpCity )
+							tmpBody = Replace( tmpBody, "{state}", tmpState )
+							tmpBody = Replace( tmpBody, "{zip}", tmpZip )
+							tmpBody = Replace( tmpBody, "{country}", tmpCountry )
+							tmpBody = Replace( tmpBody, "{firstname}", tmpFirstName )
+							tmpBody = Replace( tmpBody, "{lastname}", tmpLastName )
+							tmpBody = Replace( tmpBody, "{email}", tmpEmail )
+							tmpBody = Replace( tmpBody, "{phone}", tmpPhone )
+							tmpBody = Replace( tmpBody, "{source}", tmpSource )
+							tmpBody = Replace( tmpBody, "{id}", tmpID )
+							tmpBody = Replace( tmpBody, "{event}", tmpEvent )
+							tmpBody = Replace( tmpBody, "{m-firstname}", tmpMFirstName )
+							tmpBody = Replace( tmpBody, "{m-lastname}", tmpMLastName )
+							tmpBody = Replace( tmpBody, "{m-email}", tmpMEmail )
+							tmpBody = Replace( tmpBody, "{m-phone}", tmpMPhone )
+							tmpBody = Replace( tmpBody, "{m-id}", tmpMID )
+						</WTCUSTOM>
+					</WTOBJECT>
+				</WTCODEGROUP>
+				
+				<!-- ************************************************************** -->
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Company.Email)"/>
+				</WTOBJECT>
+				<WTCALLSUB name="SendEmail reqCompanyid, tmpSender, tmpFrom, tmpTo, tmpCC, tmpBCC, tmpSubject, tmpBody"/>
+				<WTOBJECT name="Mail" project="ptsMailUser" class="CMail">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MailID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(MailDate)" value="SYS(Now)"/>
+					<WTSETATTRIBUTE name="ATTR(MailFrom)" value="CONST(tmpFrom)"/>
+					<WTSETATTRIBUTE name="ATTR(MailTo)" value="CONST(tmpTo)"/>
+					<WTSETATTRIBUTE name="ATTR(Subject)" value="CONST(tmpSubject)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="MailID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(FileName)" value="CONST(&quot;Mail&quot; &amp; MailID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; &amp; reqCompanyID &amp; &quot;\Mail\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="CONST(&quot;en&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="CONST(tmpBody)"/>
+					<WTMETHOD name="Save"/>
+				</WTOBJECT>
+			</WTACTION>
+			<!--************************************************************************************-->
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="0503" caption="View Mail" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="MailID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Mail" project="ptsMailUser" class="CMail">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MailID" direction="input" value="PARAM(MailID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="CONST(CLng(.MemberID))"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMail" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(FileName)" value="CONST(&quot;Mail&quot; &amp; reqMailID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; &amp; reqCompanyID &amp; &quot;\Mail\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="CONST(&quot;en&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Mail" project="ptsMailUser" class="CMail">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MailID" direction="input" value="PARAM(MailID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="60" align="right"/>
+				<WTCOLUMN width="540" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Mail" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="MailFrom"/>
+					<WTSTATIC col="2" value="ATTR(Mail.MailFrom)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MailTo"/>
+					<WTSTATIC col="2" value="ATTR(Mail.MailTo)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CC"/>
+					<WTSTATIC col="2" value="ATTR(Mail.CC)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="BCC"/>
+					<WTSTATIC col="2" value="ATTR(Mail.BCC)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Subject"/>
+					<WTSTATIC col="2" value="ATTR(Mail.Subject)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" value="ATTR(HTMLFile.Data)" align="left" embedhtml="true"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)"  align="center" msg="ConfirmDelete">
+						<WTCONDITION expr="IsEmployee"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="0513" caption="Mail" page-width="580" page-left="0" margin-width="0"
+		 navbar="false" header="false" footer="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="MailCount" datatype="number" />
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Mails" project="ptsMailUser" class="CMails">
+					<WTMETHOD name="ListOwner">
+						<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)" />
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)" />
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqMailCount" direction="return" datatype="number" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMails" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="580" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(OwnerType)" />
+					<WTHIDDEN value="PARAM(OwnerID)" />
+					<WTHIDDEN value="PARAM(CompanyID)" />
+					<WTHIDDEN value="PARAM(MemberID)" />
+				</WTROW>
+		
+				<WTROW>
+					<WTCONDITION expr="PARAM(MailCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="MyMailText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(MailCount)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="NoMail" class="prompt"/>
+				</WTROW>
+
+				<WTROW >
+					<WTBUTTON col="1" action="6" value="CONST(SendMail)" align="right" btnclass="smbutton">
+						<WTCLICK>
+							var type = document.getElementById('OwnerType').value
+							var pid = document.getElementById('OwnerID').value
+							var cid = document.getElementById('CompanyID').value
+							var mid = document.getElementById('MemberID').value
+							var url = "0502.asp?OwnerType=" + type + "&amp;OwnerID=" + pid + "&amp;MemberID=" + mid + "&amp;CompanyID=" + cid
+							var win = window.open(url,"Mail","top=100,left=100,height=625,width=625,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+							win.focus();
+						</WTCLICK>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="0" value="CONST(Refresh)" btnclass="smbutton"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTRECORDSET col="1" graybar="true" entity="Mail">
+						<WTCOLUMN width="20" align="left" valign="top" label="Date"/>
+						<WTCOLUMN width="80" align="left" valign="top" label="Subject"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Mail.MailDate)"/>
+							<WTSTATIC col="2" value="DATA(Mail.Subject)">
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+										<WTLINK name="0503" target="Mail">
+											<WTPARAM name="MailID" value="DATA(Mail.MailID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>		
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(MailCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" class="prompt">
+						<WTSTATIC value="PARAM(MailCount)" space="1"/>
+						<WTSTATIC label="Mail"/>
+					</WTSTATIC>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

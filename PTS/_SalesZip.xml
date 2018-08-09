@@ -1,0 +1,373 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="168" name="SalesZip" alias="slz" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="16801" name="SalesZipID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+    <!--Foreign Keys-->
+    <WTATTRIBUTE id="16802" name="SalesAreaID" type="number" source="entity"/>
+    <WTATTRIBUTE id="16803" name="CountryID" type="number" source="entity"/>
+
+    <!--Foreign Table Fields-->
+    <WTATTRIBUTE id="16805" name="SalesAreaName" type="text" length="40" source="join">
+      <WTJOIN entity="SalesArea" name="SalesAreaName"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16806" name="CountryName" type="text" length="50" source="join">
+      <WTJOIN entity="Country" name="CountryName"/>
+    </WTATTRIBUTE>
+
+    <!--Attributes-->
+    <WTATTRIBUTE id="16810" name="ZipCode" type="text" length="10" title="true" source="entity" language="false"/>
+    <WTATTRIBUTE id="16811" name="ZipName" type="text" length="30" source="entity" language="false"/>
+    <WTATTRIBUTE id="16812" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Pending"/>
+      <WTENUM id="2" name="Open"/>
+      <WTENUM id="3" name="Closed"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16813" name="StatusDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="16814" name="Population" type="number" source="entity">
+      <WTFORMAT value="###,###,##0" />
+    </WTATTRIBUTE>
+
+    <!-- Non Persist Fields -->
+
+    <!--Indexes-->
+    <WTINDEX name="SalesAreaID">
+      <WTATTRIBUTE name="SalesAreaID"/>
+    </WTINDEX>
+    <WTINDEX name="ZipCode">
+      <WTATTRIBUTE name="CountryID"/>
+      <WTATTRIBUTE name="ZipCode"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+      <WTRELATIONSHIP name="SalesZip" entity="SalesZip" alias="slz"/>
+      <WTRELATIONSHIP name="Common" entity="SalesZip" alias="slz">
+        <WTENTITY name="SalesArea" entity="SalesArea" alias="sla">
+          <WTATTRIBUTE alias="slz" name="SalesAreaID" relalias="sla" relname="SalesAreaID"/>
+        </WTENTITY>
+        <WTENTITY name="Country" entity="Country" alias="cou">
+          <WTATTRIBUTE alias="slz" name="CountryID" relalias="cou" relname="CountryID"/>
+        </WTENTITY>
+      </WTRELATIONSHIP>
+    </WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+    <WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(SalesAreaID)" direction="input" required="false" passthru="true"/>
+      <WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SalesZip.SalesZipID)"/>
+          <WTATTRIBUTE value="ATTR(SalesZip.SalesAreaID)"/>
+          <WTATTRIBUTE value="ATTR(SalesZip.CountryID)"/>
+          <WTATTRIBUTE value="ATTR(SalesArea.SalesAreaName)" alias="SalesAreaName"/>
+          <WTATTRIBUTE value="ATTR(Country.CountryName)" alias="CountryName"/>
+          <WTATTRIBUTE value="ATTR(SalesZip.ZipCode)"/>
+          <WTATTRIBUTE value="ATTR(SalesZip.ZipName)"/>
+          <WTATTRIBUTE value="ATTR(SalesZip.Status)"/>
+          <WTATTRIBUTE value="ATTR(SalesZip.StatusDate)"/>
+          <WTATTRIBUTE value="ATTR(SalesZip.Population)"/>
+          <WTJOIN name="Common"/>
+          <WTCONDITION expr="ATTR(SalesAreaID)" oper="equal" value="PARAM(SalesAreaID)"/>
+          <WTORDER name="ATTR(SalesZip.ZipCode)"/>
+        </WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="UpdatePopulation" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(SalesZipID)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="Status" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="16803" caption="SalesZip" header="false" footer="false" navbar="false"  wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--============================================================================================-->
+      <WTPARAM name="SalesZipID" datatype="number"/>
+      <WTPARAM name="SalesAreaID" datatype="number"/>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTOBJECT name="SalesZip" project="ptsSalesZipUser" class="CSalesZip">
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesZipID" direction="input" value="PARAM(SalesZipID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(SalesZipID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(SalesAreaID)" value="PARAM(SalesAreaID)"/>
+            <WTSETATTRIBUTE name="ATTR(CountryID)" value="CONST(224)"/>
+            <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="ATTR(StatusDate)" value="SYS(Date)"/>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesZip" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="SalesZip" project="ptsSalesZipUser" class="CSalesZip">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesZipID" direction="input" value="PARAM(SalesZipID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+          <WTMETHOD name="Save">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="UpDatePopulation">
+            <WTCONDITION expr="NoErrors"/>
+            <WTPARAM name="SalesZipID" direction="input" value="PARAM(SalesZipID)"/>
+            <WTPARAM name="Status" direction="return" datatype="number"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlSalesZip" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+      <WTACTION id="2" name="Add" type="Add">
+        <WTOBJECT name="SalesZip" project="ptsSalesZipUser" class="CSalesZip">
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesZipID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Add">
+            <WTPARAM name="SalesZipID" direction="return" datatype="number"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="UpDatePopulation">
+            <WTCONDITION expr="NoErrors"/>
+            <WTPARAM name="SalesZipID" direction="input" value="CONST(SalesZipID)"/>
+            <WTPARAM name="Status" direction="return" datatype="number"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlSalesZip" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+      
+      <WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="SalesZip" project="ptsSalesZipUser" class="CSalesZip">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SalesZipID" direction="input" value="PARAM(SalesZipID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="SalesZip" project="ptsSalesZipUser" class="CSalesZip">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SalesZipID" direction="input" value="PARAM(SalesZipID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSalesZip" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+        <WTROW>
+          <WTCONDITION expr="PARAM(SalesZipID)" oper="equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" label="NewSalesZip" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTCONDITION expr="PARAM(SalesZipID)" oper="not-equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" tag="SalesZip" value="ATTR(SalesZip.ZipName)" class="PageHeading" align="left"/>
+        </WTROW>
+
+        <WTCODEGROUP>
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="SalesAreaID"/>
+            <WTTEXT col="2" value="ATTR(SalesZip.SalesAreaID)" size="3"/>
+          </WTROW>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="CountryID"/>
+            <WTTEXT col="2" value="ATTR(SalesZip.CountryID)" size="3"/>
+            <WTSTATIC col="2" value="ATTR(SalesZip.CountryName)"/>
+          </WTROW>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="NotEmployee"/>
+          <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+          <WTROW margin-bottom="3">
+            <WTHIDDEN value="ATTR(SalesZip.SalesAreaID)"/>
+            <WTHIDDEN value="ATTR(SalesZip.CountryID)"/>
+          </WTROW>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="CountryName"/>
+            <WTSTATIC col="2" value="ATTR(SalesZip.CountryName)"/>
+          </WTROW>
+        </WTCODEGROUP>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="ZipName"/>
+          <WTTEXT col="2" value="ATTR(SalesZip.ZipName)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="ZipCode"/>
+          <WTTEXT col="2" value="ATTR(SalesZip.ZipCode)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Population"/>
+          <WTTEXT col="2" value="ATTR(SalesZip.Population)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(SalesZip.Status)"/>
+          <WTTEXT col="2" value="ATTR(SalesZip.StatusDate)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(SalesZipID)" oper="equal" value="CONST(0)"/>
+          <WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(SalesZipID)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+      <!--============================================================================================-->
+		<WTWEBPAGE name="16811" caption="SalesZips" header="false" footer="false" navbar="false" wrapper="wrapper1000"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--============================================================================================-->
+      <WTPARAM name="SalesAreaID" datatype="number"/>
+
+      <WTSUB name="LoadSalesZips">
+        <WTOBJECT name="SalesArea" project="ptsSalesAreaUser" class="CSalesArea">
+          <WTCONDITION expr="PARAM(SalesAreaID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesArea" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="SalesZips" project="ptsSalesZipUser" class="CSalesZips">
+          <WTMETHOD name="List">
+            <WTPARAM name="SalesAreaID" direction="input" value="PARAM(SalesAreaID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlSalesZips" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTCALLSUB name="LoadSalesZips"/>
+      </WTACTION>
+      
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="1000" align="left"/>
+
+        <WTFUNCTION name="NewSalesZip()">
+          var sid = document.getElementById('SalesAreaID').value
+          var url = "16803.asp?SalesAreaID=" + sid
+          window.location = url + "&amp;returnurl=16811.asp?SalesAreaID=" + sid
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(SalesAreaID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" tag="SalesAreaName" value="ATTR(SalesArea.SalesAreaName)" class="PageHeading"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+					<WTRECORDSET col="1" graybar="true" entity="SalesZip">
+            <WTCOLUMN width="20" align="left" label="ZipName"/>
+            <WTCOLUMN width="15" align="center" label="ZipCode"/>
+            <WTCOLUMN width="20" align="left" label="CountryName"/>
+            <WTCOLUMN width="15" align="center" label="Population"/>
+            <WTCOLUMN width="15" align="center" label="Status"/>
+            <WTCOLUMN width="15" align="center" label="StatusDate"/>
+
+            <WTROW height="24">
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(ZipName)"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="IsEmployee"/>
+                  <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                  <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="16803">
+                      <WTPARAM name="SalesZipID" value="DATA(SalesZipID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(ZipCode)"/>
+              <WTSTATIC col="3" value="DATA(CountryName)"/>
+              <WTSTATIC col="4" value="DATA(Population)"/>
+              <WTSTATIC col="5" value="DATA(Status)"/>
+              <WTSTATIC col="6" value="DATA(StatusDate)"/>
+            </WTROW>
+          </WTRECORDSET>
+				</WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" value="CONST(NewSalesZip)" align="center">
+            <WTCONDITION expr="IsEmployee"/>
+            <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+            <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+            <WTCLICK>NewSalesZip()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+      </WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,1115 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="159" name="Gift" alias="gc">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="15901" name="GiftID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="15902" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="15903" name="PaymentID" type="number" source="entity"/>
+    <WTATTRIBUTE id="15904" name="Member2ID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+    <WTATTRIBUTE id="15905" name="MemberName" type="text" length="60" min="1" max="60" source="join">
+      <WTJOIN entity="Member" name="CompanyName" />
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="15906" name="MemberName2" type="text" length="60" min="1" max="60" source="join">
+      <WTJOIN entity="Member2" name="CompanyName" />
+    </WTATTRIBUTE>
+
+		<!--Attributes-->
+    <WTATTRIBUTE id="15910" name="GiftDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="15911" name="ActiveDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="15912" name="Amount" type="currency" min="0" max="99999999.99" source="entity"/>
+    <WTATTRIBUTE id="15913" name="Purpose" type="text" length="10" min="1" max="10" source="entity"/>
+    <WTATTRIBUTE id="15914" name="Notes" type="text" length="100" min="1" max="100" source="entity" language="false"/>
+
+    <WTINDEX name="MemberID">
+      <WTATTRIBUTE name="MemberID"/>
+    </WTINDEX>
+    <WTINDEX name="Member2ID">
+      <WTATTRIBUTE name="Member2ID"/>
+    </WTINDEX>
+    <WTINDEX name="PaymentID">
+      <WTATTRIBUTE name="PaymentID"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Gift" entity="Gift" alias="gc"/>
+			<WTRELATIONSHIP name="Common" entity="Gift" alias="gc">
+        <WTENTITY name="Member" entity="Member" alias="me">
+          <WTATTRIBUTE alias="gc" name="MemberID" relalias="me" relname="MemberID"/>
+        </WTENTITY>
+        <WTENTITY name="Member2" entity="Member" alias="me2">
+          <WTATTRIBUTE alias="gc" name="Member2ID" relalias="me2" relname="MemberID"/>
+        </WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+    <!--List-->
+    <WTENUM id="1" type="find">
+      <WTATTRIBUTE name="Amount" default="true"/>
+      <WTATTRIBUTE name="GiftDate"/>
+      <WTATTRIBUTE name="GiftID"/>
+      <WTATTRIBUTE name="Member2ID"/>
+      <WTATTRIBUTE name="MemberName2"/>
+      <WTATTRIBUTE name="PaymentID"/>
+    </WTENUM>
+
+    <!-- System Constants -->
+    <WTSYSCONS>
+      <WTSYSCON name="GIFT-ALL" value="0"/>
+      <WTSYSCON name="GIFT-AVAILABLE" value="1"/>
+      <WTSYSCON name="GIFT-SHARED" value="2"/>
+      <WTSYSCON name="GIFT-REGISTERED" value="3"/>
+      <WTSYSCON name="GIFT-RETAIL" value="4"/>
+    </WTSYSCONS>
+
+  </WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTJOIN name="Common"/>
+      <WTCONDITION expr="ATTR(Gift.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+    </WTPROCEDURE>
+    <WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindAvailable" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTJOIN name="Common"/>
+      <WTCONDITION expr="ATTR(Gift.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+      <WTCONDITION expr="ATTR(Gift.Member2ID)" oper="equal" value="CONST(0)" connector="and"/>
+      <WTCONDITION expr="ATTR(Gift.Purpose)" oper="equal" value="CONST('')" connector="and"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindRetail" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+      <WTPARAM name="ATTR(GiftDate)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTJOIN name="Common"/>
+      <WTCONDITION expr="ATTR(Gift.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+      <WTCONDITION expr="ATTR(Gift.GiftDate)" oper="less" value="PARAM(GiftDate)" connector="and"/>
+      <WTCONDITION expr="ATTR(Gift.Member2ID)" oper="equal" value="CONST(0)" connector="and"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindShared" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTJOIN name="Common"/>
+      <WTCONDITION expr="ATTR(Gift.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+      <WTCONDITION expr="ATTR(Gift.Member2ID)" oper="equal" value="CONST(0)" connector="and"/>
+      <WTCONDITION expr="ATTR(Gift.Purpose)" oper="equal" value="CONST('Shared')" connector="and"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindRegistered" style="GenerateDataProc.xsl">
+      <WTBOOKMARK name=""/>
+      <WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTJOIN name="Common"/>
+      <WTCONDITION expr="ATTR(Gift.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+      <WTCONDITION expr="ATTR(Gift.Member2ID)" oper="not-equal" value="CONST(0)" connector="and"/>
+    </WTPROCEDURE>
+    <!--===================================================================================-->
+    <WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+    <!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(Member2ID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Gift.GiftID)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)"/>
+          <WTATTRIBUTE value="ATTR(Gift.GiftDate)"/>
+          <WTATTRIBUTE value="ATTR(Gift.ActiveDate)"/>
+          <WTATTRIBUTE value="ATTR(Gift.Amount)"/>
+          <WTATTRIBUTE value="ATTR(Gift.Purpose)"/>
+          <WTATTRIBUTE value="ATTR(Gift.Notes)"/>
+          <WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Member2ID)" oper="equal" value="PARAM(Member2ID)"/>
+					<WTORDER name="ATTR(Gift.ActiveDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+    <!--==================================================================================================================-->
+    <WTWEBPAGE name="15901" caption="Certificate Manager" action="5" header="false" footer="false" navbar="false" wrapper="wrapper750"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+      <!--==================================================================================================================-->
+      <WTPARAM name="SearchText" datatype="text"/>
+      <WTPARAM name="FindTypeID" datatype="number"/>
+      <WTPARAM name="Bookmark" datatype="text"/>
+      <WTPARAM name="Direction" datatype="number"/>
+      <WTPARAM name="MemberID" datatype="number"/>
+      <WTPARAM name="Status" datatype="number"/>
+      <WTPARAM name="GiftID" datatype="number"/>
+      <WTPARAM name="TransferID" datatype="number"/>
+      <WTPARAM name="TransferName" datatype="text"/>
+      <WTPARAM name="MemberName" datatype="text"/>
+      <WTPARAM name="Transfer" datatype="number"/>
+      <WTPARAM name="Cert2" datatype="number"/>
+      <WTPARAM name="Cert10" datatype="number"/>
+      <WTPARAM name="Cert25" datatype="number"/>
+      <WTPARAM name="Cert50" datatype="number"/>
+      <WTPARAM name="Retail" datatype="text"/>
+      <WTPARAM name="Total" datatype="text"/>
+      <WTPARAM name="Percent" datatype="text"/>
+      
+      <WTCODEGROUP>
+        <WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(Amount)">
+          <WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+        </WTSETATTRIBUTE>
+        <WTSETATTRIBUTE name="PARAM(Transfer)" value="CONST(1)"/>
+        <!-- Get the total available certificates -->
+        <WTOBJECT name="Nexxus" project="ptsNexxusUser" class="CNexxus">
+          <WTMETHOD name="Custom">
+            <WTPARAM name="Status" direction="input" value="CONST(600)"/>
+            <WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+            <WTPARAM name="Quantity" direction="input" value="PARAM(MemberID)"/>
+            <WTPARAM name="Amount" direction="input" value="CONST(2)"/>
+            <WTPARAM name="Result" direction="return" datatype="text"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              a = Split(Result, ";")
+              reqCert10 = a(0)
+              reqCert25 = a(1)
+              reqCert50 = a(2)
+              reqCert2 = a(3)
+              reqRetail = FormatCurrency(a(4))
+              reqTotal = FormatCurrency(a(5))
+              reqPercent = a(6)
+            </WTCUSTOM>
+          </WTCODEGROUP>
+        </WTOBJECT>
+
+      </WTCODEGROUP>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="IsMemberOnly"/>
+        <WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+          <WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)"/>
+        </WTSETATTRIBUTE>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)"/>
+          <WTCUSTOM>AbortUser()</WTCUSTOM>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="SYS(CompanyID)" oper="equal" value="SYSCON(NEXXUS)"/>
+          <WTSETATTRIBUTE name="CONST(tmp2FA)" value="CONST(Is2FA(reqSysUserID))"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="CONST(tmp2FA)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="PARAM(Transfer)" value="CONST(-1)"/>
+          </WTCODEGROUP>
+        </WTCODEGROUP>
+      </WTCODEGROUP>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="PARAM(GiftID)" oper="not-equal" value="CONST(0)"/>
+        <WTCONDITION expr="PARAM(TransferName)" oper="not-equal" value="CONST(&quot;&quot;)" connector="and"/>
+        <WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+          <WTMETHOD name="Load">
+            <WTPARAM name="GiftID" direction="input" value="PARAM(GiftID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(GiftID)" value="CONST(0)"/>
+          <WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(TransferID)"/>
+          <WTSETATTRIBUTE name="ATTR(Notes)" value="CONST(&quot;*&quot;)"/>
+          <WTMETHOD name="Save">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTCODEGROUP>
+      
+      <WTCODEGROUP>
+        <WTCONDITION expr="NotMemberOnly"/>
+        <WTCONDITION expr="PARAM(MemberName)" oper="equal" value="CONST(&quot;&quot;)" connector="and"/>
+        <WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+          <WTMETHOD name="Load">
+            <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(MemberName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast + &quot; #&quot; + .MemberID)"/>
+        </WTOBJECT>
+      </WTCODEGROUP>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTSETATTRIBUTE name="PARAM(Status)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+        <WTOBJECT name="Gifts" project="ptsGiftUser" class="CGifts">
+          <WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlGifts" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(14)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+      </WTACTION>
+
+      <WTACTION id="5" name="Find" type="New">
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTACTION id="6" name="Previous" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+      </WTACTION>
+
+      <WTACTION id="7" name="Next" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTACTION id="8" name="Purchase" type="Update">
+        <WTRETURN>
+          <WTLINK name="NexxusGift" nolocaldata="true">
+            <WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+          </WTLINK>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="9" name="Lookup" type="Update">
+        <WTSETATTRIBUTE name="PARAM(TransferName)" value="CONST(&quot;&quot;)"/>
+        <WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+          <WTCONDITION expr="PARAM(TransferID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MemberID" direction="input" value="PARAM(TransferID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(TransferName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+
+          <WTCODEGROUP>
+						<WTCONDITION expr="NotSysAdmin"/>
+						<WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+            <!-- Affiliate not found or in a different company -->
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(1)"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(CompanyID)" oper="not-equal" value="SYSCON(NEXXUS)"/>
+                <WTSETATTRIBUTE name="PARAM(Transfer)" value="CONST(2)"/>
+                <WTSETATTRIBUTE name="PARAM(TransferName)" value="CONST(&quot;&quot;)"/>
+              </WTCODEGROUP>
+            </WTCODEGROUP>
+            <!-- Affiliate not active -->
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(1)"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(Level)" oper="equal" value="CONST(1)"/>
+                <WTCONDITION expr="ATTR(Status)" oper="not-equal" value="CONST(1)" connector="and"/>
+                <WTSETATTRIBUTE name="PARAM(Transfer)" value="CONST(3)"/>
+                <WTSETATTRIBUTE name="PARAM(TransferName)" value="CONST(&quot;&quot;)"/>
+              </WTCODEGROUP>
+            </WTCODEGROUP>
+            <!-- Found a Customer -->
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(1)"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(Level)" oper="equal" value="CONST(0)"/>
+                <WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(3)" connector="and"/>
+                <WTSETATTRIBUTE name="PARAM(Transfer)" value="CONST(4)"/>
+                <WTSETATTRIBUTE name="PARAM(TransferName)" value="CONST(&quot;&quot;)"/>
+              </WTCODEGROUP>
+            </WTCODEGROUP>
+            <!-- Not bonus and payout qualified -->
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(1)"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(Qualify)" oper="less" value="CONST(2)"/>
+                <WTCONDITION expr="ATTR(IsIncluded)" oper="equal" value="CONST(0)" connector="or"/>
+                <WTSETATTRIBUTE name="PARAM(Transfer)" value="CONST(5)"/>
+                <WTSETATTRIBUTE name="PARAM(TransferName)" value="CONST(&quot;&quot;)"/>
+              </WTCODEGROUP>
+            </WTCODEGROUP>
+          </WTCODEGROUP>
+
+        </WTOBJECT>
+      </WTACTION>
+
+      <WTACTION id="10" name="Consolidate" type="Update">
+        <WTRETURN>
+          <WTLINK name="NexxusGift2" nolocaldata="true">
+            <WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+          </WTLINK>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="11" name="Split" type="Update">
+        <WTRETURN>
+          <WTLINK name="NexxusGift3" nolocaldata="true">
+            <WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+          </WTLINK>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTOBJECT name="Gifts" project="ptsGiftUser" class="CGifts">
+        <WTMETHOD name="Find">
+          <WTCONDITION expr="PARAM(Status)" oper="equal" value="SYSCON(GIFT-ALL)" />
+          <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+          <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+          <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+          <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+          <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+          <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+          <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+        </WTMETHOD>
+        <WTMETHOD name="FindAvailable">
+          <WTCONDITION expr="PARAM(Status)" oper="equal" value="SYSCON(GIFT-AVAILABLE)" />
+          <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+          <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+          <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+          <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+          <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+          <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+          <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+        </WTMETHOD>
+        <WTMETHOD name="FindShared">
+          <WTCONDITION expr="PARAM(Status)" oper="equal" value="SYSCON(GIFT-SHARED)" />
+          <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+          <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+          <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+          <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+          <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+          <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+          <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+        </WTMETHOD>
+        <WTMETHOD name="FindRegistered">
+          <WTCONDITION expr="PARAM(Status)" oper="equal" value="SYSCON(GIFT-REGISTERED)" />
+          <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+          <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+          <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+          <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+          <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+          <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+          <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+        </WTMETHOD>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(Status)" oper="equal" value="SYSCON(GIFT-RETAIL)" />
+          <WTSETATTRIBUTE name="CONST(RetailDate)" value="CONST(DateAdd(&quot;d&quot;,-31,reqSysDate))"/>
+          <WTMETHOD name="FindRetail">
+            <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+            <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+            <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+            <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+            <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+            <WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+            <WTPARAM name="GiftDate" direction="input" value="CONST(RetailDate)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+        </WTCODEGROUP>
+        <WTMETHOD name="XML">
+          <WTPARAM name="xmlGifts" direction="return" datatype="text"/>
+          <WTPARAM name="Option" direction="input" value="CONST(15)"/>
+        </WTMETHOD>
+      </WTOBJECT>
+      <WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+        <WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+        <WTMETHOD name="XML">
+          <WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+        </WTMETHOD>
+      </WTOBJECT>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="750" align="left"/>
+
+        <WTFUNCTION name="ViewCertificate(id)">
+          var url, win;
+          url = "15904.asp?giftid=" + id
+          win = window.open(url,"Certificate","top=200,left=200,height=330,width=430,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="ViewCustomer(id)">
+          var url, win;
+          url = "0421c.asp?m=" + id
+          win = window.open(url,"CustomerInfo","top=200,left=200,height=240,width=280,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="TransferGift(id)">
+          document.getElementById('GiftID').value = id;
+          doSubmit(5,"");
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(TransferName)"/>
+          <WTHIDDEN value="PARAM(GiftID)"/>
+          <WTHIDDEN value="PARAM(MemberName)"/>
+        </WTROW>
+
+        <WTROW>
+          <WTSTATIC col="1" class="PageHeading">
+            <WTCODEGROUP>
+              <WTSTATIC space="5"/>
+              <WTIMAGE value="CONST(certificate32.gif)" imgalign="absmiddle"/>
+              <WTSTATIC space="5"/>
+            </WTCODEGROUP>
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(MemberName)" oper="equal" value="CONST('')"/>
+              <WTSTATIC label="FindGift" fontsize="4"/>
+            </WTCODEGROUP>
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(MemberName)" oper="not-equal" value="CONST('')"/>
+              <WTSTATIC fontsize="4">
+                <WTSTATIC tag="FindGift" value="PARAM(MemberName)"/>
+              </WTSTATIC>
+            </WTCODEGROUP>
+            <WTCODEGROUP>
+              <WTCONDITION expr="IsEmployee"/>
+              <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+              <WTSTATIC space="2"/>
+              <WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle">
+                <WTLINK name="15902">
+                  <WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+                </WTLINK>
+              </WTIMAGE>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" label="GiftFindText" align="left" class="prompt"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTBUTTON col="1" action="8" value="CONST(PurchaseGift)" align="center"/>
+          <WTBUTTON col="1" action="10" value="CONST(ConsolidateGift)" align="center"/>
+          <WTBUTTON col="1" action="11" value="CONST(SplitGift)" align="center"/>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" merge="2" align="center" class="PageHeader" fontsize="4">
+            <WTSTATIC tag="Available"/>
+            <WTSTATIC label="Cert2" space="1"/>
+            <WTSTATIC value="PARAM(Cert2)" space="3" bold="true"/>
+            <WTSTATIC label="Cert10" space="1"/>
+            <WTSTATIC value="PARAM(Cert10)" space="3" bold="true"/>
+            <WTSTATIC label="Cert25" space="1"/>
+            <WTSTATIC value="PARAM(Cert25)" space="3" bold="true"/>
+            <WTSTATIC label="Cert50" space="1"/>
+            <WTSTATIC value="PARAM(Cert50)" space="5" bold="true"/>
+            <WTSTATIC label="Retail" space="1"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(Total)" oper="not-equal" value="CONST('$0.00')"/>
+              <WTSTATIC value="PARAM(Retail)" space="1"/>
+              <WTSTATIC label="of" space="1"/>
+              <WTSTATIC value="PARAM(Total)" space="1"/>
+              <WTSTATIC label="("/>
+            </WTCODEGROUP>
+            <WTSTATIC value="PARAM(Percent)"/>
+            <WTSTATIC label="%"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="PARAM(Total)" oper="not-equal" value="CONST('$0.00')"/>
+              <WTSTATIC label=")"/>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+          <WTCOMBO col="1" value="ATTR(Gifts.FindTypeID)" translate="true"/>
+          <WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+          <WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+          <WTSTATIC col="1" tag="Status" class="ColumnHeader"/>
+          <WTCOMBO col="1" value="PARAM(Status)">
+            <WTOPTION id="0" label="All"/>
+            <WTOPTION id="1" label="Available"/>
+            <WTOPTION id="2" label="Shared"/>
+            <WTOPTION id="3" label="Registered"/>
+            <WTOPTION id="4" label="Retail"/>
+          </WTCOMBO>
+          <WTBUTTON col="1" action="5" value="CONST(Search)" default="true"/>
+        </WTROW>
+        
+        <WTROW margin-bottom="6">
+          <WTCONDITION expr="PARAM(Transfer)" oper="greater" value="CONST(0)"/>
+          <WTSTATIC col="1" class="ColumnHeader" align="center">
+            <WTSTATIC label="TransferTo" space="1"/>
+            <WTSTATIC label="TransferTo2">
+              <WTCONDITION expr="PARAM(TransferName)" oper="equal" value="CONST('')"/>
+            </WTSTATIC>
+            <WTSTATIC value="PARAM(TransferName)" bold="true" fontcolor="blue">
+              <WTCONDITION expr="PARAM(TransferName)" oper="not-equal" value="CONST('')"/>
+            </WTSTATIC>
+          </WTSTATIC>
+          <WTTEXT col="1" value="PARAM(TransferID)" size="5"/>
+          <WTBUTTON col="1" action="9" value="CONST(Lookup)"/>
+          <WTSTATIC col="1" fontcolor="red" bold="true">
+            <WTCONDITION expr="PARAM(Transfer)" oper="greater" value="CONST(1)"/>
+            <WTSTATIC label="TransferBad2">
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(2)"/>
+            </WTSTATIC>
+            <WTSTATIC label="TransferBad3">
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(3)"/>
+            </WTSTATIC>
+            <WTSTATIC label="TransferBad4">
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(4)"/>
+            </WTSTATIC>
+            <WTSTATIC label="TransferBad5">
+              <WTCONDITION expr="PARAM(Transfer)" oper="equal" value="CONST(5)"/>
+            </WTSTATIC>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTSTATIC label="ViewCertificate"/>
+        <WTSTATIC label="ViewCustomer"/>
+        <WTSTATIC label="TransferCertificate"/>
+        <WTSTATIC label="NoTransferCertificate"/>
+
+        <WTROW>
+          <WTRECORDSET col="1" graybar="true" prevnext="top" entity="Gift">
+            <WTCOLUMN width="10" align="center" valign="top" label="GiftID" />
+            <WTCOLUMN width="14" align="center" valign="top" label="GiftDate" />
+            <WTCOLUMN width="12" align="center" valign="top" label="Amount" />
+            <WTCOLUMN width="28" align="left" valign="top" label="MemberName2" />
+            <WTCOLUMN width="14" align="center" valign="top" label="ActiveDate" />
+            <WTCOLUMN width="12" align="center" valign="top" label="Purpose" />
+            <WTCOLUMN width="10" align="center" valign="top" label="PaymentID" />
+            <WTROW height="24">
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(Gift.GiftID)"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="IsEmployee"/>
+                  <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                  <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="15903"><WTPARAM name="GiftID" value="DATA(Gift.GiftID)"/></WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(Gift.GiftDate)"/>
+              <WTSTATIC col="3">
+                <WTSTATIC value="DATA(Gift.Amount)">
+                  <WTCONDITION expr="DATA(Gift.Member2ID)" oper="greater" value="CONST(0)"/>
+                </WTSTATIC>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Gift.Member2ID)" oper="equal" value="CONST(0)"/>
+                  <WTSTATIC value="DATA(Gift.Amount)" fontcolor="darkgreen">
+                    <WTCONDITION expr="DATA(Gift.Purpose)" oper="not-exist" value="CONST()"/>
+                  </WTSTATIC>
+                  <WTSTATIC value="DATA(Gift.Amount)" fontcolor="darkorange">
+                    <WTCONDITION expr="DATA(Gift.Purpose)" oper="not-equal" value="CONST('')"/>
+                  </WTSTATIC>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="4">
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Gift.Member2ID)" oper="greater" value="CONST(0)"/>
+                  <WTSTATIC value="DATA(Gift.MemberName2)" space="1"/>
+                  <WTIMAGE value="CONST(preview.gif)" alt="ViewCustomer" imgalign="absmiddle">
+                    <WTLINK name="ViewCustomer(&lt;xsl:value-of select=&quot;@member2id&quot;/&gt;)" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Gift.Member2ID)" oper="equal" value="CONST(0)"/>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Gift.Notes)" oper="not-equal" value="CONST('*')"/>
+                    <WTCONDITION expr="DATA(Gift.Notes)" oper="not-exist" value="CONST()" connector="or"/>
+                    <WTIMAGE value="CONST(Certificate24.gif)" alt="ViewCertificate" imgalign="absmiddle">
+                      <WTLINK name="ViewCertificate(&lt;xsl:value-of select=&quot;@giftid&quot;/&gt;)" click="true" />
+                    </WTIMAGE>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Gift.Notes)" oper="equal" value="CONST('*')"/>
+                    <WTIMAGE value="CONST(Certificate24t.gif)" alt="ViewCertificate" imgalign="absmiddle">
+                      <WTLINK name="ViewCertificate(&lt;xsl:value-of select=&quot;@giftid&quot;/&gt;)" click="true" />
+                    </WTIMAGE>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(TransferName)" oper="not-equal" value="CONST('')"/>
+                    <WTCONDITION expr="DATA(Gift.Purpose)" oper="not-exist" value="CONST()" connector="and"/>
+                    <WTSTATIC space="1"/>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="DATA(Gift.Notes)" oper="equal" value="CONST('*')"/>
+                      <WTIMAGE value="CONST(Distribute2.gif)" alt="NoTransferCertificate" imgalign="absmiddle"/>
+                    </WTCODEGROUP>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="DATA(Gift.Notes)" oper="not-equal" value="CONST('*')"/>
+                      <WTCONDITION expr="DATA(Gift.Notes)" oper="not-exist" value="CONST()" connector="or"/>
+                      <WTIMAGE value="CONST(Distribute.gif)" alt="TransferCertificate" imgalign="absmiddle">
+                        <WTLINK name="TransferGift(&lt;xsl:value-of select=&quot;@giftid&quot;/&gt;)" click="true" />
+                      </WTIMAGE>
+                    </WTCODEGROUP>
+                  </WTCODEGROUP>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Gift.Member2ID)" oper="equal" value="CONST(0)"/>
+                  <WTCONDITION expr="DATA(Gift.Purpose)" oper="equal" value="CONST('Shared')" connector="and"/>
+                  <WTCONDITION expr="DATA(Gift.Notes)" oper="not-equal" value="CONST('')" connector="and"/>
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC value="DATA(Gift.Notes)" fontcolor="darkorange"/>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="5" value="DATA(Gift.ActiveDate)"/>
+              <WTSTATIC col="6" value="DATA(Gift.Purpose)"/>
+              <WTSTATIC col="7" value="DATA(Gift.PaymentID)"/>
+            </WTROW>
+            <WTROW>
+              <WTCONDITION expr="DATA(Gift.Notes)" oper="not-equal" value="CONST('')" />
+              <WTCONDITION expr="DATA(Gift.Purpose)" oper="not-equal" value="CONST('Shared')" connector="and"/>
+              <WTSTATIC col="1"/>
+              <WTSTATIC col="2" merge="6" value="DATA(Gift.Notes)" fontcolor="gray" align="left"/>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+		<WTWEBPAGE name="15902" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="125">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+					<WTMETHOD name="Load">
+						<WTPARAM name="GiftID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(GiftDate)" value="SYS(Date)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlGift" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+					<WTMETHOD name="Load">
+						<WTPARAM name="GiftID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="GiftID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlGift" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewGift" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="GiftDate"/>
+          <WTTEXT col="2" value="ATTR(Gift.GiftDate)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Amount"/>
+          <WTTEXT col="2" value="ATTR(Gift.Amount)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="PaymentID"/>
+          <WTTEXT col="2" value="ATTR(Gift.PaymentID)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="15903" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="125">
+		<!--============================================================================================-->
+			<WTPARAM name="GiftID" datatype="number"/>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+					<WTMETHOD name="Load">
+						<WTPARAM name="GiftID" direction="input" value="PARAM(GiftID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlGift" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+					<WTMETHOD name="Load">
+						<WTPARAM name="GiftID" direction="input" value="PARAM(GiftID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlGift" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="GiftID" direction="input" value="PARAM(GiftID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="Gift" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="GiftID"/>
+          <WTSTATIC col="2" value="ATTR(Gift.GiftID)" bold="true"/>
+        </WTROW>
+        <WTCODEGROUP>
+          <WTCONDITION expr="ATTR(Gift.Member2ID)" oper="not-equal" value="CONST(0)" />
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="MemberName2"/>
+            <WTSTATIC col="2" value="ATTR(Gift.MemberName2)"/>
+          </WTROW>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="ActiveDate"/>
+            <WTSTATIC col="2" value="ATTR(Gift.ActiveDate)"/>
+          </WTROW>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="Purpose"/>
+            <WTSTATIC col="2" value="ATTR(Gift.Purpose)"/>
+          </WTROW>
+          <WTROW margin-bottom="6">
+            <WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+          </WTROW>
+        </WTCODEGROUP>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="MemberID"/>
+          <WTTEXT col="2" value="ATTR(Gift.MemberID)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="GiftDate"/>
+          <WTTEXT col="2" value="ATTR(Gift.GiftDate)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Amount"/>
+          <WTTEXT col="2" value="ATTR(Gift.Amount)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="PaymentID"/>
+          <WTTEXT col="2" value="ATTR(Gift.PaymentID)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Member2ID"/>
+          <WTTEXT col="2" value="ATTR(Gift.Member2ID)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="ActiveDate"/>
+          <WTTEXT col="2" value="ATTR(Gift.ActiveDate)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Purpose"/>
+          <WTTEXT col="2" value="ATTR(Gift.Purpose)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Notes"/>
+          <WTTEXT col="2" value="ATTR(Gift.Notes)"/>
+        </WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="15904" page-left="10" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="400" margin-width="0" navbar-width="0" content-width="400" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+      <!--============================================================================================-->
+      <WTPARAM name="GiftID" datatype="number"/>
+      <WTPARAM name="URL" datatype="text"/>
+      <WTPARAM name="Shared" datatype="number"/>
+      <WTPARAM name="ShareWith" datatype="text"/>
+
+      <WTSUB name="NewGift">
+        <WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+          <WTMETHOD name="Load">
+            <WTPARAM name="GiftID" direction="input" value="PARAM(GiftID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsMemberOnly"/>
+            <WTCONDITION expr="ATTR(MemberID)" oper="not-equal" value="CONST(CSTR(reqSysMemberID))" connector="and"/>
+            <WTCUSTOM>AbortUser()</WTCUSTOM>
+          </WTCODEGROUP>
+          <WTCUSTOM>
+            requrl = "http://" + reqSysServerName + reqSysServerPath + "NexxusOrder.asp?p=" + .MemberID + "-" + CStr(reqGiftID)
+          </WTCUSTOM>
+          <WTCODEGROUP>
+            <WTCONDITION expr="ATTR(Purpose)" oper="equal" value="CONST(&quot;Shared&quot;)"/>
+            <WTSETATTRIBUTE name="PARAM(Shared)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="PARAM(ShareWith)" value="ATTR(Notes)"/>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlGift" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB function="Share( shr )">
+        <WTOBJECT name="Gift" project="ptsGiftUser" class="CGift">
+          <WTMETHOD name="Load">
+            <WTPARAM name="GiftID" direction="input" value="PARAM(GiftID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="ATTR(Member2ID)" oper="equal" value="CONST(0)"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="CONST(shr)" oper="equal" value="CONST(1)"/>
+              <WTSETATTRIBUTE name="ATTR(Purpose)" value="CONST(&quot;Shared&quot;)"/>
+              <WTSETATTRIBUTE name="ATTR(ActiveDate)" value="SYS(Date)"/>
+              <WTSETATTRIBUTE name="ATTR(Notes)" value="PARAM(ShareWith)"/>
+            </WTCODEGROUP>
+            <WTCODEGROUP>
+              <WTCONDITION expr="CONST(shr)" oper="equal" value="CONST(0)"/>
+              <WTSETATTRIBUTE name="ATTR(Purpose)" value="CONST(&quot;&quot;)"/>
+              <WTSETATTRIBUTE name="ATTR(ActiveDate)" value="CONST(0)"/>
+              <WTSETATTRIBUTE name="ATTR(Notes)" value="CONST(&quot;&quot;)"/>
+            </WTCODEGROUP>
+            <WTMETHOD name="Save">
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCALLSUB name="NewGift"/>
+      </WTACTION>
+
+      <WTACTION id="1" name="Share" type="New">
+        <WTCALLSUB name="Share( 1 )"/>
+        <WTCALLSUB name="NewGift"/>
+      </WTACTION>
+
+      <WTACTION id="2" name="Unshare" type="New">
+        <WTCALLSUB name="Share( 0 )"/>
+        <WTCALLSUB name="NewGift"/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="400" align="left"/>
+
+        <WTROW>
+          <WTSTATIC col="1" label="Gift" class="PageHeading" align="center"/>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+        </WTROW>
+        <WTCODEGROUP>
+          <WTCONDITION expr="ATTR(Member2ID)" oper="not-equal" value="CONST(0)"/>
+          <WTROW>
+            <WTSTATIC col="1" label="AlreadyRegistered" class="PageHeading" align="center" fontcolor="red"/>
+          </WTROW>
+        </WTCODEGROUP>
+
+        <WTCODEGROUP>
+          <WTCONDITION expr="ATTR(Member2ID)" oper="equal" value="CONST(0)"/>
+
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" align="center">
+              <WTSTATIC tag="GiftID"/>
+              <WTSTATIC value="ATTR(Gift.GiftID)" bold="true"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(Gift.Notes)" oper="equal" value="CONST('*')"/>
+                <WTSTATIC space="2"/>
+                <WTSTATIC label="Transfered" fontcolor="blue" bold="true"/>
+              </WTCODEGROUP>
+            </WTSTATIC>
+          </WTROW>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" align="center">
+              <WTSTATIC tag="GiftDate"/>
+              <WTSTATIC value="ATTR(Gift.GiftDate)" bold="true"/>
+            </WTSTATIC>
+          </WTROW>
+          <WTROW margin-bottom="6">
+            <WTSTATIC col="1" align="center">
+              <WTSTATIC tag="Amount"/>
+              <WTSTATIC value="ATTR(Gift.Amount)" bold="true"/>
+            </WTSTATIC>
+          </WTROW>
+          <WTROW margin-bottom="6">
+            <WTSTATIC col="1" align="center">
+              <WTSTATIC tag="Shared"/>
+              <WTSTATIC label="No" bold="true">
+                <WTCONDITION expr="PARAM(Shared)" oper="equal" value="CONST(0)"/>
+              </WTSTATIC>
+              <WTSTATIC label="Yes" bold="true">
+                <WTCONDITION expr="PARAM(Shared)" oper="not-equal" value="CONST(0)"/>
+              </WTSTATIC>
+            </WTSTATIC>
+          </WTROW>
+          <WTROW margin-bottom="6">
+            <WTDIVIDER col="1" align="left" height="1" color="SYS(divider)"/>
+          </WTROW>
+          <WTROW margin-bottom="6">
+            <WTSTATIC col="1" label="GiftShareText" align="left" class="prompt"/>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTSTATIC col="1" tag="ShareWith" align="center"/>
+            <WTTEXT col="1" value="PARAM(ShareWith)" size="20"/>
+            <WTBUTTON col="1" action="1" value="CONST(Share)" align="center" btnclass="smbutton">
+              <WTCONDITION expr="PARAM(Shared)" oper="equal" value="CONST(0)"/>
+            </WTBUTTON>
+            <WTBUTTON col="1" action="2" value="CONST(Unshare)" align="center" btnclass="smbutton">
+              <WTCONDITION expr="PARAM(Shared)" oper="not-equal" value="CONST(0)"/>
+            </WTBUTTON>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTSTATIC col="1" label="GiftURLText" align="left" class="prompt"/>
+          </WTROW>
+          <WTROW>
+            <WTSTATIC col="1" align="center">
+              <WTSTATIC tag="GiftURL" newline="1"/>
+              <WTSTATIC value="PARAM(URL)" bold="true" underline="true"/>
+                <WTLINK name="PARAM(URL)" type="anchor" target="_blank"/>
+              </WTSTATIC>
+          </WTROW>
+
+          <WTROW margin-top="18">
+            <WTBUTTON col="1" value="CONST(Close)" align="center" btnclass="smbutton">
+              <WTCLICK>window.parent.opener.location.reload();window.close()</WTCLICK>
+            </WTBUTTON>
+          </WTROW>
+        </WTCODEGROUP>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+		<WTWEBPAGE name="15911" caption="List" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+			<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Gifts" project="ptsGiftUser" class="CGifts">
+					<WTMETHOD name="List">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlGifts" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Gifts" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Gift">
+						<WTCOLUMN width="15" align="left" valign="top" label="ActiveDate"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="Amount"/>
+            <WTCOLUMN width="15" align="left" valign="top" label="Purpose"/>
+            <WTCOLUMN width="55" align="left" valign="top" label="MemberName"/>
+            <WTROW>
+              <WTSTATIC col="1" value="DATA(ActiveDate)"/>
+              <WTSTATIC col="2" value="DATA(Amount)"/>
+              <WTSTATIC col="3" value="DATA(Purpose)"/>
+              <WTSTATIC col="4" value="DATA(MemberName)"/>
+            </WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

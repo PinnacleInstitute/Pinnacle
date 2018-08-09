@@ -1,0 +1,1600 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="64" name="Expense" alias="ex" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="6401" name="ExpenseID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="6402" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="6403" name="ExpenseTypeID" type="number" source="entity" required="true"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="6404" name="ExpenseTypeName" type="text" length="40" source="join">
+			<WTJOIN entity="ExpenseType" name="ExpenseTypeName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6405" name="TaxType" type="number" source="join">
+			<WTJOIN entity="ExpenseType" name="TaxType"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6406" name="IsRequired" type="yesno" source="join">
+			<WTJOIN entity="ExpenseType" name="IsRequired"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="6410" name="ExpType" type="number" source="entity" required="true">
+			<WTENUM id="1" name="Mileage"/>
+			<WTENUM id="2" name="Meals"/>
+			<WTENUM id="3" name="Travel"/>
+			<WTENUM id="4" name="HomeOffice"/>
+			<WTENUM id="5" name="Misc"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6411" name="ExpDate" type="date" source="entity" title="true"/>
+		<WTATTRIBUTE id="6412" name="Total" type="currency" source="entity"/>
+		<WTATTRIBUTE id="6413" name="Amount" type="currency" source="entity"/>
+		<WTATTRIBUTE id="6414" name="MilesStart" type="number" source="entity">
+			<WTFORMAT value="###,##0"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6415" name="MilesEnd" type="number" source="entity">
+			<WTFORMAT value="###,##0"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6416" name="TotalMiles" type="number" source="entity">
+			<WTFORMAT value="###,##0"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6417" name="Note1" type="text" length="50" min="1" max="50" source="entity"/>
+		<WTATTRIBUTE id="6418" name="Note2" type="text" length="100" min="1" max="100" source="entity"/>
+		<WTATTRIBUTE id="6419" name="Purpose" type="text" length="200" min="1" max="200" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="6490" name="Method" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="6491" name="FromDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="6492" name="ToDate" type="date" source="entity" persist="false"/>
+		
+		<!--Indexes-->
+		<WTINDEX name="Member">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="ExpType"/>
+			<WTATTRIBUTE name="ExpDate"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Expense" entity="Expense" alias="ex"/>
+			<WTRELATIONSHIP name="Common" entity="Expense" alias="ex">
+				<WTENTITY name="ExpenseType" entity="ExpenseType" alias="ext">
+					<WTATTRIBUTE alias="ex" name="ExpenseTypeID" relalias="ext" relname="ExpenseTypeID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="ExpDate" default="true"/>
+			<WTATTRIBUTE name="Amount"/>
+			<WTATTRIBUTE name="Purpose" contains="true"/>
+			<WTATTRIBUTE name="Note1" contains="true"/>
+			<WTATTRIBUTE name="Note2" contains="true"/>
+		</WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="EXPTYPE-MILEAGE" value="1"/>
+			<WTSYSCON name="EXPTYPE-MEALS" value="2"/>
+			<WTSYSCON name="EXPTYPE-TRAVEL" value="3"/>
+			<WTSYSCON name="EXPTYPE-OFFICE" value="4"/>
+			<WTSYSCON name="EXPTYPE-MISC" value="5"/>
+			<WTSYSCON name="MILEAGE-STANDARD" value="0"/>
+			<WTSYSCON name="MILEAGE-COST" value="1"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Expense.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindType" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(ExpType)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Expense.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="PARAM(ExpType)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl" template="new">
+			<WTCODEGROUP>
+				<WTUPDATE>
+					<WTJOIN name="Expense" lock="true"/>
+					<WTCONDITION expr="ATTR(Expense.ExpenseID)" oper="equal" value="PARAM(ExpenseID)"/>
+				</WTUPDATE>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Expense_CalcTotal">
+					<WTPARAM name="ATTR(ExpenseID)" direction="input" value="PARAM(ExpenseID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ReportSummary" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Expense.ExpenseID)"/>
+					<WTATTRIBUTE value="ATTR(Expense.ExpType)"/>
+					<WTATTRIBUTE value="ATTR(Expense.Amount)"/>
+					<WTATTRIBUTE value="ATTR(Expense.Total)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Expense.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(ExpType.Year)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ReportDetail" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(ExpType)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Expense.ExpenseID)"/>
+					<WTATTRIBUTE value="ATTR(Expense.ExpDate)"/>
+					<WTATTRIBUTE value="ATTR(ExpenseType.ExpenseTypeName)"/>
+					<WTATTRIBUTE value="ATTR(Expense.Amount)"/>
+					<WTATTRIBUTE value="ATTR(Expense.Total)"/>
+					<WTATTRIBUTE value="ATTR(Expense.MilesStart)"/>
+					<WTATTRIBUTE value="ATTR(Expense.MilesEnd)"/>
+					<WTATTRIBUTE value="ATTR(Expense.TotalMiles)"/>
+					<WTATTRIBUTE value="ATTR(Expense.Note1)"/>
+					<WTATTRIBUTE value="ATTR(Expense.Note2)"/>
+					<WTATTRIBUTE value="ATTR(Expense.Purpose)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Expense.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(Expense.ExpType)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="CalcTotal" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ExpenseID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetVehicleMethod" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(ExpDate)" direction="input"/>
+			<WTPARAM name="Method" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6401" caption="Expenses" header="false" footer="false" navbar="false" action="5" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="ExpType" datatype="number"/>
+			<WTPARAM name="ExpOption" datatype="number"/>
+
+      <!-- CHECK FOR ILLEGAL ACCESS -->
+      <WTCODEGROUP>
+        <WTCONDITION expr="IsMemberOnly"/>
+        <WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(ExpDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTSUB name="LoadExpOption">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="GetVehicleMethod">
+						<WTPARAM name="reqExpOption" direction="return" datatype="number"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="ExpDate" direction="input" value="SYS(Date)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;ExpenseMgr.htm&quot;)" />
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadExpOption"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Expenses" project="ptsExpenseUser" class="CExpenses">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpenses" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="8" name="ExpOption" type="New">
+				<WTRETURN>
+					<WTLINK name="6702" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="9" name="NewExpense" type="New">
+				<WTRETURN>
+					<WTLINK name="6402" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTOBJECT name="Expenses" project="ptsExpenseUser" class="CExpenses">
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(ExpType)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindType">
+					<WTCONDITION expr="PARAM(ExpType)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="ExpType" direction="input" value="PARAM(ExpType)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlExpenses" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(ExpOption)" oper="greater-equal" value="CONST(0)"/>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSEXPENSES/PTSEXPENSE))" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTSTATIC col="1" align="right" bold="true">
+<!--
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewExpense">
+								<WTLINK name="6402">
+									<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+-->
+						<WTCODEGROUP>
+<!--							<WTSTATIC space="1"/> -->
+							<WTIMAGE value="CONST(reportsm.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="ExpenseReport">
+								<WTLINK name="6415" target="Report">
+									<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(Calculator16.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="MemberTax">
+								<WTLINK name="6711">
+									<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+<!--
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" align="center">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(Icon_ex.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="3"/>
+						<WTSTATIC label="Expenses" fontsize="5" fontcolor="#000080"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTSTATIC space="2"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-EXPENSEMANAGER)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" label="ExpensesText" fontsize="4" fontcolor="#000080" align="center"/>
+				</WTROW>
+-->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ExpOption)" oper="less" value="CONST(0)"/>
+					<WTROW margin-top="6" margin-bottom="12">
+						<WTSTATIC col="1" align="left" label="ExpOptionText" fontcolor="#000080" fontsize="3"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTBUTTON col="1" action="8" value="CONST(AddExpOption)" align="center" default="true"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(ExpOption)" oper="greater-equal" value="CONST(0)"/>
+					
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1" align="left" label="ExpenseFindText" fontcolor="#000080" fontsize="3"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTCONDITION expr="CONST(count(/DATA/TXN/PTSEXPENSES/PTSEXPENSE))" oper="not-equal" value="CONST(0)"/>
+						<WTBUTTON col="1" action="9" value="CONST(NewExpense)" align="center" btnclass="smbutton"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="12">
+						<WTCONDITION expr="CONST(count(/DATA/TXN/PTSEXPENSES/PTSEXPENSE))" oper="equal" value="CONST(0)"/>
+						<WTBUTTON col="1" action="9" value="CONST(NewExpense)" align="center"/>
+					</WTROW>
+
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+						<WTCOMBO col="1" value="ATTR(Expenses.FindTypeID)" translate="true" prespace="false"/>
+						<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+						<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="15" focus="true" prespace="false"/>
+						<WTSTATIC col="1" tag="ShowType" class="ColumnHeader" align="center"/>
+						<WTCOMBO col="1" value="PARAM(ExpType)" prespace="false" required="false">
+							<WTOPTION id="0" label="All"/>
+							<WTOPTION id="1" label="Mileage"/>
+							<WTOPTION id="2" label="Meals"/>
+							<WTOPTION id="3" label="Travel"/>
+							<WTOPTION id="4" label="HomeOffice"/>
+							<WTOPTION id="5" label="Misc"/>
+						</WTCOMBO>
+						<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+						<WTBUTTON col="1" action="3" value="CONST(Return)" btnclass="smbutton"/>
+					</WTROW>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(count(/DATA/TXN/PTSEXPENSES/PTSEXPENSE))" oper="not-equal" value="CONST(0)"/>
+
+						<WTROW margin-bottom="6">
+							<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW>
+							<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Expense">
+								<WTCOLUMN width="5" align="center" valign="top"/>
+								<WTCOLUMN width="12" align="center" valign="top" label="ExpDate"/>
+								<WTCOLUMN width="15" align="right" valign="top" label="Amount"/>
+								<WTCOLUMN width="15" align="right" valign="top" label="Total"/>
+								<WTCOLUMN width="19" align="center" valign="top" label="ExpType"/>
+								<WTCOLUMN width="34" align="left" valign="top" label="ExpenseTypeName"/>
+								<WTROW>
+									<WTSTATIC col="1">
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(ExpType)" oper="equal" value="SYSCON(EXPTYPE-MILEAGE)"/>
+											<WTIMAGE value="CONST(ExpVehicle16.gif)" imgalign="absmiddle"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(ExpType)" oper="equal" value="SYSCON(EXPTYPE-MEALS)"/>
+											<WTIMAGE value="CONST(ExpMeals16.gif)" imgalign="absmiddle"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(ExpType)" oper="equal" value="SYSCON(EXPTYPE-TRAVEL)"/>
+											<WTIMAGE value="CONST(ExpTravel16.gif)" imgalign="absmiddle"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(ExpType)" oper="equal" value="SYSCON(EXPTYPE-OFFICE)"/>
+											<WTIMAGE value="CONST(ExpOffice16.gif)" imgalign="absmiddle"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(ExpType)" oper="equal" value="SYSCON(EXPTYPE-MISC)"/>
+											<WTIMAGE value="CONST(ExpMisc16.gif)" imgalign="absmiddle"/>
+										</WTCODEGROUP>
+									</WTSTATIC>
+									<WTSTATIC col="2" value="DATA(ExpDate)"/>
+									<WTSTATIC col="3" value="DATA(Amount)">
+										<WTSTATIC space="1"/>
+										<WTCODEGROUP>
+											<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+												<WTLINK name="6403"><WTPARAM name="ExpenseID" value="DATA(Expense.ExpenseID)"/></WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+									</WTSTATIC>
+									<WTSTATIC col="4" value="DATA(Total)"/>
+									<WTSTATIC col="5" value="DATA(ExpType)"/>
+									<WTSTATIC col="6" value="DATA(ExpenseTypeName)"/>
+								</WTROW>
+								<WTROW>
+									<WTSTATIC col="1" merge="3"/>
+									<WTSTATIC col="4" merge="3" align="left">
+										<WTSTATIC>
+											<WTCONDITION expr="DATA(ExpType)" oper="equal" value="SYSCON(EXPTYPE-MILEAGE)"/>
+											<WTSTATIC fontcolor="gray">
+												<WTCONDITION expr="DATA(TotalMiles)" oper="not-equal" value="CONST(0)"/>
+												<WTSTATIC value="DATA(MilesStart)" space="1"/>
+												<WTSTATIC value="CONST(-)" space="1"/>
+												<WTSTATIC value="DATA(MilesEnd)" space="1"/>
+												<WTSTATIC value="CONST(()" space="1"/>
+												<WTSTATIC value="DATA(TotalMiles)" space="1"/>
+												<WTSTATIC value="CONST())"/>
+											</WTSTATIC>
+										</WTSTATIC>
+										<WTSTATIC value="DATA(Note1)" space="1" fontcolor="blue">
+											<WTCONDITION expr="DATA(Note1)" oper="not-equal" value="CONST('')"/>
+										</WTSTATIC>
+										<WTSTATIC value="DATA(Note2)" space="1" fontcolor="purple">
+											<WTCONDITION expr="DATA(Note2)" oper="not-equal" value="CONST('')"/>
+										</WTSTATIC>
+										<WTSTATIC value="DATA(Purpose)" space="1" fontcolor="gray">
+											<WTCONDITION expr="DATA(Purpose)" oper="not-equal" value="CONST('')"/>
+										</WTSTATIC>
+									</WTSTATIC>
+								</WTROW>
+
+							</WTRECORDSET>
+						</WTROW>
+
+						<WTROW margin-top="36" margin-bottom="12">
+							<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="center">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="3"/>
+									<WTIMAGE value="CONST(ExpVehicle16.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpVehicle)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="Mileage" bold="true">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpVehicle)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(ExpMeals16.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpMeals)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="Meals" bold="true">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpMeals)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(ExpTravel16.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpTravel)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="Travel" bold="true">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpTravel)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(ExpOffice16.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpOffice)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="HomeOffice" bold="true">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpOffice)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(ExpMisc16.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpMisc)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="Misc" bold="true">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpMisc)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW margin-top="3" margin-bottom="12">
+							<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+						</WTROW>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6402" header="false" footer="false" navbar="false" wrapper="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="ExpenseID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(ExpDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(ExpType)" value="CONST(1)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpense" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(ExpenseTypeID)" value="CONST(-1)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ExpenseID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(ExpenseID)" value="ATTR(ExpenseID)"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlExpense" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="6403" skipreturn="true">
+						<WTPARAM name="ExpenseID" value="PARAM(ExpenseID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="310" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="100" align="center"/>
+						<WTCOLUMN width="400" align="left"/>
+						<WTCOLUMN width="100" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Calculator32.gif)" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" class="Prompt">
+								<WTSTATIC label="AddExpenseText"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpDate"/>
+					<WTTEXT col="2" value="ATTR(Expense.ExpDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpType"/>
+					<WTCOMBO col="2" value="ATTR(Expense.ExpType)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)" align="left">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6403" header="false" footer="false" navbar="false" wrapper="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ExpenseID" datatype="number"/>
+			<WTPARAM name="Method" datatype="number"/>
+			<WTPARAM name="Receipts" datatype="number"/>
+
+			<WTSETATTRIBUTE name="CONST(tmpExpenseTypeID)" value="CONST(0)"/>
+			<WTSETATTRIBUTE name="CONST(tmpExpType)" value="CONST(0)"/>
+
+			<WTSUB name="LoadLists">
+				<WTOBJECT name="ExpenseTypes" project="ptsExpenseTypeUser" class="CExpenseTypes">
+					<WTMETHOD name="EnumExpenseType">
+						<WTPARAM name="xmlExpenseTypes" direction="return" datatype="text"/>
+						<WTPARAM name="ExpType" direction="input" value="CONST(tmpExpType)"/>
+						<WTPARAM name="ItemID" direction="input" value="CONST(tmpExpenseTypeID)"/>
+						<WTPARAM name="Element" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="CountParent">
+						<WTPARAM name="reqReceipts" direction="return" datatype="number"/>
+						<WTPARAM name="ParentType" direction="input" value="ENTITY(Expense)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ExpenseID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadExpense">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseID" direction="input" value="PARAM(ExpenseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpExpType)" value="ATTR(Expense.ExpType)" />
+					<WTSETATTRIBUTE name="CONST(tmpExpenseTypeID)" value="ATTR(Expense.ExpenseTypeID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpense" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(ExpType)" oper="equal" value="SYSCON(EXPTYPE-MILEAGE)"/>
+						<WTMETHOD name="GetVehicleMethod">
+							<WTPARAM name="reqMethod" direction="return" datatype="number"/>
+							<WTPARAM name="MemberID" direction="input" value="ATTR(MemberID)"/>
+							<WTPARAM name="ExpDate" direction="input" value="ATTR(ExpDate)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(tmpExpType)" value="CONST(11)">
+							<WTCONDITION expr="PARAM(Method)" oper="equal" value="CONST(1)"/>
+						</WTSETATTRIBUTE>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadLists"/>
+			</WTSUB>
+
+			<WTSUB name="UpdateExpense">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseID" direction="input" value="PARAM(ExpenseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsErrors"/>
+						<WTSETATTRIBUTE name="CONST(tmpExpType)" value="ATTR(Expense.ExpType)" />
+						<WTSETATTRIBUTE name="CONST(tmpExpenseTypeID)" value="ATTR(Expense.ExpenseTypeID)" />
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlExpense" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(ExpType)" oper="equal" value="SYSCON(EXPTYPE-MILEAGE)"/>
+							<WTMETHOD name="GetVehicleMethod">
+								<WTPARAM name="reqMethod" direction="return" datatype="number"/>
+								<WTPARAM name="MemberID" direction="input" value="ATTR(MemberID)"/>
+								<WTPARAM name="ExpDate" direction="input" value="ATTR(ExpDate)"/>
+							</WTMETHOD>
+							<WTSETATTRIBUTE name="CONST(tmpExpType)" value="CONST(11)">
+								<WTCONDITION expr="PARAM(Method)" oper="equal" value="CONST(1)"/>
+							</WTSETATTRIBUTE>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadLists">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadExpense"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateExpense"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ExpenseID" direction="input" value="PARAM(ExpenseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="Refresh" type="Update">
+				<WTCALLSUB name="UpdateExpense"/>
+				<WTCALLSUB name="LoadExpense">
+					<WTCONDITION expr="NoErrors"/>
+				</WTCALLSUB>
+			</WTACTION>
+
+			<WTACTION id="6" name="Change" type="Update">
+				<WTCALLSUB name="UpdateExpense"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="6404">
+						<WTPARAM name="ExpenseID" value="PARAM(ExpenseID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="310" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="Validate()">
+				var msg, good = 1;
+				var exptype = document.getElementById('ExpType').value;
+				var method = document.getElementById('Method').value;
+				var category = document.getElementById('ExpenseTypeID').value;
+				var purpose = document.getElementById('Purpose').value;
+				// category required for all expenses
+				if (category == 0) {
+					good = 0;
+					alert(document.getElementById('CategoryRequired').value);
+				}
+				// place and attendees required for meals
+				if (exptype == 2) {
+					var place = document.getElementById('Note1').value;
+					var attendees = document.getElementById('Note2').value;
+					if (place.length == 0) {
+						good = 0;
+						alert(document.getElementById('PlaceRequired').value);
+					}	
+					if (attendees.length == 0) {
+						good = 0;
+						alert(document.getElementById('AttendeesRequired').value);
+					}	
+				}	
+				// purpose required except for home office and vehicle actual costs
+				if ( exptype != 4 &amp;&amp; method != 1 ) {
+					if (purpose.length == 0) {
+						good = 0;
+						alert(document.getElementById('PurposeRequired').value);
+					}	
+				}	
+				if( good == 1 ) { doSubmit(1,""); }
+			    </WTFUNCTION>  
+
+				<WTFUNCTION name="Receipts()">
+					var url, win;
+					var id = document.getElementById('ExpenseID').value
+					url = '8017.asp?ParentType=64&amp;ParentID=' + id
+					win = window.open(url,'', "left=100, top=100, width=600, height=400 resizable=no, status=no");
+					win.focus();
+			    </WTFUNCTION>  
+
+				<WTROW>
+					<WTHIDDEN value="ATTR(Expense.ExpType)"/>
+					<WTHIDDEN value="ATTR(Expense.TaxType)"/>
+					<WTHIDDEN value="ATTR(Expense.ExpenseID)"/>
+					<WTHIDDEN value="PARAM(Method)"/>
+					<WTHIDDEN name="PurposeRequired" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name='PurposeRequired']&quot;/&gt;)"/>
+					<WTSTATIC label="PurposeRequired"/>
+					<WTHIDDEN name="CategoryRequired" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name='CategoryRequired']&quot;/&gt;)"/>
+					<WTSTATIC label="CategoryRequired"/>
+					<WTHIDDEN name="PlaceRequired" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name='PlaceRequired']&quot;/&gt;)"/>
+					<WTSTATIC label="PlaceRequired"/>
+					<WTHIDDEN name="AttendeesRequired" value="CONST(&lt;xsl:value-of select=&quot;/DATA/LANGUAGE/LABEL[@name='AttendeesRequired']&quot;/&gt;)"/>
+					<WTSTATIC label="AttendeesRequired"/>
+				</WTROW>
+
+				<WTSTATIC label="Receipts"/>
+				
+				<WTROW>
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="100" align="center"/>
+						<WTCOLUMN width="500" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-MILEAGE)"/>
+									<WTIMAGE value="CONST(ExpVehicle.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpVehicle)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-MEALS)"/>
+									<WTIMAGE value="CONST(ExpMeals.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpMeals)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-TRAVEL)"/>
+									<WTIMAGE value="CONST(ExpTravel.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpTravel)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-OFFICE)"/>
+									<WTIMAGE value="CONST(ExpOffice.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpOffice)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-MISC)"/>
+									<WTIMAGE value="CONST(ExpMisc.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+										<WTLINK name="Page" target="Help">
+											<WTPARAM name="Page" value="CONST(HelpExpMisc)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" class="Prompt">
+								<WTSTATIC label="EditExpenseText"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="ExpType" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Expense.ExpType)" bold="true"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="ExpenseTypeID" />
+					<WTCOMBO col="2" value="ATTR(Expense.ExpenseTypeID)" datapath="/DATA/TXN/PTSEXPENSETYPES/ENUM" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpDate"/>
+					<WTTEXT col="2" value="ATTR(Expense.ExpDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(Expense.Amount)" size="8"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="ATTR(Expense.Total)" oper="not-equal" value="CONST('$0.00')"/>
+					<WTSTATIC col="1" tag="Total" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Expense.Total)" bold="true"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-MILEAGE)"/>
+					<WTCONDITION expr="PARAM(Method)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="MileageText" align="left" class="Prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="MilesStart"/>
+						<WTTEXT col="2" value="ATTR(Expense.MilesStart)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="MilesEnd"/>
+						<WTTEXT col="2" value="ATTR(Expense.MilesEnd)" size="5"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="ATTR(Expense.TotalMiles)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC col="1" tag="TotalMiles" height="18"/>
+						<WTSTATIC col="2" value="ATTR(Expense.TotalMiles)" bold="true"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-MEALS)"/>
+					<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-TRAVEL)" connector="or"/>
+					<WTSTATIC col="1" tag="Note1"/>
+					<WTTEXT col="2" value="ATTR(Expense.Note1)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-MEALS)"/>
+					<WTSTATIC col="1" tag="Note2"/>
+					<WTMEMO col="2" value="ATTR(Expense.Note2)" rows="3" cols="50"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1">
+						<WTSTATIC tag="Purpose">
+							<WTCONDITION expr="ATTR(Expense.ExpType)" oper="not-equal" value="SYSCON(EXPTYPE-OFFICE)"/>
+						</WTSTATIC>
+						<WTSTATIC tag="Notes">
+							<WTCONDITION expr="ATTR(Expense.ExpType)" oper="equal" value="SYSCON(EXPTYPE-OFFICE)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+					<WTMEMO col="2" value="ATTR(Expense.Purpose)" rows="5" cols="50"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+						<WTCLICK>Validate()</WTCLICK>
+					</WTBUTTON>
+					<WTBUTTON col="1" valuez="concat( /DATA/PARAM/@receipts, ' ', /DATA/LANGUAGE/LABEL[@name='Receipts'])">
+						<WTCLICK>Receipts()</WTCLICK>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6404" header="false" footer="false" navbar="false" wrapper="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ExpenseID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseID" direction="input" value="PARAM(ExpenseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpense" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ExpenseID" direction="input" value="PARAM(ExpenseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="310" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(Calculator32.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC col="2" class="PageHeading">
+							<WTSTATIC label="ChangeExpenseText"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ExpType"/>
+					<WTCOMBO col="2" value="ATTR(Expense.ExpType)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)" align="left">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="6415" caption="Expense Report" form="Report" header="false" footer="false" navbar="false" wrapper="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+			<!--==================================================================-->
+			<WTPARAM name="MemberID" datatype="number" />
+			<WTPARAM name="FromDate" datatype="date" />
+			<WTPARAM name="ToDate" datatype="date" />
+			<WTPARAM name="Year" datatype="number" />
+			<WTPARAM name="Term" datatype="number" />
+			<WTPARAM name="Count" datatype="number" />
+			<WTPARAM name="Amount" datatype="currency" />
+			<WTPARAM name="Total" datatype="currency" />
+			
+			<WTSUB name="LoadReport">
+				<WTOBJECT name="Expenses" project="ptsExpenseUser" class="CExpenses">
+					<WTMETHOD name="ReportSummary">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)" />
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)" />
+					</WTMETHOD>
+<WTCUSTOM>
+				reqCount = 0
+				reqAmount = 0
+				reqTotal = 0
+				For Each oExpense in oExpenses
+					reqCount = reqCount + 1
+					With oExpense
+					   reqAmount = reqAmount + CCUR(.Amount)
+					   reqTotal = reqTotal + CCUR(.Total)
+					End With
+				Next
+				reqCount = FormatNumber(reqCount,0) 
+				reqAmount = FormatCurrency(reqAmount)
+				reqTotal = FormatCurrency(reqTotal)
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpenses" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Year)" oper="not-equal" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="PARAM(FromDate)" value="&quot;1/1/&quot; + CStr(reqYear)" />
+					<WTSETATTRIBUTE name="PARAM(ToDate)" value="&quot;12/31/&quot; + CStr(reqYear)" />
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(FromDate)" oper="equal" value="CONST(&quot;&quot;)"/>
+					<WTSETATTRIBUTE name="PARAM(Term)" value="CONST(9)" />
+					<WTSETATTRIBUTE name="PARAM(FromDate)" value="&quot;1/1/&quot; &amp; Year(reqSysDate)" />
+					<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(date)" />
+				</WTCODEGROUP>
+				<WTCALLSUB name="LoadReport" />
+			</WTACTION>
+			
+			<WTACTION id="5" name="Report" type="Update">
+				<WTCALLSUB name="LoadReport" />
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="650" align="right" />
+
+				<WTSTATIC label="DetailReport"/>
+				<WTSTATIC label="ViewAllDetailReport"/>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(Report.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1" />
+						<WTSTATIC label="ExpenseSummaryReport"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTSTATIC value="SYS(UserName)" />
+						<WTSTATIC value="CONST( - )" />
+						<WTSTATIC value="SYS(Date)"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" align="center" tag="ReportOn" />
+					<WTCOMBO col="1" name="Term" align="center" value="PARAM(Term)" prespace="false">
+						<WTOPTION id="0" label="Blank" />
+						<WTOPTION id="1" label="Yesterday" />
+						<WTOPTION id="2" label="Today" />
+						<WTOPTION id="3" label="UptoToday" />
+						<WTOPTION id="4" label="PrevWeek" />
+						<WTOPTION id="5" label="PrevMonth" />
+						<WTOPTION id="6" label="PrevYear" />
+						<WTOPTION id="7" label="WeekToDate" />
+						<WTOPTION id="8" label="MonthToDate" />
+						<WTOPTION id="9" label="YearToDate" />
+<!--
+						<WTOPTION id="10" label="Tomorrow" />
+						<WTOPTION id="11" label="Next7Days" />
+						<WTOPTION id="12" label="Next14Days" />
+						<WTOPTION id="13" label="Next30Days" />
+-->						
+						<WTCHANGE>
+							var ONE_DAY = 1000 * 60 * 60 * 24;
+							var fromdate = new Date();
+							var todate = new Date();
+							var term = document.getElementById('Term').value;
+							switch(term) {
+							case "0":
+							//document.getElementById('FromDate').value = document.getElementById('EnrollDate').value
+							break;
+							case "1":
+							fromdate.setTime(fromdate.getTime() - ONE_DAY );
+							todate = fromdate;
+							break;
+							case "2":
+							break;
+							case "3":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							fromdate.setYear(2000);
+							break;
+							case "4":
+							todate.setTime(todate.getTime() - ( todate.getDay() * ONE_DAY ) );
+							fromdate.setTime(todate.getTime() - ( 6 * ONE_DAY ) );
+							break;
+							case "5":
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setDate(1);
+							break;
+							case "6":
+							todate.setMonth(0);
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+							case "7":
+							fromdate.setTime(fromdate.getTime() - ( (fromdate.getDay()-1) * ONE_DAY ) );
+							break;
+							case "8":
+							fromdate.setDate(1);
+							break;
+							case "9":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+							case "10":
+							fromdate.setTime(fromdate.getTime() + ONE_DAY );
+							todate = fromdate;
+							break;
+							case "11":
+							todate.setTime(todate.getTime() + 6 * ONE_DAY );
+							break;
+							case "12":
+							todate.setTime(todate.getTime() + 13 * ONE_DAY );
+							break;
+							case "13":
+							todate.setTime(todate.getTime() + 29 * ONE_DAY );
+							break;
+							}
+							if(term!="0"){document.getElementById('FromDate').value = fromdate.getMonth()+1 + "/" + fromdate.getDate() + "/" + fromdate.getFullYear();}
+							document.getElementById('ToDate').value = todate.getMonth()+1 + "/" + todate.getDate() + "/" + todate.getFullYear();
+						</WTCHANGE>
+					</WTCOMBO>
+					<WTSTATIC col="1" align="center" tag="From" />
+					<WTTEXT col="1" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true" prespace="false"/>
+					<WTSTATIC col="1" tag="To" />
+					<WTTEXT col="1" value="PARAM(ToDate)" name="ToDate" type="date" size="8" prespace="false" />
+					<WTBUTTON col="1" action="5" value="CONST(Report)" default="true" />
+					<WTBUTTON col="1" value="CONST(Close)" align="center" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Expense">
+						<WTCOLUMN width="30" align="left" valign="top" label="ExpType" />
+						<WTCOLUMN width="16" align="right" valign="top" label="Amount" />
+						<WTCOLUMN width="16" align="right" valign="top" label="Total" />
+						<WTCOLUMN width="38" align="left" valign="top" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Expense.ExpType)" valign="top" bold="true"/>
+							<WTSTATIC col="2" value="DATA(Expense.Amount)" valign="top" />
+							<WTSTATIC col="3" value="DATA(Expense.Total)" valign="top" />
+							<WTSTATIC col="4">
+								<WTCODEGROUP>
+									<WTSTATIC space="3"/>
+									<WTIMAGE value="CONST(reportsm.gif)" alt="DetailReport" imgalign="absmiddle">
+										<WTLINK name="6416" target="DetailReport">
+											<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+											<WTPARAM name="ExpType" value="DATA(ExpType)"/>
+											<WTPARAM name="FromDate" value="PARAM(FromDate)"/>
+											<WTPARAM name="ToDate" value="PARAM(ToDate)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="195" align="left"/>
+						<WTCOLUMN width="104" align="right"/>
+						<WTCOLUMN width="104" align="right"/>
+						<WTCOLUMN width="247" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" value="PARAM(Amount)" bold="true" />
+							<WTSTATIC col="3" value="PARAM(Total)" bold="true" />
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="center">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(report.gif)" alt="ViewAllDetailReport" imgalign="absmiddle">
+								<WTLINK name="6416" target="DetailReport">
+									<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+									<WTPARAM name="ExpType" value="CONST(-1)"/>
+									<WTPARAM name="FromDate" value="PARAM(FromDate)"/>
+									<WTPARAM name="ToDate" value="PARAM(ToDate)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="6416" caption="Expense Detail" form="Report" header="false" footer="false" navbar="false" wrapper="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+			<!--==================================================================-->
+			<WTPARAM name="MemberID" datatype="number" />
+			<WTPARAM name="ExpType" datatype="number" />
+			<WTPARAM name="FromDate" datatype="date" />
+			<WTPARAM name="ToDate" datatype="date" />
+			<WTPARAM name="Term" datatype="number" />
+			<WTPARAM name="Count" datatype="number" />
+			<WTPARAM name="Amount" datatype="currency" />
+			<WTPARAM name="Total" datatype="currency" />
+			
+			<WTSUB name="LoadReport">
+				<WTOBJECT name="Expense" project="ptsExpenseUser" class="CExpense">
+					<WTSETATTRIBUTE name="ATTR(ExpType)" value="PARAM(ExpType)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpense" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Expenses" project="ptsExpenseUser" class="CExpenses">
+					<WTMETHOD name="ReportDetail">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="ExpType" direction="input" value="PARAM(ExpType)" />
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)" />
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)" />
+					</WTMETHOD>
+<WTCUSTOM>
+				reqCount = 0
+				reqAmount = 0
+				reqTotal = 0
+				For Each oExpense in oExpenses
+					reqCount = reqCount + 1
+					With oExpense
+					   reqAmount = reqAmount + CCUR(.Amount)
+					   reqTotal = reqTotal + CCUR(.Total)
+					End With
+				Next
+				reqCount = FormatNumber(reqCount,0) 
+				reqAmount = FormatCurrency(reqAmount)
+				reqTotal = FormatCurrency(reqTotal)
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlExpenses" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(FromDate)" oper="equal" value="CONST(&quot;&quot;)"/>
+					<WTSETATTRIBUTE name="PARAM(Term)" value="CONST(9)" />
+					<WTSETATTRIBUTE name="PARAM(FromDate)" value="&quot;1/1/&quot; &amp; Year(reqSysDate)" />
+					<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(date)" />
+				</WTCODEGROUP>
+				<WTCALLSUB name="LoadReport" />
+			</WTACTION>
+			
+			<WTACTION id="5" name="Report" type="Update">
+				<WTCALLSUB name="LoadReport" />
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="650" align="right" />
+
+				<WTSTATIC label="DetailReport"/>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(Report.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1" />
+						<WTSTATIC label="ExpenseDetailReport"/>
+						<WTSTATIC value="CONST( - )" />
+						<WTSTATIC value="ATTR(Expense.ExpType)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTSTATIC value="SYS(UserName)" />
+						<WTSTATIC value="CONST( - )" />
+						<WTSTATIC value="SYS(Date)"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" align="center" tag="ReportOn" />
+					<WTCOMBO col="1" name="Term" align="center" value="PARAM(Term)" prespace="false">
+						<WTOPTION id="0" label="Blank" />
+						<WTOPTION id="1" label="Yesterday" />
+						<WTOPTION id="2" label="Today" />
+						<WTOPTION id="3" label="UptoToday" />
+						<WTOPTION id="4" label="PrevWeek" />
+						<WTOPTION id="5" label="PrevMonth" />
+						<WTOPTION id="6" label="PrevYear" />
+						<WTOPTION id="7" label="WeekToDate" />
+						<WTOPTION id="8" label="MonthToDate" />
+						<WTOPTION id="9" label="YearToDate" />
+<!--
+						<WTOPTION id="10" label="Tomorrow" />
+						<WTOPTION id="11" label="Next7Days" />
+						<WTOPTION id="12" label="Next14Days" />
+						<WTOPTION id="13" label="Next30Days" />
+-->						
+						<WTCHANGE>
+						var ONE_DAY = 1000 * 60 * 60 * 24;
+						var fromdate = new Date();
+						var todate = new Date();
+						switch(Report.Term.value) {
+						case "0":
+							//Report.FromDate.value = Report.EnrollDate.value
+							break;
+						case "1":
+							fromdate.setTime(fromdate.getTime() - ONE_DAY ); 
+							todate = fromdate; 
+							break;
+						case "2": 
+							break;
+						case "3":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							fromdate.setYear(2000);
+							break;
+						case "4":
+							todate.setTime(todate.getTime() - ( todate.getDay() * ONE_DAY ) );
+							fromdate.setTime(todate.getTime() - ( 6 * ONE_DAY ) );
+							break;
+						case "5":
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setDate(1);
+							break;
+						case "6":
+							todate.setMonth(0);
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+						case "7":
+							fromdate.setTime(fromdate.getTime() - ( (fromdate.getDay()-1) * ONE_DAY ) );
+							break;
+						case "8":
+							fromdate.setDate(1);
+							break;
+						case "9":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+						case "10":
+							fromdate.setTime(fromdate.getTime() + ONE_DAY ); 
+							todate = fromdate; 
+							break;
+						case "11":
+							todate.setTime(todate.getTime() + 6 * ONE_DAY );
+							break;
+						case "12":
+							todate.setTime(todate.getTime() + 13 * ONE_DAY );
+							break;
+						case "13":
+							todate.setTime(todate.getTime() + 29 * ONE_DAY );
+							break;
+						}
+						if(Report.Term.value!="0"){Report.FromDate.value = fromdate.getMonth()+1 + "/" + fromdate.getDate() + "/" + fromdate.getFullYear();}
+						Report.ToDate.value = todate.getMonth()+1 + "/" + todate.getDate() + "/" + todate.getFullYear();
+						</WTCHANGE>
+					</WTCOMBO>
+					<WTSTATIC col="1" align="center" tag="From" />
+					<WTTEXT col="1" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true" prespace="false"/>
+					<WTSTATIC col="1" tag="To" />
+					<WTTEXT col="1" value="PARAM(ToDate)" name="ToDate" type="date" size="8" prespace="false" />
+					<WTBUTTON col="1" action="5" value="CONST(Report)" default="true" />
+					<WTBUTTON col="1" value="CONST(Close)" align="center" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Expense">
+						<WTCOLUMN width="10" align="center" valign="top" label="ExpDate" />
+						<WTCOLUMN width="16" align="right" valign="top" label="Amount" />
+						<WTCOLUMN width="16" align="right" valign="top" label="Total" />
+						<WTCOLUMN width="8" align="left" valign="top"/>
+						<WTCOLUMN width="50" align="left" valign="top" label="ExpenseTypeName" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Expense.ExpDate)" valign="top"/>
+							<WTSTATIC col="2" value="DATA(Expense.Amount)" valign="top" />
+							<WTSTATIC col="3" value="DATA(Expense.Total)" valign="top" />
+							<WTSTATIC col="4"/>
+							<WTSTATIC col="5" value="DATA(Expense.ExpenseTypeName)" valign="top" />
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2"/>
+							<WTSTATIC col="3" merge="3" align="left">
+								<WTSTATIC>
+									<WTCONDITION expr="PARAM(ExpType)" oper="equal" value="SYSCON(EXPTYPE-MILEAGE)"/>
+									<WTSTATIC fontcolor="gray">
+										<WTCONDITION expr="DATA(TotalMiles)" oper="not-equal" value="CONST(0)"/>
+										<WTSTATIC value="DATA(MilesStart)" space="1"/>
+										<WTSTATIC value="CONST(-)" space="1"/>
+										<WTSTATIC value="DATA(MilesEnd)" space="1"/>
+										<WTSTATIC value="CONST(()" space="1"/>
+										<WTSTATIC value="DATA(TotalMiles)" space="1"/>
+										<WTSTATIC value="CONST())"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Note1)" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(Note1)" oper="not-equal" value="CONST('')"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Note2)" space="1" fontcolor="purple">
+									<WTCONDITION expr="DATA(Note2)" oper="not-equal" value="CONST('')"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Purpose)" space="1" fontcolor="gray">
+									<WTCONDITION expr="DATA(Purpose)" oper="not-equal" value="CONST('')"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="65" align="left"/>
+						<WTCOLUMN width="104" align="right"/>
+						<WTCOLUMN width="104" align="right"/>
+						<WTCOLUMN width="195" align="left"/>
+						<WTCOLUMN width="182" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="Items" value="PARAM(Count)" bold="true"/>
+							<WTSTATIC col="2" value="PARAM(Amount)" bold="true" />
+							<WTSTATIC col="3" value="PARAM(Total)" bold="true" />
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

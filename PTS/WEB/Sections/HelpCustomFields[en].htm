@@ -1,0 +1,49 @@
+
+<P align=center><FONT color=#000066 size=4>CUSTOM FIELDS</FONT> 
+<P><FONT size=3>You can define custom fields to request on the Lead Program. Each custom field starts on a separate line and can continue to the next line if too long. The field name must be followed by a colon(:). If the name of the field starts with an Asterick(*), entry is required. </FONT>
+<P><FONT size=3>A list of choices must be separated by semi-colons(;). </FONT>
+<P><FONT size=3>If the name of the choice starts with an Asterick(*) it will be the default choice. </FONT>
+<P><FONT size=3>Non-list options can specify the data type (type=text|memo|number|date), minimum and/or maximum values (min=xxx max=xxx), width of text box or height of memo (size=xx), and a default value (value=abc). If a default value is specified it cannot include any spaces. </FONT>
+<P><FONT size=3>If type=date, the min, max and value settings can be entered as NOW for the current date. </FONT>
+<P><FONT size=3>A prompt can be included with the option name for input instructions (Age[Enter your Age]:) and cannot include a colon.</FONT> 
+<P><B>*Age: Under 20; 21 - 35; 36 - 50; Over 50</B>&nbsp;&nbsp;<SELECT name=InputOptionsText1><OPTION value="Under 20" selected>Under 20</OPTION><OPTION value="21 - 35">21 - 35</OPTION><OPTION value="36 - 50">36 - 50</OPTION><OPTION value="Over 50">Over 50</OPTION></SELECT> 
+<P><B>*Income: *Under $40K; Under $70K; Over $70K</B>&nbsp;&nbsp;<SELECT name=InputOptionsText2><OPTION value="Under $40K" selected>Under $40K</OPTION><OPTION value="Under $70K">Under $70K</OPTION><OPTION value="Over $70K">Over $70K</OPTION></SELECT> 
+<P><B>Initials[Enter up to 3 characters]: type=text max=3 size=3</B>&nbsp;&nbsp;<INPUT size=3> 
+<P>
+<BR><FONT color=#000066 size=5>Embedded Fields in the Page Content</FONT> 
+<P><FONT size=3>You can optionally design your page content with the inputs for the custom fields built in the content rather than having them displayed after the content.&nbsp; The following tips will help you setup embedded inputs. </FONT>
+<OL>
+<LI><FONT size=3>Remove all &lt;FORM&gt; tag definitions (and closing tags) </FONT>
+<LI><FONT size=3>Edit the name&nbsp;of each &lt;INPUT&gt; to be the exact name in your custom field definition. </FONT>
+<LI><FONT size=3>Edit the&nbsp;Submit button to include onclick="doSubmit(1,' ')" </FONT>
+<LI><FONT size=3>Edit &lt;SELECT&gt; &lt;OPTION&gt; tags to have a value = the text choice</FONT>
+</OL>
+<P><FONT size=3><B><FONT color=#000099 size=4>EXAMPLE</FONT></B></FONT> 
+<P><FONT size=3><B><FONT size=2><FONT size=3>Custom Field Definition</FONT> 
+<BR></FONT>
+<BR></B></FONT><FONT face="courier new, courier, mono" size=2>FirstName:type=text 
+<BR>LastName:type=text 
+<BR>Email:type=text 
+<BR>Phone:type=text 
+<BR>ColorList:Red;Blue;Green 
+<BR></FONT>
+<P><FONT size=3><B>HTML Source Code</B></FONT><BLOCKQUOTE style="MARGIN-RIGHT: 0px">
+<P><FONT face="courier new, courier, mono" size=2>&lt;TR&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;First Name:&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;&lt;INPUT type="text" name="FirstName"/&gt;&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;Last Name:&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;&lt;INPUT type="text" name="LastName"/&gt;&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;Email:&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;&lt;INPUT type="text" name="Email"/&gt;&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;Phone:&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;&lt;INPUT type="text" name="Phone"/&gt;&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;Pick a Color:&lt;/TD&gt; 
+<BR>&nbsp;&nbsp; &lt;TD&gt;&nbsp;&nbsp; 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;SELECT name="ColorList"&gt; 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;OPTION value="Red"&gt;Red&lt;/OPTION&gt; 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;OPTION value="Blue"&gt;Blue&lt;/OPTION&gt; 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;OPTION value="Green"&gt;Green&lt;/OPTION&gt; 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/SELECT&gt; 
+<BR>&nbsp;&nbsp; &lt;/TD&gt; 
+<BR>&lt;/TR&gt;</FONT></BLOCKQUOTE>
+<P>&nbsp; 

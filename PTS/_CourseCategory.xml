@@ -1,0 +1,1350 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="12" name="CourseCategory" alias="cc" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="1201" name="CourseCategoryID" type="number" identity="true" min="1" source="entity"/>
+		<WTATTRIBUTE id="1202" name="ParentCategoryID" type="number" source="entity" parent="true"/>
+		<WTATTRIBUTE id="1203" name="ForumID" type="number" source="entity"/>
+
+		<!--Foreign Keys-->
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="1210" name="ParentCategoryName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="ParentCategory" name="CourseCategoryName"/>
+		</WTATTRIBUTE>
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="1215" name="CourseCategoryName" type="text" length="60" min="1" max="60" source="entity" title="true" required="true"/>
+		<WTATTRIBUTE id="1216" name="Seq" type="number" source="entity" seq="10"/>
+		<WTATTRIBUTE id="1217" name="CourseCount" type="number" source="entity"/>
+
+		<!--Non-Persist-->
+		<WTATTRIBUTE id="1297" name="CreateDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="1298" name="CompanyID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="1299" name="MemberID" type="number" source="entity" persist="false"/>
+		
+		<!--Indexes-->
+		<WTINDEX name="ParentCategoryID">
+			<WTATTRIBUTE name="ParentCategoryID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="CourseCategory" entity="CourseCategory" alias="cc"/>
+			<WTRELATIONSHIP name="Common" entity="CourseCategory" alias="cc">
+				<WTENTITY name="ParentCategory" entity="CourseCategory" alias="ccp">
+					<WTATTRIBUTE alias="cc" name="ParentCategoryID" relalias="ccp" relname="CourseCategoryID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="CourseCategoryName" default="true"/>
+		</WTENUM>
+		
+		<WTENUM id="2" type="list"/>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" >
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTDECLARE name="ForumID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTSETVALUE name="ForumID" value="CONST(0)"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Forum_Add">
+					<WTPARAM name="ATTR(CompanyID)" direction="input" value="CONST(0)"/>
+					<WTPARAM name="ATTR(ForumName)" direction="input" value="PARAM(CourseCategoryName)"/>
+					<WTPARAM name="ATTR(Seq)" direction="input" value="CONST(0)"/>
+					<WTPARAM name="ATTR(Description)" direction="input" value="CONST('')"/>					
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="ForumID" direction="output"/>
+				</WTPROCEDURE>			
+				<WTSETVALUE name="PARAM(ForumID)" value="ForumID" null="0"/>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTINSERT/>
+			</WTCODEGROUP>
+			<WTSETVALUE name="NewID" value="CONST(@@IDENTITY)"/>
+			<WTSETVALUE name="PARAM(CourseCategoryID)" value="NewID"/>
+			<WTSETVALUE name="PARAM(ForumID)" value="ForumID"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Enum" name="Enum" style="GenerateDataProc.xsl" column="CourseCategoryName">
+			<WTORDER name="Seq"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListCourseCategory" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(ParentCategoryID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryName)"/>
+					
+					<WTJOIN name="CourseCategory"/>
+					<WTCONDITION expr="ATTR(CourseCategory.ParentCategoryID)" oper="equal" value="PARAM(ParentCategoryID)"/>
+					<WTORDER name="ATTR(CourseCategory.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListPublic" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================-->
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.ParentCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryName)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCount)"/>
+					<WTJOIN name="CourseCategory"/>
+<!-- this condition is wrong, it makes category administration impossible -->					
+<!--					<WTCONDITION expr="ATTR(CourseCategory.CourseCount)" oper="greater" value="CONST(0)"/> -->
+					<WTORDER name="ATTR(CourseCategory.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListPrivate" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.ParentCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryName)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCount)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListAll" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.ParentCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryName)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCount)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryName)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.ForumID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListFavorite" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(CreateDate)" direction="input"/>
+			<WTPARAM name="ATTR(Seq)" direction="input"/> <!-- List Type -->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryID)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCategoryName)"/>
+					<WTATTRIBUTE value="ATTR(CourseCategory.CourseCount)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1202" caption="CourseCategory" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="21">
+		<!--===============================================================================-->
+			<WTPARAM name="CategoryID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="CourseCategory" project="ptsCourseCategoryUser" class="CCourseCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseCategoryID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CourseCategory.ParentCategoryID)" value="PARAM(CategoryID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategory" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="CourseCategory" project="ptsCourseCategoryUser" class="CCourseCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseCategoryID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CourseCategory.ParentCategoryID)" value="PARAM(CategoryID)"/>
+					<WTSETATTRIBUTES/>
+					
+					<WTMETHOD name="Add">
+						<WTPARAM name="CourseCategoryID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CourseCategory" class="PageHeading" align="left"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="CourseCategoryName"/>
+					<WTTEXT col="2" value="ATTR(CourseCategory.CourseCategoryName)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(CourseCategory.Seq)" size="2"/>
+				</WTROW>
+			
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1203" caption="CourseCategory" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="21">
+		<!--===============================================================================-->
+			<WTPARAM name="CourseCategoryID" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="CourseCategory" project="ptsCourseCategoryUser" class="CCourseCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseCategoryID" direction="input" value="PARAM(CourseCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategory" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTOBJECT name="CourseCategory" project="ptsCourseCategoryUser" class="CCourseCategory">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseCategoryID" direction="input" value="PARAM(CourseCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION name="Delete" type="Delete" id="2">
+				<WTOBJECT name="CourseCategory" project="ptsCourseCategoryUser" class="CCourseCategory">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="CourseCategoryID" direction="input" value="PARAM(CourseCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="CourseCategory" project="ptsCourseCategoryUser" class="CCourseCategory">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseCategoryID" direction="input" value="PARAM(CourseCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CourseCategory" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="ATTR(ParentCategoryID)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" tag="ParentCategoryName" value="ATTR(ParentCategoryName)" class="BoldText" align="left">
+						<WTLINK name="1203"><WTPARAM name="CourseCategoryID" value="ATTR(CourseCategory.ParentCategoryID)"/></WTLINK>
+					</WTSTATIC>
+				</WTROW>				
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="CourseCategoryID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(CourseCategory.CourseCategoryID)" bold="true"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="ParentCategoryID"/>
+					<WTTEXT col="2" value="ATTR(CourseCategory.ParentCategoryID)" size="2"/>
+					<WTSTATIC col="2" value="ATTR(CourseCategory.ParentCategoryName)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="CourseCategoryName"/>
+					<WTTEXT col="2" value="ATTR(CourseCategory.CourseCategoryName)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(CourseCategory.Seq)" size="2"/>
+				</WTROW>
+			
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Delete)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+<!-- ********** Member Course Browser ********** -->		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1211" caption="Course Categories" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="ParentCategoryID" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="CourseCategorys" project="ptsCourseCategoryUser" class="CCourseCategorys">
+					<WTMETHOD name="ListCourseCategory">
+						<WTPARAM name="ParentCategoryID" direction="input" value="PARAM(ParentCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="CourseCategory" project="ptsCourseCategoryUser" class="CCourseCategory">
+					<WTCONDITION expr="PARAM(ParentCategoryID)" oper="greater" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseCategoryID" direction="input" value="PARAM(ParentCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategory" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Courses" project="ptsCourseUser" class="CCourses">
+					<WTMETHOD name="ListCourse">
+						<WTPARAM name="CourseCategoryID" direction="input" value="PARAM(ParentCategoryID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourses" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="CourseCategory" class="PageHeading"/>
+
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(ParentCategoryID)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" tag="ParentCategoryName" value="ATTR(CourseCategory.CourseCategoryName)" class="BoldText" align="left">
+						<WTLINK name="1211"><WTPARAM name="CourseCategoryID" value="ATTR(CourseCategory.ParentCategoryID)"/></WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="CourseCategory">
+						<WTCOLUMN width="100" align="left" valign="top" label="CourseCategoryName"/>
+
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(CourseCategory.CourseCategoryName)">
+								<WTLINK name="1211"><WTPARAM name="ParentCategoryID" value="DATA(CourseCategory.CourseCategoryID)"/></WTLINK>
+							</WTSTATIC>
+
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Course">
+						<WTCOLUMN width="100" align="left" valign="top" label="CourseName"/>
+
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Course.CourseName)">
+								<WTLINK name="1120"><WTPARAM name="CourseID" value="DATA(Course.CourseID)"/></WTLINK>
+							</WTSTATIC>
+
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1212" caption="Course Catalog" focus="false" wrapper="wrapper600"
+			   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" contentpage="true" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="ProgramID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			<WTPARAM name="Mode" datatype="number"/>
+			<WTPARAM name="Demo" datatype="number"/>
+			<WTPARAM name="Catalog" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTDATATXN name="Programs"/>
+
+			<!-- MODE==DESCRIPTION==============USER==PARAMS==========CALLED-BY========-->
+			<!--  0  Courses Categories (edit)  emp   none            1101             --> 
+			<!--  1  Courses for Public (demo)  ano   none            header,homepage  -->
+			<!--  2  Courses for a Member       mem   MemberID,OrgID  1311             -->
+			<!--  3  Courses to Insert          org   OrgID,CompanyID   1101             -->
+			<!-- ======================================================================-->
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotCatalog" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="NotEmployee"/>
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+<!--
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)"/>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="SYS(CompanyID)" connector="or"/>
+						<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+					</WTCODEGROUP>
+-->
+				</WTCODEGROUP>
+
+				<!-- FOR DEMO CLASSES ONLY -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsAnonymous"/>
+					<!-- NavBar looks at the Demo param to display demp courses -->
+					<WTSETATTRIBUTE name="PARAM(Demo)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="PARAM(Mode)" value="CONST(1)"/>
+				</WTCODEGROUP>
+				<!-- Set Default to view Public Catalog -->
+				<WTSETATTRIBUTE name="CONST(reqCatalog)" value="CONST(1)"/>
+				
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)" connector="and" paren="start"/>
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)" connector="or" paren="end"/>
+					<WTMETHOD name="IsPublicCatalog">
+						<WTCONDITION expr="PARAM(MemberID)" oper="greater" value="CONST(0)"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqCatalog" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)" connector="or"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="ListFavoritePrivate">
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+<WTCUSTOM>
+		xmlOrgs = "&lt;ORG id=""0"" name="" ""/&gt;"
+		For Each oOrg In oOrgs
+			xmlOrgs = xmlOrgs + "&lt;ORG id=""" &amp; oOrg.OrgID &amp; """ name=""" &amp; oOrg.OrgName &amp; """/&gt;"
+		Next
+</WTCUSTOM>
+						<WTMETHOD name="ListProgram">
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+<WTCUSTOM>
+		xmlPrograms = "&lt;PROGRAM id=""0"" name="" ""/&gt;"
+		For Each oOrg In oOrgs
+			xmlPrograms = xmlPrograms + "&lt;PROGRAM id=""" &amp; oOrg.OrgID &amp; """ name=""" &amp; oOrg.OrgName &amp; """/&gt;"
+		Next
+</WTCUSTOM>
+					</WTCODEGROUP>
+				</WTOBJECT>
+
+				<WTOBJECT name="CourseCategorys" project="ptsCourseCategoryUser" class="CCourseCategorys">
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)" connector="or"/>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)" connector="or"/>
+						<WTMETHOD name="ListPublic">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+						<!-- PUBLIC CATALOG ONLY -->
+						<WTMETHOD name="ListPublic">
+							<!-- If this member does not belong to a company -->
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTCODEGROUP>
+							<!-- If this member does belong to a company -->
+							<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)"/>
+							<!-- PRIVATE COURSES ONLY (-x) -->
+							<WTMETHOD name="ListPrivate">
+								<!-- If this member does NOT have access to the public catalog -->
+								<WTCONDITION expr="PARAM(Catalog)" oper="equal" value="CONST(0)"/>
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+							<!-- PUBLIC CATALOG AND PRIVATE COURSES (-x) -->
+							<WTMETHOD name="ListAll">
+								<!-- If this member has access to the public catalog -->
+								<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)"/>
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="5" name="ReturnFind" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="1101" return="false"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="ReturnClasses" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="1311" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<!-- DEMO NAVBAR -->
+				<WTSTATIC label="Demos"/>
+				<WTSTATIC label="Demo1"/>
+				<WTSTATIC label="Demo2"/>
+				<WTSTATIC label="Demo3"/>
+
+				<WTFUNCTION name="loadFrame(coursecategoryid)">
+					var frame = document.getElementById('frame');
+					var orgid = document.getElementById('OrgID').value;
+					var companyid = document.getElementById('CompanyID').value;
+					var memberid = document.getElementById('MemberID').value;
+					var content = document.getElementById('SearchText');
+					frame.src="1114.asp?CategoryID=" + coursecategoryid + "&amp;contentpage=1&amp;MemberID=" + memberid + "&amp;OrgID=" + orgid + "&amp;companyid=" + companyid;
+					if (content)
+						content.scrollIntoView();
+				</WTFUNCTION>
+				<WTFUNCTION name="searchClicked()">
+					var text = document.getElementById('SearchText').value; 
+					if(text==""){
+						alert("Enter search text.");
+					}else{
+						var frame = document.getElementById('frame');
+						var memberid = document.getElementById('MemberID').value; 
+						var companyid = document.getElementById('CompanyID').value; 
+						var orgid = document.getElementById('OrgID').value; 
+						var content = document.getElementById('SearchText');
+						frame.src="1113.asp?SearchText=" + text + "&amp;MemberID=" + memberid + "&amp;CompanyID=" + companyid + "&amp;OrgID=" + orgid;
+						content.scrollIntoView();				
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="goClicked()">
+					var id = document.getElementById('CourseID').value; 
+					var grp = document.getElementById('Grp').value; 
+					if(isNaN(id) || id==""){
+						if(isNaN(grp) || grp==""){
+							alert("Enter a Course #");
+						}else{
+							var frame = document.getElementById('frame');
+							var memberid = document.getElementById('MemberID').value; 
+							frame.src="1119.asp?Grp=" + grp + "&amp;MemberID=" + memberid; 
+						}
+					}else{
+						var frame = document.getElementById('frame');
+						var memberid = document.getElementById('MemberID').value; 
+						var companyid = document.getElementById('CompanyID').value; 
+						var orgid = document.getElementById('OrgID').value; 
+						frame.src="1115.asp?CourseID=" + id + "&amp;MemberID=" + memberid + "&amp;CompanyID=" + companyid + "&amp;OrgID=" + orgid;
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="favoriteClicked()">
+					var frame = document.getElementById('frame');
+					var memberid = document.getElementById('MemberID').value; 
+					var orgid = document.getElementById('FavoriteID').value; 
+					if( orgid != 0 ) {
+						var content = document.getElementById('SearchText');
+						frame.src="1116.asp?OrgID=" + orgid + "&amp;MemberID=" + memberid;
+						content.scrollIntoView();				
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="programClicked()">
+					var frame = document.getElementById('frame');
+					var memberid = document.getElementById('MemberID').value; 
+					var orgid = document.getElementById('ProgramID').value; 
+					if( orgid != 0 ) {
+						var content = document.getElementById('SearchText');
+						frame.src="1126.asp?OrgID=" + orgid + "&amp;MemberID=" + memberid;
+						content.scrollIntoView();				
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="HideFolder()">
+					document.getElementById('HideFolder').style.display="none"; 
+					document.getElementById('ShowFolder').style.display="block"; 
+					document.getElementById('TreeView').style.display="none";
+				</WTFUNCTION>
+				<WTFUNCTION name="ShowFolder()">
+					document.getElementById('HideFolder').style.display="block"; 
+					document.getElementById('ShowFolder').style.display="none"; 
+					document.getElementById('TreeView').style.display="block";
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(OrgID)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="3">
+					<WTTABLE col="1">
+						<WTCOLUMN width="100" align="center"/>
+						<WTCOLUMN width="500" align="left"/>
+						<WTROW>
+							<WTIMAGE col="1" value="CONST(topics2.gif)" align="center"/>
+							<WTTABLE col="2">
+								<WTCOLUMN width="500" align="center"/>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="CourseCatalogue" class="PageHeading">
+										<WTCODEGROUP>
+											<WTCONDITION expr="_IsPinnacleTutorial"/>
+											<WTSTATIC space="1"/>
+											<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+												<WTLINK name="Tutorial" target="Tutorial">
+													<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-CATALOG)"/>
+													<WTPARAM name="contentpage" value="CONST(3)"/>
+													<WTPARAM name="popup" value="CONST(1)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)"/>
+									<WTSTATIC col="1" label="CatalogInclude" align="left" valign="center" class="Prompt" prespace="false"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="PARAM(Mode)" oper="not-equal" value="CONST(3)"/>
+									<WTSTATIC col="1" label="CatalogEmployee" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC col="1" label="CatalogMember" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC col="1" label="NoCatalogMember" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+										<WTCONDITION expr="PARAM(Catalog)" oper="equal" value="CONST(0)" connector="and"/>
+									</WTSTATIC>
+									<WTSTATIC col="1" label="CatalogMember" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+										<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)" connector="and"/>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)"/>
+									<WTTEXT col="1" name="SearchText" align="center" size="20" focus="true">
+										<WTCONDITION expr="_IsSearch"/>
+									</WTTEXT>
+									<WTBUTTON col="1" value="CONST(Search)">
+										<WTCONDITION expr="_IsSearch"/>
+										<WTCLICK>searchClicked()</WTCLICK>
+									</WTBUTTON>
+									<WTSTATIC col="1">
+										<WTCONDITION expr="_IsSearch"/>
+										<WTCODEGROUP>
+											<WTIMAGE value="CONST(LearnMore.gif)">
+												<WTLINK name="Pagex" target="Help">
+													<WTPARAM name="Page" value="CONST(SearchHelp)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+									</WTSTATIC>
+									<WTSTATIC col="1" label="CourseNo"/>
+									<WTTEXT col="1" name="CourseID" align="center" size="2" focus="true"/>
+									<WTSTATIC col="1" label="Grp"/>
+									<WTTEXT col="1" name="Grp" align="center" size="2"/>
+									<WTBUTTON col="1" name="buttonGo" value="CONST(Go)">
+										<WTCLICK>goClicked()</WTCLICK>
+									</WTBUTTON>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="CONST(count(/DATA/TXN/PROGRAM))" oper="greater" value="CONST(1)"/>
+									<WTSTATIC col="1" label="Programs" align="center"/>
+									<WTCOMBO col="1" name="ProgramID" datapath="/DATA/TXN/PROGRAM" select="false">
+										<WTCHANGE>programClicked()</WTCHANGE>
+									</WTCOMBO>
+								</WTROW>
+								<WTROW margin-bottom="3">
+									<WTCONDITION expr="CONST(count(/DATA/TXN/ORG))" oper="greater" value="CONST(1)"/>
+									<WTSTATIC col="1" label="Favorites" align="center"/>
+									<WTCOMBO col="1" name="FavoriteID" datapath="/DATA/TXN/ORG" select="false">
+										<WTCHANGE>favoriteClicked()</WTCHANGE>
+									</WTCOMBO>
+								</WTROW>
+								<WTROW>
+									<WTBUTTON col="1" action="5" value="CONST(ReturnCourses)" align="right" btnclass="smbutton">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+									</WTBUTTON>
+									<WTBUTTON col="1" action="6" value="CONST(ReturnClasses)" align="right" btnclass="smbutton">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+									</WTBUTTON>
+									<WTBUTTON col="1" value="CONST(Close)" align="right" btnclass="smbutton">
+										<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(1)"/>
+										<WTCLICK>window.close()</WTCLICK>
+									</WTBUTTON>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTSTATIC label="HideFolder"/>
+				<WTSTATIC label="ShowFolder"/>
+<!--				
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+-->
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="Prompt">
+						<WTSPAN id="HideFolder" style="DISPLAY: block;"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(FolderClose.gif)" alt="HideFolder" imgalign="absmiddle">
+								<WTLINK click="true" name="CONST(HideFolder();"/>
+							</WTIMAGE>
+							<WTSTATIC space="2"/>
+						</WTCODEGROUP>
+						<WTSTATIC label="ExpandFolder"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="Prompt">
+						<WTSPAN id="ShowFolder" style="DISPLAY: none;"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(FolderOpen.gif)" alt="ShowFolder" imgalign="absmiddle">
+								<WTLINK click="true" name="CONST(ShowFolder();"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+<!--			
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+-->
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)"/>
+					<WTTREE col="1" id="TreeView" entity="CourseCategory" tree-node-open="folder_open.gif" nodeid="CourseCategoryID" parentid="ParentCategoryID" height="0" treeheight="200" border="none" borderwidth="20"> 
+						<WTNODECLICK>loadFrame(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);</WTNODECLICK>
+						<WTSTATIC value="DATA(CourseCategory.CourseCategoryName)">
+<!--							<WTLINK click="true" name="CONST(openNode(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);loadFrame(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);)"/>-->
+<!--							<WTLINK name="JAVA(openNode(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);loadFrame(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);)"/>-->
+							<WTLINK name="JAVA(showBranch('&lt;xsl:value-of select=&quot;$nodeid&quot;/&gt;',&lt;xsl:value-of select=&quot;$children&quot;/&gt;);openNode(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);loadFrame(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);)"/>
+						</WTSTATIC>
+<!--
+						<WTSTATIC fontcolor="green">
+							<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(' (',@coursecount,')')&quot;/&gt;)"/>
+						</WTSTATIC>
+-->
+						<WTSTATIC>
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCONDITION expr="DATA(CourseCategory.CourseCategoryID)" oper="greater" value="CONST(0)" connector="and"/>
+							<WTSTATIC value="CONST( - (new)">
+								<WTLINK name="1202">
+									<WTPARAM name="CategoryID" value="DATA(CourseCategoryID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC value="CONST( | )"/>
+							<WTSTATIC value="CONST(edit)">
+								<WTLINK name="1203">
+									<WTPARAM name="CourseCategoryID" value="DATA(CourseCategoryID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC value="CONST( ) )"/>
+						</WTSTATIC>
+					</WTTREE>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTCONDITION expr="PARAM(Catalog)" oper="equal" value="CONST(0)"/>
+					<WTTREE col="1" duplicate="true" style="WIDTH: 300; HEIGHT: 25; BORDER: none; OVERFLOW: visible;"/>
+				</WTROW>
+<!--				
+				<WTROW margin-bottom="3">
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+					<WTBUTTON col="1" action="5" value="CONST(ReturnCourses)" align="center" btnclass="smbutton">
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="6" value="CONST(ReturnClasses)" align="center" btnclass="smbutton">
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(1)"/>
+					<WTBUTTON col="1" value="CONST(Close)" align="center" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+-->				
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTFRAME col="1" src="" name="frame" frmclass="FrameNoScroll" frmwidth="600" frmheight="1800" label="NoFrameSupport" border="0"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_1212" caption="Course Catalog" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" focus="false" viewport="width=device-width"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="98" track="0">
+			<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="ProgramID" datatype="number"/>
+			<WTPARAM name="Mode" datatype="number"/>
+			<WTPARAM name="Demo" datatype="number"/>
+			<WTPARAM name="Catalog" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTDATATXN name="Programs"/>
+
+			<!-- MODE==DESCRIPTION==============USER==PARAMS==========CALLED-BY========-->
+			<!--  0  Courses Categories (edit)  emp   none            1101             -->
+			<!--  1  Courses for Public (demo)  ano   none            header,homepage  -->
+			<!--  2  Courses for a Member       mem   MemberID,OrgID  1311             -->
+			<!--  3  Courses to Insert          org   OrgID,CompanyID   1101             -->
+			<!-- ======================================================================-->
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotCatalog" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="NotEmployee"/>
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<!--
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)"/>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="SYS(CompanyID)" connector="or"/>
+						<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+					</WTCODEGROUP>
+-->
+				</WTCODEGROUP>
+
+				<!-- FOR DEMO CLASSES ONLY -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsAnonymous"/>
+					<!-- NavBar looks at the Demo param to display demp courses -->
+					<WTSETATTRIBUTE name="PARAM(Demo)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="PARAM(Mode)" value="CONST(1)"/>
+				</WTCODEGROUP>
+				<!-- Set Default to view Public Catalog -->
+				<WTSETATTRIBUTE name="CONST(reqCatalog)" value="CONST(1)"/>
+
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)" connector="and" paren="start"/>
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)" connector="or" paren="end"/>
+					<WTMETHOD name="IsPublicCatalog">
+						<WTCONDITION expr="PARAM(MemberID)" oper="greater" value="CONST(0)"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="reqCatalog" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)" connector="or"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="ListFavoritePrivate">
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTCUSTOM>
+							xmlOrgs = "&lt;ORG id=""0"" name="" ""/&gt;"
+							For Each oOrg In oOrgs
+							xmlOrgs = xmlOrgs + "&lt;ORG id=""" &amp; oOrg.OrgID &amp; """ name=""" &amp; oOrg.OrgName &amp; """/&gt;"
+							Next
+						</WTCUSTOM>
+						<WTMETHOD name="ListProgram">
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						</WTMETHOD>
+						<WTCUSTOM>
+							xmlPrograms = "&lt;PROGRAM id=""0"" name="" ""/&gt;"
+							For Each oOrg In oOrgs
+							xmlPrograms = xmlPrograms + "&lt;PROGRAM id=""" &amp; oOrg.OrgID &amp; """ name=""" &amp; oOrg.OrgName &amp; """/&gt;"
+							Next
+						</WTCUSTOM>
+					</WTCODEGROUP>
+				</WTOBJECT>
+
+				<WTOBJECT name="CourseCategorys" project="ptsCourseCategoryUser" class="CCourseCategorys">
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)" connector="or"/>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)" connector="or"/>
+						<WTMETHOD name="ListPublic">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+						<!-- PUBLIC CATALOG ONLY -->
+						<WTMETHOD name="ListPublic">
+							<!-- If this member does not belong to a company -->
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTCODEGROUP>
+							<!-- If this member does belong to a company -->
+							<WTCONDITION expr="PARAM(CompanyID)" oper="greater" value="CONST(0)"/>
+							<!-- PRIVATE COURSES ONLY (-x) -->
+							<WTMETHOD name="ListPrivate">
+								<!-- If this member does NOT have access to the public catalog -->
+								<WTCONDITION expr="PARAM(Catalog)" oper="equal" value="CONST(0)"/>
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+							<!-- PUBLIC CATALOG AND PRIVATE COURSES (-x) -->
+							<WTMETHOD name="ListAll">
+								<!-- If this member has access to the public catalog -->
+								<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)"/>
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+								<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							</WTMETHOD>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="6" name="ReturnClasses" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="m_1311" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<!-- DEMO NAVBAR -->
+				<WTSTATIC label="Demos"/>
+				<WTSTATIC label="Demo1"/>
+				<WTSTATIC label="Demo2"/>
+				<WTSTATIC label="Demo3"/>
+
+				<WTFUNCTION name="loadFrame(coursecategoryid)">
+					var frame = document.getElementById('frame');
+					var orgid = document.getElementById('OrgID').value;
+					var companyid = document.getElementById('CompanyID').value;
+					var memberid = document.getElementById('MemberID').value;
+					var content = document.getElementById('SearchText');
+					frame.src="m_1114.asp?CategoryID=" + coursecategoryid + "&amp;contentpage=1&amp;MemberID=" + memberid + "&amp;OrgID=" + orgid + "&amp;companyid=" + companyid;
+					if (content)
+					content.scrollIntoView();
+				</WTFUNCTION>
+				<WTFUNCTION name="searchClicked()">
+					var text = document.getElementById('SearchText').value;
+					if(text==""){
+					alert("Enter search text.");
+					}else{
+					var frame = document.getElementById('frame');
+					var memberid = document.getElementById('MemberID').value;
+					var companyid = document.getElementById('CompanyID').value;
+					var orgid = document.getElementById('OrgID').value;
+					var content = document.getElementById('SearchText');
+					frame.src="m_1113.asp?SearchText=" + text + "&amp;MemberID=" + memberid + "&amp;CompanyID=" + companyid + "&amp;OrgID=" + orgid;
+					content.scrollIntoView();
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="goClicked()">
+					var id = document.getElementById('CourseID').value;
+					var grp = document.getElementById('Grp').value;
+					if(isNaN(id) || id==""){
+						if(isNaN(grp) || grp==""){
+						alert("Enter a Course #");
+						}else{
+							var frame = document.getElementById('frame');
+							var memberid = document.getElementById('MemberID').value;
+							frame.src="m_1119.asp?Grp=" + grp + "&amp;MemberID=" + memberid;
+						}
+					}else{
+						var frame = document.getElementById('frame');
+						var memberid = document.getElementById('MemberID').value;
+						var companyid = document.getElementById('CompanyID').value;
+						var orgid = document.getElementById('OrgID').value;
+						frame.src="m_1115.asp?CourseID=" + id + "&amp;MemberID=" + memberid + "&amp;CompanyID=" + companyid + "&amp;OrgID=" + orgid;
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="favoriteClicked()">
+					var frame = document.getElementById('frame');
+					var memberid = document.getElementById('MemberID').value;
+					var orgid = document.getElementById('FavoriteID').value;
+					if( orgid != 0 ) {
+					var content = document.getElementById('SearchText');
+					frame.src="m_1116.asp?OrgID=" + orgid + "&amp;MemberID=" + memberid;
+					content.scrollIntoView();
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="programClicked()">
+					var frame = document.getElementById('frame');
+					var memberid = document.getElementById('MemberID').value;
+					var orgid = document.getElementById('ProgramID').value;
+					if( orgid != 0 ) {
+					var content = document.getElementById('SearchText');
+					frame.src="m_1126.asp?OrgID=" + orgid + "&amp;MemberID=" + memberid;
+					content.scrollIntoView();
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="HideFolder()">
+					document.getElementById('HideFolder').style.display="none";
+					document.getElementById('ShowFolder').style.display="block";
+					document.getElementById('TreeView').style.display="none";
+				</WTFUNCTION>
+				<WTFUNCTION name="ShowFolder()">
+					document.getElementById('HideFolder').style.display="block";
+					document.getElementById('ShowFolder').style.display="none";
+					document.getElementById('TreeView').style.display="block";
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(OrgID)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTTABLE col="1">
+						<WTCOLUMN width="17" align="center"/>
+						<WTCOLUMN width="83" align="left"/>
+						<WTROW>
+							<WTIMAGE col="1" value="CONST(topics3.gif)" align="center"/>
+							<WTTABLE col="2">
+								<WTCOLUMN width="250" align="center"/>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="CourseCatalogue" class="PageHeading">
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(3)"/>
+									<WTSTATIC col="1" label="CatalogInclude" align="left" valign="center" class="Prompt" prespace="false"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="PARAM(Mode)" oper="not-equal" value="CONST(3)"/>
+									<WTSTATIC col="1" label="CatalogEmployee" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC col="1" label="CatalogMember" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/>
+									</WTSTATIC>
+									<WTSTATIC col="1" label="NoCatalogMember" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+										<WTCONDITION expr="PARAM(Catalog)" oper="equal" value="CONST(0)" connector="and"/>
+									</WTSTATIC>
+									<WTSTATIC col="1" label="CatalogMember" align="left" valign="center" class="Prompt" prespace="false">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+										<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)" connector="and"/>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)"/>
+									<WTTEXT col="1" name="SearchText" align="center" size="20" focus="true">
+										<WTCONDITION expr="_IsSearch"/>
+									</WTTEXT>
+									<WTBUTTON col="1" value="CONST(Search)">
+										<WTCONDITION expr="_IsSearch"/>
+										<WTCLICK>searchClicked()</WTCLICK>
+									</WTBUTTON>
+									<WTSTATIC col="1">
+										<WTCONDITION expr="_IsSearch"/>
+										<WTCODEGROUP>
+											<WTIMAGE value="CONST(LearnMore.gif)">
+												<WTLINK name="Pagex" target="Help">
+													<WTPARAM name="Page" value="CONST(SearchHelp)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)"/>
+									<WTSTATIC col="1" label="CourseNo"/>
+									<WTTEXT col="1" name="CourseID" align="center" size="2" focus="true"/>
+									<WTSTATIC col="1" label="Grp"/>
+									<WTTEXT col="1" name="Grp" align="center" size="2"/>
+									<WTBUTTON col="1" name="buttonGo" value="CONST(Go)">
+										<WTCLICK>goClicked()</WTCLICK>
+									</WTBUTTON>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTCONDITION expr="CONST(count(/DATA/TXN/PROGRAM))" oper="greater" value="CONST(1)"/>
+									<WTSTATIC col="1" label="Programs" align="center"/>
+									<WTCOMBO col="1" name="ProgramID" datapath="/DATA/TXN/PROGRAM" select="false">
+										<WTCHANGE>programClicked()</WTCHANGE>
+									</WTCOMBO>
+								</WTROW>
+								<WTROW margin-bottom="3">
+									<WTCONDITION expr="CONST(count(/DATA/TXN/ORG))" oper="greater" value="CONST(1)"/>
+									<WTSTATIC col="1" label="Favorites" align="center"/>
+									<WTCOMBO col="1" name="FavoriteID" datapath="/DATA/TXN/ORG" select="false">
+										<WTCHANGE>favoriteClicked()</WTCHANGE>
+									</WTCOMBO>
+								</WTROW>
+								<WTROW>
+									<WTBUTTON col="1" action="6" value="CONST(ReturnClasses)" align="right" btnclass="smbutton">
+										<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(2)"/>
+									</WTBUTTON>
+									<WTBUTTON col="1" value="CONST(Close)" align="right" btnclass="smbutton">
+										<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(1)"/>
+										<WTCLICK>window.close()</WTCLICK>
+									</WTBUTTON>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTSTATIC label="HideFolder"/>
+				<WTSTATIC label="ShowFolder"/>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="Prompt">
+						<WTSPAN id="HideFolder" style="DISPLAY: block;"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(FolderClose.gif)" alt="HideFolder" imgalign="absmiddle">
+								<WTLINK click="true" name="CONST(HideFolder();"/>
+							</WTIMAGE>
+							<WTSTATIC space="2"/>
+						</WTCODEGROUP>
+						<WTSTATIC label="ExpandFolder"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="left" class="Prompt">
+						<WTSPAN id="ShowFolder" style="DISPLAY: none;"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(FolderOpen.gif)" alt="ShowFolder" imgalign="absmiddle">
+								<WTLINK click="true" name="CONST(ShowFolder();"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTCONDITION expr="PARAM(Catalog)" oper="not-equal" value="CONST(0)"/>
+					<WTTREE col="1" id="TreeView" entity="CourseCategory" tree-node-open="folder_open.gif" nodeid="CourseCategoryID" parentid="ParentCategoryID" height="0" width="300" treeheight="200" border="none" borderwidth="20">
+						<WTNODECLICK>loadFrame(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);</WTNODECLICK>
+						<WTSTATIC value="DATA(CourseCategory.CourseCategoryName)">
+							<WTLINK name="JAVA(showBranch('&lt;xsl:value-of select=&quot;$nodeid&quot;/&gt;',&lt;xsl:value-of select=&quot;$children&quot;/&gt;);openNode(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);loadFrame(&lt;xsl:value-of select=&quot;@coursecategoryid&quot;/&gt;);)"/>
+						</WTSTATIC>
+					</WTTREE>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTCONDITION expr="PARAM(Catalog)" oper="equal" value="CONST(0)"/>
+					<WTTREE col="1" duplicate="true" style="WIDTH: 300; HEIGHT: 25; BORDER: none; OVERFLOW: visible;"/>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTFRAME col="1" src="" name="frame" frmclass="FrameNoScroll" frmwidth="100" frmheight="2000" label="NoFrameSupport" border="0"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1213" caption="Course Catalog" focus="false" navbar="false" header="false" footer="false"
+		margin="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" langfile="1213" language="false">
+		<!--===============================================================================-->
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="CourseCategorys" project="ptsCourseCategoryUser" class="CCourseCategorys">
+					<WTMETHOD name="ListPublic">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+
+				<WTFUNCTION name="SetCategory(C)">
+					window.opener.document.getElementById('CourseCategoryID').value = C;
+					window.close();
+				</WTFUNCTION>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" label="CatalogText" class="Prompt" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTTREE col="1" entity="CourseCategory" nodeid="CourseCategoryID" parentid="ParentCategoryID" width="300" border="none">
+						<WTSTATIC value="DATA(CourseCategory.CourseCategoryName)">
+							<WTLINK click="true" name="CONST(SetCategory(&lt;xsl:value-of select=&quot;$nodeid&quot;/&gt;);)"/>
+						</WTSTATIC>
+					</WTTREE>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,284 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="96" name="LabLang" alias="zlg">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="9601" name="LabLangID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--attributes-->
+		<WTATTRIBUTE id="9602" name="LanguageName" type="text" length="30" min="1" max="30" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="9603" name="LanguageCode" type="text"  length="5" min="1" max="5" required="true" source="entity"/>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="LabLang" entity="LabLang" alias="zlg"/>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="2" type="list"/>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Enum" name="Enum" style="GenerateDataProc.xsl" column="LanguageName">
+			<WTORDER name="LanguageName"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl">
+			<WTORDER name="LanguageName"/>
+		</WTPROCEDURE>
+
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumLanguage" style="GenerateDataProc.xsl" id="LanguageCode" column="LanguageName" template="new" passthru="true">
+		<!--===================================================================================-->
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(LabLang.LanguageCode)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(LabLang.LanguageName)"/>
+					<WTJOIN name="LabLang"/>
+					<WTORDER name="CONST('Name')"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9602" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="22">
+		<!--============================================================================================-->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="LabLang" project="ptsLabLangUser" class="CLabLang">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabLangID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabLang" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="LabLang" project="ptsLabLangUser" class="CLabLang">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabLangID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="LabLangID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+	 					<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLabLang" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewLabLang" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageName"/>
+					<WTTEXT col="2" value="ATTR(LabLang.LanguageName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageCode"/>
+					<WTTEXT col="2" value="ATTR(LabLang.LanguageCode)"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9603" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="22">
+		<!--============================================================================================-->
+			<WTPARAM name="LabLangID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="LabLang" project="ptsLabLangUser" class="CLabLang">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabLangID" direction="input" value="PARAM(LabLangID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabLang" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="LabLang" project="ptsLabLangUser" class="CLabLang">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabLangID" direction="input" value="PARAM(LabLangID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+	 					<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLabLang" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="LabLang" project="ptsLabLangUser" class="CLabLang">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LabLangID" direction="input" value="PARAM(LabLangID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="LabLang" project="ptsLabLangUser" class="CLabLang">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="LabLangID" direction="input" value="PARAM(LabLangID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabLang" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="LabLang" value="ATTR(LabLang.LanguageName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageName"/>
+					<WTTEXT col="2" value="ATTR(LabLang.LanguageName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LanguageCode"/>
+					<WTTEXT col="2" value="ATTR(LabLang.LanguageCode)"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" align="left" height="12"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9611" caption="List" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="22">
+		<!--============================================================================================-->
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="LabLangs" project="ptsLabLangUser" class="CLabLangs">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ListType" direction="input" value="CONST(0)" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLabLangs" direction="return" concat="true" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="LabLangs" class="PageHeading" align="left"/>
+					<WTLINKGROUP col="2" align="right">
+						<WTCONDITION expr="IsActive"/>
+						<WTLINK name="9602" label="NewLabLang"/>
+					</WTLINKGROUP>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="2" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="LabLang">
+						<WTCOLUMN width="15" align="left" valign="top" label="LanguageCode"/>
+						<WTCOLUMN width="85" align="left" valign="top" label="LanguageName"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(LabLang.LanguageCode)">
+								<WTLINK name="9603">
+									<WTPARAM name="LabLangID" value="DATA(LabLang.LabLangID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(LabLang.LanguageName)">
+								<WTLINK name="9603">
+									<WTPARAM name="LabLangID" value="DATA(LabLang.LabLangID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" height="4"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

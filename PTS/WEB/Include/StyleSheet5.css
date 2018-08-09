@@ -1,0 +1,571 @@
+#wrapper {
+    WIDTH: 750px;
+    MARGIN: 0 auto;
+    TEXT-ALIGN: center;
+}
+BODY
+{
+    /*COLOR: #666666;*/
+	color:#797979;
+    FONT-FAMILY: Arial, Helvetica, Sans-Serif;
+    TEXT-ALIGN: center;
+	background:#e7e7e6;
+}
+A:link
+{
+    COLOR: #000000;
+    TEXT-DECORATION: none
+}
+A
+{
+    COLOR: #000000
+}
+A:visited
+{
+    COLOR: #000000;
+    TEXT-DECORATION: none
+}
+A:hover
+{
+    COLOR: #000070;
+    TEXT-DECORATION: none
+}
+A.NavBar
+{
+    FONT-WEIGHT: bold;
+    COLOR: #000000;
+    TEXT-DECORATION: none
+}
+.PageLink A
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt;
+    COLOR: #004080;
+    TEXT-DECORATION: underline;
+     
+}
+.PageLink A:visited
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt;
+    COLOR: #004080;
+    TEXT-DECORATION: underline;
+     
+}
+.PageLink A:hover
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt;
+    COLOR: #004080;
+    TEXT-DECORATION: underline;
+     
+}
+.PageLink A:hover
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt;
+    COLOR: #004080;
+    TEXT-DECORATION: underline;
+     
+}
+.SelectLink A
+{
+    COLOR: #004080;
+    TEXT-DECORATION: underline;
+     
+}
+.SelectLink A:visited
+{
+    COLOR: #004080;
+    TEXT-DECORATION: underline;
+     
+}
+.SelectLink A:hover
+{
+    COLOR: #000070;
+    TEXT-DECORATION: underline;
+     
+}
+.CustNavGroup
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10pt;
+    COLOR: gray;
+     
+}
+.CustNavGroup TD
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10pt;
+    COLOR: #004080;
+     
+}
+.CustNavItem A:hover
+{
+    FONT-WEIGHT: bold;
+     
+}
+INPUT.smbutton
+{
+    FONT-SIZE: 84%;
+}
+INPUT.lgbutton
+{
+    FONT-SIZE: 120%;
+}
+TD
+{
+    FONT-SIZE: 9pt;
+    COLOR: #000000;
+    FONT-FAMILY: Arial, Helvetica, Sans-Serif
+}
+.NavBar
+{
+    FONT-WEIGHT: bold
+}
+.PageHeading
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    /*COLOR: #000070*/
+	color:#584b42;
+}
+.ReportHeading1
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 24pt;
+    COLOR: #000070
+}
+.ReportHeading2
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 14pt
+}
+.ReportHeading3
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt
+}
+.ReportHeading4
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt
+}
+.ReportFooter
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10pt
+}
+.Copyright
+{
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-STYLE: italic
+}
+.Button
+{
+    FONT-WEIGHT: bolder;
+    FONT-SIZE: 9pt;
+    MARGIN-LEFT: 0px;
+    MARGIN-RIGHT: 0px;
+    TEXT-ALIGN: center
+}
+.AccentTitle
+{
+    FONT-WEIGHT: bolder;
+    FONT-SIZE: 12pt;
+    COLOR: white;
+    TEXT-DECORATION: none
+}
+.ColumnHeader
+{
+    FONT-WEIGHT: bold;
+    COLOR: #000070
+}
+.FindByColumn
+{
+    FONT-WEIGHT: bold;
+    COLOR: #ffffff! important;
+    BACKGROUND-COLOR: #000070
+}
+.InputHeading
+{
+    FONT-SIZE: 7pt;
+    COLOR: #000070
+}
+.DisplayText
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #000000
+}
+.ParentLink
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #000070
+}
+.PrevNext
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000070
+}
+.PrevNextDisable
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #808080
+}
+.EndList
+{
+    FONT-WEIGHT: bold;
+    COLOR: #000070
+}
+.NoItems
+{
+    COLOR: #000000;
+    FONT-STYLE: italic;
+    BACKGROUND-COLOR: #F0F0F0
+}
+.ItemCount
+{
+    COLOR: #000000;
+    FONT-STYLE: italic
+}
+.GrayBar
+{
+    BACKGROUND-COLOR: #F0F0F0
+}
+.BlueBar
+{
+    BACKGROUND-COLOR: #E1F9FF
+}
+.YellowBar
+{
+    BACKGROUND-COLOR: #FDFFE1
+}
+.RedBar
+{
+    BACKGROUND-COLOR: #FFECEA
+}
+.GreenBar
+{
+    BACKGROUND-COLOR: #EBFFEA
+}
+.BoldText
+{
+    FONT-WEIGHT: bold
+}
+.DarkHeader
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #ffffff;
+    BACKGROUND-COLOR: #004080
+}
+.DarkHeader TD
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #ffffff;
+    BACKGROUND-COLOR: #004080
+}
+.DarkHeader A
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 9pt;
+    COLOR: #ffffff;
+    TEXT-DECORATION: none;
+     
+}
+.DarkHeader A:visited
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 9pt;
+    COLOR: #ffffff;
+    TEXT-DECORATION: none;
+     
+}
+.DarkHeader A:hover
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 9pt;
+    COLOR: #ffffff;
+    TEXT-DECORATION: none;
+     
+}
+.PurpleTitle A
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #004080;
+    TEXT-DECORATION: none;
+     
+}
+.PurpleTitle A:visited
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #004080;
+    TEXT-DECORATION: none;
+     
+}
+.PurpleTitle A:hover
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #000070;
+    TEXT-DECORATION: none;
+     
+}
+.ProductTitlePurple
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #004080
+}
+.ProductTitleBlack
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    COLOR: #000000
+}
+.ScriptSmall
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 9pt;
+    COLOR: #000070;
+    FONT-STYLE: italic;
+    FONT-FAMILY: 'Georgia'
+}
+.ScriptMedium
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 12pt;
+    COLOR: #004080;
+    FONT-STYLE: italic;
+    FONT-FAMILY: 'Georgia'
+}
+.ScriptLarge
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 16pt;
+    COLOR: #004080;
+    FONT-STYLE: italic;
+    FONT-FAMILY: 'Georgia'
+}
+.WarningSmall
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 9pt;
+    COLOR: #ff0000
+}
+.Strike
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 10pt;
+    COLOR: #ff0000;
+    FONT-FAMILY: 'Georgia';
+    TEXT-DECORATION: line-through
+}
+.Prompt
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 9pt;
+    /*COLOR: 004080;*/
+	color:#584b42;
+    FONT-FAMILY: 'Georgia'
+}
+H1
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 16pt;
+    COLOR: #004080;
+    FONT-FAMILY: Georgia
+}
+.PageLinkLarge
+{
+    FONT-SIZE: 16pt;
+    COLOR: chocolate;
+    TEXT-DECORATION: none
+}
+.SelectedTab
+{
+    COLOR: white;
+    BACKGROUND-COLOR: #ffcc66
+}
+.UnselectedTab
+{
+    COLOR: black;
+    BACKGROUND-COLOR: #faefd4
+}
+
+/*Begin Calendar Style Sheet*/
+
+.dpDiv {
+	}
+
+.dpTable {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: center;
+	color: #505050;
+	background-color: #ffcc00;
+	border: 1px solid #AAAAAA;
+	
+	}
+
+.dpTR {
+	}
+
+.dpTitleTR {
+	}
+
+.dpDayTR {
+	
+	}
+
+.dpTodayButtonTR {
+	}
+
+.dpTD {
+	cursor: pointer;
+	}
+
+.dpDayHighlightTD {
+	background-color: #CCCCCC;
+	border: 1px solid #AAAAAA;
+	cursor: pointer;
+	}
+
+.dpTitleTD {
+	}
+
+.dpButtonTD {
+	}
+
+.dpTodayButtonTD {
+	}
+
+.dpDayTD {
+	background-color: #CCCCCC;
+	border: 1px solid #AAAAAA;
+	color: gray;
+	
+	}
+
+.dpTitleText {
+	font-size: 9px;
+	color: gray;
+	font-weight: bold;
+	}
+
+.dpDayHighlight {
+	color: 4060ff;
+	font-weight: bold;
+	}
+
+.dpButton {
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: gray;
+	background: #d8e8ff;
+	font-weight: bold;
+	padding: 0px;
+	}
+
+.dpTodayButton {
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: gray;
+	background: #d8e8ff;
+	font-weight: bold;
+	}
+/*End Calendar StyleSheet*/
+
+.over{color:#000000; background-color:#9D9DF9;font-family:Verdana;font-size:12px;}
+.def{color:#000000; background-color:#E0E0F4;font-family:Verdana;font-size:12px;}
+.curr{color:#000000; background-color:#C0C0FF;font-family:Verdana;font-size:12px;FONT-WEIGHT: bold;}
+
+.Calendar {
+	border-width: 1px;
+	border-spacing: 1px;
+	border-style: solid;
+	border-color: #5084A2;
+	border-collapse: collapse;
+}
+.CalendarDay {
+	border-width: 1px;
+	padding: 1px;
+	border-style: solid;
+	border-color: #5084A2;
+}
+.tooltip 
+{ 
+  position: relative; 
+  background: #eaeaea; 
+  cursor: help; 
+  display: inline-block; 
+  text-decoration: none; 
+  color: #222; 
+  outline: none; 
+} 
+ 
+.tooltip span 
+{ 
+  visibility: hidden; 
+  position: absolute; 
+  bottom: 30px; 
+  left: 50%; 
+  z-index: 999; 
+  /*width: 230px;*/ 
+  margin-left: -127px; 
+  //padding: 10px; 
+  padding: 2px; 
+  border: 2px solid #ccc; 
+  //opacity: .9; 
+  background-color: #ddd; 
+  background-image: -webkit-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); 
+  background-image: -moz-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); 
+  background-image: -ms-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); 
+  background-image: -o-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); 
+  background-image: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); 
+  -moz-border-radius: 4px; 
+  border-radius: 4px; 
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset; 
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset; 
+  box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset; 
+  text-shadow: 0 1px 0 rgba(255,255,255,.4); 
+} 
+ 
+.tooltip:hover 
+{ 
+  border: 0; /* IE6 fix */ 
+} 
+ 
+.tooltip:hover span 
+{ 
+  visibility: visible; 
+} 
+ 
+.tooltip span:before, 
+.tooltip span:after 
+{ 
+  content: ""; 
+  position: absolute; 
+  z-index: 1000; 
+  bottom: -11px; 
+  left: 25%; 
+  margin-left: -8px; 
+  border-top: 8px solid #ddd; 
+  border-left: 8px solid transparent; 
+  border-right: 8px solid transparent; 
+  border-bottom: 0; 
+} 
+ 
+.tooltip span:before 
+{ 
+  border-top-color: #ccc; 
+  bottom: -11px; 
+}

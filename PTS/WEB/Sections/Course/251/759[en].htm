@@ -1,0 +1,81 @@
+<H4 align=center><FONT size=4>Sorting a Query</FONT></H4>
+<P><FONT size=3>When you run a query, the records in the RecordSet appear in the same order in which they appear in the table. You can sort the records by either sorting the RecordSet or assigning a sort order in the query design. You can sort the RecordSet just as you would sort a table. However, you must do this every time you run the query. If you assign the sort order in the query design, Access performs the sort automatically each time you run the query. 
+<BR>
+<BR><IMG style="WIDTH: 441px; HEIGHT: 232px" height=232 alt=Sortin5.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Sortin5.gif" width=441 border=0></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the <B>Sort</B> row under the field by which you want to sort. 
+<BR><I>The insertion point appears in the appropriate <B>Sort</B> row field and an arrow appears to the right of the field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select the <B>Sort</B> list. 
+<BR><I>A list of sort options appears.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Select <B>Ascending</B> or <B>Descending</B> . 
+<BR><I>The sort order appears in the design grid.</I></FONT>
+</OL><H4 align=center><FONT size=4>Adding Criteria to a Query</FONT></H4>
+<P><FONT size=3>You can enter data in the <B>Criteria </B>row of the query design grid to restrict the number of records that are returned in a query. </FONT>
+<P><FONT size=3>To select records that meet a single value, you enter the value in the <B>Criteria</B> row under the appropriate field. Access automatically inserts quotation marks (" ") around alphanumeric entries and number symbols (#) around date entries. If the entry is numeric, the number appears without quotation marks. When you run the query, only those records with values that match the criteria appear in the RecordSet. 
+<BR>
+<BR><IMG style="WIDTH: 763px; HEIGHT: 413px" height=413 alt=Adding6.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Adding6.gif" width=763 border=0>&nbsp;</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<P><FONT size=3>Create a Query that filters all University Employees from the state of Virginia. 
+<BR><I>Write a new Query that includes the following fields: First Name, Last Name, Address, City, StateorProvince, PostalCode</I></FONT> 
+<OL>
+<LI><FONT size=3>Select the <B>Criteria</B> row under the <B>StateorProvince</B> field. 
+<BR><I>The insertion point appears in the appropriate <B>Criteria</B> row.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type the value for the criteria. 
+<BR></FONT><I><FONT size=3>Type <B>Virginia</B> . 
+<BR>
+<BR></FONT></I>
+<LI><FONT size=3>Press <B>[Enter]</B> . 
+<BR><I>The value is entered into the design grid with the appropriate characters or symbols.</I></FONT>
+</OL><H4 align=center><FONT size=4>Hiding a Field in a Query</FONT></H4>
+<P><FONT size=3>You can use a field to select records that meet a certain criteria without displaying the field in the RecordSet. This option is useful when all the records meet the same specified criteria and, therefore, you do not need the field to appear. </FONT>
+<P><FONT size=3>For example, you may want to create a query to display customers in the <B>Southeast</B> region. Therefore, you must add the <B>Region</B> field to the query in order to enter the criteria to select only the <B>Southeast</B> region. However, you might not want the field to appear in the RecordSet because you know that all the data in the <B>Region</B> field is the same (<B> Southeast</B> ). In this case, you may want to hide the field you used for the criteria. </FONT>
+<P><FONT size=3>The design grid includes a <B>Show</B> row with a check box for each field. If the check box is selected, the field will appear in the RecordSet. If the check box is deselected, the field will be hidden in the RecordSet. All the <B>Show</B> field check boxes are selected by default. </FONT>
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Deselect the check box in the <B>Show</B> row under the field you want to hide. 
+<BR><I>The check box is deselected.</I></FONT>
+</OL><H4 align=center><FONT size=4>Adding a Record Using a Query</FONT></H4>
+<P><FONT size=3>You can use a query to update records in related tables. When you enter information into the join field for a primary table, Access automatically locates the corresponding information in the related table and enters it into the record. For example, the <B>Orders</B> and <B>Customers</B> tables are related. When you enter the customer ID number in the appropriate field in the <B>Orders</B> table, Access completes the customer name and address information automatically through the relationship with the <B>Customers</B> table. </FONT>
+<P><FONT size=3>You can always edit information in queries based on a single table. In queries based on related tables, Access must be able to determine the relationship type (i.e., one-to-one or one-to-many), or you cannot edit information. In queries with tables that have a one-to-one relationship, you can always edit data. In queries with tables that have a one-to-many relationship, you may not be able to edit data at times. For example, this can happen if the join field from the "many" table is not in the query, since Access cannot create new records in the "many" table. For example, Access cannot create new orders for a customer if the query is based on the <B>Customers</B> table unless the <B>Customer ID</B> field from the <B>Orders</B> table is included in the query. 
+<BR>
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Adding7.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Adding7.gif" width=33 border=0> <B>New Record button</B></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Click the <B>New Record</B> button on the <B>Query Datasheet</B> toolbar. <IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Adding7.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Adding7.gif" width=33 border=0> 
+<BR><I>The insertion point moves to a blank row at the bottom of the datasheet.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Type the necessary data in the first field. 
+<BR><I>The data appears in the field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Move to the next field. 
+<BR><I>The insertion point moves to the next field.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Continue to add data as necessary. 
+<BR><I>The data appears in the fields.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Save the current record. <IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Adding8.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Adding8.gif" width=33 border=0> 
+<BR><I>The record is saved.</I></FONT>
+</OL><H4 align=center><FONT size=4>Printing a Query</FONT></H4>
+<P><FONT size=3>You can print the RecordSet resulting from a query. You can print it after you run a query, while it appears on the screen, or you can save time by printing it directly from the Database window. If you print the RecordSet from the Database window, Access runs the query and sends the results to the printer, rather than to the screen. 
+<BR>
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Printi9.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Printi9.gif" width=33 border=0> <B>Print button</B></FONT> 
+<P><FONT size=3><B>Read through the steps:</B> . If you would like to complete these steps in an actual file, create a new file in Access and then proceed through the steps.</FONT><H5><FONT size=3>Practice the Skill</FONT></H5>
+<OL>
+<LI><FONT size=3>Select the name of the query you want to print. 
+<BR><I>The query name is selected.</I> 
+<BR>
+<BR></FONT>
+<LI><FONT size=3>Click the <B>Print </B>button on the <B>Database</B> toolbar. 
+<BR><IMG style="WIDTH: 33px; HEIGHT: 32px" height=32 alt=Printi9.gif hspace=0 src="http://www.pinnaclep.com/Sections/Courses/251/Printi9.gif" width=33 border=0> 
+<BR><I>Access runs the query and sends the resulting RecordSet to the printer.</I></FONT>
+</OL>

@@ -1,0 +1,12 @@
+EXEC [dbo].pts_CheckTableRebuild 'LifeTime'
+ GO
+
+ALTER TABLE [dbo].[LifeTime] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[LifeTime] WITH NOCHECK ADD
+   CONSTRAINT [PK_LifeTime] PRIMARY KEY NONCLUSTERED
+   ([LifeTimeID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

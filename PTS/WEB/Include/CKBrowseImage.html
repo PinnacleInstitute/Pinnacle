@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD W3 HTML 3.2//EN">
+<HTML id="dlgImage" STYLE="width: 49.1em; height: 50em">
+	<HEAD>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="MSThemeCompatible" content="Yes">
+		<TITLE>Browse Image</TITLE>
+		<style>
+  html, body, button, div, input, select, fieldset { font-family: MS Shell Dlg; font-size: 8pt; position: absolute; };
+</style>
+		<!--
+// Browse image dialog ASP code released under the (Modified) BSD license
+// Copyright (c) 2002-2003, S Babu, vsbabu@vsbabu.org, http://vsbabu.org/
+// All rights reserved.
+-->
+		<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function showPreview()
+
+{
+if (document.frmImagePick.ImgUrl.value != "")
+ document.PREVIEWPIC.src=document.frmImagePick.ImgUrl.value ;
+
+else
+
+document.PREVIEWPIC.src='../images/imgpreview.gif';
+
+}
+
+-->
+</SCRIPT>
+<SCRIPT defer>
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+
+window.onerror = HandleError
+
+function HandleError(message, url, line) {
+  var str = "An error has occurred in this dialog." + "\n\n"
+  + "Error: " + line + "\n" + message;
+  alert(str);
+  window.close();
+  return true;
+}
+
+var CKEditor = "";
+var CKEditorFuncNum = "";
+var langCode = "";
+
+function Init() {
+  // event handlers  
+  document.body.onkeypress = _CloseOnEsc;
+  document.frmImagePick.btnOK.onclick = new Function("btnOKClick()");
+  document.frmImagePick.ImgUrl.focus();
+
+	var qstr = location.search.replace(/\?/,"&");
+	var pair = qstr.split("&");
+	for (var i=1; i<pair.length; i++) {
+		var item = pair[i].split("=");
+		if ( item[0] == "CKEditor" ) { CKEditor = item[1] };	
+		if ( item[0] == "CKEditorFuncNum" ) { CKEditorFuncNum = item[1] };	
+		if ( item[0] == "langCode" ) { langCode = item[1] };	
+	}
+}
+
+function btnOKClick() {
+	var fil = document.frmImagePick.ImgUrl.value
+
+	if (fil.length > 2040) {
+		fil = fil.substring(0,2040);
+	}
+
+	window.opener.CKEDITOR.tools.callFunction( CKEditorFuncNum, fil );
+	window.close();
+}
+
+</SCRIPT>
+	</HEAD>
+	<BODY id="bdy" onload="Init()" style="BACKGROUND: buttonface; COLOR: windowtext; HEIGHT: 600px; WIDTH: 800px" scroll="no">
+		<FORM NAME="frmImagePick" method="post" action="">
+			<TABLE CELLSPACING="10" border="0" width="100%" height="100%">
+				<TR>
+					<TD style="FONT-SIZE: 8pt; FONT-FAMILY: MS Shell Dlg" VALIGN="top" align="left" width="50%" height="100%" nowrap>
+						<iframe name="IMGPICK" src="CKBrowseImage.asp" style="BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; Z-INDEX: 1; BORDER-LEFT: black 1px solid; WIDTH: 100%; BORDER-BOTTOM: black 1px solid; HEIGHT: 100%;"></iframe>
+					</TD>
+					<TD VALIGN="top" align="left" width="50%" height="100%">
+						<span>
+							<IMG id="PREVIEWPIC" alt="Preview" src="../images/imgpreview.gif" align="absMiddle" name="PREVIEWPIC" valign="middle" bgcolor="#ffffff">
+						</span>
+						<br>
+						<br>
+						<INPUT NAME="ImgUrl" ID="ImgUrl" style="WIDTH: 100%; HEIGHT: 2.2em" onChange="showPreview()">
+						<br>
+						<br>
+						<center>
+							<br>
+							<BUTTON ID="btnOK" style="WIDTH: 7em; HEIGHT: 2.2em" type="button">OK</BUTTON>
+							<br>
+							<br>
+							<BUTTON ID="btnCancel" style="WIDTH: 7em; HEIGHT: 2.2em" type="reset" onClick="window.close();">Cancel</BUTTON>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+						</center>
+					</TD>
+				</TR>
+			</TABLE>
+		</FORM>
+	</BODY>
+</HTML>

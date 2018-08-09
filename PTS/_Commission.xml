@@ -1,0 +1,1755 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="09" name="Commission" alias="co" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="0901" name="CommissionID" type="number" identity="true" min="1" required="true" source="entity" title="true"/>
+		<WTATTRIBUTE id="0902" name="CompanyID" type="number" min="1" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="0903" name="OwnerType" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="0904" name="OwnerID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="0905" name="PayoutID" type="number" source="entity"/>
+		<WTATTRIBUTE id="0906" name="RefID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="0907" name="CommTypeName" type="text" length="40" source="join">
+			<WTJOIN entity="CommType" name="CommTypeName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="0910" name="CommDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mm am/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0911" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Submitted"/>
+			<WTENUM id="2" name="Payout"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0912" name="CommType" type="number" source="entity"/>
+		<WTATTRIBUTE id="0913" name="Amount" type="currency" min="-9999999.99" max="9999999.99" source="entity"/>
+		<WTATTRIBUTE id="0914" name="Total" type="currency" min="-9999999.99" max="9999999.99" source="entity"/>
+		<WTATTRIBUTE id="0915" name="Charge" type="currency" min="-9999999.99" max="9999999.99" source="entity"/>
+		<WTATTRIBUTE id="0916" name="Description" type="text" length="100" min="1" max="100" required="true" source="entity" language="false"/>
+		<WTATTRIBUTE id="0917" name="Notes" type="text" length="500" min="1" max="500" source="entity" language="false"/>
+		<WTATTRIBUTE id="0918" name="Show" type="number" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="0990" name="FromDate" type="date" source="entity" xml="false" persist="false"/>
+		<WTATTRIBUTE id="0991" name="ToDate" type="date" source="entity" xml="false" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="Owner">
+			<WTATTRIBUTE name="OwnerType"/>
+			<WTATTRIBUTE name="OwnerID"/>
+      <WTATTRIBUTE name="CommDate"/>
+    </WTINDEX>
+		<WTINDEX name="Payout">
+			<WTATTRIBUTE name="PayoutID"/>
+			<WTATTRIBUTE name="CommType"/>
+		</WTINDEX>
+		<WTINDEX name="Company">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="CommDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Commission" entity="Commission" alias="co"/>
+			<WTRELATIONSHIP name="Common" entity="Commission" alias="co">
+				<WTENTITY name="CommType" entity="CommType" alias="ct">
+					<WTATTRIBUTE alias="co" name="CompanyID" relalias="ct" relname="CompanyID"/>
+					<WTATTRIBUTE alias="co" name="CommType" relalias="ct" relname="CommTypeNo" connector="AND"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="CommDate" default="true"/>
+			<WTATTRIBUTE name="CommTypeName"/>
+			<WTATTRIBUTE name="CommissionID"/>
+			<WTATTRIBUTE name="Amount"/>
+			<WTATTRIBUTE name="Description" contains="true"/>
+			<WTATTRIBUTE name="OwnerID"/>
+		</WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="COMMISSION-SUBMITTED" value="1"/>
+			<WTSYSCON name="COMMISSION-PAYOUT" value="2"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Commission.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.CommDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.CommDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindOwner" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Commission.OwnerType)" oper="equal" value="PARAM(OwnerType)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.CommDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.CommDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindOwnerShow" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Show)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Commission.OwnerType)" oper="equal" value="PARAM(OwnerType)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.CommDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.CommDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.Show)" oper="less-equal" value="PARAM(Show)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindPayout" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(PayoutID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(CommType)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Commission.PayoutID)" oper="equal" value="PARAM(PayoutID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Commission.CommType)" oper="equal" value="PARAM(CommType)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListPayout" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(PayoutID)" direction="input"/>
+			<WTPARAM name="ATTR(CommType)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Commission.CommissionID)"/>
+					<WTATTRIBUTE value="ATTR(Commission.PayoutID)"/>
+					<WTATTRIBUTE value="ATTR(Commission.RefID)"/>
+					<WTATTRIBUTE value="ATTR(Commission.CommDate)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Status)"/>
+					<WTATTRIBUTE value="ATTR(Commission.CommType)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Amount)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Total)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Charge)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Description)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Notes)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Commission.PayoutID)" oper="equal" value="PARAM(PayoutID)"/>
+					<WTCONDITION expr="ATTR(Commission.CommType)" oper="equal" value="PARAM(CommType)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListPayoutSummary" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(PayoutID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Commission.CommissionID)"/>
+					<WTATTRIBUTE value="ATTR(Commission.CommType)"/>
+					<WTATTRIBUTE value="ATTR(Commission.CommTypeName)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Amount)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Commission.PayoutID)" oper="equal" value="PARAM(PayoutID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="Report" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Commission.CommissionID)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Description)"/>  <!-- Agent Reference / Name / Title -->
+					<WTATTRIBUTE value="ATTR(Commission.Amount)"/>       <!-- Commission -->
+					<WTATTRIBUTE value="ATTR(Commission.CommTypeName)"/> <!-- Client Name -->
+					<WTATTRIBUTE value="ATTR(Commission.CommDate)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Total)"/>        <!-- Order Total -->
+					<WTATTRIBUTE value="ATTR(Commission.Notes)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="Email" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(RefID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Commission.CommissionID)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Notes)"/> <!-- Member Email -->
+					<WTATTRIBUTE value="ATTR(Commission.Description)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Total)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListRef" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(RefID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Commission.CommissionID)"/>
+					<WTATTRIBUTE value="ATTR(Commission.CommType)"/>
+					<WTATTRIBUTE value="ATTR(Commission.CommTypeName)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Notes)"/> <!-- Member Name -->
+					<WTATTRIBUTE value="ATTR(Commission.Description)"/>
+					<WTATTRIBUTE value="ATTR(Commission.CommDate)"/>
+					<WTATTRIBUTE value="ATTR(Commission.Total)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Commission.RefID)" oper="equal" value="PARAM(RefID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="TrainerScores" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="CreateCommissions" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CommDate)" direction="input" passthru="true"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="CompanyCommissions" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(CommType)" direction="input" passthru="true"/>  <!-- CommPlan -->
+			<WTPARAM name="ATTR(CommDate)" direction="input" passthru="true"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="CustomCommissions" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(CommType)" direction="input" passthru="true"/>  <!-- CommPlan -->
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="TotalCommissions" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="Amount" direction="output" datatype="currency"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="SubmitCommissions" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="CalcAdvancement" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" passthru="true"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="0901" caption="Find" action="5" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="23">
+		<!--==================================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CommDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(DateAdd(&quot;m&quot;, -1, reqToDate))"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTSETATTRIBUTE name="CONST(tmpToDate)" value="FORM(ToDate)"/>
+			<WTSETATTRIBUTE name="CONST(tmpToDate)" value="CONST(DateAdd(&quot;d&quot;, 1, reqToDate))"/>
+			<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Commissions" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="CommissionFindText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Commissions.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="10" focus="true"/>
+					<WTSTATIC col="1" tag="From" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" size="7" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" size="7" type="date" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Commission">
+						<WTCOLUMN width="20" align="left" valign="top" label="CommDate" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Amount" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Total" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Charge" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Status" />
+						<WTCOLUMN width="5" align="center" valign="top" label="CommType" />
+						<WTCOLUMN width="9" align="center" valign="top" label="RefID" />
+						<WTCOLUMN width="9" align="center" valign="top" label="PayoutID" />
+						<WTCOLUMN width="9" align="center" valign="top" label="ID" />
+						<WTROW>
+							<WTCONDITION expr="IsEmployee"/>
+							<WTSTATIC col="1" value="DATA(Commission.CommDate)">
+								<WTLINK name="0903"><WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Commission.Amount)">
+								<WTLINK name="0903"><WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Commission.Total)"/>
+							<WTSTATIC col="4" value="DATA(Commission.Charge)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC value="DATA(Commission.Status)" fontcolor="green">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="less" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Status)">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="6" value="DATA(Commission.CommType)"/>
+							<WTSTATIC col="7" value="DATA(Commission.RefID)"/>
+							<WTSTATIC col="8">
+								<WTSTATIC value="DATA(Commission.PayoutID)">
+									<WTCONDITION expr="DATA(Commission.PayoutID)" oper="greater" value="CONST(0)"/>
+									<WTLINK name="0803"><WTPARAM name="PayoutID" value="DATA(Commission.PayoutID)"/></WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="9" value="DATA(Commission.CommissionID)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="CONST(&lt;xsl:value-of select=&quot;@ownertype&quot;/&gt;.&lt;xsl:value-of select=&quot;@ownerid&quot;/&gt;)" fontcolor="gray"/>
+							<WTSTATIC col="2" merge="8" value="DATA(Commission.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="0902" header="false" footer="false" navbar="false" wrapper="false" 
+               aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="1251">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+      <WTPARAM name="Popup" datatype="number"/>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CommissionID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(CommDate)" value="SYS(date)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommission" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CommissionID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="CommissionID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCommission" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2"  align="left" label="NewCommission" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="CommDate"/>
+					<WTTEXT col="2" value="ATTR(Commission.CommDate)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(Commission.Amount)" size="10"/>
+					<WTSTATIC col="2" tag="Total"/>
+					<WTTEXT col="2" value="ATTR(Commission.Total)" size="10" prespace="false"/>
+					<WTSTATIC col="2" tag="Charge"/>
+					<WTTEXT col="2" value="ATTR(Commission.Charge)" size="10" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CommType"/>
+					<WTTEXT col="2" value="ATTR(Commission.CommType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Commission.Status)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsManager"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTROW>
+						<WTSTATIC col="1" tag="OwnerType"/>
+						<WTTEXT col="2" value="ATTR(Commission.OwnerType)" size="2"/>
+						<WTTEXT col="2" value="ATTR(Commission.OwnerID)" size="8"/>
+					</WTROW>
+					 <WTROW>
+					 	<WTSTATIC col="1" tag="RefID"/>
+					 	<WTTEXT col="2" value="ATTR(Commission.RefID)"/>
+					 </WTROW>
+					 <WTROW>
+					 	<WTSTATIC col="1" tag="PayoutID"/>
+					 	<WTTEXT col="2" value="ATTR(Commission.PayoutID)"/>
+					 </WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotManager"/>
+          <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+          <WTHIDDEN value="ATTR(Commission.OwnerType)"/>
+					<WTHIDDEN value="ATTR(Commission.OwnerID)"/>
+					<WTHIDDEN value="ATTR(Commission.RefID)"/>
+					<WTHIDDEN value="ATTR(Commission.PayoutID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Commission.Description)" cols="70" rows="2"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Notes" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Commission.Notes)" cols="72" rows="6"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+          <WTBUTTON col="2" action="3" value="CONST(Cancel)">
+            <WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" />
+          </WTBUTTON>
+          <WTBUTTON col="1" merge="2" value="CONST(Close)">
+            <WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="0903" header="false" footer="false" navbar="false" wrapper="false" 
+               aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="1251">
+		<!--==================================================================-->
+      <WTPARAM name="CommissionID" datatype="number"/>
+      <WTPARAM name="Popup" datatype="number"/>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CommissionID" direction="input" value="PARAM(CommissionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommission" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CommissionID" direction="input" value="PARAM(CommissionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommission" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTCONDITION expr="IsEmployee"/>
+				<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="CommissionID" direction="input" value="PARAM(CommissionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Commission" project="ptsCommissionUser" class="CCommission">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CommissionID" direction="input" value="PARAM(CommissionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommission" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="CommissionID" value="ATTR(Commission.CommissionID)" align="left" class="PageHeading"/>
+					<WTLINKGROUP col="2" align="right">
+						<WTLINK name="0803" label="Payout" class="PageHeadingLink">
+							<WTPARAM name="PayoutID" value="ATTR(Commission.PayoutID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="CommDate"/>
+					<WTTEXT col="2" value="ATTR(Commission.CommDate)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(Commission.Amount)" size="10"/>
+					<WTSTATIC col="2" tag="Total"/>
+					<WTTEXT col="2" value="ATTR(Commission.Total)" size="10" prespace="false"/>
+					<WTSTATIC col="2" tag="Charge"/>
+					<WTTEXT col="2" value="ATTR(Commission.Charge)" size="10" prespace="false"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="CommTypeName"/>
+          <WTTEXT col="2" value="ATTR(Commission.CommType)" size="2"/>
+          <WTSTATIC col="2" value="ATTR(Commission.CommTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Commission.Status)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsManager"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTROW>
+						<WTSTATIC col="1" tag="OwnerType"/>
+						<WTTEXT col="2" value="ATTR(Commission.OwnerType)" size="2"/>
+						<WTTEXT col="2" value="ATTR(Commission.OwnerID)" size="8"/>
+					</WTROW>
+					 <WTROW>
+					 	<WTSTATIC col="1" tag="RefID"/>
+					 	<WTTEXT col="2" value="ATTR(Commission.RefID)"/>
+					 </WTROW>
+					 <WTROW>
+					 	<WTSTATIC col="1" tag="PayoutID"/>
+					 	<WTTEXT col="2" value="ATTR(Commission.PayoutID)"/>
+					 </WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotManager"/>
+          <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+          <WTHIDDEN value="ATTR(Commission.OwnerType)"/>
+					<WTHIDDEN value="ATTR(Commission.OwnerID)"/>
+					<WTHIDDEN value="ATTR(Commission.RefID)"/>
+					<WTHIDDEN value="ATTR(Commission.PayoutID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Commission.Description)" cols="70" rows="2"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Notes" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Commission.Notes)" cols="72" rows="6"/>
+				</WTROW>
+			
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)">
+          <WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" />
+          </WTBUTTON>
+          <WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+          <WTBUTTON col="2" value="CONST(Close)">
+            <WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="0911" caption="Find" action="5" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CommDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="PARAM(OwnerType)" oper="equal" value="CONST(4)" connector="and"/>
+				<WTCONDITION expr="PARAM(OwnerID)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTSETATTRIBUTE name="PARAM(OwnerID)" value="SYS(MemberID)"/>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(DateAdd(&quot;m&quot;, -1, reqToDate))"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+				<WTMETHOD name="FindOwner">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+					<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Commissions" value="ATTR(Commission.OwnerID)" class="PageHeading"/>
+					<WTBUTTON col="1" value="CONST(Close)" btnclass="smbutton">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+				<WTROW>
+					<WTLINKGROUP col="1" align="right">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTLINK name="0902" label="NewCommission" class="PageHeadingLink">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+							<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="CommissionFindText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Commissions.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="15" focus="true"/>
+					<WTSTATIC col="1" tag="From" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" size="7" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" size="7" type="date" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Commission">
+						<WTCOLUMN width="12" align="left" valign="top" label="CommDate" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Amount" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Total" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Charge" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Status" />
+						<WTCOLUMN width="13" align="left" valign="top" label="CommType" />
+						<WTCOLUMN width="9" align="center" valign="top" label="RefID" />
+						<WTCOLUMN width="9" align="center" valign="top" label="PayoutID" />
+						<WTCOLUMN width="9" align="center" valign="top" label="ID" />
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Commission.CommDate)">
+									<WTCONDITION expr="NotEmployee"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.CommDate)">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTLINK name="0903"><WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/></WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Commission.Amount)"/>
+							<WTSTATIC col="3" value="DATA(Commission.Total)"/>
+							<WTSTATIC col="4" value="DATA(Commission.Charge)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC value="DATA(Commission.Status)" fontcolor="green">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="less" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Status)">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="6" value="DATA(Commission.CommType)"/>
+							<WTSTATIC col="7" value="DATA(Commission.RefID)"/>
+							<WTSTATIC col="8">
+								<WTSTATIC value="DATA(Commission.PayoutID)">
+									<WTCONDITION expr="DATA(Commission.PayoutID)" oper="greater" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="9" value="DATA(Commission.CommissionID)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="8" value="DATA(Commission.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" />
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="0921" caption="Member Bonuses" page-width="580" page-left="0" margin-width="0" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52" track="0">
+		<!--==================================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CommTypeName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(DateAdd(&quot;m&quot;, -1, reqToDate))"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="CONST(tmpShow)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="CONST(tmpShow)" value="CONST(1)">
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+				</WTSETATTRIBUTE>
+      </WTCODEGROUP>
+			
+			<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+        <WTSETATTRIBUTE name="CONST(tmpToDate)" value="DATEADD(&quot;d&quot;,1,reqToDate)" />
+        <WTMETHOD name="FindOwnerShow">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+					<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)"/>
+					<WTPARAM name="Show" direction="input" value="CONST(tmpShow)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+        <WTROW margin-top="6">
+          <WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+					<WTSTATIC col="1" label="NewCommission" bold="true" align="right" class="PageHeader">
+						<WTLINK name="0902">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+              <WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+            </WTLINK>
+					</WTSTATIC>
+				</WTROW>
+        <WTROW margin-top="6">
+          <WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+          <WTCOMBO col="1" value="PARAM(FindTypeID)" prespace="false">
+            <WTOPTION id="907" label="CommTypeName"/>
+            <WTOPTION id="901" label="CommissionID"/>
+            <WTOPTION id="913" label="Amount"/>
+            <WTOPTION id="916" label="AffiliateNumber"/>
+          </WTCOMBO>
+          <WTSTATIC col="1" tag="SearchFor" class="ColumnHeader" align="center"/>
+          <WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="10" prespace="false" focus="true"/>
+          <WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+        </WTROW>
+        <WTROW margin-top="6" margin-bottom="6">
+          <WTSTATIC col="1" tag="From" class="ColumnHeader" align="center"/>
+          <WTTEXT col="1" value="PARAM(FromDate)" size="8" type="date" prespace="false"/>
+          <WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+          <WTTEXT col="1" value="PARAM(ToDate)" size="8" type="date" prespace="false"/>
+        </WTROW>
+
+        <WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Commission">
+						<WTCOLUMN width="10" align="left" valign="top" label="#" />
+						<WTCOLUMN width="20" align="left" valign="top" label="CommDate" />
+						<WTCOLUMN width="15" align="left" valign="top" label="Total" />
+						<WTCOLUMN width="35" align="left" valign="top" label="CommType" />
+						<WTCOLUMN width="10" align="left" valign="top" label="Status" />
+						<WTCOLUMN width="10" align="left" valign="top" label="PayoutID" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Commission.CommissionID)"/>
+							<WTSTATIC col="2" value="DATA(Commission.CommDate)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Commission.Total)">
+									<WTCONDITION expr="DATA(Commission.Show)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Total)" fontcolor="gray">
+									<WTCONDITION expr="DATA(Commission.Show)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="IsEmployee"/>
+                  <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                  <WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="0903">
+                      <WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/>
+                    </WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Commission.CommTypeName)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC label="Pending" fontcolor="green">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Status)" fontcolor="green">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Status)">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="6" value="DATA(Commission.PayoutID)"/>
+						</WTROW>
+						<WTROW>
+              <WTSTATIC col="1"/>
+              <WTSTATIC col="2" merge="2" value="DATA(Commission.RefID)" fontcolor="gray"/>
+              <WTSTATIC col="4" merge="3" value="DATA(Commission.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--==================================================================================================================-->
+    <WTWEBPAGE name="0922" caption="My Commissions" action="5" header="false" footer="false" navbar="false" wrapper="wrapper1000"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+      <!--==================================================================================================================-->
+      <WTPARAM name="SearchText" datatype="text"/>
+      <WTPARAM name="FindTypeID" datatype="number"/>
+      <WTPARAM name="Bookmark" datatype="text"/>
+      <WTPARAM name="Direction" datatype="number"/>
+      <WTPARAM name="CompanyID" datatype="number"/>
+      <WTPARAM name="MerchantID" datatype="number"/>
+      <WTPARAM name="FromDate" datatype="date"/>
+      <WTPARAM name="ToDate" datatype="date"/>
+      <WTPARAM name="Title" datatype="text"/>
+
+      <WTINCLUDE name="2FA.asp"/>
+      <WTCODEGROUP><WTCALLSUB name="Check2FAMerchant reqMerchantID"/></WTCODEGROUP>
+
+      <WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CommTypeName)">
+        <WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+      </WTSETATTRIBUTE>
+      <WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(NEXXUS)">
+        <WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+      </WTSETATTRIBUTE>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+        <WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(DateAdd(&quot;m&quot;, -1, reqToDate))"/>
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+        <WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+          <WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(14)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+        <WTOBJECT name="Merchant" project="ptsMerchantUser" class="CMerchant">
+          <WTCONDITION expr="PARAM(Title)" oper="equal" value="CONST(&quot;&quot;)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MerchantID" direction="input" value="PARAM(MerchantID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Title)" value="CONST(CleanXML(.MerchantName))"/>
+        </WTOBJECT>
+      </WTACTION>
+
+      <WTACTION id="5" name="Find" type="New">
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTACTION id="6" name="Previous" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+      </WTACTION>
+
+      <WTACTION id="7" name="Next" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTCODEGROUP>
+        <WTSETATTRIBUTE name="CONST(tmpShow)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="CONST(tmpShow)" value="CONST(1)">
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+        </WTSETATTRIBUTE>
+      </WTCODEGROUP>
+
+      <WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+        <WTSETATTRIBUTE name="CONST(tmpToDate)" value="DATEADD(&quot;d&quot;,1,reqToDate)" />
+        <WTMETHOD name="FindOwnerShow">
+          <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+          <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+          <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+          <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+          <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+          <WTPARAM name="OwnerType" direction="input" value="ENTITY(Merchant)"/>
+          <WTPARAM name="OwnerID" direction="input" value="PARAM(MerchantID)"/>
+          <WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+          <WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)"/>
+          <WTPARAM name="Show" direction="input" value="CONST(tmpShow)"/>
+          <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+        </WTMETHOD>
+        <WTMETHOD name="XML">
+          <WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+          <WTPARAM name="Option" direction="input" value="CONST(15)"/>
+        </WTMETHOD>
+      </WTOBJECT>
+      <WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+        <WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+        <WTMETHOD name="XML">
+          <WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+        </WTMETHOD>
+      </WTOBJECT>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="1000" align="left"/>
+
+        <WTFUNCTION name="NewCommisison()">
+          var cid = document.getElementById('CompanyID').value
+          var mid = document.getElementById('MerchantID').value
+          var ret = '0922.asp?companyid=' + cid + "%26ownertype=150" + otype + "%26ownerid=" + mid
+          window.location = "0902.asp?companyid=' + cid + "&amp;ownertype=150" + "&amp;ownerid=" + mid + "&amp;returnurl=" + ret;
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN name="CompanyID" value="PARAM(CompanyID)"/>
+          <WTHIDDEN name="MerchantID" value="PARAM(MerchantID)"/>
+          <WTHIDDEN name="Title" value="PARAM(Title)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" tag="Commissions" value="PARAM(Title)" class="PageHeading"/>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+          <WTCOMBO col="1" value="PARAM(FindTypeID)" prespace="false">
+            <WTOPTION id="907" label="CommTypeName"/>
+            <WTOPTION id="901" label="CommissionID"/>
+            <WTOPTION id="913" label="Amount"/>
+          </WTCOMBO>
+          <WTSTATIC col="1" tag="SearchFor" class="ColumnHeader" align="center"/>
+          <WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="10" prespace="false" focus="true"/>
+          <WTSTATIC col="1" tag="From" class="ColumnHeader" align="center"/>
+          <WTTEXT col="1" value="PARAM(FromDate)" size="8" type="date" prespace="false"/>
+          <WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+          <WTTEXT col="1" value="PARAM(ToDate)" size="8" type="date" prespace="false"/>
+          <WTBUTTON col="1" action="5" value="CONST(View)" default="true"/>
+          <WTBUTTON col="1" value="CONST(NewCommission)" align="center">
+            <WTCONDITION expr="IsEmployee"/>
+            <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+            <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+            <WTCLICK>NewCommisison()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+        <WTROW>
+          <WTRECORDSET col="1" graybar="true" prevnext="top" entity="Commission">
+            <WTCOLUMN width="10" align="left" valign="top" label="CommissionID" />
+            <WTCOLUMN width="20" align="left" valign="top" label="CommDate" />
+            <WTCOLUMN width="15" align="left" valign="top" label="Total" />
+            <WTCOLUMN width="35" align="left" valign="top" label="CommType" />
+            <WTCOLUMN width="10" align="left" valign="top" label="Status" />
+            <WTCOLUMN width="10" align="left" valign="top" label="InvoiceID" />
+            <WTROW>
+              <WTSTATIC col="1" value="DATA(Commission.CommissionID)"/>
+              <WTSTATIC col="2" value="DATA(Commission.CommDate)"/>
+              <WTSTATIC col="3">
+                <WTSTATIC value="DATA(Commission.Total)">
+                  <WTCONDITION expr="DATA(Commission.Show)" oper="equal" value="CONST(0)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Commission.Total)" fontcolor="gray">
+                  <WTCONDITION expr="DATA(Commission.Show)" oper="not-equal" value="CONST(0)"/>
+                </WTSTATIC>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="IsEmployee"/>
+                  <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+                    <WTLINK name="0903">
+                      <WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="4" value="DATA(Commission.CommTypeName)"/>
+              <WTSTATIC col="5">
+                <WTSTATIC label="Pending" fontcolor="green">
+                  <WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(0)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Commission.Status)" fontcolor="green">
+                  <WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(1)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Commission.Status)">
+                  <WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(2)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="6" value="DATA(Commission.PayoutID)"/>
+            </WTROW>
+            <WTROW>
+              <WTSTATIC col="1"/>
+              <WTSTATIC col="2" merge="2" value="DATA(Commission.RefID)" fontcolor="gray"/>
+              <WTSTATIC col="4" merge="3" value="DATA(Commission.Description)" fontcolor="gray"/>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--===============================================================================-->
+		<WTWEBPAGE name="0912" caption="Commissions" header="false" footer="false" navbar="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="PayoutID" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+					<WTMETHOD name="ListPayout">
+						<WTPARAM name="PayoutID" direction="input" value="PARAM(PayoutID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Commissions" label="PayoutID" value="PARAM(PayoutID)" class="PageHeading"/>
+					<WTLINKGROUP col="2" align="right">
+						<WTLINK name="0803"><WTPARAM name="PayoutID" value="PARAM(PayoutID)"/></WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="Commission">
+						<WTCOLUMN width="18" align="left" valign="top" label="CommDate" />
+						<WTCOLUMN width="13" align="left" valign="top" label="Amount" />
+						<WTCOLUMN width="13" align="left" valign="top" label="Total" />
+						<WTCOLUMN width="13" align="left" valign="top" label="Charge" />
+						<WTCOLUMN width="13" align="left" valign="top" label="Status" />
+						<WTCOLUMN width="10" align="left" valign="top" label="CommType" />
+						<WTCOLUMN width="9" align="right" valign="top" label="PayoutID" />
+						<WTCOLUMN width="9" align="right" valign="top" label="#" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Commission.CommDate)">
+								<WTLINK name="0903"><WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Commission.Amount)">
+								<WTLINK name="0903"><WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Commission.Total)"/>
+							<WTSTATIC col="4" value="DATA(Commission.Charge)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC value="DATA(Commission.Status)" fontcolor="green">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="less" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Status)">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="6" value="DATA(Commission.CommType)"/>
+							<WTSTATIC col="7">
+								<WTSTATIC value="DATA(Commission.PayoutID)">
+									<WTCONDITION expr="NotEmployee"/>
+									<WTCONDITION expr="DATA(Commission.PayoutID)" oper="greater" value="CONST(0)" connector="and"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.PayoutID)">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="DATA(Commission.PayoutID)" oper="greater" value="CONST(0)" connector="and"/>
+									<WTLINK name="0803"><WTPARAM name="PayoutID" value="DATA(Commission.PayoutID)"/></WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="8" value="DATA(Commission.CommissionID)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="8" value="DATA(Commission.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" />
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)" btnclass="smbutton">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="0913" caption="Commissions" header="false" footer="false" navbar="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--===============================================================================-->
+			<WTPARAM name="RefID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+					<WTMETHOD name="ListRef">
+						<WTPARAM name="RefID" direction="input" value="PARAM(RefID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Commissions" label="RefID" value="PARAM(RefID)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Commission">
+						<WTCOLUMN width="10" align="left" valign="top" label="Total" />
+						<WTCOLUMN width="20" align="left" valign="top" label="CommTypeName" />
+						<WTCOLUMN width="30" align="left" valign="top" label="MemberName" />
+						<WTCOLUMN width="40" align="left" valign="top" label="Description" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Total)"/>
+							<WTSTATIC col="2" value="DATA(CommTypeName)"/>
+							<WTSTATIC col="3" value="DATA(Notes)"/>
+							<WTSTATIC col="4" value="DATA(Description)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="0931" caption="Find" action="5" header="false" footer="false" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CommDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(DateAdd(&quot;m&quot;, -1, reqToDate))"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTSETATTRIBUTE name="CONST(tmpToDate)" value="CONST(DateAdd(&quot;d&quot;, 1, reqToDate))"/>
+			<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Commissions" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="CommissionFindText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Commissions.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="10" focus="true"/>
+					<WTSTATIC col="1" tag="From" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" size="7" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" size="7" type="date" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Commission">
+						<WTCOLUMN width="20" align="left" valign="top" label="CommDate" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Amount" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Total" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Charge" />
+						<WTCOLUMN width="12" align="left" valign="top" label="Status" />
+						<WTCOLUMN width="5" align="center" valign="top" label="CommType" />
+						<WTCOLUMN width="9" align="center" valign="top" label="RefID" />
+						<WTCOLUMN width="9" align="center" valign="top" label="PayoutID" />
+						<WTCOLUMN width="9" align="center" valign="top" label="ID" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Commission.CommDate)">
+								<WTLINK name="0903"><WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Commission.Amount)">
+								<WTLINK name="0903"><WTPARAM name="CommissionID" value="DATA(Commission.CommissionID)"/></WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Commission.Total)"/>
+							<WTSTATIC col="4" value="DATA(Commission.Charge)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC label="Pending" fontcolor="green">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Status)" fontcolor="green">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Commission.Status)">
+									<WTCONDITION expr="DATA(Commission.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="6" value="DATA(Commission.CommType)"/>
+							<WTSTATIC col="7" value="DATA(Commission.RefID)"/>
+							<WTSTATIC col="8">
+								<WTSTATIC value="DATA(Commission.PayoutID)">
+									<WTCONDITION expr="DATA(Commission.PayoutID)" oper="greater" value="CONST(0)"/>
+									<WTLINK name="0803"><WTPARAM name="PayoutID" value="DATA(Commission.PayoutID)"/></WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="9" value="DATA(Commission.CommissionID)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="CONST(&lt;xsl:value-of select=&quot;@ownertype&quot;/&gt;.&lt;xsl:value-of select=&quot;@ownerid&quot;/&gt;)" fontcolor="gray"/>
+							<WTSTATIC col="2" merge="8" value="DATA(Commission.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="0941" caption="Find" action="5" header="false" footer="false" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="PayoutID" datatype="number"/>
+			<WTPARAM name="CommType" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(Description)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Payout" project="ptsPayoutUser" class="CPayout"/>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember"/>
+				<WTOBJECT name="CommType" project="ptsCommTypeUser" class="CCommType"/>
+				<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Payout" project="ptsPayoutUser" class="CPayout">
+				<WTMETHOD name="Load">
+					<WTPARAM name="PayoutID" direction="input" value="PARAM(PayoutID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(OwnerID)"/>
+        <WTCODEGROUP>
+          <WTCONDITION expr="IsMemberOnly"/>
+          <WTCONDITION expr="CONST(tmpMemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+          <WTCUSTOM>AbortUser()</WTCUSTOM>
+        </WTCODEGROUP>
+        <WTMETHOD name="XML">
+					<WTPARAM name="xmlPayout" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+				<WTMETHOD name="Load">
+					<WTPARAM name="MemberID" direction="input" value="CONST(tmpMemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(CompanyID)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="CommType" project="ptsCommTypeUser" class="CCommType">
+				<WTMETHOD name="FetchCommTypeNo">
+					<WTPARAM name="CompanyID" direction="input" value="CONST(tmpCompanyID)"/>
+					<WTPARAM name="CommTypeID" direction="input" value="PARAM(CommType)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlCommType" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Commissions" project="ptsCommissionUser" class="CCommissions">
+				<WTMETHOD name="FindPayout">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="PayoutID" direction="input" value="PARAM(PayoutID)"/>
+					<WTPARAM name="CommType" direction="input" value="PARAM(CommType)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlCommissions" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="center"/>
+
+				<WTROW>
+					<WTSTATIC col="1" fontsize="4">
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)" space="2"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" bold="true">
+						<WTSTATIC value="ATTR(CommType.CommTypeName)" space="2"/>
+						<WTSTATIC value="ATTR(Payout.PayDate)" space="2"/>
+						<WTSTATIC value="ATTR(Payout.Amount)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="PARAM(FindTypeID)" prespace="false">
+						<WTOPTION id="916" label="AffiliateNumber"/>
+					</WTCOMBO>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="10" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Commission">
+						<WTCOLUMN width="70" align="left" valign="top" label="AffiliateNumber" />
+						<WTCOLUMN width="20" align="left" valign="top" label="Total" />
+						<WTCOLUMN width="10" align="center" valign="top" label="Payment" />
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Commission.Description)"/>
+							<WTSTATIC col="2" value="DATA(Commission.Total)"/>
+							<WTSTATIC col="3" value="DATA(Commission.RefID)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

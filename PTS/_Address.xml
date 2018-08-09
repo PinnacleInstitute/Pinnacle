@@ -1,0 +1,1064 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="37" name="Address" alias="ad" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="3701" name="AddressID" type="number" identity="true" min="1" required="true" source="entity" title="true"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="3702" name="OwnerType" type="number" source="entity"/>
+		<WTATTRIBUTE id="3703" name="OwnerID" type="number" source="entity"/>
+		<WTATTRIBUTE id="3704" name="CountryID" type="number" source="entity" required="true"/>
+		
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="3705" name="CountryName" type="text" length="50" source="join">
+			<WTJOIN entity="Country" name="CountryName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="3706" name="AddressType" type="number" source="entity" required="true">
+			<WTENUM id="1" name="AddressType1"/>
+			<WTENUM id="2" name="AddressType2"/>
+			<WTENUM id="3" name="AddressType3"/>
+			<WTENUM id="4" name="AddressType4"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3707" name="IsActive" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="3708" name="Street1" type="text" length="60" min="1" max="60" source="entity" required="true"/>
+		<WTATTRIBUTE id="3709" name="Street2" type="text" length="60" min="1" max="60" source="entity"/>
+		<WTATTRIBUTE id="3710" name="City" type="text" length="30" min="1" max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="3711" name="State" type="text" length="30" min="1"  max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="3712" name="Zip" type="text" length="20" min="1"  max="20" source="entity" required="true"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="3790" name="CopyID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="Owner">
+			<WTATTRIBUTE name="OwnerType"/>
+			<WTATTRIBUTE name="OwnerID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Address" entity="Address" alias="ad"/>
+			<WTRELATIONSHIP name="Common" entity="Address" alias="ad">
+				<WTENTITY name="Country" entity="Country" alias="cou">
+					<WTATTRIBUTE alias="ad" name="CountryID" relalias="cou" relname="CountryID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="FetchOwner" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(OwnerType)" direction="input"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTPARAM name="ATTR(AddressType)" direction="input"/>
+			<WTPARAM name="ATTR(AddressID)" direction="output"/>
+			<WTPARAM name="ATTR(CountryID)" direction="output"/>
+			<WTPARAM name="ATTR(CountryName)" direction="output"/>
+			<WTPARAM name="ATTR(IsActive)" direction="output"/>
+			<WTPARAM name="ATTR(Street1)" direction="output"/>
+			<WTPARAM name="ATTR(Street2)" direction="output"/>
+			<WTPARAM name="ATTR(City)" direction="output"/>
+			<WTPARAM name="ATTR(State)" direction="output"/>
+			<WTPARAM name="ATTR(Zip)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PARAM(AddressID)" value="ATTR(Address.AddressID)"/>
+					<WTATTRIBUTE name="PARAM(CountryID)" value="ATTR(Address.CountryID)"/>
+					<WTATTRIBUTE name="PARAM(CountryName)" value="ATTR(Country.CountryName)"/>
+					<WTATTRIBUTE name="PARAM(IsActive)" value="ATTR(Address.IsActive)"/>
+					<WTATTRIBUTE name="PARAM(Street1)" value="ATTR(Address.Street1)"/>
+					<WTATTRIBUTE name="PARAM(Street2)" value="ATTR(Address.Street2)"/>
+					<WTATTRIBUTE name="PARAM(City)" value="ATTR(Address.City)"/>
+					<WTATTRIBUTE name="PARAM(State)" value="ATTR(Address.State)"/>
+					<WTATTRIBUTE name="PARAM(Zip)" value="ATTR(Address.Zip)"/>
+					<WTJOIN name="Common" lock="false"/>
+					<WTCONDITION expr="ATTR(OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTCONDITION expr="ATTR(AddressType)" oper="equal" value="PARAM(AddressType)" connector="and"/>
+					<WTCONDITION expr="ATTR(IsActive)" oper="not-equal" value="CONST(0)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListOwner" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Address.AddressID)"/>
+					<WTATTRIBUTE value="ATTR(Address.AddressType)"/>
+					<WTATTRIBUTE value="ATTR(Address.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(Address.Street1)"/>
+					<WTATTRIBUTE value="ATTR(Address.Street2)"/>
+					<WTATTRIBUTE value="ATTR(Address.City)"/>
+					<WTATTRIBUTE value="ATTR(Address.State)"/>
+					<WTATTRIBUTE value="ATTR(Address.Zip)"/>
+					<WTATTRIBUTE value="ATTR(Country.CountryName)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Address.OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(Address.OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTORDER name="ATTR(Address.IsActive)" descend="true"/>
+					<WTORDER name="ATTR(Address.AddressType)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListOwnerType" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input"/>
+			<WTPARAM name="ATTR(AddressType)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Address.AddressID)"/>
+					<WTATTRIBUTE value="ATTR(Address.AddressType)"/>
+					<WTATTRIBUTE value="ATTR(Address.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(Address.Street1)"/>
+					<WTATTRIBUTE value="ATTR(Address.Street2)"/>
+					<WTATTRIBUTE value="ATTR(Address.City)"/>
+					<WTATTRIBUTE value="ATTR(Address.State)"/>
+					<WTATTRIBUTE value="ATTR(Address.Zip)"/>
+					<WTATTRIBUTE value="ATTR(Country.CountryName)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(Address.OwnerType)" oper="equal" value="PARAM(OwnerType)"/>
+					<WTCONDITION expr="ATTR(Address.OwnerID)" oper="equal" value="PARAM(OwnerID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Address.AddressType)" oper="equal" value="PARAM(AddressType)" connector="and"/>
+					<WTCONDITION expr="ATTR(Address.IsActive)" oper="not-equal" value="CONST(0)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="Copy" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(AddressID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(AddressType)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="CopyID" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="Activate" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(OwnerType)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(OwnerID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(AddressType)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(AddressID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="CopyID" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="m_3702" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="320" margin-width="0" navbar-width="0" content-width="320"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" mobile="MobileHome.asp" secured="98">
+			<!--==================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSUB name="LoadList">
+				<WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCountrys" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTSETATTRIBUTE name="ATTR(CountryID)" value="CONST(224)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="AddressID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Activate">
+						<WTCONDITION expr="ATTR(IsActive)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="result" direction="return" datatype="number"/>
+						<WTPARAM name="OwnerType" direction="input" value="ATTR(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="ATTR(OwnerID)"/>
+						<WTPARAM name="AddressType" direction="input" value="ATTR(AddressType)"/>
+						<WTPARAM name="AddressID" direction="input" value="CONST(AddressID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="80" align="right"/>
+				<WTCOLUMN width="240" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="AddressType"/>
+					<WTCOMBO col="2" value="ATTR(Address.AddressType)"/>
+					<WTCHECK col="2" value="ATTR(Address.IsActive)"/>
+				</WTROW>
+				<WTROW margin-top="3">
+					<WTSTATIC col="1" tag="Address"/>
+					<WTTEXT col="2" value="ATTR(Address.Street1)" size="30"/>
+				</WTROW>
+				<WTROW margin-top="3">
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.Street2)" size="30"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.City)" width="120" label="City" size="15" required="false"/>
+					<WTTEXT col="2" value="ATTR(Address.State)" width="120" label="State" size="15" required="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.Zip)" width="240" label="Zip" size="15" required="false"/>
+				</WTROW>
+				<WTROW margin-top="3">
+					<WTCOMBO col="1" merge="2" value="ATTR(Address.CountryID)" datapath="/DATA/TXN/PTSCOUNTRYS/ENUM" setselected="true" required="false" align="left"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center" btnclass="smbutton" prespace="false">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="m_3703" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="320" margin-width="0" navbar-width="0" content-width="320"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" mobile="MobileHome.asp" secured="98">
+			<!--==================================================================-->
+			<WTPARAM name="AddressID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTSUB name="LoadList">
+				<WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCountrys" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(3)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(oldIsActive)" value="ATTR(IsActive)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Activate">
+						<WTCONDITION expr="CONST(oldIsActive)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(IsActive)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTPARAM name="result" direction="return" datatype="number"/>
+						<WTPARAM name="OwnerType" direction="input" value="ATTR(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="ATTR(OwnerID)"/>
+						<WTPARAM name="AddressType" direction="input" value="ATTR(AddressType)"/>
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="or"/>
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(2)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTCONDITION expr="IsEmployee"/>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(3)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="80" align="right"/>
+				<WTCOLUMN width="240" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="AddressType"/>
+					<WTCOMBO col="2" value="ATTR(Address.AddressType)"/>
+					<WTCHECK col="2" value="ATTR(Address.IsActive)"/>
+				</WTROW>
+				<WTROW margin-top="3">
+					<WTSTATIC col="1" tag="Address"/>
+					<WTTEXT col="2" value="ATTR(Address.Street1)" size="30"/>
+				</WTROW>
+				<WTROW margin-top="3">
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.Street2)" size="30"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.City)" width="120" label="City" size="15" required="false"/>
+					<WTTEXT col="2" value="ATTR(Address.State)" width="120" label="State" size="15" required="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.Zip)" width="240" label="Zip" size="15" required="false"/>
+				</WTROW>
+				<WTROW margin-top="3">
+					<WTCOMBO col="1" merge="2" value="ATTR(Address.CountryID)" datapath="/DATA/TXN/PTSCOUNTRYS/ENUM" setselected="true" required="false" align="left"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center" btnclass="smbutton" prespace="false">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete" btnclass="smbutton" prespace="false">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="m_3711" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="320" margin-width="0" navbar-width="0" content-width="320"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="52">
+			<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="CopyID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTCONDITION expr="PARAM(CopyID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Copy">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(CopyID)"/>
+						<WTPARAM name="AddressType" direction="input" value="CONST(4)"/>
+						<WTPARAM name="tmpAddressID" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(CopyID)" oper="not-equal" value="CONST(0)"/>
+					<WTRETURN>
+						<WTLINK name="m_3711" return="false">
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+							<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+				<WTOBJECT name="Addresss" project="ptsAddressUser" class="CAddresss">
+					<WTMETHOD name="ListOwner">
+						<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddresss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="180" align="left"/>
+				<WTCOLUMN width="140" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Addresss" bold="true"/>
+					<WTIMAGE col="2" value="CONST(AddNew.gif)" imgalign="absmiddle" align="right"/>
+					<WTSTATIC col="2" label="NewAddress">
+						<WTLINK name="m_3702">
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+							<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+				<WTSTATIC label="editAddress"/>
+				<WTSTATIC label="copyAddress"/>
+				<WTSTATIC label="activeAddress"/>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" noitems="false" entity="Address">
+						<WTCOLUMN width="15" align="left" valign="top"/>
+						<WTCOLUMN width="85" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(IsActive)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(GreenChecksm.gif)" alt="activeAddress" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Address.AddressType)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(edit.gif)" alt="editAddress" imgalign="absmiddle">
+										<WTLINK name="m_3703">
+											<WTPARAM name="AddressID" value="DATA(AddressID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Address.Street1)" space="1"/>
+								<WTSTATIC value="DATA(Address.Street2)" space="1"/>
+								<WTSTATIC value="DATA(Address.City)" space="1"/>
+								<WTSTATIC value="DATA(Address.State)" space="1"/>
+								<WTSTATIC value="DATA(Address.Zip)" space="1"/>
+								<WTSTATIC value="DATA(Address.CountryName)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(copy.gif)" alt="copyAddress" imgalign="absmiddle">
+										<WTLINK name="m_3711">
+											<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+											<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="CopyID" value="DATA(AddressID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="3702" page-width="600" page-left="0" margin-width="0" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSUB name="LoadList">
+				<WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCountrys" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTSETATTRIBUTE name="ATTR(CountryID)" value="CONST(224)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OwnerType)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OwnerID)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="AddressID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Activate">
+						<WTCONDITION expr="ATTR(IsActive)" oper="not-equal" value="CONST(0)"/>
+						<WTPARAM name="result" direction="return" datatype="number"/>
+						<WTPARAM name="OwnerType" direction="input" value="ATTR(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="ATTR(OwnerID)"/>
+						<WTPARAM name="AddressType" direction="input" value="ATTR(AddressType)"/>
+						<WTPARAM name="AddressID" direction="input" value="CONST(AddressID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" tag="AddressType"/>
+					<WTCOMBO col="2" value="ATTR(Address.AddressType)"/>
+					<WTCHECK col="2" value="ATTR(Address.IsActive)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Address"/>
+					<WTTEXT col="2" value="ATTR(Address.Street1)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.Street2)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.City)" width="200" label="City" size="25"/>
+					<WTTEXT col="2" value="ATTR(Address.State)" width="240" label="State" size="25"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Address.Zip)" width="100" label="Zip" size="10"/>
+					<WTCOMBO col="2" value="ATTR(Address.CountryID)" width="340" label="CountryID" datapath="/DATA/TXN/PTSCOUNTRYS/ENUM" setselected="true"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center" btnclass="smbutton" prespace="false">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="3703" page-width="600" page-left="0" margin-width="0" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="AddressID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTSUB name="LoadList">
+				<WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCountrys" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(3)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(oldIsActive)" value="ATTR(IsActive)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Activate">
+						<WTCONDITION expr="CONST(oldIsActive)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(IsActive)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTPARAM name="result" direction="return" datatype="number"/>
+						<WTPARAM name="OwnerType" direction="input" value="ATTR(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="ATTR(OwnerID)"/>
+						<WTPARAM name="AddressType" direction="input" value="ATTR(AddressType)"/>
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="or"/>
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(2)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTCONDITION expr="IsEmployee"/>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="and"/>
+						<WTSETATTRIBUTE name="PARAM(Popup)" value="CONST(3)"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(AddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+<!--
+				<WTLOAD>
+					content = window.parent.document.getElementById('AddresssFrame');
+					if(content) content.height=130;
+				</WTLOAD>
+-->
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(2)"/>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1" merge="2" label="SuccessfullyUpdated" align="center" class="PageHeading" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(3)"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="SuccessfullyDeleted" align="center" class="PageHeading"/>
+					</WTROW>
+					<WTROW>
+						<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Popup)" oper="less" value="CONST(3)"/>
+
+					<WTROW>
+						<WTSTATIC col="1" tag="AddressType"/>
+						<WTCOMBO col="2" value="ATTR(Address.AddressType)"/>
+						<WTCHECK col="2" value="ATTR(Address.IsActive)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Address"/>
+						<WTTEXT col="2" value="ATTR(Address.Street1)" size="60"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTTEXT col="2" value="ATTR(Address.Street2)" size="60"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTTEXT col="2" value="ATTR(Address.City)" width="200" label="City" size="25"/>
+						<WTTEXT col="2" value="ATTR(Address.State)" width="240" label="State" size="25"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTTEXT col="2" value="ATTR(Address.Zip)" width="100" label="Zip" size="10"/>
+						<WTCOMBO col="2" value="ATTR(Address.CountryID)" width="340" label="CountryID" datapath="/DATA/TXN/PTSCOUNTRYS/ENUM" setselected="true"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center" btnclass="smbutton" prespace="false">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" action="3" value="CONST(Cancel)" btnclass="smbutton" prespace="false">
+							<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" value="CONST(Close)" btnclass="smbutton" prespace="false">
+							<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete" btnclass="smbutton" prespace="false">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+			
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="3711" page-width="580" page-left="0" margin-width="0" caption="List" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="OwnerType" datatype="number"/>
+			<WTPARAM name="OwnerID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="CopyID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTCONDITION expr="PARAM(CopyID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Copy">
+						<WTPARAM name="AddressID" direction="input" value="PARAM(CopyID)"/>
+						<WTPARAM name="AddressType" direction="input" value="CONST(4)"/>
+						<WTPARAM name="tmpAddressID" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(CopyID)" oper="not-equal" value="CONST(0)"/>
+					<WTRETURN>
+						<WTLINK name="3711" return="false">
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+							<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+				<WTOBJECT name="Addresss" project="ptsAddressUser" class="CAddresss">
+					<WTMETHOD name="ListOwner">
+						<WTPARAM name="OwnerType" direction="input" value="PARAM(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OwnerID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAddresss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="280" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Addresss" bold="true"/>
+					<WTIMAGE col="2" value="CONST(AddNew.gif)" imgalign="absmiddle" align="right"/>
+					<WTSTATIC col="2" label="NewAddress">
+						<WTLINK name="3702">
+							<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+							<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+				<WTSTATIC label="editAddress"/>
+				<WTSTATIC label="copyAddress"/>
+				<WTSTATIC label="activeAddress"/>
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" noitems="false" entity="Address">
+						<WTCOLUMN width="15" align="left" valign="top"/>
+						<WTCOLUMN width="85" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(IsActive)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(GreenChecksm.gif)" alt="activeAddress" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Address.AddressType)" space="1">
+									<WTLINK name="3703">
+										<WTPARAM name="AddressID" value="DATA(AddressID)"/>
+										<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(edit.gif)" alt="editAddress" imgalign="absmiddle">
+										<WTLINK name="3703">
+											<WTPARAM name="AddressID" value="DATA(AddressID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Address.Street1)" space="1"/>
+								<WTSTATIC value="DATA(Address.Street2)" space="1"/>
+								<WTSTATIC value="DATA(Address.City)" space="1"/>
+								<WTSTATIC value="DATA(Address.State)" space="1"/>
+								<WTSTATIC value="DATA(Address.Zip)" space="1"/>
+								<WTSTATIC value="DATA(Address.CountryName)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(copy.gif)" alt="copyAddress" imgalign="absmiddle">
+										<WTLINK name="3711">
+											<WTPARAM name="OwnerType" value="PARAM(OwnerType)"/>
+											<WTPARAM name="OwnerID" value="PARAM(OwnerID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="CopyID" value="DATA(AddressID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="3722" caption="Add Address" navbar="false" worker="true" aspstyle="GenerateWebASP.xsl"> 
+		<!--==================================================================-->
+			<WTPARAM name="CO" datatype="number"/>
+			<WTPARAM name="RE" datatype="text"/>
+			<WTPARAM name="OT" datatype="number"/>
+			<WTPARAM name="OI" datatype="number"/>
+			<WTPARAM name="AT" datatype="number"/>
+			<WTPARAM name="S1" datatype="text"/>
+			<WTPARAM name="S2" datatype="text"/>
+			<WTPARAM name="CI" datatype="text"/>
+			<WTPARAM name="ST" datatype="text"/>
+			<WTPARAM name="ZC" datatype="text"/>
+			<WTPARAM name="CC" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+<WTCUSTOM>
+		If reqOT = 0 Then reqOT = 4
+		If reqAT = 0 Then reqAT = 1
+		If reqCO = 0 Then
+			response.write "0 - Missing Company"
+			response.end
+		End If
+		If reqOI = 0 AND reqRE = "" Then
+			response.write "0 - Missing Address Owner"
+			response.end
+		End If
+		If reqS1 = "" Then
+			response.write "0 - Missing Street"
+			response.end
+		End If
+		If reqCI = "" Then
+			response.write "0 - Missing City"
+			response.end
+		End If
+		If reqST = "" Then
+			response.write "0 - Missing State"
+			response.end
+		End If
+		If reqZC = "" Then
+			response.write "0 - Missing Zip Code"
+			response.end
+		End If
+		If reqCC = 0 Then
+			response.write "0 - Missing Country Code"
+			response.end
+		End If
+</WTCUSTOM>					
+				<!-- lookup reference member number -->
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(RE)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+					<WTMETHOD name="FetchRef">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CO)"/>
+						<WTPARAM name="Reference" direction="input" value="PARAM(RE)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="PARAM(OI)" value="ATTR(MemberID)"/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="CONST(0)"/>
+<WTCUSTOM>
+					response.write "0 - Invalid Member Reference Number"
+					response.end
+</WTCUSTOM>
+					</WTCODEGROUP>
+				</WTOBJECT>	
+
+				<WTOBJECT name="Address" project="ptsAddressUser" class="CAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AddressID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(OwnerType)" value="PARAM(OT)"/>
+					<WTSETATTRIBUTE name="ATTR(OwnerID)" value="PARAM(OI)"/>
+					<WTSETATTRIBUTE name="ATTR(CountryID)" value="PARAM(CC)"/>
+					<WTSETATTRIBUTE name="ATTR(AddressType)" value="PARAM(AT)"/>
+					<WTSETATTRIBUTE name="ATTR(IsActive)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Street1)" value="PARAM(S1)"/>
+					<WTSETATTRIBUTE name="ATTR(Street2)" value="PARAM(S2)"/>
+					<WTSETATTRIBUTE name="ATTR(City)" value="PARAM(CI)"/>
+					<WTSETATTRIBUTE name="ATTR(State)" value="PARAM(ST)"/>
+					<WTSETATTRIBUTE name="ATTR(Zip)" value="PARAM(ZC)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="AddressID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Activate">
+						<WTPARAM name="result" direction="return" datatype="number"/>
+						<WTPARAM name="OwnerType" direction="input" value="ATTR(OwnerType)"/>
+						<WTPARAM name="OwnerID" direction="input" value="ATTR(OwnerID)"/>
+						<WTPARAM name="AddressType" direction="input" value="ATTR(AddressType)"/>
+						<WTPARAM name="AddressID" direction="input" value="CONST(AddressID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+					If Len(xmlError) = 0 Then
+						response.write AddressID
+					Else
+						response.write "0 - " + xmlError
+					End If	
+					response.end
+</WTCUSTOM>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT/>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

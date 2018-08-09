@@ -1,0 +1,882 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="182" name="Market" alias="mar" log="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="18201" name="MarketID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="18202" name="CompanyID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="18203" name="CountryID" type="number" source="entity" required="true"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="18205" name="MarketName" type="text" length="80" min="1" max="80" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="18206" name="FromEmail" type="text" length="60" min="1" max="60" source="entity" required="true"/>
+		<WTATTRIBUTE id="18207" name="Subject" type="text" length="80" min="1" max="80" source="entity" required="true"/>
+		<WTATTRIBUTE id="18208" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Setup"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="Inactive"/>
+		</WTATTRIBUTE>
+    <WTATTRIBUTE id="18209" name="Target" type="text" length="200" min="1" max="200" source="entity"/>
+    <WTATTRIBUTE id="18210" name="CreateDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="18211" name="SendDate" type="date" source="entity"/>
+    <WTATTRIBUTE id="18212" name="SendDays" type="number" source="entity"/>
+    <WTATTRIBUTE id="18213" name="Consumers" type="number" source="entity"/>
+    <WTATTRIBUTE id="18214" name="Merchants" type="number" source="entity"/>
+    <WTATTRIBUTE id="18215" name="Orgs" type="number" source="entity"/>
+		<WTATTRIBUTE id="18217" name="TestEmail" type="text" length="80" source="entity"/>
+
+    <!--Indexes-->
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Market" entity="Market" alias="mar"/>
+			<WTRELATIONSHIP name="Common" entity="Market" alias="mar"/>
+		</WTRELATIONSHIPS>
+		
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="MarketName" default="true" contains="true"/>
+			<WTATTRIBUTE name="SendDate"/>
+			<WTATTRIBUTE name="Status"/>
+      <WTATTRIBUTE name="Target" contains="true"/>
+    </WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="MARKET-SETUP" value="1"/>
+			<WTSYSCON name="MARKET-ACTIVE" value="2"/>
+			<WTSYSCON name="MARKET-INACTIVE" value="3"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Market.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+		</WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE type="List" name="ListMarket" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(CompanyID)" direction="input"/>
+      <WTPARAM name="ATTR(SendDate)" direction="input"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(Market.MarketID)"/>
+          <WTATTRIBUTE value="ATTR(Market.CountryID)"/>
+          <WTATTRIBUTE value="ATTR(Market.MarketName)"/>
+          <WTATTRIBUTE value="ATTR(Market.FromEmail)"/>
+          <WTATTRIBUTE value="ATTR(Market.Subject)"/>
+          <WTATTRIBUTE value="ATTR(Market.Target)"/>
+          <WTATTRIBUTE value="ATTR(Market.SendDate)"/>
+          <WTATTRIBUTE value="ATTR(Market.SendDays)"/>
+          <WTJOIN name="Market" lock="false"/>
+          <WTCONDITION expr="ATTR(Market.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+          <WTCONDITION expr="ATTR(Market.Status)" oper="equal" value="SYSCON(MARKET-ACTIVE)" connector="and"/>
+          <WTCONDITION expr="ATTR(Market.SendDate)" oper="less-equal" value="PARAM(SendDate)" connector="and"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==========================================================================================================-->
+    <WTWEBPAGE name="18201" caption="FindMarket" action="5" navbar="false" header="false" footer="false" wrapper="wrapper1000"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" focus="false" track="0">
+		<!--==========================================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+      <WTPARAM name="CompanyID" datatype="number"/>
+      <WTPARAM name="Popup" datatype="number"/>
+
+      <WTCODEGROUP>
+        <WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(NEXXUS)">
+          <WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+        </WTSETATTRIBUTE>
+        <WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(MarketName)">
+          <WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+        </WTSETATTRIBUTE>
+      </WTCODEGROUP>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Markets" project="ptsMarketUser" class="CMarkets">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMarkets" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Markets" project="ptsMarketUser" class="CMarkets">
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>				
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlMarkets" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="1000" align="left"/>
+
+        <WTFUNCTION name="NewMarket()">
+          var url, win, mid;
+          mid = document.getElementById('CompanyID').value
+          url = "18203.asp?CompanyID=" + mid
+          win = window.location = url + "&amp;returnurl=18201.asp?CompanyID=" + mid;
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN name="CompanyID" value="PARAM(CompanyID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" label="Markets" class="PageHeading" align="left"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Markets.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+          <WTBUTTON col="1" action="5" value="CONST(View)" default="true"/>
+          <WTBUTTON col="1" value="CONST(NewMarket)">
+            <WTCLICK>NewMarket()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)">
+            <WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" merge="2" value="CONST(Home)" align="center">
+            <WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+            <WTCLICK>window.parent.ShowTab('TabDashboard',1)</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+        <WTSTATIC  label="DuplicateMarket"/>
+
+        <WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Market">
+						<WTCOLUMN width="38" align="left" valign="top" label="MarketName"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Status"/>
+            <WTCOLUMN width="10" align="center" valign="top" label="CreateDate"/>
+            <WTCOLUMN width="10" align="center" valign="top" label="SendDate"/>
+            <WTCOLUMN width="8" align="center" valign="top" label="SendDays"/>
+            <WTCOLUMN width="8" align="center" valign="top" label="Consumers"/>
+            <WTCOLUMN width="8" align="center" valign="top" label="Merchants"/>
+            <WTCOLUMN width="8" align="center" valign="top" label="Orgs"/>
+            <WTROW height="24">
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTSTATIC value="DATA(Market.MarketName)" space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="18203"><WTPARAM name="MarketID" value="DATA(MarketID)"/></WTLINK>
+									</WTIMAGE>
+                  <WTSTATIC space="2"/>
+                  <WTIMAGE value="CONST(Preview.gif)" alt="PreviewMarket" imgalign="absmiddle">
+                    <WTLINK name="18207" target="PreviewMarket">
+                      <WTPARAM name="MarketID" value="DATA(MarketID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                  <WTSTATIC space="2"/>
+                  <WTIMAGE value="CONST(Copy.gif)" alt="DuplicateMarket" imgalign="absmiddle">
+                    <WTLINK name="18203">
+                      <WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+                      <WTPARAM name="CopyID" value="DATA(MarketID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Status)"/>
+              <WTSTATIC col="3" value="DATA(CreateDate)"/>
+              <WTSTATIC col="4" value="DATA(SendDate)"/>
+              <WTSTATIC col="5" value="DATA(SendDays)"/>
+              <WTSTATIC col="6" value="DATA(Consumers)"/>
+              <WTSTATIC col="7" value="DATA(Merchants)"/>
+              <WTSTATIC col="8" value="DATA(Orgs)"/>
+            </WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="8" fontcolor="gray">
+								<WTSTATIC space="5"/>
+								<WTSTATIC tag="Target"/>
+                <WTSTATIC value="DATA(Target)"/>
+              </WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+ 		<!--============================================================================================-->
+		<WTWEBPAGE name="18203" caption="Market" header="false" footer="false" navbar="false" wrapper="wrapper800"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--============================================================================================-->
+			<WTPARAM name="MarketID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="CopyID" datatype="number"/>
+
+      <WTINCLUDE name="Comm.asp"/>
+      <WTINCLUDE name="MarketMerchants.asp"/>
+
+      <WTCODEGROUP>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(NEXXUS)"/>
+			</WTCODEGROUP>
+
+      <WTSUB name="LoadLists">
+				<WTOBJECT name="Countrys" project="ptsCountryUser" class="CCountrys">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCountrys" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+      <WTSUB name="AddMarket">
+				<WTCALLSUB name="LoadLists"/>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(CopyID)" oper="equal" value="0"/>
+          <WTSETATTRIBUTE name="CONST(tmpName)" value="CONST(&quot;Test Market&quot;)"/>
+          <WTSETATTRIBUTE name="CONST(tmpFrom)" value="CONST(&quot;support@nexxusrewards.com&quot;)"/>
+          <WTSETATTRIBUTE name="CONST(tmpSubject)" value="CONST(&quot;Nexxus Rewards for {firstname}&quot;)"/>
+          <WTSETATTRIBUTE name="CONST(tmpCountryID)" value="CONST(224)"/>
+          <WTSETATTRIBUTE name="CONST(tmpTarget)" value="CONST(&quot;&quot;)"/>
+          <WTSETATTRIBUTE name="CONST(tmpTestEmail)" value="CONST(&quot;&quot;)"/>
+        </WTCODEGROUP>
+        <WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTCONDITION expr="PARAM(CopyID)" oper="not-equal" value="0"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MarketID" direction="input" value="PARAM(CopyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpName)" value="ATTR(MarketName)"/>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(FromEmail)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSubject)" value="ATTR(Subject)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCountryID)" value="ATTR(CountryID)"/>
+          <WTSETATTRIBUTE name="CONST(tmpTarget)" value="ATTR(Target)"/>
+					<WTSETATTRIBUTE name="CONST(tmpTestEmail)" value="ATTR(TestEmail)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MarketID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(MarketName)" value="CONST(tmpName)"/>
+					<WTSETATTRIBUTE name="ATTR(FromEmail)" value="CONST(tmpFrom)"/>
+					<WTSETATTRIBUTE name="ATTR(Subject)" value="CONST(tmpSubject)"/>
+          <WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(MARKET-SETUP)"/>
+          <WTSETATTRIBUTE name="ATTR(CountryID)" value="CONST(tmpCountryID)"/>
+          <WTSETATTRIBUTE name="ATTR(Target)" value="CONST(tmpTarget)"/>
+          <WTSETATTRIBUTE name="ATTR(CreateDate)" value="SYS(Date)"/>
+          <WTSETATTRIBUTE name="ATTR(SendDate)" value="SYS(Date)"/>
+          <WTSETATTRIBUTE name="ATTR(SendDays)" value="CONST(7)"/>
+          <WTSETATTRIBUTE name="ATTR(TestEmail)" value="CONST(tmpTestEmail)"/>
+          <WTMETHOD name="Add">
+						<WTPARAM name="reqMarketID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMarket" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+        <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+          <WTCONDITION expr="PARAM(CopyID)" oper="not-equal" value="0"/>
+          <WTSETATTRIBUTE name="ATTR(FileName)" value="PARAM(CopyID)"/>
+          <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; &amp; reqCompanyID &amp; &quot;/Market/&quot;)"/>
+          <WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+          <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+          <WTMETHOD name="Load"/>
+          <WTSETATTRIBUTE name="ATTR(FileName)" value="PARAM(MarketID)"/>
+          <WTMETHOD name="Save"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+			<WTSUB name="LoadMarket">
+				<WTCALLSUB name="LoadLists"/>
+				<WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MarketID" direction="input" value="PARAM(MarketID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(Market.CompanyID)">
+						<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="0"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMarket" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+        <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+          <WTSETATTRIBUTE name="ATTR(FileName)" value="PARAM(MarketID)"/>
+          <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; &amp; reqCompanyID &amp; &quot;/Market/&quot;)"/>
+          <WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+          <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+          <WTMETHOD name="Load"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+			<WTSUB name="SaveMarket">
+        <WTSETATTRIBUTE name="CONST(tmpTarget)" value="FORM(Target)"/>
+        <WTSETATTRIBUTE name="CONST(tmpCountryID)" value="FORM(CountryID)"/>
+        <WTOBJECT name="Consumer" project="ptsConsumerUser" class="CConsumer">
+          <WTMETHOD name="CountMarketEmail">
+            <WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+            <WTPARAM name="Target" direction="input" value="CONST(tmpTarget)"/>
+            <WTPARAM name="CountryID" direction="input" value="CONST(tmpCountryID)"/>
+            <WTPARAM name="tmpConsumers" direction="return" datatype="number"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Merchant" project="ptsMerchantUser" class="CMerchant">
+          <WTMETHOD name="CountMarket">
+            <WTPARAM name="Target" direction="input" value="CONST(tmpTarget)"/>
+            <WTPARAM name="CountryID" direction="input" value="CONST(tmpCountryID)"/>
+            <WTPARAM name="tmpResults" direction="return" datatype="text"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              a = split(tmpResults, "|")
+              tmpMerchants = a(0)
+              tmpOrgs = a(1)
+            </WTCUSTOM>
+          </WTCODEGROUP>
+        </WTOBJECT>
+				<WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MarketID" direction="input" value="PARAM(MarketID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTSETATTRIBUTE name="ATTR(Consumers)" value="CONST(tmpConsumers)"/>
+          <WTSETATTRIBUTE name="ATTR(Merchants)" value="CONST(tmpMerchants)"/>
+          <WTSETATTRIBUTE name="ATTR(Orgs)" value="CONST(tmpOrgs)"/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(Market.CompanyID)"/>
+					<WTSETATTRIBUTES/>
+          <WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsErrors"/>
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlMarket" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+						<WTCALLSUB name="LoadMarket"/>
+					</WTCODEGROUP>
+				</WTOBJECT>
+        <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+          <WTCONDITION expr="NoErrors"/>
+          <WTSETATTRIBUTE name="ATTR(FileName)" value="PARAM(MarketID)"/>
+          <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; &amp; reqCompanyID &amp; &quot;/Market/&quot;)"/>
+          <WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+          <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+          <WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+          <WTMETHOD name="Save"/>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadMarket">
+					<WTCONDITION expr="PARAM(MarketID)" oper="not-equal" value="0"/>
+				</WTCALLSUB>
+				<WTCALLSUB name="AddMarket">
+					<WTCONDITION expr="PARAM(MarketID)" oper="equal" value="0"/>
+				</WTCALLSUB>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="SaveMarket"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MarketID" direction="input" value="PARAM(MarketID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsErrors"/>
+					<WTCALLSUB name="LoadMarket"/>
+				</WTCODEGROUP>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="TestMarket" type="Update">
+				<WTSETATTRIBUTE name="CONST(tmpEmail)" value="FORM(TestEmail)"/>
+        <WTCALLSUB name="SaveMarket"/>
+        <WTCALLSUB name="LoadMarket"/>
+        <WTCODEGROUP>
+					<WTCONDITION expr="CONST(tmpEmail)" oper="equal" value="CONST(&quot;&quot;)"/>
+					<WTERROR number="10007" message="Please enter a test market email address."/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(tmpEmail)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+          <WTSETATTRIBUTE name="CONST(tmpData)" value="FORM(Data)"/>
+          <WTSETATTRIBUTE name="CONST(tmpTarget)" value="FORM(Target)"/>
+          <WTSETATTRIBUTE name="CONST(tmpCountryID)" value="FORM(CountryID)"/>
+<WTCUSTOM>
+  GetMerchants tmpTarget, tmpCountryID, tmpFeatured, tmpNew, tmpMerchants, tmpOrgs
+</WTCUSTOM>
+</WTCODEGROUP>
+          <WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+						<WTMETHOD name="Load">
+							<WTPARAM name="MarketID" direction="input" value="PARAM(MarketID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlMarket" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(tmpTo)" value="CONST(tmpEmail)"/>
+						<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(FromEmail)"/>
+						<WTSETATTRIBUTE name="CONST(tmpSender)" value="CONST(tmpFrom)"/>
+						<WTCUSTOM>
+							If InStr(tmpTo, "@") &gt; 0 Then
+              If InStr(tmpFrom, "@") = 0 Then tmpFrom = tmpTo
+              tmpSubject = Replace( .Subject, "{firstname}", "Bill" )
+              tmpSubject = Replace( tmpSubject, "{lastname}", "Jones" )
+              tmpBody = Replace( tmpData, "{firstname}", "Bill" )
+              tmpBody = Replace( tmpBody, "{lastname}", "Jones" )
+              tmpBody = Replace( tmpBody, "{id}", "0" )
+              tmpBody = Replace( tmpBody, "{email}", .TestEmail )
+              tmpBody = Replace( tmpBody, "{memberid}", "0" )
+
+              tmpBody = Replace( tmpBody, "{featured-merchants}", tmpFeatured )
+              tmpBody = Replace( tmpBody, "{new-merchants}", tmpNew )
+              tmpBody = Replace( tmpBody, "{orgs}", tmpOrgs )
+              tmpBody = Replace( tmpBody, "{merchants}", tmpMerchants )
+
+              SendEmail reqCompanyID, tmpSender, tmpFrom, tmpTo, "", "", tmpSubject, tmpBody
+              End If
+            </WTCUSTOM>
+					</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="6" name="PreviewMarket" type="Update">
+        <WTCALLSUB name="SaveMarket"/>
+        <WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="18207" return="false">
+						<WTPARAM name="MarketID" value="PARAM(MarketID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+      <WTACTION id="7" name="SendMarket" type="Update">
+        <WTCALLSUB name="SaveMarket"/>
+        <WTHTTP>
+          <WTCONDITION expr="NoErrors"/>
+          <WTLINK name="18206">
+            <WTPARAM name="MarketID" value="PARAM(MarketID)"/>
+          </WTLINK>
+        </WTHTTP>
+        <WTRETURN/>
+      </WTACTION>
+
+      <WTACTION id="8" name="Refresh" type="Update">
+        <WTCALLSUB name="SaveMarket"/>
+        <WTCALLSUB name="LoadMarket"/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="right"/>
+				<WTCOLUMN width="650" align="left"/>
+
+        <WTROW>
+					<WTHIDDEN value="PARAM(MarketID)"/>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+        </WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Market" value="ATTR(Market.MarketName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="MarketText" align="left" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="MarketName"/>
+					<WTTEXT col="2" value="ATTR(Market.MarketName)" size="60"/>
+				</WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="CountryID"/>
+          <WTCOMBO col="2" value="ATTR(Market.CountryID)" datapath="/DATA/TXN/PTSCOUNTRYS/ENUM" setselected="true"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Target" valign="top"/>
+          <WTMEMO col="2" align="left" value="ATTR(Market.Target)" cols="60" rows="2"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" merge="2" align="center">
+            <WTCONDITION expr="ATTR(Market.Status)" oper="greater" value="CONST(2)"/>
+            <WTSTATIC tag="Consumers" value="ATTR(Market.Consumers)" space="3"/>
+            <WTSTATIC tag="Merchants" value="ATTR(Market.Merchants)" space="3"/>
+            <WTSTATIC tag="Orgs" value="ATTR(Market.Orgs)"/>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="FromEmail"/>
+					<WTTEXT col="2" value="ATTR(Market.FromEmail)" size="60"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" tag="Subject"/>
+					<WTTEXT col="2" value="ATTR(Market.Subject)" size="60"/>
+				</WTROW>
+
+        <WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="MessageText" align="left" class="prompt"/>
+				</WTROW>
+        <WTROW margin-bottom="6">
+          <WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="72" rows="20" htmleditor="true" embedhtml="true"/>
+        </WTROW>
+
+        <WTROW>
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(Market.Status)"/>
+          <WTSTATIC col="2" tag="SendDate"/>
+          <WTTEXT col="2" value="ATTR(Market.SendDate)" prespace="false"/>
+          <WTSTATIC col="2" tag="SendDays"/>
+          <WTTEXT col="2" value="ATTR(Market.SendDays)" size="2" prespace="false"/>
+        </WTROW>
+
+        <WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="PreviewText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TestEmail"/>
+					<WTTEXT col="2" value="ATTR(Market.TestEmail)"/>
+				</WTROW>
+
+				<WTROW margin-top="12">
+          <WTBUTTON col="1" merge="2" action="6" value="CONST(Preview)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="5" value="CONST(TestEmail)" msg="ConfirmPreview" align="center"/>
+          <WTBUTTON col="1" merge="2" action="7" value="CONST(Send)" align="center" msg="ConfirmSend"/>
+        </WTROW>
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)"  align="center" msg="ConfirmDelete"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--==================================================================================================-->
+		<WTWEBPAGE name="18206" worker="true" aspstyle="GenerateWebASP.xsl">
+		<!--==================================================================================================-->
+			<WTPARAM name="MarketID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+      <WTINCLUDE name="MarketMerchants.asp"/>
+
+      <WTCODEGROUP>
+				<WTCONDITION expr="PARAM(MarketID)" oper="equal" value="CONST(0)"/>
+				<WTCUSTOM>Response.Write "Missing MarketID"</WTCUSTOM>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(NEXXUS)"/>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCOMMENT>Insure that the first test for a valid email passes</WTCOMMENT>
+				<WTSETATTRIBUTE name="CONST(tmpTo)" value="CONST(&quot;@&quot;)"/>
+				<WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MarketID" direction="input" value="PARAM(MarketID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(Market.CompanyID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(Market.FromEmail)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSubject)" value="ATTR(Market.Subject)"/>
+          <WTSETATTRIBUTE name="CONST(tmpTarget)" value="ATTR(Market.Target)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCountryID)" value="ATTR(Market.CountryID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMarket" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+        <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+          <WTSETATTRIBUTE name="ATTR(FileName)" value="PARAM(MarketID)"/>
+          <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; &amp; reqCompanyID &amp; &quot;/Market/&quot;)"/>
+          <WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+          <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+          <WTMETHOD name="Load"/>
+          <WTSETATTRIBUTE name="CONST(tmpBody)" value="ATTR(Data)"/>
+        </WTOBJECT>
+        <WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Company.Email3)"/>
+				</WTOBJECT>
+				<WTCUSTOM>
+          GetMerchants tmpTarget, tmpCountryID, tmpFeatured, tmpNew, tmpMerchants, tmpOrgs
+          tmpBody = Replace( tmpBody, "{featured-merchants}", tmpFeatured )
+          tmpBody = Replace( tmpBody, "{new-merchants}", tmpNew )
+          tmpBody = Replace( tmpBody, "{orgs}", tmpOrgs )
+          tmpBody = Replace( tmpBody, "{merchants}", tmpMerchants )
+
+          tmpMasterSubject = tmpSubject
+          tmpMasterBody = tmpBody
+          tmpCount = 0
+
+          If InStr(tmpFrom, "@")=0 Then tmpFrom = ""
+          If tmpFrom &lt;&gt; "" Then
+          Set oMail = server.CreateObject("CDO.Message")
+          If oMail Is Nothing Then Response.Write "Unable to Create Object - CDO.Message"
+          With oMail
+          .Sender = tmpSender
+          .From = tmpFrom
+          End With
+
+          Set oConsumers = server.CreateObject("ptsConsumerUser.CConsumers")
+          If oConsumers Is Nothing Then
+          DoError Err.Number, Err.Source, "Unable to Create Object - ptsConsumerUser.CConsumers"
+          Else
+          With oConsumers
+          .SysCurrentLanguage = reqSysLanguage
+          .ListMarketEmail reqCompanyID, tmpTarget, tmpCountryID
+          If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description
+
+          For Each oConsumer in oConsumers
+          With oConsumer
+          tmpTo = .Email
+          tmpSubject = Replace( tmpMasterSubject, "{firstname}", .NameFirst )
+          tmpSubject = Replace( tmpSubject, "{lastname}", .NameLast )
+          tmpBody = Replace( tmpMasterBody, "{firstname}", .NameFirst )
+          tmpBody = Replace( tmpBody, "{lastname}", .NameLast )
+          tmpBody = Replace( tmpBody, "{id}", .ConsumerID )
+          tmpBody = Replace( tmpBody, "{email}", tmpTo )
+          tmpBody = Replace( tmpBody, "{memberid}", .MemberID )
+          End With
+          If InStr(tmpTo, &quot;@&quot;) &gt; 0 Then
+										tmpCount = tmpCount + 1
+										With oMail
+											.To = tmpTo
+											.Subject = tmpSubject
+											.HTMLBody = tmpBody
+											.Send
+										End With
+									End If
+								Next
+							End With
+						End If	
+						Set oConsumers = Nothing
+						Set oMail = Nothing
+					End If
+				</WTCUSTOM>
+				
+				<WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MarketID" direction="input" value="PARAM(MarketID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(SendDate)" value="DateAdd(&quot;d&quot;,.SendDays, .SendDate)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+		</WTWEBPAGE>
+
+		<!--==================================================================================================-->
+		<WTWEBPAGE name="18207" type="Market Preview" header="false" footer="false" navbar="false" wrapper="wrapper1000"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================================================-->
+			<WTPARAM name="MarketID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+      <WTINCLUDE name="MarketMerchants.asp"/>
+
+      <WTCODEGROUP>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(NEXXUS)"/>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+        <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+          <WTSETATTRIBUTE name="ATTR(FileName)" value="PARAM(MarketID)"/>
+          <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Company/&quot; &amp; reqCompanyID &amp; &quot;/Market/&quot;)"/>
+          <WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+          <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+          <WTMETHOD name="Load"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Market" project="ptsMarketUser" class="CMarket">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MarketID" direction="input" value="PARAM(MarketID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpTarget)" value="ATTR(Target)"/>
+          <WTSETATTRIBUTE name="CONST(tmpCountryID)" value="ATTR(CountryID)"/>
+          <WTCODEGROUP>
+					<WTCUSTOM>
+            .Subject = Replace( .Subject, "{firstname}", "Bill" )
+            .Subject = Replace( .Subject, "{lastname}", "Jones" )
+            xmlHTMLFile = Replace( xmlHTMLFile, "{firstname}", "Bill" )
+            xmlHTMLFile = Replace( xmlHTMLFile, "{lastname}", "Jones" )
+            xmlHTMLFile = Replace( xmlHTMLFile, "{id}", "0" )
+            xmlHTMLFile = Replace( xmlHTMLFile, "{email}", .TestEmail )
+            xmlHTMLFile = Replace( xmlHTMLFile, "{memberid}", "0" )
+          </WTCUSTOM>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+						<WTPARAM name="xmlMarket" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCODEGROUP>
+<WTCUSTOM>
+  GetMerchants tmpTarget, tmpCountryID, tmpFeatured, tmpNew, tmpMerchants, tmpOrgs
+  xmlHTMLFile = Replace( xmlHTMLFile, "{featured-merchants}", tmpFeatured )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{new-merchants}", tmpNew )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{orgs}", tmpOrgs )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{merchants}", tmpMerchants )
+</WTCUSTOM>
+</WTCODEGROUP>
+
+      </WTACTION>
+
+			<WTACTION id="1" name="Return" type="New">
+				<WTRETURN>
+					<WTLINK name="18203" skipreturn="true">
+						<WTPARAM name="MarketID" value="PARAM(MarketID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="75" align="right"/>
+				<WTCOLUMN width="675" align="left"/>
+
+        <WTROW margin-top="12" margin-bottom="6">
+					<WTSTATIC col="1" tag="From"/>
+					<WTSTATIC col="2" value="ATTR(Market.FromEmail)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="To"/>
+					<WTSTATIC col="2" value="ATTR(Market.TestEmail)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Subject"/>
+					<WTSTATIC col="2" value="ATTR(Market.Subject)" bold="true"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" value="ATTR(HTMLFile.Data)" align="left" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,17 @@
+EXEC [dbo].pts_CheckTable 'CloudZow'
+ GO
+
+CREATE TABLE [dbo].[CloudZow] (
+   [CloudZowID] int IDENTITY (1,1) NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[CloudZow] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[CloudZow] WITH NOCHECK ADD
+   CONSTRAINT [PK_CloudZow] PRIMARY KEY NONCLUSTERED
+   ([CloudZowID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

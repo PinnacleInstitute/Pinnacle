@@ -1,0 +1,164 @@
+<xsl:template match="REPORTS">
+<!--	<xsl:variable name="cr" select="'&#010;'"/>-->
+	<xsl:variable name="cr" select="'&lt;BR&gt;'"/>
+<xsl:value-of select="concat( 'testing... ', $cr)"/>
+
+	<!--TEST valid attributes-->
+	<xsl:for-each select="@*">
+		<xsl:choose>
+			<xsl:when test="name()='source'"/>
+			<xsl:when test="name()='language'"/>
+			<xsl:when test="name()='path'"/>
+			<xsl:otherwise><xsl:value-of select="concat( 'Invalid REPORTS Attribute (', name(), ')', $cr)"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:for-each>
+
+	<!--TEST each REPORT-->
+	<xsl:for-each select="REPORT">
+		<xsl:variable name="reportname" select="@name"/>
+
+		<!--TEST valid attributes-->
+		<xsl:for-each select="@*">
+			<xsl:choose>
+				<xsl:when test="name()='id'"/>
+				<xsl:when test="name()='name'"/>
+				<xsl:when test="name()='type'"/>
+				<xsl:when test="name()='secure'"/>
+				<xsl:when test="name()='option'"/>
+				<xsl:when test="name()='source'"/>
+				<xsl:when test="name()='language'"/>
+				<xsl:when test="name()='path'"/>
+				<xsl:when test="name()='xsl'"/>
+				<xsl:when test="name()='desc'"/>
+				<xsl:when test="name()='align'"/>
+				<xsl:when test="name()='grid'"/>
+				<xsl:when test="name()='header'"/>
+				<xsl:when test="name()='chart'"/>
+				<xsl:when test="name()='width'"/>
+				<xsl:when test="name()='height'"/>
+				<xsl:when test="name()='title'"/>
+				<xsl:when test="name()='xtitle'"/>
+				<xsl:when test="name()='ytitle'"/>
+	 			<xsl:when test="name()='transform'"/>
+				<xsl:otherwise><xsl:value-of select="concat( 'Invalid REPORT Attribute (', $reportname, ':', name(), ')', $cr)"/></xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="not(@id)">
+				<xsl:value-of select="concat( 'Required id attribute (', $reportname, ')', $cr)"/>
+			</xsl:if>
+			<xsl:if test="not(@name)">
+				<xsl:value-of select="concat( 'Required name attribute (', $reportname, ')', $cr)"/>
+			</xsl:if>
+			<xsl:if test="not(@type)">
+				<xsl:value-of select="concat( 'Required type attribute (', $reportname, ')', $cr)"/>
+			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="@type='system'"/>
+				<xsl:when test="@type='company'"/>
+				<xsl:when test="@type='member'"/>
+				<xsl:otherwise><xsl:value-of select="concat( 'Invalid type attribute value (', $reportname, ':', @type, ')', $cr)"/></xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="@align='left'"/>
+				<xsl:when test="@align='center'"/>
+				<xsl:when test="@align='right'"/>
+				<xsl:otherwise><xsl:value-of select="concat( 'Invalid align attribute value (', $reportname, ':', @align, ')', $cr)"/></xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="@header='false'"/>
+				<xsl:otherwise><xsl:value-of select="concat( 'Invalid header attribute value (', $reportname, ':', @header, ')', $cr)"/></xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="@chart='pie'"/>
+				<xsl:when test="@chart='bar'"/>
+				<xsl:when test="@chart='line'"/>
+				<xsl:when test="@chart='area'"/>
+				<xsl:otherwise><xsl:value-of select="concat( 'Invalid align attribute value (', $reportname, ':', @chart, ')', $cr)"/></xsl:otherwise>
+			</xsl:choose>
+			
+			<!--TEST PARAM-->
+			<xsl:for-each select="PARAM/@*">
+				<xsl:variable name="paramname" select="@name"/>
+				<xsl:choose>
+					<xsl:when test="name()='name'"/>
+					<xsl:when test="name()='type'"/>
+					<xsl:when test="name()='init'"/>
+					<xsl:when test="name()='required'"/>
+					<xsl:otherwise><xsl:value-of select="concat( 'Invalid PARAM Attribute (', $reportname, ':', $paramname, ':', name(), ')', $cr)"/></xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="not(@name)">
+					<xsl:value-of select="concat( 'Required name attribute (', $reportname, ':', $paramname, ')', $cr)"/>
+				</xsl:if>
+				<xsl:if test="not(@type)">
+					<xsl:value-of select="concat( 'Required type attribute (', $reportname, ':', $paramname, ')', $cr)"/>
+				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="@type='system'"/>
+					<xsl:when test="@type='date'"/>
+					<xsl:when test="@type='text'"/>
+					<xsl:when test="@type='list'"/>
+					<xsl:otherwise><xsl:value-of select="concat( 'Invalid type attribute value (', $reportname, ':', $paramname, ':', @type, ')', $cr)"/></xsl:otherwise>
+				</xsl:choose>
+
+				<xsl:for-each select="OPTION/@*">
+					<xsl:variable name="optionname" select="@name"/>
+					<xsl:choose>
+						<xsl:when test="name()='id'"/>
+						<xsl:when test="name()='name'"/>
+						<xsl:otherwise><xsl:value-of select="concat( 'Invalid OPTION Attribute (', $reportname, ':', $paramname, ':', $optionname, ':', name(), ')', $cr)"/></xsl:otherwise>
+					</xsl:choose>
+					<xsl:if test="not(@id)">
+						<xsl:value-of select="concat( 'Required id attribute (', $reportname, ':', $paramname, ':', $optionname, ')', $cr)"/>
+					</xsl:if>
+					<xsl:if test="not(@name)">
+						<xsl:value-of select="concat( 'Required name attribute (', $reportname, ':', $paramname, ':', $optionname, ')', $cr)"/>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:for-each>
+			
+			<!--TEST COLUMN-->
+			<xsl:for-each select="COLUMN/@*">
+				<xsl:variable name="columnname" select="@name"/>
+				<xsl:choose>
+					<xsl:when test="name()='name'"/>
+					<xsl:when test="name()='width'"/>
+					<xsl:when test="name()='align'"/>
+					<xsl:otherwise><xsl:value-of select="concat( 'Invalid COLUMN Attribute (', $reportname, ':', $columnname, ':', name(), ')', $cr)"/></xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="not(@name)">
+					<xsl:value-of select="concat( 'Required name attribute (', $reportname, ':', $columnname, ')', $cr)"/>
+				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="@align='left'"/>
+					<xsl:when test="@align='center'"/>
+					<xsl:when test="@align='right'"/>
+					<xsl:otherwise><xsl:value-of select="concat( 'Invalid align attribute value (', $reportname, ':', $columnname, ':', @align, ')', $cr)"/></xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+			
+			<!--TEST TOTAL-->
+			<xsl:for-each select="TOTAL/@*">
+				<xsl:variable name="totalname" select="@name"/>
+				<xsl:choose>
+					<xsl:when test="name()='name'"/>
+					<xsl:when test="name()='type'"/>
+					<xsl:otherwise><xsl:value-of select="concat( 'Invalid TOTAL Attribute (', $reportname, ':', $totalname, ':', name(), ')', $cr)"/></xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="not(@name)">
+					<xsl:value-of select="concat( 'Required name attribute (', $reportname, ':', $totalname, ')', $cr)"/>
+				</xsl:if>
+				<xsl:if test="not(@type)">
+					<xsl:value-of select="concat( 'Required type attribute (', $reportname, ':', $totalname, ')', $cr)"/>
+				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="@type='count'"/>
+					<xsl:when test="@type='sum'"/>
+					<xsl:otherwise><xsl:value-of select="concat( 'Invalid align attribute value (', $reportname, ':', $totalname, ':', @type, ')', $cr)"/></xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		
+		</xsl:for-each>
+
+	</xsl:for-each>
+		
+</xsl:template>
+

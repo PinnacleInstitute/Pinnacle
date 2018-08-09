@@ -1,0 +1,229 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle" language="false">
+	<WTENTITY id="99" name="Audit" alias="adt" audit="false" title="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="9901" name="AuditID" type="number" identity="true" min="1" required="true" source="entity"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="9902" name="AuthUserID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="9903" name="NameFirst" type="text" length="30" source="join">
+			<WTJOIN entity="AuthUser" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9904" name="NameLast" type="text" length="30" source="join">
+			<WTJOIN entity="AuthUser" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9905" name="UserName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameLast"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9906" name="UserGroup" type="text" length="80" source="join">
+			<WTJOIN entity="AuthUser" name="UserGroup"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="9910" name="AuditDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mm am/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9911" name="Action" type="number" source="entity"/>
+		<WTATTRIBUTE id="9912" name="Page" type="text" length="100" min="1" max="100" source="entity" language="false"/>
+		<WTATTRIBUTE id="9913" name="IP" type="text" length="16" min="1" max="16" source="entity" language="false"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="9990" name="ToDate" type="date" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="AuditDate">
+			<WTATTRIBUTE name="AuditDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Audit" entity="Audit" alias="adt"/>
+			<WTRELATIONSHIP name="Common" entity="Audit" alias="adt">
+				<WTENTITY name="AuthUser" entity="AuthUser" alias="au">
+					<WTATTRIBUTE alias="adt" name="AuthUserID" relalias="au" relname="AuthUserID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="UserName" default="true"/>
+			<WTATTRIBUTE name="Page" contains="true"/>
+			<WTATTRIBUTE name="IP" contains="true"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(AuditDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Audit.AuditDate)" oper="greater-equal" value="PARAM(AuditDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Audit.AuditDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindAction" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(Action)" direction="input"/>
+			<WTPARAM name="ATTR(AuditDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Audit.AuditDate)" oper="greater-equal" value="PARAM(AuditDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Audit.AuditDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Audit.Action)" oper="equal" value="PARAM(Action)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+	    <!--============================================================================================-->
+		<WTWEBPAGE name="9901" caption="Find" action="5" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secure="1">
+		<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Action" datatype="text"/>
+
+      <WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(UserName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(FromDate)" value="CONST(DateAdd(&quot;m&quot;, -1, reqToDate))"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Audits" project="ptsAuditUser" class="CAudits">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAudits" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTSETATTRIBUTE name="CONST(tmpToDate)" value="CONST(DateAdd(&quot;d&quot;,1,reqToDate))"/>
+			<WTOBJECT name="Audits" project="ptsAuditUser" class="CAudits">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(Action)" oper="equal" value="CONST(&quot;&quot;)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindAction">
+					<WTCONDITION expr="PARAM(Action)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="Action" direction="input" value="PARAM(Action)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="CONST(tmpToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlAudits" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="FindAudit" align="left" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Audits.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="15" focus="true" prespace="false"/>
+					<WTSTATIC col="1" tag="Action" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(Action)" size="1" prespace="false"/>
+					<WTSTATIC col="1" tag="From" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" size="8" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" size="8" type="date" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+					<WTBUTTON col="1" action="3" value="CONST(Close)" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Audit">
+						<WTCOLUMN width="15" align="left" label="AuditDate"/>
+						<WTCOLUMN width="15" align="left" label="UserName"/>
+						<WTCOLUMN width="6" align="center" label="UserGroup"/>
+						<WTCOLUMN width="6" align="center" label="Action"/>
+						<WTCOLUMN width="46" align="left" label="Page"/>
+						<WTCOLUMN width="12" align="left" label="IP"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Audit.AuditDate)"/>
+							<WTSTATIC col="2" value="DATA(Audit.UserName)"/>
+							<WTSTATIC col="3" value="DATA(Audit.UserGroup)"/>
+							<WTSTATIC col="4" value="DATA(Audit.Action)"/>
+							<WTSTATIC col="5" value="DATA(Audit.Page)"/>
+							<WTSTATIC col="5" value="DATA(Audit.IP)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

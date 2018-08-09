@@ -1,0 +1,17 @@
+EXEC [dbo].pts_CheckTable 'Zazzed'
+ GO
+
+CREATE TABLE [dbo].[Zazzed] (
+   [ZazzedID] int IDENTITY (1,1) NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Zazzed] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[Zazzed] WITH NOCHECK ADD
+   CONSTRAINT [PK_Zazzed] PRIMARY KEY NONCLUSTERED
+   ([ZazzedID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

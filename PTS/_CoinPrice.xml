@@ -1,0 +1,417 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="166" name="CoinPrice" alias="cpr" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="16601" name="CoinPriceID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Attributes-->
+    <WTATTRIBUTE id="16603" name="Coin" type="number" title="true" source="entity">
+      <WTENUM id="1" name="Coin1"/>
+      <WTENUM id="2" name="Coin2"/>
+      <WTENUM id="3" name="Coin3"/>
+      <WTENUM id="4" name="Coin4"/>
+      <WTENUM id="5" name="Coin5"/>
+      <WTENUM id="6" name="Coin6"/>
+      <WTENUM id="7" name="Coin7"/>
+      <WTENUM id="8" name="Coin8"/>
+      <WTENUM id="9" name="Coin9"/>
+      <WTENUM id="10" name="Coin10"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16604" name="Source" type="number" source="entity">
+      <WTENUM id="1" name="Source1"/>
+      <WTENUM id="2" name="Source2"/>
+      <WTENUM id="3" name="Source3"/>
+      <WTENUM id="4" name="Source4"/>
+      <WTENUM id="5" name="Source5"/>
+      <WTENUM id="6" name="Source6"/>
+      <WTENUM id="7" name="Source7"/>
+      <WTENUM id="8" name="Source8"/>
+      <WTENUM id="9" name="Source9"/>
+      <WTENUM id="10" name="Source10"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16605" name="Price" type="currency" source="entity">
+      <WTFORMAT value="###,##0.0000"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16606" name="PriceDate" type="date" source="entity">
+      <WTFORMAT value="m-d-yy h:mm:ss am/pm"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16607" name="CurrencyCode" type="text" length="3" source="entity" language="false"/>
+    <WTATTRIBUTE id="16608" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Default"/>
+      <WTENUM id="2" name="Active"/>
+      <WTENUM id="3" name="Inactive"/>
+    </WTATTRIBUTE>
+
+    <WTINDEX name="Coin">
+      <WTATTRIBUTE name="Coin"/>
+      <WTATTRIBUTE name="CurrencyCode"/>
+      <WTATTRIBUTE name="Status"/>
+    </WTINDEX>
+
+    <WTINDEX name="Source">
+      <WTATTRIBUTE name="Source"/>
+      <WTATTRIBUTE name="Coin"/>
+      <WTATTRIBUTE name="CurrencyCode"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="CoinPrice" entity="CoinPrice" alias="cpr"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(Coin)" direction="input" required="false" passthru="true"/>
+      <WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CoinPrice.CoinPriceID)"/>
+          <WTATTRIBUTE value="ATTR(CoinPrice.Coin)"/>
+          <WTATTRIBUTE value="ATTR(CoinPrice.Source)"/>
+          <WTATTRIBUTE value="ATTR(CoinPrice.Price)"/>
+          <WTATTRIBUTE value="ATTR(CoinPrice.PriceDate)"/>
+          <WTATTRIBUTE value="ATTR(CoinPrice.CurrencyCode)"/>
+          <WTATTRIBUTE value="ATTR(CoinPrice.Status)"/>
+          <WTJOIN name="CoinPrice"/>
+          <WTCONDITION expr="PARAM(Coin)" oper="equal" value="CONST(0)"/>
+          <WTCONDITION expr="ATTR(Coin)" oper="equal" value="PARAM(Coin)" connector="or"/>
+          <WTORDER name="ATTR(CoinPrice.Coin)"/>
+          <WTORDER name="ATTR(CoinPrice.CurrencyCode)"/>
+          <WTORDER name="ATTR(CoinPrice.Status)"/>
+        </WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="GetPrice" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(Coin)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="ATTR(CurrencyCode)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="Price" direction="output" datatype="currency"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="SetPrice" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(Source)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="ATTR(Coin)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="ATTR(CurrencyCode)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="ATTR(Price)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="Status" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="CalcPrice" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(Coin)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="Status" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="16603" caption="CoinPrice" header="false" footer="false" navbar="false"  wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="1">
+		<!--============================================================================================-->
+      <WTPARAM name="CoinPriceID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="CoinPrice" project="ptsCoinPriceUser" class="CCoinPrice">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoinPriceID" direction="input" value="PARAM(CoinPriceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(CoinPriceID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+						<WTPARAM name="xmlCoinPrice" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="CoinPrice" project="ptsCoinPriceUser" class="CCoinPrice">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoinPriceID" direction="input" value="PARAM(CoinPriceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCoinPrice" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+      <WTACTION id="2" name="Add" type="Add">
+        <WTOBJECT name="CoinPrice" project="ptsCoinPriceUser" class="CCoinPrice">
+          <WTMETHOD name="Load">
+            <WTPARAM name="CoinPriceID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Add">
+            <WTPARAM name="CoinPriceID" direction="return" datatype="number"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlCoinPrice" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+      
+      <WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="CoinPrice" project="ptsCoinPriceUser" class="CCoinPrice">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="CoinPriceID" direction="input" value="PARAM(CoinPriceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="CoinPrice" project="ptsCoinPriceUser" class="CCoinPrice">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoinPriceID" direction="input" value="PARAM(CoinPriceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoinPrice" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+        <WTROW>
+          <WTCONDITION expr="PARAM(CoinPriceID)" oper="equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" label="NewCoinPrice" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW>
+          <WTCONDITION expr="PARAM(CoinPriceID)" oper="not-equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" tag="CoinPrice" value="ATTR(CoinPrice.Coin)" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Coin"/>
+          <WTCOMBO col="2" value="ATTR(CoinPrice.Coin)">
+            <WTOPTION id="1" label="Coin1"/>
+            <WTOPTION id="2" label="Coin2"/>
+            <WTOPTION id="3" label="Coin3"/>
+            <WTOPTION id="4" label="Coin4"/>
+            <WTOPTION id="5" label="Coin5"/>
+            <WTOPTION id="6" label="Coin6"/>
+            <WTOPTION id="7" label="Coin7"/>
+            <WTOPTION id="8" label="Coin8"/>
+            <WTOPTION id="9" label="Coin9"/>
+            <WTOPTION id="10" label="Coin10"/>
+          </WTCOMBO>
+        </WTROW>
+        
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Source"/>
+          <WTCOMBO col="2" value="ATTR(CoinPrice.Source)">
+            <WTOPTION id="1" label="Source1"/>
+            <WTOPTION id="2" label="Source2"/>
+            <WTOPTION id="3" label="Source3"/>
+            <WTOPTION id="4" label="Source4"/>
+            <WTOPTION id="5" label="Source5"/>
+            <WTOPTION id="6" label="Source6"/>
+            <WTOPTION id="7" label="Source7"/>
+            <WTOPTION id="8" label="Source8"/>
+            <WTOPTION id="9" label="Source9"/>
+            <WTOPTION id="10" label="Source10"/>
+          </WTCOMBO>
+        </WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Price"/>
+          <WTTEXT col="2" value="ATTR(CoinPrice.Price)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="PriceDate"/>
+          <WTTEXT col="2" value="ATTR(CoinPrice.PriceDate)" size="15"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="CurrencyCode"/>
+          <WTTEXT col="2" value="ATTR(CoinPrice.CurrencyCode)"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(CoinPrice.Status)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(CoinPriceID)" oper="equal" value="CONST(0)"/>
+          <WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(CoinPriceID)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="16611" caption="CoinPrices" header="false" footer="false" navbar="false" wrapper="wrapper750"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="1251">
+		<!--============================================================================================-->
+      <WTPARAM name="Coin" datatype="number"/>
+
+      <WTSUB name="LoadCoins">
+        <WTOBJECT name="CoinPrices" project="ptsCoinPriceUser" class="CCoinPrices">
+          <WTMETHOD name="List">
+            <WTPARAM name="Coin" direction="input" value="PARAM(Coin)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlCoinPrices" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTCALLSUB name="LoadCoins"/>
+      </WTACTION>
+      
+      <WTACTION name="Calc" type="Update" id="1">
+        <WTOBJECT name="CoinPrice" project="ptsCoinPriceUser" class="CCoinPrice">
+          <WTMETHOD name="CalcPrice">
+            <WTPARAM name="Coin" direction="input" value="CONST(0)"/>
+            <WTPARAM name="Status" direction="return" datatype="number"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTCALLSUB name="LoadCoins"/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+        <WTFUNCTION name="NewCoinPrice()">
+          var url = "16603.asp"
+          window.location = url + "?returnurl=16611.asp"
+        </WTFUNCTION>
+
+        <WTROW height="24">
+          <WTSTATIC col="1" tag="CoinPrices" class="PageHeading" align="center"/>
+          <WTCOMBO col="1" value="PARAM(Coin)">
+            <WTCHANGE>doSubmit(0,"");</WTCHANGE>
+            <WTOPTION id="0" label="All"/>
+            <WTOPTION id="1" label="Coin1"/>
+            <WTOPTION id="2" label="Coin2"/>
+            <WTOPTION id="3" label="Coin3"/>
+            <WTOPTION id="4" label="Coin4"/>
+            <WTOPTION id="5" label="Coin5"/>
+            <WTOPTION id="6" label="Coin6"/>
+            <WTOPTION id="7" label="Coin7"/>
+            <WTOPTION id="8" label="Coin8"/>
+            <WTOPTION id="9" label="Coin9"/>
+            <WTOPTION id="10" label="Coin10"/>
+          </WTCOMBO>
+          <WTBUTTON col="1" action="0" value="CONST(Refresh)" btnclass="smbutton"/>
+          <WTBUTTON col="1" action="1" value="CONST(Recalc)" btnclass="smbutton">
+            <WTCONDITION expr="IsSysAdmin"/>
+          </WTBUTTON>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+					<WTRECORDSET col="1" graybar="true" entity="CoinPrice">
+						<WTCOLUMN width="29" align="left" label="Coin"/>
+            <WTCOLUMN width="8" align="center" label="CurrencyCode"/>
+            <WTCOLUMN width="15" align="center" label="Price"/>
+            <WTCOLUMN width="10" align="left" label="Status"/>
+            <WTCOLUMN width="20" align="left" label="Source"/>
+            <WTCOLUMN width="18" align="left" label="PriceDate"/>
+
+            <WTROW height="36">
+              <WTSTATIC col="1">
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(Coin&lt;xsl:value-of select=&quot;@coin&quot;/&gt;.gif)" imgalign="absmiddle"/>
+                </WTCODEGROUP>
+                <WTSTATIC space="2"/>
+                <WTSTATIC value="DATA(Coin)"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="IsSysAdmin"/>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="16603">
+                      <WTPARAM name="CoinPriceID" value="DATA(CoinPriceID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(CurrencyCode)"/>
+              <WTSTATIC col="3">
+                <WTSTATIC value="DATA(Price)" fontcolor="blue">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Price)">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Price)" fontcolor="red">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="4">
+                <WTSTATIC value="DATA(Status)" fontcolor="blue">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Status)">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Status)" fontcolor="red">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="5" value="DATA(Source)"/>
+              <WTSTATIC col="6" value="DATA(PriceDate)"/>
+            </WTROW>
+          </WTRECORDSET>
+				</WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" value="CONST(NewCoinPrice)" align="center">
+            <WTCONDITION expr="IsSysAdmin"/>
+            <WTCLICK>NewCoinPrice()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+      </WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

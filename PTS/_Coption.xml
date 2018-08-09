@@ -1,0 +1,2790 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="49" name="Coption" alias="cop" log="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="4901" name="CoptionID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="4902" name="CompanyID" type="number" title="true" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="4905" name="InitPrice" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4906" name="Price" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4907" name="Price2" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4908" name="Price3" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4909" name="Discount" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4910" name="Retail" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4911" name="Retail2" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4912" name="Retail3" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4913" name="BusPrice" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4914" name="BusRetail" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4915" name="BusAccts" type="number" source="entity"/>
+		<WTATTRIBUTE id="4916" name="BusAcctPrice" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4917" name="BusAcctRetail" type="currency" source="entity"/>
+
+		<WTATTRIBUTE id="4918" name="IsCatalog" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4919" name="IsDiscount" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4920" name="Billing" type="number" source="entity">
+			<WTENUM id="1" name="BillNone"/>
+			<WTENUM id="2" name="BillCompany"/>
+			<WTENUM id="3" name="BillMember"/>
+			<WTENUM id="5" name="BillManual"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4921" name="CommRate" type="currency" min="-999999.9999" max="999999.9999" source="entity">
+			<WTFORMAT value="###,##0.0000" />
+		</WTATTRIBUTE>
+
+		<WTATTRIBUTE id="4922" name="PromoCode" type="number" source="entity"/>
+		
+		<WTATTRIBUTE id="4923" name="AccessLimit" type="text" length="50" min="1" max="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="4924" name="QuizLimit" type="number" source="entity">
+			<WTENUM id="1" name="NoRetake"/>
+			<WTENUM id="2" name="NoAnswer"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4925" name="MemberLimit" type="number" source="entity"/>
+		<WTATTRIBUTE id="4926" name="TrialDays" type="number" source="entity"/>
+		<WTATTRIBUTE id="4927" name="IsTrialPayment" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4928" name="IsSignIn" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4929" name="IsJoinNow" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4930" name="IsNewEmail" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4931" name="IsBusAcct" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4932" name="IsFree" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4933" name="RefName" type="text" length="20" source="entity"/>
+		<WTATTRIBUTE id="4934" name="NewMemberOrgs" type="text" length="20" source="entity" language="false"/>
+		<WTATTRIBUTE id="4935" name="TBPage" type="text" length="20" source="entity" language="false"/>
+		<WTATTRIBUTE id="4936" name="Languages" type="text" length="200" source="entity" language="false"/>
+		<WTATTRIBUTE id="4937" name="UploadURL" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4938" name="SetupFee" type="currency" source="entity"/>
+		<WTATTRIBUTE id="4939" name="IsSalesDefault" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4940" name="ProjectsDefault" type="number" source="entity">
+			<WTENUM id="1" name="pNone"/>
+			<WTENUM id="2" name="pAssign"/>
+			<WTENUM id="3" name="pSecure"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4941" name="DocSizeLimit" type="number" source="entity"/>
+		<WTATTRIBUTE id="4942" name="FreeOptions" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4943" name="EasyOptions" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4944" name="Options" type="text" length="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="4945" name="Options2" type="text" length="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="4946" name="Options3" type="text" length="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="4947" name="Options4" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4948" name="Options5" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4949" name="Options6" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4950" name="Options7" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4951" name="Options8" type="text" length="40" source="entity" language="false"/>
+		<WTATTRIBUTE id="4952" name="FreeName" type="text" length="40" source="entity"/>
+		<WTATTRIBUTE id="4953" name="PaidName" type="text" length="40" source="entity"/>
+		<WTATTRIBUTE id="4954" name="PaidName2" type="text" length="40" source="entity"/>
+		<WTATTRIBUTE id="4955" name="PaidName3" type="text" length="40" source="entity"/>
+		<WTATTRIBUTE id="4956" name="Identify" type="number" source="entity"/>
+		<WTATTRIBUTE id="4957" name="Identification" type="text" length="500" source="entity"/>
+		<WTATTRIBUTE id="4958" name="MerchantCardType" type="number" source="entity"/>
+		<WTATTRIBUTE id="4959" name="MerchantCheckType" type="number" source="entity"/>
+		<WTATTRIBUTE id="4960" name="MerchantCardAcct" type="text" length="100" source="entity"/>
+		<WTATTRIBUTE id="4961" name="MerchantCheckAcct" type="text" length="100" source="entity"/>
+		<WTATTRIBUTE id="4962" name="WalletType" type="text" length="20" source="entity" language="false"/>
+		<WTATTRIBUTE id="4963" name="WalletAcct" type="text" length="100" source="entity" language="false"/>
+		<WTATTRIBUTE id="4964" name="PayoutProcessors" type="text" length="20" source="entity" language="false"/>
+		<WTATTRIBUTE id="4965" name="PaymentOptions" type="text" length="15" source="entity" language="false"/>
+		<WTATTRIBUTE id="4966" name="MiscPay1" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="4967" name="MiscPay2" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="4968" name="MiscPay3" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="4969" name="IPLimit" type="number" source="entity"/>
+		<WTATTRIBUTE id="4970" name="InputOptions" type="text" length="1000" min="1" max="1000" source="entity"/>
+		<WTATTRIBUTE id="4971" name="GAAcct" type="text" length="50" source="entity" language="false"/>
+		<WTATTRIBUTE id="4972" name="Countries" type="text" length="100" source="entity" language="false"/>
+		<WTATTRIBUTE id="4973" name="MenuColors" type="text" length="200" source="entity" language="false"/>
+		<WTATTRIBUTE id="4974" name="Portal" type="text" length="20" source="entity" language="false"/>
+		<WTATTRIBUTE id="4975" name="Shopping" type="text" length="20" source="entity" language="false"/>
+
+		<!-- Non Persist Fields -->
+		
+		<!--Indexes-->
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Coption" entity="Coption" alias="cop"/>
+			<WTRELATIONSHIP name="Common" entity="Coption" alias="cop"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<!--Procedures-->
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="FetchCompany" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(CoptionID)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PARAM(CoptionID)" value="ATTR(Coption.CoptionID)"/>
+					<WTJOIN name="Coption" lock="false"/>
+					<WTCONDITION expr="ATTR(Coption.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="4903" caption="Company Options" header="false" footer="false" navbar="false" focus="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="23">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+
+      <WTSUB name="LoadCoption">
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>			
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateCoption">
+				<WTSETATTRIBUTE name="PARAM(Status)" value="CONST(1)"/>
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>			
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>	
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadCoption"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Update" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTCALLSUB name="LoadCoption"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="UpdateExit" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTCALLSUB name="LoadCoption"/>
+<!--
+				<WTCALLSUB name="LoadCoption">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+-->				
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="Edit6" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(0)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="Edit7" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="8" name="Edit8" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(2)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="9" name="Edit9" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(3)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="10" name="Edit10" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="11" name="Edit11" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-2)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="12" name="Edit12" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-3)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="13" name="Edit13" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-4)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="14" name="Edit14" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-5)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="15" name="Edit15" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-6)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="TestOptions()">
+					var url, win;
+					url = "5005.asp?companyid=" + document.getElementById('CompanyID').value
+		            win = window.open(url,"TestOptions","top=100,left=100,height=300,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+				</WTROW>
+
+				<WTSTATIC label="IsDiscount"/>
+				<WTSTATIC label="IsTrialPayment"/>
+				<WTSTATIC label="IsNewEmail"/>
+				<WTSTATIC label="IsSignIn"/>
+				<WTSTATIC label="IsJoinNow"/>
+				<WTSTATIC label="IsTraining"/>
+				<WTSTATIC label="IsNewsLetter"/>
+				<WTSTATIC label="IsSales"/>
+				<WTSTATIC label="IsSalesDefault"/>
+				<WTSTATIC label="IsSalesLookup"/>
+				<WTSTATIC label="IsSalesLeads"/>
+				<WTSTATIC label="IsProjects"/>
+				<WTSTATIC label="ProjectsDefault"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC tag="CompanyOptions"/>
+						<WTSTATIC value="ATTR(Coption.CompanyID)" space="1"/>
+						<WTSTATIC label="Updated" fontcolor="red">
+							<WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="IsActive"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" btnclass="smbutton" align="right"/>
+<!--
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(UpdateExit)" btnclass="smbutton" align="right" prespace="false"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" btnclass="smbutton" align="right" prespace="false"/>
+-->					
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="PaidMembershipText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="FreeName"/>
+					<WTTEXT col="2" value="ATTR(Coption.FreeName)" size="40"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="PaidName"/>
+					<WTTEXT col="2" value="ATTR(Coption.PaidName)" size="40"/>
+					<WTTEXT col="2" value="ATTR(Coption.Price)" size="6"/>
+					<WTTEXT col="2" value="ATTR(Coption.Retail)" size="5"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="PaidName2"/>
+					<WTTEXT col="2" value="ATTR(Coption.PaidName2)" size="40"/>
+					<WTTEXT col="2" value="ATTR(Coption.Price2)" size="6"/>
+					<WTTEXT col="2" value="ATTR(Coption.Retail2)" size="5"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="PaidName3"/>
+					<WTTEXT col="2" value="ATTR(Coption.PaidName3)" size="40"/>
+					<WTTEXT col="2" value="ATTR(Coption.Price3)" size="6"/>
+					<WTTEXT col="2" value="ATTR(Coption.Retail3)" size="5"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="OptionsText" space="1"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(CompanyOptions)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				
+				<WTROW>
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="160" align="right"/>
+						<WTCOLUMN width="320" align="left"/>
+						<WTCOLUMN width="60" align="left"/>
+						<WTCOLUMN width="60" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="FreeOptions"/>
+							<WTTEXT col="2" value="ATTR(Coption.FreeOptions)" size="48"/>
+							<WTBUTTON col="3" action="6" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="PaidName"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options)" size="48"/>
+							<WTBUTTON col="3" action="7" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="PaidName2"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options2)" size="48"/>
+							<WTBUTTON col="3" action="8" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="PaidName3"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options3)" size="48"/>
+							<WTBUTTON col="3" action="9" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="AdminOptionsText" space="1"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(CompanyOptions)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="160" align="right"/>
+						<WTCOLUMN width="320" align="left"/>
+						<WTCOLUMN width="60" align="left"/>
+						<WTCOLUMN width="60" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options4"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options4)" size="48"/>
+							<WTBUTTON col="3" action="11" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options5"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options5)" size="48"/>
+							<WTBUTTON col="3" action="12" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options6"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options6)" size="48"/>
+							<WTBUTTON col="3" action="13" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options7"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options7)" size="48"/>
+							<WTBUTTON col="3" action="14" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options8"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options8)" size="48"/>
+							<WTBUTTON col="3" action="15" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="MerchantText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MerchantCardType"/>
+					<WTCOMBO col="2" value="ATTR(Coption.MerchantCardType)">
+						<WTOPTION id="0" label="None"/>
+						<WTOPTION id="1" label="Verisign"/>
+						<WTOPTION id="2" label="PaymentTech"/>
+						<WTOPTION id="6" label="MerchantPartners"/>
+						<WTOPTION id="8" label="AuthorizeNet"/>
+						<WTOPTION id="10" label="PayJunction"/>
+						<WTOPTION id="12" label="FirstData"/>
+						<WTOPTION id="14" label="NMI"/>
+						<WTOPTION id="16" label="MGI"/>
+            <WTOPTION id="5" label="PayPal"/>
+            <WTOPTION id="18" label="ChainCommerce"/>
+            <WTOPTION id="19" label="GPG"/>
+          </WTCOMBO>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MerchantCardAcct"/>
+					<WTMEMO col="2" value="ATTR(Coption.MerchantCardAcct)" rows="2" cols="50"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MerchantCheckType"/>
+					<WTCOMBO col="2" value="ATTR(Coption.MerchantCheckType)">
+						<WTOPTION id="0" label="None"/>
+						<WTOPTION id="99" label="VersaCheck"/>
+						<WTOPTION id="100" label="LegacyTexas"/>
+						<WTOPTION id="3" label="ACHCommerce"/>
+						<WTOPTION id="4" label="PaymentTech"/>
+						<WTOPTION id="7" label="MerchantPartners"/>
+						<WTOPTION id="9" label="AuthorizeNet"/>
+						<WTOPTION id="11" label="PayJunction"/>
+						<WTOPTION id="13" label="FirstData"/>
+						<WTOPTION id="15" label="NMI"/>
+						<WTOPTION id="17" label="MGI"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MerchantCheckAcct"/>
+					<WTMEMO col="2" value="ATTR(Coption.MerchantCheckAcct)" rows="2" cols="50"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="WalletType"/>
+					<WTTEXT col="2" value="ATTR(Coption.WalletType)"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(WalletProcessors)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="WalletAcct"/>
+					<WTMEMO col="2" value="ATTR(Coption.WalletAcct)" rows="3" cols="50"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" tag="PayoutProcessors"/>
+					<WTTEXT col="2" value="ATTR(Coption.PayoutProcessors)"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(WalletProcessors)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Coption.PayoutProcessors)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="PaymentOptions"/>
+					<WTTEXT col="2" value="ATTR(Coption.PaymentOptions)"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(PaymentOptions)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+        <WTROW>
+          <WTSTATIC col="1" tag="SetupFee"/>
+          <WTTEXT col="2" value="ATTR(Coption.SetupFee)" size="6"/>
+        </WTROW>
+        <WTROW>
+					<WTSTATIC col="1" tag="MiscPay1" />
+					<WTTEXT col="2" value="ATTR(Coption.MiscPay1)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MiscPay2" />
+					<WTTEXT col="2" value="ATTR(Coption.MiscPay2)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MiscPay3" />
+					<WTTEXT col="2" value="ATTR(Coption.MiscPay3)" />
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+<!--				
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="HomePageHelp" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Coption.IsSignIn)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Coption.IsJoinNow)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" tag="HomePage"/>
+					<WTTEXT col="2" value="ATTR(Coption.HomePage)"/>
+				</WTROW>
+-->				
+				<WTROW>
+					<WTSTATIC col="1" tag="UploadURL"/>
+					<WTTEXT col="2" value="ATTR(Coption.UploadURL)" size="20" class="prompt"/>
+					<WTSTATIC col="2" label="ActivityTracksText"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TBPage"/>
+					<WTTEXT col="2" value="ATTR(Coption.TBPage)" size="20"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(SalesTeamOptions)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Shopping"/>
+					<WTTEXT col="2" value="ATTR(Coption.Shopping)" size="20"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(ShoppingOptions)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Portal"/>
+					<WTTEXT col="2" value="ATTR(Coption.Portal)" size="20"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="Page" target="Help">
+									<WTPARAM name="Page" value="CONST(PortalOptions)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="GAAcct"/>
+					<WTTEXT col="2" value="ATTR(Coption.GAAcct)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+<!--					
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+-->					
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+<!--					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>-->
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="4903a" caption="Company Options" header="false" footer="false" navbar="false" focus="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="125">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+
+      <WTSUB name="LoadCoption">
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateCoption">
+				<WTSETATTRIBUTE name="PARAM(Status)" value="CONST(1)"/>
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadCoption"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Update" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTCALLSUB name="LoadCoption"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="UpdateExit" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTCALLSUB name="LoadCoption"/>
+				<!--
+				<WTCALLSUB name="LoadCoption">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+-->
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="Edit6" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(0)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="Edit7" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="8" name="Edit8" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(2)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="9" name="Edit9" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(3)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="10" name="Edit10" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="11" name="Edit11" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-2)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="TestOptions()">
+					var url, win;
+					url = "5005.asp?companyid=" + document.getElementById('CompanyID').value
+					win = window.open(url,"TestOptions","top=100,left=100,height=300,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+				</WTROW>
+
+				<WTSTATIC label="IsDiscount"/>
+				<WTSTATIC label="IsTrialPayment"/>
+				<WTSTATIC label="IsNewEmail"/>
+				<WTSTATIC label="IsSignIn"/>
+				<WTSTATIC label="IsJoinNow"/>
+				<WTSTATIC label="IsTraining"/>
+				<WTSTATIC label="IsNewsLetter"/>
+				<WTSTATIC label="IsSales"/>
+				<WTSTATIC label="IsSalesDefault"/>
+				<WTSTATIC label="IsSalesLookup"/>
+				<WTSTATIC label="IsSalesLeads"/>
+				<WTSTATIC label="IsProjects"/>
+				<WTSTATIC label="ProjectsDefault"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC tag="CompanyOptions"/>
+						<WTSTATIC value="ATTR(Coption.CompanyID)" space="1"/>
+						<WTSTATIC label="Updated" fontcolor="red">
+							<WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="IsActive"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" btnclass="smbutton" align="right"/>
+					<!--
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(UpdateExit)" btnclass="smbutton" align="right" prespace="false"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" btnclass="smbutton" align="right" prespace="false"/>
+-->
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CustomFields" align="left"/>
+					<WTBUTTON col="1" value="CONST(Test)" btnclass="smbutton" align="right">
+						<WTCLICK>TestOptions()</WTCLICK>
+					</WTBUTTON>
+					<WTSTATIC col="1" label="SaveFirst" class="prompt" space="2"/>
+					<WTIMAGE col="1" value="CONST(LearnMore.gif)" imgalign="absmiddle">
+						<WTLINK name="Page" target="Help">
+							<WTPARAM name="Page" value="CONST(CustomField)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Coption.InputOptions)" cols="70" rows="10"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="TrialDays"/>
+					<WTTEXT col="2" value="ATTR(Coption.TrialDays)" size="2"/>
+					<WTCHECK col="2" value="ATTR(Coption.IsTrialPayment)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTCHECK col="2" value="ATTR(Coption.IsBusAcct)" label="IsBusAcct"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTCHECK col="2" value="ATTR(Coption.IsFree)" label="IsFree"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="InitPrice"/>
+					<WTTEXT col="2" value="ATTR(Coption.InitPrice)" size="6"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="BusPrice"/>
+					<WTTEXT col="2" value="ATTR(Coption.BusPrice)" size="4" prespace="false"/>
+					<WTSTATIC col="2" tag="BusRetail"/>
+					<WTTEXT col="2" value="ATTR(Coption.BusRetail)" size="4" prespace="false"/>
+					<WTSTATIC col="2" tag="BusAccts"/>
+					<WTTEXT col="2" value="ATTR(Coption.BusAccts)" size="2" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="BusAcctPrice"/>
+					<WTTEXT col="2" value="ATTR(Coption.BusAcctPrice)" size="4" prespace="false"/>
+					<WTSTATIC col="2" tag="BusAcctRetail"/>
+					<WTTEXT col="2" value="ATTR(Coption.BusAcctRetail)" size="4" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="RefName"/>
+					<WTTEXT col="2" value="ATTR(Coption.RefName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="NewMemberOrgs"/>
+					<WTTEXT col="2" value="ATTR(Coption.NewMemberOrgs)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Coption.IsNewEmail)"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="AccessLimitText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AccessLimit"/>
+					<WTTEXT col="2" value="ATTR(Coption.AccessLimit)" size="50"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="QuizLimit"/>
+					<WTCOMBO col="2" value="ATTR(Coption.QuizLimit)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberLimit"/>
+					<WTTEXT col="2" value="ATTR(Coption.MemberLimit)" size="3"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="DocSizeLimit"/>
+					<WTTEXT col="2" value="ATTR(Coption.DocSizeLimit)" size="10"/>
+					<WTSTATIC col="2" label="Bytes"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="IPLimit"/>
+					<WTTEXT col="2" value="ATTR(Coption.IPLimit)" size="3"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="LanguagesText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="3911" target="Countries"/>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC tag="Countries"/>
+					</WTSTATIC>
+					<WTMEMO col="2" value="ATTR(Coption.Countries)" rows="3" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Languages"/>
+					<WTMEMO col="2" value="ATTR(Coption.Languages)" rows="3" />
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Coption.IsDiscount)"/>
+					<WTSTATIC col="2" tag="Discount"/>
+					<WTTEXT col="2" value="ATTR(Coption.Discount)" size="4" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Billing"/>
+					<WTCOMBO col="2" value="ATTR(Coption.Billing)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CommRate"/>
+					<WTTEXT col="2" value="ATTR(Coption.CommRate)" size="5" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" align="left" label="CommRateText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="IdentificationText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Identify"/>
+					<WTCOMBO col="2" value="ATTR(Coption.Identify)">
+						<WTOPTION id="0" label="None"/>
+						<WTOPTION id="1" label="Training"/>
+					</WTCOMBO>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Coption.Identification)" cols="70" rows="15"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<!--					
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+-->
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<!--					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>-->
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="4903b" caption="Manager Options" header="false" footer="false" navbar="false" focus="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="1251">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+
+      <WTSUB name="LoadCoption">
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateCoption">
+				<WTSETATTRIBUTE name="PARAM(Status)" value="CONST(1)"/>
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadCoption"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Update" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTCALLSUB name="LoadCoption"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="UpdateExit" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTCALLSUB name="LoadCoption"/>
+				<!--
+				<WTCALLSUB name="LoadCoption">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+-->
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="Edit6" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(0)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="Edit7" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="8" name="Edit8" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(2)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="9" name="Edit9" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(3)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="10" name="Edit10" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4910" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="11" name="Edit11" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-2)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="12" name="Edit12" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-3)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="13" name="Edit13" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-4)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="14" name="Edit14" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-5)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="15" name="Edit15" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTLINK name="4911" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Opt" value="CONST(-6)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC label="ManagerOptions" space="1"/>
+						<WTSTATIC label="Updated" fontcolor="red">
+							<WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="AdminOptionsText2"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="160" align="right"/>
+						<WTCOLUMN width="320" align="left"/>
+						<WTCOLUMN width="60" align="left"/>
+						<WTCOLUMN width="60" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options5"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options5)" size="48"/>
+							<WTBUTTON col="3" action="12" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options6"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options6)" size="48"/>
+							<WTBUTTON col="3" action="13" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options7"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options7)" size="48"/>
+							<WTBUTTON col="3" action="14" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="Options8"/>
+							<WTTEXT col="2" value="ATTR(Coption.Options8)" size="48"/>
+							<WTBUTTON col="3" action="15" value="CONST(Edit)" btnclass="smbutton"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="4904" caption="Company Graphics" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" secured="125">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Header" datatype="text"/>
+
+			<WTSUB name="LoadCoption">
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>			
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateCoption">
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>			
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>	
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoption" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadCoption"/>
+<WTCUSTOM>
+	reqHeader = GetHeader( reqCompanyID, 0, "Header", reqSysLanguage )
+</WTCUSTOM>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="3803" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="UploadHeader" type="Upload">
+				<WTCALLSUB name="UpdateCoption"/>
+<WTCUSTOM>
+Set oFileSys = server.CreateObject("Scripting.FileSystemObject")
+oFileSys.DeleteFile reqSysWebDirectory + "Images\Company\" + CStr(reqCompanyID) + "\header[en].*"
+Set oFileSys = Nothing
+</WTCUSTOM>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3820" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ImageName" value="CONST(&quot;header[en]&quot;)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="UploadCertHeader" type="Upload">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3820" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ImageName" value="CONST(&quot;certificateheader&quot;)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="8" name="UploadMobileHeader" type="Upload">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3820" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ImageName" value="CONST(&quot;mobileheader&quot;)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="9" name="UploadLogo" type="Upload">
+				<WTCALLSUB name="UpdateCoption"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3820" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ImageName" value="CONST(&quot;logo&quot;)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC tag="CompanyGraphics"/>
+						<WTSTATIC value="ATTR(Coption.CompanyID)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+<!--				
+				<WTROW>
+					<WTCONDITION expr="IsActive"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" btnclass="smbutton" align="right"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" btnclass="smbutton" align="right"/>
+				</WTROW>
+-->				
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="HelpText1" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTBUTTON col="1" merge="2" action="6" align="center" value="CONST(UploadHeader)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTIMAGE col="1" merge="2" imgwidth="600" value="CONST(&lt;xsl:value-of select=&quot;concat(DATA/PARAM/@companyid, '\', DATA/PARAM/@header)&quot;/&gt;)" align="center" path="Company"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="HelpText2" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTBUTTON col="1" merge="2" action="7" align="center" value="CONST(UploadCertificateHeader)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTIMAGE col="1" merge="2" value="CONST(&lt;xsl:value-of select=&quot;DATA/PARAM/@companyid&quot;/&gt;\certificateheader.gif)" align="center" path="Company"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="HelpText3" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTBUTTON col="1" merge="2" action="8" align="center" value="CONST(UploadMobileHeader)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTIMAGE col="1" merge="2" value="CONST(&lt;xsl:value-of select=&quot;DATA/PARAM/@companyid&quot;/&gt;\mobileheader.png)" align="center" path="Company"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="HelpText4" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTBUTTON col="1" merge="2" action="9" align="center" value="CONST(UploadLogo)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTIMAGE col="1" merge="2" value="CONST(&lt;xsl:value-of select=&quot;DATA/PARAM/@companyid&quot;/&gt;\logo.png)" align="center" path="Company"/>
+				</WTROW>
+
+				<!--
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="HelpText3" class="Prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+-->				
+<!--
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTCONDITION expr="IsActive"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="4910" caption="Member Options" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" langfile="4910" secured="125">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Opt" datatype="number"/>
+			<WTPARAM name="A" datatype="number"/>
+			<WTPARAM name="B" datatype="number"/>
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="D" datatype="number"/>
+			<WTPARAM name="E" datatype="number"/>
+			<WTPARAM name="F" datatype="number"/>
+			<WTPARAM name="G" datatype="number"/>
+			<WTPARAM name="H" datatype="number"/>
+			<WTPARAM name="I" datatype="number"/>
+			<WTPARAM name="J" datatype="number"/>
+			<WTPARAM name="K" datatype="number"/>
+			<WTPARAM name="L" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="N" datatype="number"/>
+			<WTPARAM name="O" datatype="number"/>
+			<WTPARAM name="P" datatype="number"/>
+			<WTPARAM name="Q" datatype="number"/>
+			<WTPARAM name="R" datatype="number"/>
+			<WTPARAM name="S" datatype="number"/>
+			<WTPARAM name="T" datatype="number"/>
+			<WTPARAM name="U" datatype="number"/>
+			<WTPARAM name="V" datatype="number"/>
+			<WTPARAM name="W" datatype="number"/>
+			<WTPARAM name="X" datatype="number"/>
+			<WTPARAM name="Y" datatype="number"/>
+			<WTPARAM name="Z" datatype="number"/>
+			<WTPARAM name="aa" datatype="number"/>
+			<WTPARAM name="bb" datatype="number"/>
+			<WTPARAM name="cc" datatype="number"/>
+			<WTPARAM name="dd" datatype="number"/>
+			<WTPARAM name="ee" datatype="number"/>
+			<WTPARAM name="ff" datatype="number"/>
+			<WTPARAM name="gg" datatype="number"/>
+			<WTPARAM name="hh" datatype="number"/>
+			<WTPARAM name="ii" datatype="number"/>
+			<WTPARAM name="jj" datatype="number"/>
+			<WTPARAM name="kk" datatype="number"/>
+			<WTPARAM name="ll" datatype="number"/>
+			<WTPARAM name="mm" datatype="number"/>
+			<WTPARAM name="nn" datatype="number"/>
+			<WTPARAM name="oo" datatype="number"/>
+			<WTPARAM name="pp" datatype="number"/>
+			<WTPARAM name="qq" datatype="number"/>
+			<WTPARAM name="rr" datatype="number"/>
+			<WTPARAM name="ss" datatype="number"/>
+			<WTPARAM name="tt" datatype="number"/>
+			<WTPARAM name="uu" datatype="number"/>
+			<WTPARAM name="vv" datatype="number"/>
+			<WTPARAM name="ww" datatype="number"/>
+			<WTPARAM name="xx" datatype="number"/>
+			<WTPARAM name="yy" datatype="number"/>
+			<WTPARAM name="zz" datatype="number"/>
+			<WTPARAM name="a0" datatype="number"/>
+			<WTPARAM name="a1" datatype="number"/>
+			<WTPARAM name="a2" datatype="number"/>
+			<WTPARAM name="a3" datatype="number"/>
+			<WTPARAM name="a4" datatype="number"/>
+			<WTPARAM name="a5" datatype="number"/>
+			<WTPARAM name="a6" datatype="number"/>
+			<WTPARAM name="a7" datatype="number"/>
+			<WTPARAM name="a8" datatype="number"/>
+			<WTPARAM name="a9" datatype="number"/>
+
+			<WTPARAM name="at" datatype="number"/>
+			<WTPARAM name="pound" datatype="number"/>
+			<WTPARAM name="star" datatype="number"/>
+			<WTPARAM name="percent" datatype="number"/>
+			<WTPARAM name="lparen" datatype="number"/>
+			<WTPARAM name="rparen" datatype="number"/>
+			<WTPARAM name="bar" datatype="number"/>
+			<WTPARAM name="bslash" datatype="number"/>
+			<WTPARAM name="underscore" datatype="number"/>
+			<WTPARAM name="plus" datatype="number"/>
+			<WTPARAM name="equal" datatype="number"/>
+			<WTPARAM name="period" datatype="number"/>
+			<WTPARAM name="fslash" datatype="number"/>
+			<WTPARAM name="comma" datatype="number"/>
+			<WTPARAM name="lbracket" datatype="number"/>
+			<WTPARAM name="rbracket" datatype="number"/>
+			<WTPARAM name="lcurly" datatype="number"/>
+			<WTPARAM name="rcurly" datatype="number"/>
+			<WTPARAM name="exclaim" datatype="number"/>
+			<WTPARAM name="dollar" datatype="number"/>
+			<WTPARAM name="colon" datatype="number"/>
+			<WTPARAM name="semicolon" datatype="number"/>
+			<WTPARAM name="caret" datatype="number"/>
+
+			<WTPARAM name="Options" datatype="text" />
+			<WTPARAM name="Name" datatype="text" />
+
+			<!-- Edit Options -->
+			<!-- -2 = Company Admin Options -->
+			<!-- -1 = Easy Mode Options -->
+			<!-- 0 = Company Level 0 Options -->
+			<!-- 1 = Company Level 1 Options -->
+			<!-- 2 = Company Level 2 Options -->
+			<!-- 3 = Company Level 3 Options -->
+			<!-- 4 = Member Options -->
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTCONDITION expr="PARAM(Opt)" oper="less" value="CONST(4)"/>
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CoptionID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						Select Case reqOpt
+						Case -1: reqOptions = .EasyOptions
+						Case 0: reqOptions = .FreeOptions
+						Case 1: reqOptions = .Options
+						Case 2: reqOptions = .Options2
+						Case 3: reqOptions = .Options3
+						Case -2: reqOptions = .Options4
+						Case -3: reqOptions = .Options5
+						Case -4: reqOptions = .Options6
+						Case -5: reqOptions = .Options7
+						Case -6: reqOptions = .Options8
+						End Select
+					</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Moption" project="ptsMoptionUser" class="CMoption">
+					<WTCONDITION expr="PARAM(Opt)" oper="greater-equal" value="CONST(10)"/>
+					<WTCONDITION expr="PARAM(Opt)" oper="less-equal" value="CONST(13)" connector="and"/>
+					<WTMETHOD name="FetchMember">
+						<WTPARAM name="MoptionID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MoptionID" direction="input" value="ATTR(MoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						Select Case reqOpt
+						Case 10: reqOptions = .Options0
+						Case 11: reqOptions = .Options1
+						Case 12: reqOptions = .Options2
+						Case 13: reqOptions = .Options3
+						End Select
+					</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(Opt)" oper="equal" value="CONST(4)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Options)" value="ATTR(Options)"/>
+					<WTSETATTRIBUTE name="PARAM(Name)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+				</WTOBJECT>
+				<WTCUSTOM>
+					tmp = reqOptions
+					If InStr(tmp, "A") &gt; 0 Then reqA = 1
+					If InStr(tmp, "B") &gt; 0 Then reqB = 1
+					If InStr(tmp, "C") &gt; 0 Then reqC = 1
+					If InStr(tmp, "D") &gt; 0 Then reqD = 1
+					If InStr(tmp, "E") &gt; 0 Then reqE = 1
+					If InStr(tmp, "F") &gt; 0 Then reqF = 1
+					If InStr(tmp, "G") &gt; 0 Then reqG = 1
+					If InStr(tmp, "H") &gt; 0 Then reqH = 1
+					If InStr(tmp, "I") &gt; 0 Then reqI = 1
+					If InStr(tmp, "J") &gt; 0 Then reqJ = 1
+					If InStr(tmp, "K") &gt; 0 Then reqK = 1
+					If InStr(tmp, "L") &gt; 0 Then reqL = 1
+					If InStr(tmp, "M") &gt; 0 Then reqM = 1
+					If InStr(tmp, "N") &gt; 0 Then reqN = 1
+					If InStr(tmp, "O") &gt; 0 Then reqO = 1
+					If InStr(tmp, "P") &gt; 0 Then reqP = 1
+					If InStr(tmp, "Q") &gt; 0 Then reqQ = 1
+					If InStr(tmp, "R") &gt; 0 Then reqR = 1
+					If InStr(tmp, "S") &gt; 0 Then reqS = 1
+					If InStr(tmp, "T") &gt; 0 Then reqT = 1
+					If InStr(tmp, "U") &gt; 0 Then reqU = 1
+					If InStr(tmp, "V") &gt; 0 Then reqV = 1
+					If InStr(tmp, "W") &gt; 0 Then reqW = 1
+					If InStr(tmp, "X") &gt; 0 Then reqX = 1
+					If InStr(tmp, "Y") &gt; 0 Then reqY = 1
+					If InStr(tmp, "Z") &gt; 0 Then reqZ = 1
+					If InStr(tmp, "a") &gt; 0 Then reqaa = 1
+					If InStr(tmp, "b") &gt; 0 Then reqbb = 1
+					If InStr(tmp, "c") &gt; 0 Then reqcc = 1
+					If InStr(tmp, "d") &gt; 0 Then reqdd = 1
+					If InStr(tmp, "e") &gt; 0 Then reqee = 1
+					If InStr(tmp, "f") &gt; 0 Then reqff = 1
+					If InStr(tmp, "g") &gt; 0 Then reqgg = 1
+					If InStr(tmp, "h") &gt; 0 Then reqhh = 1
+					If InStr(tmp, "i") &gt; 0 Then reqii = 1
+					If InStr(tmp, "j") &gt; 0 Then reqjj = 1
+					If InStr(tmp, "k") &gt; 0 Then reqkk = 1
+					If InStr(tmp, "l") &gt; 0 Then reqll = 1
+					If InStr(tmp, "m") &gt; 0 Then reqmm = 1
+					If InStr(tmp, "n") &gt; 0 Then reqnn = 1
+					If InStr(tmp, "o") &gt; 0 Then reqoo = 1
+					If InStr(tmp, "p") &gt; 0 Then reqpp = 1
+					If InStr(tmp, "q") &gt; 0 Then reqqq = 1
+					If InStr(tmp, "r") &gt; 0 Then reqrr = 1
+					If InStr(tmp, "s") &gt; 0 Then reqss = 1
+					If InStr(tmp, "t") &gt; 0 Then reqtt = 1
+					If InStr(tmp, "u") &gt; 0 Then requu = 1
+					If InStr(tmp, "v") &gt; 0 Then reqvv = 1
+					If InStr(tmp, "w") &gt; 0 Then reqww = 1
+					If InStr(tmp, "x") &gt; 0 Then reqxx = 1
+					If InStr(tmp, "~y") &gt; 0 Then reqyy = 1
+					If InStr(tmp, "z") &gt; 0 Then reqzz = 1
+					If InStr(tmp, "0") &gt; 0 Then reqa0 = 1
+					If InStr(tmp, "1") &gt; 0 Then reqa1 = 1
+					If InStr(tmp, "2") &gt; 0 Then reqa2 = 1
+					If InStr(tmp, "~3") &gt; 0 Then reqa3 = 1
+					If InStr(tmp, "4") &gt; 0 Then reqa4 = 1
+					If InStr(tmp, "5") &gt; 0 Then reqa5 = 1
+					If InStr(tmp, "6") &gt; 0 Then reqa6 = 1
+					If InStr(tmp, "7") &gt; 0 Then reqa7 = 1
+					If InStr(tmp, "8") &gt; 0 Then reqa8 = 1
+					If InStr(tmp, "~9") &gt; 0 Then reqa9 = 1
+
+					If InStr(tmp, "@") &gt; 0 Then reqat = 1
+					If InStr(tmp, "#") &gt; 0 Then reqpound = 1
+					If InStr(tmp, "*") &gt; 0 Then reqstar = 1
+					If InStr(tmp, "%") &gt; 0 Then reqpercent= 1
+					If InStr(tmp, "(") &gt; 0 Then reqlparen = 1
+					If InStr(tmp, ")") &gt; 0 Then reqrparen = 1
+					If InStr(tmp, "|") &gt; 0 Then reqbar = 1
+					If InStr(tmp, "\") &gt; 0 Then reqbslash = 1
+					If InStr(tmp, "_") &gt; 0 Then requnderscore = 1
+					If InStr(tmp, "+") &gt; 0 Then reqplus = 1
+					If InStr(tmp, "=") &gt; 0 Then reqequal = 1
+					If InStr(tmp, ".") &gt; 0 Then reqperiod = 1
+					If InStr(tmp, "/") &gt; 0 Then reqfslash = 1
+					If InStr(tmp, ",") &gt; 0 Then reqcomma = 1
+					If InStr(tmp, "[") &gt; 0 Then reqlbracket = 1
+					If InStr(tmp, "]") &gt; 0 Then reqrbracket = 1
+					If InStr(tmp, "{") &gt; 0 Then reqlcurly = 1
+					If InStr(tmp, "}") &gt; 0 Then reqrcurly = 1
+					If InStr(tmp, "~!") &gt; 0 Then reqexclaim = 1
+					If InStr(tmp, "~$") &gt; 0 Then reqdollar = 1
+					If InStr(tmp, "~:") &gt; 0 Then reqcolon = 1
+					If InStr(tmp, ";") &gt; 0 Then reqsemicolon = 1
+					If InStr(tmp, "~^") &gt; 0 Then reqcaret = 1
+				</WTCUSTOM>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCUSTOM>
+					tmp = ""
+					If reqA = 1 Then tmp = tmp + "A"
+					If reqB = 1 Then tmp = tmp + "B"
+					If reqC = 1 Then tmp = tmp + "C"
+					If reqD = 1 Then tmp = tmp + "D"
+					If reqE = 1 Then tmp = tmp + "E"
+					If reqF = 1 Then tmp = tmp + "F"
+					If reqG = 1 Then tmp = tmp + "G"
+					If reqH = 1 Then tmp = tmp + "H"
+					If reqI = 1 Then tmp = tmp + "I"
+					If reqJ = 1 Then tmp = tmp + "J"
+					If reqK = 1 Then tmp = tmp + "K"
+					If reqL = 1 Then tmp = tmp + "L"
+					If reqM = 1 Then tmp = tmp + "M"
+					If reqN = 1 Then tmp = tmp + "N"
+					If reqO = 1 Then tmp = tmp + "O"
+					If reqP = 1 Then tmp = tmp + "P"
+					If reqQ = 1 Then tmp = tmp + "Q"
+					If reqR = 1 Then tmp = tmp + "R"
+					If reqS = 1 Then tmp = tmp + "S"
+					If reqT = 1 Then tmp = tmp + "T"
+					If reqU = 1 Then tmp = tmp + "U"
+					If reqV = 1 Then tmp = tmp + "V"
+					If reqW = 1 Then tmp = tmp + "W"
+					If reqX = 1 Then tmp = tmp + "X"
+					If reqY = 1 Then tmp = tmp + "Y"
+					If reqZ = 1 Then tmp = tmp + "Z"
+					If reqaa = 1 Then tmp = tmp + "a"
+					If reqbb = 1 Then tmp = tmp + "b"
+					If reqcc = 1 Then tmp = tmp + "c"
+					If reqdd = 1 Then tmp = tmp + "d"
+					If reqee = 1 Then tmp = tmp + "e"
+					If reqff = 1 Then tmp = tmp + "f"
+					If reqgg = 1 Then tmp = tmp + "g"
+					If reqhh = 1 Then tmp = tmp + "h"
+					If reqii = 1 Then tmp = tmp + "i"
+					If reqjj = 1 Then tmp = tmp + "j"
+					If reqkk = 1 Then tmp = tmp + "k"
+					If reqll = 1 Then tmp = tmp + "l"
+					If reqmm = 1 Then tmp = tmp + "m"
+					If reqnn = 1 Then tmp = tmp + "n"
+					If reqoo = 1 Then tmp = tmp + "o"
+					If reqpp = 1 Then tmp = tmp + "p"
+					If reqqq = 1 Then tmp = tmp + "q"
+					If reqrr = 1 Then tmp = tmp + "r"
+					If reqss = 1 Then tmp = tmp + "s"
+					If reqtt = 1 Then tmp = tmp + "t"
+					If requu = 1 Then tmp = tmp + "u"
+					If reqvv = 1 Then tmp = tmp + "v"
+					If reqww = 1 Then tmp = tmp + "w"
+					If reqxx = 1 Then tmp = tmp + "x"
+					If reqyy = 1 Then tmp = tmp + "~y"
+					If reqzz = 1 Then tmp = tmp + "z"
+					If reqa0 = 1 Then tmp = tmp + "0"
+					If reqa1 = 1 Then tmp = tmp + "1"
+					If reqa2 = 1 Then tmp = tmp + "2"
+					If reqa3 = 1 Then tmp = tmp + "~3"
+					If reqa4 = 1 Then tmp = tmp + "4"
+					If reqa5 = 1 Then tmp = tmp + "5"
+					If reqa6 = 1 Then tmp = tmp + "6"
+					If reqa7 = 1 Then tmp = tmp + "7"
+					If reqa8 = 1 Then tmp = tmp + "8"
+					If reqa9 = 1 Then tmp = tmp + "~9"
+
+					If reqat = 1 Then tmp = tmp + "@"
+					If reqpound = 1 Then tmp = tmp + "#"
+					If reqstar = 1 Then tmp = tmp + "*"
+					If reqpercent = 1 Then tmp = tmp + "%"
+					If reqlparen = 1 Then tmp = tmp + "("
+					If reqrparen = 1 Then tmp = tmp + ")"
+					If reqbar = 1 Then tmp = tmp + "|"
+					If reqbslash = 1 Then tmp = tmp + "\"
+					If requnderscore = 1 Then tmp = tmp + "_"
+					If reqplus = 1 Then tmp = tmp + "+"
+					If reqequal = 1 Then tmp = tmp + "="
+					If reqperiod = 1 Then tmp = tmp + "."
+					If reqfslash = 1 Then tmp = tmp + "/"
+					If reqcomma = 1 Then tmp = tmp + ","
+					If reqlbracket = 1 Then tmp = tmp + "["
+					If reqrbracket = 1 Then tmp = tmp + "]"
+					If reqlcurly = 1 Then tmp = tmp + "{"
+					If reqrcurly = 1 Then tmp = tmp + "}"
+					If reqexclaim = 1 Then tmp = tmp + "~!"
+					If reqdollar = 1 Then tmp = tmp + "~$"
+					If reqcolon = 1 Then tmp = tmp + "~:"
+					If reqsemicolon = 1 Then tmp = tmp + ";"
+					If reqcaret = 1 Then tmp = tmp + "~^"
+				</WTCUSTOM>
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTCONDITION expr="PARAM(Opt)" oper="less" value="CONST(4)"/>
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CoptionID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						Select Case reqOpt
+						Case -1: .EasyOptions = tmp
+						Case 0: .FreeOptions = tmp
+						Case 1: .Options = tmp
+						Case 2: .Options2 = tmp
+						Case 3: .Options3 = tmp
+						Case -2: .Options4 = tmp
+						Case -3: .Options5 = tmp
+						Case -4: .Options6 = tmp
+						Case -5: .Options7 = tmp
+						Case -6: .Options8 = tmp
+						End Select
+					</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Moption" project="ptsMoptionUser" class="CMoption">
+					<WTCONDITION expr="PARAM(Opt)" oper="greater-equal" value="CONST(10)"/>
+					<WTCONDITION expr="PARAM(Opt)" oper="less-equal" value="CONST(13)" connector="and"/>
+					<WTMETHOD name="FetchMember">
+						<WTPARAM name="MoptionID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MoptionID" direction="input" value="ATTR(MoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						Select Case reqOpt
+						Case 10: .Options0 = tmp
+						Case 11: .Options1 = tmp
+						Case 12: .Options2 = tmp
+						Case 13: .Options3 = tmp
+						End Select
+					</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(Opt)" oper="equal" value="CONST(4)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Options)" value="CONST(tmp)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="right"/>
+				<WTCOLUMN width="300" align="left"/>
+			
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PaeHeading">
+						<WTSTATIC tag="MemberOptions"/>
+						<WTSTATIC value="PARAM(Name)" space="3">
+							<WTCONDITION expr="PARAM(Opt)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC tag="Level" value="PARAM(Opt)" fontcolor="blue">
+							<WTCONDITION expr="PARAM(Opt)" oper="less" value="CONST(4)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+				<WTTABLE col="1">
+					<WTCOLUMN width="300" align="left"/>
+					<!-- Marketing ******************************************************-->
+					<WTROW margin-top="6">
+						<WTCHECK col="1" value="PARAM(A)" label="A" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(hh)" label="hh" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(E)" label="E" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a6)" label="a6" align="left"/>
+					</WTROW>
+          <WTROW>
+            <WTCHECK col="1" value="PARAM(Y)" label="Y" align="left"/>
+          </WTROW>
+          <WTROW>
+						<WTCHECK col="1" value="PARAM(Z)" label="Z" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(zz)" label="zz" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(lcurly)" label="lcurly" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a5)" label="a5" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a3)" label="a3" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a1)" label="a1" align="left"/>
+					</WTROW>
+
+					<!-- Productivity ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(nn)" label="nn" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(ll)" label="ll" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(star)" label="star" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(pound)" label="pound" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(lbracket)" label="lbracket" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(ss)" label="ss" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(H)" label="H" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a2)" label="a2" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a7)" label="a7" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(F)" label="F" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(ff)" label="ff" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(I)" label="I" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(ii)" label="ii" align="left"/>
+					</WTROW>
+
+					<!-- Leadership ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(G)" label="G" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(gg)" label="gg" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(W)" label="W" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(oo)" label="oo" align="left"/>
+					</WTROW>
+
+					<!-- Training ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(B)" label="B" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(K)" label="K" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(L)" label="L" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a9)" label="a9" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(M)" label="M" align="left"/>
+					</WTROW>
+
+					<!-- Finances ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(ww)" label="ww" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(V)" label="V" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(jj)" label="jj" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(rparen)" label="rparen" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(pp)" label="pp" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(xx)" label="xx" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(N)" label="N" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(fslash)" label="fslash" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(semicolon)" label="semicolon" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(J)" label="J" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a8)" label="a8" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(percent)" label="percent" align="left"/>
+					</WTROW>
+				</WTTABLE>
+				<WTTABLE col="2">
+					<WTCOLUMN width="300" align="left"/>
+					<!-- Resources ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(aa)" label="aa" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(bb)" label="bb" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(dd)" label="dd" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(cc)" label="cc" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(ee)" label="ee" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(rcurly)" label="rcurly" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(bar)" label="bar" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(bslash)" label="bslash" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(underscore)" label="underscore" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(plus)" label="plus" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(equal)" label="equal" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a4)" label="a4" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(a0)" label="a0" align="left"/>
+					</WTROW>
+
+					<!-- Support ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(D)" label="D" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(U)" label="U" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(S)" label="S" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(R)" label="R" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(T)" label="T" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(mm)" label="mm" align="left"/>
+					</WTROW>
+
+					<!-- Communication ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(C)" label="C" align="left" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(O)" label="O" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(P)" label="P" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(Q)" label="Q" align="left"/>
+					</WTROW>
+
+					<!-- Misc. ******************************************************-->
+					<WTROW margin-top="12">
+						<WTCHECK col="1" value="PARAM(X)" label="X" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(kk)" label="kk" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(qq)" label="qq" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(rr)" label="rr" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(tt)" label="tt" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(uu)" label="uu" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(vv)" label="vv" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(at)" label="at" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(lparen)" label="lparen" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(period)" label="period" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(comma)" label="comma" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(rbracket)" label="rbracket" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(yy)" label="yy" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(exclaim)" label="exclaim" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(dollar)" label="dollar" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(colon)" label="colon" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTCHECK col="1" value="PARAM(caret)" label="caret" align="left"/>
+					</WTROW>
+					<WTROW height="18"/>
+					<WTROW height="18"/>
+					<WTROW height="18"/>
+					<WTROW height="18"/>
+					<WTROW height="18"/>
+					<WTROW height="18"/>
+				</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="4911" caption="Admin Options" header="false" footer="false" navbar="false" wrapper="wrapper600"
+			   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" langfile="4911" secured="125">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Opt" datatype="number"/>
+			<WTPARAM name="A" datatype="number"/>
+			<WTPARAM name="B" datatype="number"/>
+			<WTPARAM name="C" datatype="number"/>
+			<WTPARAM name="D" datatype="number"/>
+			<WTPARAM name="E" datatype="number"/>
+			<WTPARAM name="F" datatype="number"/>
+			<WTPARAM name="G" datatype="number"/>
+			<WTPARAM name="H" datatype="number"/>
+			<WTPARAM name="I" datatype="number"/>
+			<WTPARAM name="J" datatype="number"/>
+			<WTPARAM name="K" datatype="number"/>
+			<WTPARAM name="L" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="N" datatype="number"/>
+			<WTPARAM name="O" datatype="number"/>
+			<WTPARAM name="P" datatype="number"/>
+			<WTPARAM name="Q" datatype="number"/>
+			<WTPARAM name="R" datatype="number"/>
+			<WTPARAM name="S" datatype="number"/>
+			<WTPARAM name="T" datatype="number"/>
+			<WTPARAM name="U" datatype="number"/>
+			<WTPARAM name="V" datatype="number"/>
+			<WTPARAM name="W" datatype="number"/>
+			<WTPARAM name="X" datatype="number"/>
+			<WTPARAM name="Y" datatype="number"/>
+			<WTPARAM name="Z" datatype="number"/>
+			<WTPARAM name="aa" datatype="number"/>
+			<WTPARAM name="bb" datatype="number"/>
+			<WTPARAM name="cc" datatype="number"/>
+			<WTPARAM name="dd" datatype="number"/>
+			<WTPARAM name="ee" datatype="number"/>
+			<WTPARAM name="ff" datatype="number"/>
+			<WTPARAM name="gg" datatype="number"/>
+			<WTPARAM name="hh" datatype="number"/>
+			<WTPARAM name="ii" datatype="number"/>
+			<WTPARAM name="jj" datatype="number"/>
+			<WTPARAM name="kk" datatype="number"/>
+			<WTPARAM name="ll" datatype="number"/>
+			<WTPARAM name="mm" datatype="number"/>
+			<WTPARAM name="nn" datatype="number"/>
+			<WTPARAM name="oo" datatype="number"/>
+			<WTPARAM name="pp" datatype="number"/>
+			<WTPARAM name="qq" datatype="number"/>
+			<WTPARAM name="rr" datatype="number"/>
+			<WTPARAM name="ss" datatype="number"/>
+			<WTPARAM name="tt" datatype="number"/>
+			<WTPARAM name="uu" datatype="number"/>
+			<WTPARAM name="vv" datatype="number"/>
+			<WTPARAM name="ww" datatype="number"/>
+			<WTPARAM name="xx" datatype="number"/>
+			<WTPARAM name="yy" datatype="number"/>
+			<WTPARAM name="zz" datatype="number"/>
+			<WTPARAM name="a0" datatype="number"/>
+			<WTPARAM name="a1" datatype="number"/>
+			<WTPARAM name="a2" datatype="number"/>
+			<WTPARAM name="a3" datatype="number"/>
+			<WTPARAM name="a4" datatype="number"/>
+			<WTPARAM name="a5" datatype="number"/>
+			<WTPARAM name="a6" datatype="number"/>
+			<WTPARAM name="a7" datatype="number"/>
+			<WTPARAM name="a8" datatype="number"/>
+			<WTPARAM name="a9" datatype="number"/>
+
+			<WTPARAM name="at" datatype="number"/>
+			<WTPARAM name="pound" datatype="number"/>
+			<WTPARAM name="star" datatype="number"/>
+			<WTPARAM name="percent" datatype="number"/>
+			<WTPARAM name="lparen" datatype="number"/>
+			<WTPARAM name="rparen" datatype="number"/>
+			<WTPARAM name="bar" datatype="number"/>
+			<WTPARAM name="bslash" datatype="number"/>
+			<WTPARAM name="underscore" datatype="number"/>
+			<WTPARAM name="plus" datatype="number"/>
+			<WTPARAM name="equal" datatype="number"/>
+			<WTPARAM name="period" datatype="number"/>
+			<WTPARAM name="fslash" datatype="number"/>
+			<WTPARAM name="comma" datatype="number"/>
+			<WTPARAM name="lbracket" datatype="number"/>
+			<WTPARAM name="rbracket" datatype="number"/>
+			<WTPARAM name="lcurly" datatype="number"/>
+			<WTPARAM name="rcurly" datatype="number"/>
+			<WTPARAM name="exclaim" datatype="number"/>
+			<WTPARAM name="dollar" datatype="number"/>
+			<WTPARAM name="colon" datatype="number"/>
+			<WTPARAM name="semicolon" datatype="number"/>
+			<WTPARAM name="caret" datatype="number"/>
+
+			<WTPARAM name="Options" datatype="text" />
+			<WTPARAM name="Name" datatype="text" />
+
+			<!-- Edit Options -->
+			<!-- -2 = Company Admin Options -->
+			<!-- -1 = Easy Mode Options -->
+			<!-- 0 = Company Level 0 Options -->
+			<!-- 1 = Company Level 1 Options -->
+			<!-- 2 = Company Level 2 Options -->
+			<!-- 3 = Company Level 3 Options -->
+			<!-- 4 = Member Options -->
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTCONDITION expr="PARAM(Opt)" oper="less" value="CONST(4)"/>
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CoptionID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						Select Case reqOpt
+						Case -1: reqOptions = .EasyOptions
+						Case 0: reqOptions = .FreeOptions
+						Case 1: reqOptions = .Options
+						Case 2: reqOptions = .Options2
+						Case 3: reqOptions = .Options3
+						Case -2: reqOptions = .Options4
+						Case -3: reqOptions = .Options5
+						Case -4: reqOptions = .Options6
+						Case -5: reqOptions = .Options7
+						Case -6: reqOptions = .Options8
+						End Select
+					</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(Opt)" oper="equal" value="CONST(4)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Options)" value="ATTR(Options)"/>
+					<WTSETATTRIBUTE name="PARAM(Name)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+				</WTOBJECT>
+				<WTCUSTOM>
+					tmp = reqOptions
+					If InStr(tmp, "A") &gt; 0 Then reqA = 1
+					If InStr(tmp, "B") &gt; 0 Then reqB = 1
+					If InStr(tmp, "C") &gt; 0 Then reqC = 1
+					If InStr(tmp, "D") &gt; 0 Then reqD = 1
+					If InStr(tmp, "E") &gt; 0 Then reqE = 1
+					If InStr(tmp, "F") &gt; 0 Then reqF = 1
+					If InStr(tmp, "G") &gt; 0 Then reqG = 1
+					If InStr(tmp, "H") &gt; 0 Then reqH = 1
+					If InStr(tmp, "I") &gt; 0 Then reqI = 1
+					If InStr(tmp, "J") &gt; 0 Then reqJ = 1
+					If InStr(tmp, "K") &gt; 0 Then reqK = 1
+					If InStr(tmp, "L") &gt; 0 Then reqL = 1
+					If InStr(tmp, "M") &gt; 0 Then reqM = 1
+					If InStr(tmp, "N") &gt; 0 Then reqN = 1
+					If InStr(tmp, "O") &gt; 0 Then reqO = 1
+					If InStr(tmp, "P") &gt; 0 Then reqP = 1
+					If InStr(tmp, "Q") &gt; 0 Then reqQ = 1
+					If InStr(tmp, "R") &gt; 0 Then reqR = 1
+					If InStr(tmp, "S") &gt; 0 Then reqS = 1
+					If InStr(tmp, "T") &gt; 0 Then reqT = 1
+					If InStr(tmp, "U") &gt; 0 Then reqU = 1
+					If InStr(tmp, "V") &gt; 0 Then reqV = 1
+					If InStr(tmp, "W") &gt; 0 Then reqW = 1
+					If InStr(tmp, "X") &gt; 0 Then reqX = 1
+					If InStr(tmp, "Y") &gt; 0 Then reqY = 1
+					If InStr(tmp, "Z") &gt; 0 Then reqZ = 1
+					If InStr(tmp, "a") &gt; 0 Then reqaa = 1
+					If InStr(tmp, "b") &gt; 0 Then reqbb = 1
+					If InStr(tmp, "c") &gt; 0 Then reqcc = 1
+					If InStr(tmp, "d") &gt; 0 Then reqdd = 1
+					If InStr(tmp, "e") &gt; 0 Then reqee = 1
+					If InStr(tmp, "f") &gt; 0 Then reqff = 1
+					If InStr(tmp, "g") &gt; 0 Then reqgg = 1
+					If InStr(tmp, "h") &gt; 0 Then reqhh = 1
+					If InStr(tmp, "i") &gt; 0 Then reqii = 1
+					If InStr(tmp, "j") &gt; 0 Then reqjj = 1
+					If InStr(tmp, "k") &gt; 0 Then reqkk = 1
+					If InStr(tmp, "l") &gt; 0 Then reqll = 1
+					If InStr(tmp, "m") &gt; 0 Then reqmm = 1
+					If InStr(tmp, "n") &gt; 0 Then reqnn = 1
+					If InStr(tmp, "o") &gt; 0 Then reqoo = 1
+					If InStr(tmp, "p") &gt; 0 Then reqpp = 1
+					If InStr(tmp, "q") &gt; 0 Then reqqq = 1
+					If InStr(tmp, "r") &gt; 0 Then reqrr = 1
+					If InStr(tmp, "s") &gt; 0 Then reqss = 1
+					If InStr(tmp, "t") &gt; 0 Then reqtt = 1
+					If InStr(tmp, "u") &gt; 0 Then requu = 1
+					If InStr(tmp, "v") &gt; 0 Then reqvv = 1
+					If InStr(tmp, "w") &gt; 0 Then reqww = 1
+					If InStr(tmp, "x") &gt; 0 Then reqxx = 1
+					If InStr(tmp, "~y") &gt; 0 Then reqyy = 1
+					If InStr(tmp, "z") &gt; 0 Then reqzz = 1
+					If InStr(tmp, "0") &gt; 0 Then reqa0 = 1
+					If InStr(tmp, "1") &gt; 0 Then reqa1 = 1
+					If InStr(tmp, "2") &gt; 0 Then reqa2 = 1
+					If InStr(tmp, "~3") &gt; 0 Then reqa3 = 1
+					If InStr(tmp, "4") &gt; 0 Then reqa4 = 1
+					If InStr(tmp, "5") &gt; 0 Then reqa5 = 1
+					If InStr(tmp, "6") &gt; 0 Then reqa6 = 1
+					If InStr(tmp, "7") &gt; 0 Then reqa7 = 1
+					If InStr(tmp, "8") &gt; 0 Then reqa8 = 1
+					If InStr(tmp, "~9") &gt; 0 Then reqa9 = 1
+
+					If InStr(tmp, "@") &gt; 0 Then reqat = 1
+					If InStr(tmp, "#") &gt; 0 Then reqpound = 1
+					If InStr(tmp, "*") &gt; 0 Then reqstar = 1
+					If InStr(tmp, "%") &gt; 0 Then reqpercent= 1
+					If InStr(tmp, "(") &gt; 0 Then reqlparen = 1
+					If InStr(tmp, ")") &gt; 0 Then reqrparen = 1
+					If InStr(tmp, "|") &gt; 0 Then reqbar = 1
+					If InStr(tmp, "\") &gt; 0 Then reqbslash = 1
+					If InStr(tmp, "_") &gt; 0 Then requnderscore = 1
+					If InStr(tmp, "+") &gt; 0 Then reqplus = 1
+					If InStr(tmp, "=") &gt; 0 Then reqequal = 1
+					If InStr(tmp, ".") &gt; 0 Then reqperiod = 1
+					If InStr(tmp, "/") &gt; 0 Then reqfslash = 1
+					If InStr(tmp, ",") &gt; 0 Then reqcomma = 1
+					If InStr(tmp, "[") &gt; 0 Then reqlbracket = 1
+					If InStr(tmp, "]") &gt; 0 Then reqrbracket = 1
+					If InStr(tmp, "{") &gt; 0 Then reqlcurly = 1
+					If InStr(tmp, "}") &gt; 0 Then reqrcurly = 1
+					If InStr(tmp, "~!") &gt; 0 Then reqexclaim = 1
+					If InStr(tmp, "~$") &gt; 0 Then reqdollar = 1
+					If InStr(tmp, "~:") &gt; 0 Then reqcolon = 1
+					If InStr(tmp, ";") &gt; 0 Then reqsemicolon = 1
+					If InStr(tmp, "~^") &gt; 0 Then reqcaret = 1
+				</WTCUSTOM>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCUSTOM>
+					tmp = ""
+					If reqA = 1 Then tmp = tmp + "A"
+					If reqB = 1 Then tmp = tmp + "B"
+					If reqC = 1 Then tmp = tmp + "C"
+					If reqD = 1 Then tmp = tmp + "D"
+					If reqE = 1 Then tmp = tmp + "E"
+					If reqF = 1 Then tmp = tmp + "F"
+					If reqG = 1 Then tmp = tmp + "G"
+					If reqH = 1 Then tmp = tmp + "H"
+					If reqI = 1 Then tmp = tmp + "I"
+					If reqJ = 1 Then tmp = tmp + "J"
+					If reqK = 1 Then tmp = tmp + "K"
+					If reqL = 1 Then tmp = tmp + "L"
+					If reqM = 1 Then tmp = tmp + "M"
+					If reqN = 1 Then tmp = tmp + "N"
+					If reqO = 1 Then tmp = tmp + "O"
+					If reqP = 1 Then tmp = tmp + "P"
+					If reqQ = 1 Then tmp = tmp + "Q"
+					If reqR = 1 Then tmp = tmp + "R"
+					If reqS = 1 Then tmp = tmp + "S"
+					If reqT = 1 Then tmp = tmp + "T"
+					If reqU = 1 Then tmp = tmp + "U"
+					If reqV = 1 Then tmp = tmp + "V"
+					If reqW = 1 Then tmp = tmp + "W"
+					If reqX = 1 Then tmp = tmp + "X"
+					If reqY = 1 Then tmp = tmp + "Y"
+					If reqZ = 1 Then tmp = tmp + "Z"
+					If reqaa = 1 Then tmp = tmp + "a"
+					If reqbb = 1 Then tmp = tmp + "b"
+					If reqcc = 1 Then tmp = tmp + "c"
+					If reqdd = 1 Then tmp = tmp + "d"
+					If reqee = 1 Then tmp = tmp + "e"
+					If reqff = 1 Then tmp = tmp + "f"
+					If reqgg = 1 Then tmp = tmp + "g"
+					If reqhh = 1 Then tmp = tmp + "h"
+					If reqii = 1 Then tmp = tmp + "i"
+					If reqjj = 1 Then tmp = tmp + "j"
+					If reqkk = 1 Then tmp = tmp + "k"
+					If reqll = 1 Then tmp = tmp + "l"
+					If reqmm = 1 Then tmp = tmp + "m"
+					If reqnn = 1 Then tmp = tmp + "n"
+					If reqoo = 1 Then tmp = tmp + "o"
+					If reqpp = 1 Then tmp = tmp + "p"
+					If reqqq = 1 Then tmp = tmp + "q"
+					If reqrr = 1 Then tmp = tmp + "r"
+					If reqss = 1 Then tmp = tmp + "s"
+					If reqtt = 1 Then tmp = tmp + "t"
+					If requu = 1 Then tmp = tmp + "u"
+					If reqvv = 1 Then tmp = tmp + "v"
+					If reqww = 1 Then tmp = tmp + "w"
+					If reqxx = 1 Then tmp = tmp + "x"
+					If reqyy = 1 Then tmp = tmp + "~y"
+					If reqzz = 1 Then tmp = tmp + "z"
+					If reqa0 = 1 Then tmp = tmp + "0"
+					If reqa1 = 1 Then tmp = tmp + "1"
+					If reqa2 = 1 Then tmp = tmp + "2"
+					If reqa3 = 1 Then tmp = tmp + "~3"
+					If reqa4 = 1 Then tmp = tmp + "4"
+					If reqa5 = 1 Then tmp = tmp + "5"
+					If reqa6 = 1 Then tmp = tmp + "6"
+					If reqa7 = 1 Then tmp = tmp + "7"
+					If reqa8 = 1 Then tmp = tmp + "8"
+					If reqa9 = 1 Then tmp = tmp + "~9"
+
+					If reqat = 1 Then tmp = tmp + "@"
+					If reqpound = 1 Then tmp = tmp + "#"
+					If reqstar = 1 Then tmp = tmp + "*"
+					If reqpercent = 1 Then tmp = tmp + "%"
+					If reqlparen = 1 Then tmp = tmp + "("
+					If reqrparen = 1 Then tmp = tmp + ")"
+					If reqbar = 1 Then tmp = tmp + "|"
+					If reqbslash = 1 Then tmp = tmp + "\"
+					If requnderscore = 1 Then tmp = tmp + "_"
+					If reqplus = 1 Then tmp = tmp + "+"
+					If reqequal = 1 Then tmp = tmp + "="
+					If reqperiod = 1 Then tmp = tmp + "."
+					If reqfslash = 1 Then tmp = tmp + "/"
+					If reqcomma = 1 Then tmp = tmp + ","
+					If reqlbracket = 1 Then tmp = tmp + "["
+					If reqrbracket = 1 Then tmp = tmp + "]"
+					If reqlcurly = 1 Then tmp = tmp + "{"
+					If reqrcurly = 1 Then tmp = tmp + "}"
+					If reqexclaim = 1 Then tmp = tmp + "~!"
+					If reqdollar = 1 Then tmp = tmp + "~$"
+					If  reqcolon = 1 Then tmp = tmp + "~:"
+					If reqsemicolon = 1 Then tmp = tmp + ";"
+					If reqcaret = 1 Then tmp = tmp + "~^"
+				</WTCUSTOM>
+				<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+					<WTCONDITION expr="PARAM(Opt)" oper="less" value="CONST(4)"/>
+					<WTMETHOD name="FetchCompany">
+						<WTPARAM name="CoptionID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						Select Case reqOpt
+						Case -1: .EasyOptions = tmp
+						Case 0: .FreeOptions = tmp
+						Case 1: .Options = tmp
+						Case 2: .Options2 = tmp
+						Case 3: .Options3 = tmp
+						Case -2: .Options4 = tmp
+						Case -3: .Options5 = tmp
+						Case -4: .Options6 = tmp
+						Case -5: .Options7 = tmp
+						Case -6: .Options8 = tmp
+						End Select
+					</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(Opt)" oper="equal" value="CONST(4)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Options)" value="CONST(tmp)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="right"/>
+				<WTCOLUMN width="300" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PaeHeading">
+						<WTSTATIC tag="MemberOptions"/>
+						<WTSTATIC value="PARAM(Name)" space="3">
+							<WTCONDITION expr="PARAM(Opt)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC tag="Level" value="PARAM(Opt)" fontcolor="blue">
+							<WTCONDITION expr="PARAM(Opt)" oper="less" value="CONST(4)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+
+						<WTROW margin-top="12">
+							<WTCHECK col="1" value="PARAM(bar)" label="bar" align="left" bold="true"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(rbracket)" label="rbracket" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(bb)" label="bb" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(ss)" label="ss" align="left"/>
+						</WTROW>
+            <WTROW>
+              <WTCHECK col="1" value="PARAM(lbracket)" label="lbracket" align="left"/>
+            </WTROW>
+
+            <!-- Marketing ******************************************************-->
+						<WTROW margin-top="6">
+							<WTCHECK col="1" value="PARAM(A)" label="A" align="left" bold="true"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(hh)" label="hh" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(E)" label="E" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(a6)" label="a6" align="left"/>
+						</WTROW>
+            <WTROW>
+              <WTCHECK col="1" value="PARAM(Y)" label="Y" align="left"/>
+            </WTROW>
+            <WTROW>
+							<WTCHECK col="1" value="PARAM(Z)" label="Z" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(zz)" label="zz" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(a5)" label="a5" align="left"/>
+						</WTROW>
+
+						<!-- Training ******************************************************-->
+						<WTROW margin-top="12">
+							<WTCHECK col="1" value="PARAM(B)" label="B" align="left" bold="true"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(K)" label="K" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(L)" label="L" align="left"/>
+						</WTROW>
+
+						<!-- Finances ******************************************************-->
+						<WTROW margin-top="12">
+							<WTCHECK col="1" value="PARAM(ww)" label="ww" align="left" bold="true"/>
+						</WTROW>
+            <WTROW>
+              <WTCHECK col="1" value="PARAM(V)" label="V" align="left"/>
+            </WTROW>
+            <WTROW>
+              <WTCHECK col="1" value="PARAM(xx)" label="xx" align="left"/>
+            </WTROW>
+            <WTROW>
+							<WTCHECK col="1" value="PARAM(jj)" label="jj" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(rparen)" label="rparen" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(a8)" label="a8" align="left"/>
+						</WTROW>
+					</WTTABLE>
+					<WTTABLE col="2">
+						<WTCOLUMN width="300" align="left"/>
+						<!-- Resources ******************************************************-->
+						<WTROW margin-top="12">
+							<WTCHECK col="1" value="PARAM(aa)" label="aa" align="left" bold="true"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(bslash)" label="bslash" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(cc)" label="cc" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(a2)" label="a2" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(rcurly)" label="rcurly" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(F)" label="F" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(period)" label="period" align="left"/>
+						</WTROW>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="SYSCON(RIGHT180)"/>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(comma)" label="comma" align="left"/>
+							</WTROW>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(semicolon)" label="semicolon" align="left"/>
+							</WTROW>
+						</WTCODEGROUP>
+
+						<!-- Setup ******************************************************-->
+						<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Opt)" oper="equal" value="CONST(-2)"/>
+							<WTROW margin-top="12">
+								<WTSTATIC col="1" label="Setup" align="left" bold="true"/>
+							</WTROW>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(underscore)" label="underscore" align="left"/>
+							</WTROW>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(ee)" label="ee" align="left"/>
+							</WTROW>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(dd)" label="dd" align="left"/>
+							</WTROW>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(a4)" label="a4" align="left"/>
+							</WTROW>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(ll)" label="ll" align="left"/>
+							</WTROW>
+							<WTROW>
+								<WTCHECK col="1" value="PARAM(a0)" label="a0" align="left"/>
+							</WTROW>
+						</WTCODEGROUP>
+
+						<!-- Support ******************************************************-->
+						<WTROW margin-top="12">
+							<WTCHECK col="1" value="PARAM(D)" label="D" align="left" bold="true"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(S)" label="S" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(mm)" label="mm" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(Q)" label="Q" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" value="PARAM(P)" label="P" align="left"/>
+						</WTROW>
+
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

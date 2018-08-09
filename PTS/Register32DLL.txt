@@ -1,0 +1,4 @@
+Registering 32 bit DLL in 64 bit Windows
+Run Cmd.exe as administrator
+cd c:\windows\syswow64
+regsvr32 c:\pts\lib\ptsIssueUser.dll

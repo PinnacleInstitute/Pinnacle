@@ -1,0 +1,30 @@
+<REPORTS source="ReportsData.asp" language="reports.xml" path="http://www.pinnaclep.com/" >
+	<REPORT id="1" name="MemberStatus" desc="MemberStatusDesc" chart="pie" type="system">
+		<PARAM name="Company" type="list">
+			<OPTION id="1" name="SalesTeam"/>
+			<OPTION id="13" name="EcoQuest"/>
+			<OPTION id="586" name="YTB"/>
+		</PARAM>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="2" name="MemberVisit" desc="MemberVisitDesc" chart="pie" type="system">
+		<PARAM name="Company" type="list">
+			<OPTION id="1" name="SalesTeam"/>
+			<OPTION id="13" name="EcoQuest"/>
+			<OPTION id="586" name="YTB"/>
+		</PARAM>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="6" name="MemberLevel" desc="MemberLevelDesc" chart="pie" type="system">
+		<PARAM name="Company" type="list">
+			<OPTION id="1" name="SalesTeam"/>
+			<OPTION id="13" name="EcoQuest"/>
+			<OPTION id="586" name="YTB"/>
+		</PARAM>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+</REPORTS>

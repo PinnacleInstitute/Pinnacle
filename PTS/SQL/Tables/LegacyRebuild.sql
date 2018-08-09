@@ -1,0 +1,12 @@
+EXEC [dbo].pts_CheckTableRebuild 'Legacy'
+ GO
+
+ALTER TABLE [dbo].[Legacy] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[Legacy] WITH NOCHECK ADD
+   CONSTRAINT [PK_Legacy] PRIMARY KEY NONCLUSTERED
+   ([LegacyID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

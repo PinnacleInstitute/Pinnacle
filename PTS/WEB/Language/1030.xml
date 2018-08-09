@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="CCPayments">Credit Card Payments Processed</LABEL>
+	<LABEL name="InFile">in file</LABEL>
+	<LABEL name="CKPayments">Electronic Check Payments Processed</LABEL>
+	<LABEL name="PaymentsText">RECURRING PAYMENTS: Click the "Create New Payments" button to create a payment for each Sales Item 
+	that is recurring and has a due date on or before the date specified below.</LABEL>
+	<LABEL name="Thru">Thru</LABEL>
+	<LABEL name="CCCKText">PAYMENT FILES: Click the "Create Payment Files" button to create a batch file of all new 
+	payments to be processed. Click the "Mark Payments Pending" to change the status of these same payments to pending.</LABEL>
+	<LABEL name="UpdateCCCKText">PAYMENT STATUS: Click the "Update Payments Status" to upload a status file for previously processed payments and update their status.</LABEL>
+	<LABEL name="CommissionsText">COMMISSIONS: Click the "Create Commissions" button to create the specified type of 
+	commissions for all approved payments that have not yet been commissioned and thier payment date is less than or 
+	equal to the date specified below.</LABEL>
+	<LABEL name="PayoutsText">PAYOUTS: Click the "Create Payouts" button to create a summary of all commissions recently created 
+	on or before the specified date for each person that has earned commissions.</LABEL>
+	<LABEL name="For">For</LABEL>
+	<LABEL name="DebitsText">DEBITS: Click the "Create Debits" button to create debits against unpaid payouts
+	 for recurring payments coming due within one month from the specified date below.</LABEL>
+	<LABEL name="PayoutFileText">PAYOUT FILE: Click the "Create Payout File" button to create a payout file of all 
+	unpaid payouts with a minimum amount specified below and to be paid on the specified date below. Click the "Mark 
+	Payouts Paid" button to set the status to paid and the paid date to the specified date below for the same payouts 
+	in the payout file.</LABEL>
+	<LABEL name="Min">Minimum $</LABEL>
+	<LABEL name="On">On</LABEL>
+	<LABEL name="SetPaidDate">Set Paid Date to</LABEL>
+	<LABEL name="Accounting">Accounting</LABEL>
+	<LABEL name="ConfirmCreateSOPayments">Are you sure you want to Create New Payments for all recurring sales orders?</LABEL>
+	<LABEL name="ConfirmCreateMEPayments">Are you sure you want to Create New Payments for all due members?</LABEL>
+	<LABEL name="ConfirmCreateCCCKFiles">Are you sure you want to Create payment processing files from all payments with a "Submitted" Status?</LABEL>
+	<LABEL name="ConfirmSetCCCKPending">Are you sure you want to Update "Submitted" payments to "Pending" Status?</LABEL>
+	<LABEL name="ConfirmCreateCommissions">Are you sure you want to Create New Commissions for all Approved Payments?</LABEL>
+	<LABEL name="ConfirmCreatePayouts">Are you sure you want to Create New Payouts for all unpaid Commissions?</LABEL>
+	<LABEL name="ConfirmDebits">Are you sure you want to Create Debits from earned commissions for upcoming recurring payments?</LABEL>
+	<LABEL name="ConfirmPayoutFile">Are you sure you want to Create a Payout File of all payouts to be paid on the specified date and equal to or greater than the specified amount?</LABEL>
+	<LABEL name="ConfirmUpdatePayouts">Are you sure you want to set the status to paid and the paid date to the specified date for all unpaid payouts?</LABEL>
+	<LABEL name="CreateSOPayments">Create New Sales Order Payments</LABEL>
+	<LABEL name="CreateMEPayments">Create New Member Payments</LABEL>
+	<LABEL name="CreateCCCKFiles">Create Payment Files</LABEL>
+	<LABEL name="SetCCCKPending">Mark Payments Pending</LABEL>
+	<LABEL name="UpdateStatus">Update Payments Status</LABEL>
+	<LABEL name="CreateCommissions">Create Commissions</LABEL>
+	<LABEL name="CreatePayouts">Create Payouts</LABEL>
+	<LABEL name="CreateDebits">Create Debits</LABEL>
+	<LABEL name="PayoutFile">Create Payout File</LABEL>
+	<LABEL name="UpdatePayouts">Mark Payouts Paid</LABEL>
+	<LABEL name="Return">Return</LABEL>
+</LANGUAGE>

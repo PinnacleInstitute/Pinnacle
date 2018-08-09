@@ -1,0 +1,1300 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="111" name="Prepaid" alias="pre" audit="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="11101" name="PrepaidID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="11102" name="MemberID" type="number" source="entity" required="true"/>
+		<WTATTRIBUTE id="11103" name="RefID" type="number" source="entity" required="true"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="11105" name="PayDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="11106" name="PayType" type="number" source="entity" blankrow="false">
+			<WTENUM id="1" name="Credit"/>
+			<WTENUM id="2" name="Debit"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11107" name="Amount" type="currency" source="entity"/>
+		<WTATTRIBUTE id="11108" name="Note" type="text" length="100" min="1" max="100" required="true" source="entity" language="false"/>
+		<WTATTRIBUTE id="11109" name="BV" type="currency" source="entity"/>
+		<WTATTRIBUTE id="11110" name="Bonus" type="number" source="entity">
+			<WTENUM id="1" name="No"/>
+			<WTENUM id="2" name="Yes"/>
+			<WTENUM id="3" name="None"/>
+			<WTENUM id="4" name="Reclaimed"/>
+		</WTATTRIBUTE>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="11190" name="FromDate" type="date" source="entity" xml="false" persist="false"/>
+		<WTATTRIBUTE id="11191" name="ToDate" type="date" source="entity" xml="false" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="PayDate"/>
+			<WTATTRIBUTE name="PayType"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Prepaid" entity="Prepaid" alias="pre"/>
+			<WTRELATIONSHIP name="Common" entity="Prepaid" alias="pre"/>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="PayDate" default="true"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Prepaid.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Prepaid.PayDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Prepaid.PayDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Find" name="FindType" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(PayType)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Prepaid.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Prepaid.PayDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Prepaid.PayDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Prepaid.PayType)" oper="equal" value="PARAM(PayType)" connector="and"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11100" caption="Prepaid Services" footer="false" navbar="false" secured="41" wrapper="wrapper800"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" langfile="11100">
+			<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Code" datatype="number"/>
+			<WTPARAM name="Certified" datatype="number"/>
+
+			<WTINCLUDE name="Prepaid.asp"/>
+
+			<!-- CHECK FOR ILLEGAL ACCESS -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0101" return="false">
+						<WTPARAM name="ActionCode" value="CONST(9)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)"/>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						If IsTraining(oMember) And IsCompliance(oMember) Then
+							reqCertified = 1
+							reqCode = 3
+						Else
+							reqCode = 1
+						End If
+					</WTCUSTOM>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="800" align="left"/>
+
+				<WTTAB name="MemberTab">
+					<WTITEM label="ViewSummary" width="150">
+						<WTCONDITION expr="PARAM(Certified)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="JAVA(ShowTab('TabSummary',1))"/>
+					</WTITEM>
+					<WTITEM label="ViewPrepaid" width="150">
+						<WTCONDITION expr="PARAM(Certified)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="JAVA(ShowTab('TabPrepaid',1))"/>
+					</WTITEM>
+					<WTITEM label="ViewCash" width="150">
+						<WTCONDITION expr="PARAM(Certified)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="JAVA(ShowTab('TabCash',1))"/>
+					</WTITEM>
+					<WTITEM label="ViewTraining" width="155">
+						<WTCONDITION expr="PARAM(Certified)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="JAVA(ShowTab('TabTraining',1))"/>
+					</WTITEM>
+					<WTITEM label="ViewCompliance" width="155">
+						<WTCONDITION expr="PARAM(Certified)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="JAVA(ShowTab('TabCompliance',1))"/>
+					</WTITEM>
+					<WTITEM label="ViewTraining" width="385">
+						<WTCONDITION expr="PARAM(Certified)" oper="equal" value="CONST(0)"/>
+						<WTLINK name="JAVA(ShowTab('TabTraining',1))"/>
+					</WTITEM>
+					<WTITEM label="ViewCompliance" width="385">
+						<WTCONDITION expr="PARAM(Certified)" oper="equal" value="CONST(0)"/>
+						<WTLINK name="JAVA(ShowTab('TabCompliance',1))"/>
+					</WTITEM>
+				</WTTAB>
+
+				<WTFUNCTION name="ShowTab(tab, shw)">
+					var memberid = document.getElementById('MemberID').value;
+					document.getElementById('TabTraining').style.display = 'none';
+					document.getElementById('TabCompliance').style.display = 'none';
+					document.getElementById('TabSummary').style.display = 'none';
+					document.getElementById('TabPrepaid').style.display = 'none';
+					document.getElementById('TabCash').style.display = 'none';
+					document.getElementById(tab).style.display = '';
+
+					if ( tab == 'TabTraining' ) {
+					var src = document.getElementById('TrainingFrame').src
+					if (src.indexOf("11111.asp") &lt; 0 ) {
+					document.getElementById('TrainingFrame').src = '11111.asp?MemberID=' + memberid
+					}
+					}
+					if ( tab == 'TabCompliance' ) {
+					var src = document.getElementById('ComplianceFrame').src
+					if (src.indexOf("11112.asp") &lt; 0 ) {
+					document.getElementById('ComplianceFrame').src = '11112.asp?MemberID=' + memberid
+					}
+					}
+					if ( tab == 'TabSummary' ) {
+					var src = document.getElementById('SummaryFrame').src
+					if (src.indexOf("11113.asp") &lt; 0 ) {
+					document.getElementById('SummaryFrame').src = '11113.asp?MemberID=' + memberid
+					}
+					}
+					if ( tab == 'TabPrepaid' ) {
+					var src = document.getElementById('PrepaidFrame').src
+					if (src.indexOf("11101.asp") &lt; 0 ) {
+					document.getElementById('PrepaidFrame').src = '11101.asp?MemberID=' + memberid
+					}
+					}
+					if ( tab == 'TabCash' ) {
+					var src = document.getElementById('CashFrame').src
+					if (src.indexOf("11201.asp") &lt; 0 ) {
+					document.getElementById('CashFrame').src = '11201.asp?MemberID=' + memberid
+					}
+					}
+				</WTFUNCTION>
+				<WTFUNCTION name="LoadTab()">
+					var code = document.getElementById('Code').value
+					switch(code)
+					{
+					case '1':
+					MemberTab.setCurrTab('Training');
+					ShowTab('TabTraining',0);
+					break;
+					case '2':
+					MemberTab.setCurrTab('Compliance');
+					ShowTab('TabCompliance',0);
+					break;
+					case '3':
+					MemberTab.setCurrTab('Summary');
+					ShowTab('TabSummary',0);
+					break;
+					case '4':
+					MemberTab.setCurrTab('Prepaid');
+					ShowTab('TabPrepaid',0);
+					break;
+					case '5':
+					MemberTab.setCurrTab('Cash');
+					ShowTab('TabCash',0);
+					break;
+					}
+				</WTFUNCTION>
+				<WTLOAD>
+					LoadTab();
+				</WTLOAD>
+
+				<WTROW>
+					<WTHIDDEN value="ATTR(Member.MemberID)"/>
+					<WTHIDDEN value="PARAM(Code)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(PrepaidServices.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="2"/>
+						<WTSTATIC label="PrepaidServices" fontsize="4" space="1"/>
+						<WTSTATIC label="for" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)" space="1"/>
+						<WTSTATIC value="CONST((#&lt;xsl:value-of select=&quot;/DATA/TXN/PTSMEMBER/@memberid&quot;/&gt;))"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" align="center" class="prompt">
+						<WTSTATIC label="PrepaidServicesText1">
+							<WTCONDITION expr="PARAM(Certified)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PrepaidServicesText2">
+							<WTCONDITION expr="PARAM(Certified)" oper="not-equal" value="CONST(0)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" align="left">
+						<WTCODEGROUP>
+							<WTSTARTTAB name="MemberTab"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW id="TabTraining">
+					<WTFRAME col="1" src="" name="TrainingFrame" frmclass="FrameNoScroll" frmwidth="800" frmheight="2000" label="NoFrameSupport" border="0"/>
+				</WTROW>
+				<WTROW id="TabCompliance">
+					<WTFRAME col="1" src="" name="ComplianceFrame" frmclass="FrameNoScroll" frmwidth="800" frmheight="2000" label="NoFrameSupport" border="0"/>
+				</WTROW>
+				<WTROW id="TabSummary">
+					<WTFRAME col="1" src="" name="SummaryFrame" frmclass="FrameNoScroll" frmwidth="800" frmheight="2000" label="NoFrameSupport" border="0"/>
+				</WTROW>
+				<WTROW id="TabPrepaid">
+					<WTFRAME col="1" src="" name="PrepaidFrame" frmclass="FrameNoScroll" frmwidth="800" frmheight="2000" label="NoFrameSupport" border="0"/>
+				</WTROW>
+				<WTROW id="TabCash">
+					<WTFRAME col="1" src="" name="CashFrame" frmclass="FrameNoScroll" frmwidth="800" frmheight="2500" label="NoFrameSupport" border="0"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="11101" caption="Find" action="5" navbar="false" header="false" footer="false"
+				aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Type" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(PayDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FromDate)" value="ATTR(EnrollDate)"/>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(Type)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Prepaids" project="ptsPrepaidUser" class="CPrepaids">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlPrepaids" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Prepaids" project="ptsPrepaidUser" class="CPrepaids">
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(Type)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindType">
+					<WTCONDITION expr="PARAM(Type)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					<WTPARAM name="Type" direction="input" value="PARAM(Type)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlPrepaids" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW margin-top="12" margin-bottom="6">
+					<WTSTATIC col="1" tag="ViewFrom" class="ColumnHeader" align="center"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" size="8" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" size="8" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="Type" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="PARAM(Type)" prespace="false">
+						<WTOPTION id="0" label="All"/>
+						<WTOPTION id="1" label="Credit"/>
+						<WTOPTION id="2" label="Debit"/>
+					</WTCOMBO>
+					<WTBUTTON col="1" action="5" value="CONST(Go)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSPREPAIDS/PTSPREPAID)" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Prepaid">
+						<WTCOLUMN width="15" align="center" valign="top" label="PayDate"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="PayType"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Amount"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="RefID"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="BV"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Bonus"/>
+						<WTCOLUMN width="10" align="right" valign="top"/>
+
+						<WTROW margin-top="6">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(PayDate)">
+									<WTCONDITION expr="IsManager"/>
+									<WTLINK name="11103">
+										<WTPARAM name="PrepaidID" value="DATA(Prepaid.PrepaidID)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(PayDate)">
+									<WTCONDITION expr="NotManager"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(PayType)">
+									<WTCONDITION expr="DATA(PayType)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(PayType)" fontcolor="red">
+									<WTCONDITION expr="DATA(PayType)" oper="not-equal" value="CONST(1)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Amount)">
+									<WTCONDITION expr="DATA(PayType)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Amount)" fontcolor="red">
+									<WTCONDITION expr="DATA(PayType)" oper="not-equal" value="CONST(1)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="4">
+								<WTSTATIC value="DATA(RefID)">
+									<WTCONDITION expr="DATA(RefID)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="5">
+								<WTSTATIC value="DATA(BV)">
+									<WTCONDITION expr="DATA(PayType)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="6">
+								<WTSTATIC value="DATA(Bonus)">
+									<WTCONDITION expr="DATA(PayType)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="7"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="DATA(Note)" oper="not-equal" value="CONST('')"/>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="6" value="DATA(Prepaid.Note)" fontcolor="gray"/>
+						</WTROW>
+
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11103" caption="Prepaid" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="PrepaidID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Prepaid" project="ptsPrepaidUser" class="CPrepaid">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PrepaidID" direction="input" value="PARAM(PrepaidID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlPrepaid" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Prepaid" project="ptsPrepaidUser" class="CPrepaid">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PrepaidID" direction="input" value="PARAM(PrepaidID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlPrepaid" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Prepaid" project="ptsPrepaidUser" class="CPrepaid">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="PrepaidID" direction="input" value="PARAM(PrepaidID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Prepaid" project="ptsPrepaidUser" class="CPrepaid">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="PrepaidID" direction="input" value="PARAM(PrepaidID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlPrepaid" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="200" align="left"/>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" tag="PayDate"/>
+					<WTTEXT col="2" value="ATTR(Prepaid.PayDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="PayType"/>
+					<WTCOMBO col="2" value="ATTR(Prepaid.PayType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(Prepaid.Amount)" size="10"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Note"/>
+					<WTTEXT col="2" value="ATTR(Prepaid.Note)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="BV"/>
+					<WTCOMBO col="2" value="ATTR(Prepaid.BV)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Bonus"/>
+					<WTCOMBO col="2" value="ATTR(Prepaid.Bonus)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11111" caption="How It Works" header="false" footer="false" navbar="false" 
+				aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" langfile="11111">
+			<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="IsCertified" datatype="number"/>
+			<WTPARAM name="Answer1" datatype="number"/>
+			<WTPARAM name="Answer2" datatype="number"/>
+			<WTPARAM name="Answer3" datatype="number"/>
+			<WTPARAM name="Answer4" datatype="number"/>
+			<WTPARAM name="Answer5" datatype="number"/>
+			<WTPARAM name="Pass" datatype="number"/>
+
+			<WTINCLUDE name="Prepaid.asp"/>
+
+			<WTSUB name="LoadPage">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						If IsTraining(oMember) Then reqIsCertified = 1
+					</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;PrepaidTraining.htm&quot;)" />
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\5&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadPage"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Grade" type="Edit">
+				<WTCUSTOM>
+					If reqAnswer1 &lt;&gt; 1 Then reqAnswer1 = -1
+					If reqAnswer2 &lt;&gt; 2 Then reqAnswer2 = -1
+					If reqAnswer3 &lt;&gt; 3 Then reqAnswer3 = -1
+					If reqAnswer4 &lt;&gt; 4 Then reqAnswer4 = -1
+					If reqAnswer5 &lt;&gt; 1 Then reqAnswer5 = -1
+					If reqAnswer1 &lt;&gt; -1 And reqAnswer2 &lt;&gt; -1 And reqAnswer3 &lt;&gt; -1 And reqAnswer4 &lt;&gt; -1 And reqAnswer5 &lt;&gt; -1 Then reqPass = 1
+				</WTCUSTOM>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(Pass)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(Result)" value="CONST(SetTraining(oMember))" />
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadPage"/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="25" align="left"/>
+				<WTCOLUMN width="575" align="left"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(IsCertified)" oper="not-equal" value="CONST(0)" />
+					<WTROW>
+						<WTIMAGE col="1" merge="3" value="CONST(Certified.gif)" align="center"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="3" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(IsCertified)" oper="equal" value="CONST(0)" />
+
+					<!-- Question 1 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer1)" oper="equal" value="CONST(1)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer1)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question1"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="1" align="left" datapathx="/DATA/PARAM/@answer1=1"/>
+						<WTSTATIC col="3" label="Answer11"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="2" align="left" datapathx="/DATA/PARAM/@answer1=2"/>
+						<WTSTATIC col="3" label="Answer12"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="3" align="left" datapathx="/DATA/PARAM/@answer1=3"/>
+						<WTSTATIC col="3" label="Answer13"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="4" align="left" datapathx="/DATA/PARAM/@answer1=4"/>
+						<WTSTATIC col="3" label="Answer14"/>
+					</WTROW>
+
+					<!-- Question 2 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer2)" oper="equal" value="CONST(2)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer2)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question2"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="1" align="left" datapathx="/DATA/PARAM/@answer2=1"/>
+						<WTSTATIC col="3" label="Answer21"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="2" align="left" datapathx="/DATA/PARAM/@answer2=2"/>
+						<WTSTATIC col="3" label="Answer22"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="3" align="left" datapathx="/DATA/PARAM/@answer2=3"/>
+						<WTSTATIC col="3" label="Answer23"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="4" align="left" datapathx="/DATA/PARAM/@answer2=4"/>
+						<WTSTATIC col="3" label="Answer24"/>
+					</WTROW>
+
+					<!-- Question 3 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer3)" oper="equal" value="CONST(3)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer3)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question3"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="1" align="left" datapathx="/DATA/PARAM/@answer3=1"/>
+						<WTSTATIC col="3" label="Answer31"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="2" align="left" datapathx="/DATA/PARAM/@answer3=2"/>
+						<WTSTATIC col="3" label="Answer32"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="3" align="left" datapathx="/DATA/PARAM/@answer3=3"/>
+						<WTSTATIC col="3" label="Answer33"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="4" align="left" datapathx="/DATA/PARAM/@answer3=4"/>
+						<WTSTATIC col="3" label="Answer34"/>
+					</WTROW>
+
+					<!-- Question 4 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer4)" oper="equal" value="CONST(4)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer4)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question4"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="1" align="left" datapathx="/DATA/PARAM/@answer4=1"/>
+						<WTSTATIC col="3" label="Answer41"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="2" align="left" datapathx="/DATA/PARAM/@answer4=2"/>
+						<WTSTATIC col="3" label="Answer42"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="3" align="left" datapathx="/DATA/PARAM/@answer4=3"/>
+						<WTSTATIC col="3" label="Answer43"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="4" align="left" datapathx="/DATA/PARAM/@answer4=4"/>
+						<WTSTATIC col="3" label="Answer44"/>
+					</WTROW>
+
+					<!-- Question 5 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer5)" oper="equal" value="CONST(1)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer5)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question5"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="1" align="left" datapathx="/DATA/PARAM/@answer5=1"/>
+						<WTSTATIC col="3" label="Answer51"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="2" align="left" datapathx="/DATA/PARAM/@answer5=2"/>
+						<WTSTATIC col="3" label="Answer52"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="3" align="left" datapathx="/DATA/PARAM/@answer5=3"/>
+						<WTSTATIC col="3" label="Answer53"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="4" align="left" datapathx="/DATA/PARAM/@answer5=4"/>
+						<WTSTATIC col="3" label="Answer54"/>
+					</WTROW>
+
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTBUTTON col="1" merge="3" action="1" value="CONST(Grade)" align="center"/>
+					</WTROW>
+				</WTCODEGROUP>	
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11112" caption="Legal Compliance" header="false" footer="false" navbar="false" 
+				aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" langfile="11112">
+			<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="IsCertified" datatype="number"/>
+			<WTPARAM name="Answer1" datatype="number"/>
+			<WTPARAM name="Answer2" datatype="number"/>
+			<WTPARAM name="Answer3" datatype="number"/>
+			<WTPARAM name="Answer4" datatype="number"/>
+			<WTPARAM name="Answer5" datatype="number"/>
+			<WTPARAM name="Pass" datatype="number"/>
+
+			<WTINCLUDE name="Prepaid.asp"/>
+
+			<WTSUB name="LoadPage">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						If IsCompliance(oMember) Then reqIsCertified = 1
+					</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;PrepaidCompliance.htm&quot;)" />
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\5&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadPage"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Grade" type="Edit">
+				<WTCUSTOM>
+					If reqAnswer1 &lt;&gt; 1 Then reqAnswer1 = -1
+					If reqAnswer2 &lt;&gt; 2 Then reqAnswer2 = -1
+					If reqAnswer3 &lt;&gt; 3 Then reqAnswer3 = -1
+					If reqAnswer4 &lt;&gt; 4 Then reqAnswer4 = -1
+					If reqAnswer5 &lt;&gt; 1 Then reqAnswer5 = -1
+					If reqAnswer1 &lt;&gt; -1 And reqAnswer2 &lt;&gt; -1 And reqAnswer3 &lt;&gt; -1 And reqAnswer4 &lt;&gt; -1 And reqAnswer5 &lt;&gt; -1 Then reqPass = 1
+				</WTCUSTOM>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(Pass)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(Result)" value="CONST(SetCompliance(oMember))" />
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadPage"/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="25" align="left"/>
+				<WTCOLUMN width="575" align="left"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(IsCertified)" oper="not-equal" value="CONST(0)" />
+					<WTROW>
+						<WTIMAGE col="1" merge="3" value="CONST(Certified.gif)" align="center"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="3" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(IsCertified)" oper="equal" value="CONST(0)" />
+
+					<!-- Question 1 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer1)" oper="equal" value="CONST(1)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer1)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question1"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="1" align="left" datapathx="/DATA/PARAM/@answer1=1"/>
+						<WTSTATIC col="3" label="Answer11"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="2" align="left" datapathx="/DATA/PARAM/@answer1=2"/>
+						<WTSTATIC col="3" label="Answer12"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="3" align="left" datapathx="/DATA/PARAM/@answer1=3"/>
+						<WTSTATIC col="3" label="Answer13"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer1" name="4" align="left" datapathx="/DATA/PARAM/@answer1=4"/>
+						<WTSTATIC col="3" label="Answer14"/>
+					</WTROW>
+
+					<!-- Question 2 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer2)" oper="equal" value="CONST(2)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer2)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question2"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="1" align="left" datapathx="/DATA/PARAM/@answer2=1"/>
+						<WTSTATIC col="3" label="Answer21"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="2" align="left" datapathx="/DATA/PARAM/@answer2=2"/>
+						<WTSTATIC col="3" label="Answer22"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="3" align="left" datapathx="/DATA/PARAM/@answer2=3"/>
+						<WTSTATIC col="3" label="Answer23"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer2" name="4" align="left" datapathx="/DATA/PARAM/@answer2=4"/>
+						<WTSTATIC col="3" label="Answer24"/>
+					</WTROW>
+
+					<!-- Question 3 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer3)" oper="equal" value="CONST(3)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer3)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question3"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="1" align="left" datapathx="/DATA/PARAM/@answer3=1"/>
+						<WTSTATIC col="3" label="Answer31"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="2" align="left" datapathx="/DATA/PARAM/@answer3=2"/>
+						<WTSTATIC col="3" label="Answer32"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="3" align="left" datapathx="/DATA/PARAM/@answer3=3"/>
+						<WTSTATIC col="3" label="Answer33"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer3" name="4" align="left" datapathx="/DATA/PARAM/@answer3=4"/>
+						<WTSTATIC col="3" label="Answer34"/>
+					</WTROW>
+
+					<!-- Question 4 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer4)" oper="equal" value="CONST(4)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer4)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question4"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="1" align="left" datapathx="/DATA/PARAM/@answer4=1"/>
+						<WTSTATIC col="3" label="Answer41"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="2" align="left" datapathx="/DATA/PARAM/@answer4=2"/>
+						<WTSTATIC col="3" label="Answer42"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="3" align="left" datapathx="/DATA/PARAM/@answer4=3"/>
+						<WTSTATIC col="3" label="Answer43"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer4" name="4" align="left" datapathx="/DATA/PARAM/@answer4=4"/>
+						<WTSTATIC col="3" label="Answer44"/>
+					</WTROW>
+
+					<!-- Question 5 ************************************************************-->
+					<WTROW margin-top="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" bold="true">
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer5)" oper="equal" value="CONST(1)" />
+								<WTIMAGE value="CONST(GreenCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(Answer5)" oper="equal" value="CONST(-1)" />
+								<WTIMAGE value="CONST(RedCheck.gif)" imgalign="absmiddle"/>
+							</WTCODEGROUP>
+							<WTSTATIC label="Question5"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="1" align="left" datapathx="/DATA/PARAM/@answer5=1"/>
+						<WTSTATIC col="3" label="Answer51"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="2" align="left" datapathx="/DATA/PARAM/@answer5=2"/>
+						<WTSTATIC col="3" label="Answer52"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="3" align="left" datapathx="/DATA/PARAM/@answer5=3"/>
+						<WTSTATIC col="3" label="Answer53"/>
+					</WTROW>
+					<WTROW margin-top="3">
+						<WTSTATIC col="1" merge="2"/>
+						<WTRADIO col="3" group="Answer5" name="4" align="left" datapathx="/DATA/PARAM/@answer5=4"/>
+						<WTSTATIC col="3" label="Answer54"/>
+					</WTROW>
+
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTBUTTON col="1" merge="3" action="1" value="CONST(Grade)" align="center"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11113" caption="Summary" header="false" footer="false" navbar="false" 
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" langfile="11113">
+			<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="IsFounder" datatype="number"/>
+
+			<WTINCLUDE name="Prepaid.asp"/>
+			<WTDATATXN name="Summary"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						If IsFounder(oMember) Then reqIsFounder = 1
+					</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="CloudZow" project="ptsCloudZowUser" class="CCloudZow">
+					<WTMETHOD name="Custom">
+						<WTPARAM name="Status" direction="input" value="CONST(18)"/>
+						<WTPARAM name="czDate" direction="input" value="CONST(0)"/>
+						<WTPARAM name="Quantity" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Amount" direction="input" value="CONST(0)"/>
+						<WTPARAM name="xmlSummary" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCUSTOM>
+					Set oData = server.CreateObject("MSXML2.FreeThreadedDOMDocument")
+					oData.loadXML xmlSummary
+					Set oIC = oData.selectNodes("/PTSSUMMARY")
+					For Each oItem In oData.selectNodes("/PTSSUMMARY")
+					oItem.setAttribute("pb") = FormatCurrency(oItem.getAttribute("pb"), 2)
+					oItem.setAttribute("pc") = FormatCurrency(oItem.getAttribute("pc"), 2)
+					oItem.setAttribute("pd") = FormatCurrency(oItem.getAttribute("pd"), 2)
+					oItem.setAttribute("bv") = FormatCurrency(oItem.getAttribute("bv"), 2)
+					oItem.setAttribute("cb") = FormatCurrency(oItem.getAttribute("cb"), 2)
+					oItem.setAttribute("ct") = FormatCurrency(oItem.getAttribute("ct"), 2)
+					oItem.setAttribute("c1") = FormatCurrency(oItem.getAttribute("c1"), 2)
+					oItem.setAttribute("c2") = FormatCurrency(oItem.getAttribute("c2"), 2)
+					oItem.setAttribute("c3") = FormatCurrency(oItem.getAttribute("c3"), 2)
+					oItem.setAttribute("c4") = FormatCurrency(oItem.getAttribute("c4"), 2)
+					Next
+					xmlSummary = oData.XML
+					Set oData = Nothing
+				</WTCUSTOM>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="65" align="right"/>
+				<WTCOLUMN width="300" align="center"/>
+				<WTCOLUMN width="20" align="center"/>
+				<WTCOLUMN width="300" align="center"/>
+				<WTCOLUMN width="65" align="center"/>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTTABLE col="2" valign="top">
+						<WTCOLUMN width="300" align="center"/>
+						<WTROW margin-bottom="12">
+							<WTTABLE col="1" valign="top" padding="0" style="border: 1px #5084A2 solid">
+								<WTCOLUMN width="300" align="right"/>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" merge="4" height="18" align="center" valign="middle" backcolor="#D8EEFB" background="bg_table_head.gif">
+										<WTSTATIC fontcolor="darkblue" bold="true">
+											<WTSTATIC label="Status"/>
+										</WTSTATIC>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="TrainingCertified" bold="true"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="ComlianceCertified" bold="true"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="Founder" bold="true">
+										<WTCONDITION expr="PARAM(IsFounder)" oper="not-equal" value="CONST(0)" />
+									</WTSTATIC>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+						<WTROW margin-bottom="12">
+							<WTTABLE col="1" valign="top" padding="0" style="border: 1px #5084A2 solid">
+								<WTCOLUMN width="175" align="right"/>
+								<WTCOLUMN width="125" align="center"/>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" merge="4" height="18" align="center" valign="middle" backcolor="#D8EEFB" background="bg_table_head.gif">
+										<WTSTATIC fontcolor="darkblue" bold="true">
+											<WTSTATIC label="PrepaidAccount"/>
+										</WTSTATIC>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="PB" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.PB)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="PC" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.PC)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="PD" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.PD)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="BV" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.BV)"/>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+					<WTSTATIC col="3"/>
+					<WTTABLE col="4" valign="top">
+						<WTCOLUMN width="300" align="center"/>
+						<WTROW margin-bottom="12">
+							<WTTABLE col="1" valign="top" padding="0" style="border: 1px #5084A2 solid">
+								<WTCOLUMN width="175" align="right"/>
+								<WTCOLUMN width="125" align="center"/>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" merge="4" height="18" align="center" valign="middle" backcolor="#D8EEFB" background="bg_table_head.gif">
+										<WTSTATIC fontcolor="darkblue" bold="true">
+											<WTSTATIC label="CashAccount"/>
+										</WTSTATIC>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="CB" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.CB)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="CT" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.CT)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="C1" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.C1)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="C2" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.C2)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="C3" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.C3)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="C4" bold="true" align="right"/>
+									<WTSTATIC col="2" value="ATTR(Summary.C4)"/>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="5" action="0" value="Refresh" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

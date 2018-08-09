@@ -1,0 +1,86 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="55" name="DownTitle" alias="dt" title="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="5501" name="DownTitleID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<WTATTRIBUTE id="5502" name="TitleName" type="text" length="40" source="join">
+			<WTJOIN entity="Title" name="TitleName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="5503" name="Line" type="number" source="entity"/>
+		<WTATTRIBUTE id="5504" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="5505" name="Leg" type="number" source="entity"/>
+		<WTATTRIBUTE id="5506" name="Title" type="number" source="entity"/>
+		<WTATTRIBUTE id="5507" name="Cnt" type="number" source="entity"/>
+
+		<!-- Non Persist Fields -->
+
+		<WTINDEX name="Member">
+			<WTATTRIBUTE name="Line"/>
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="Leg"/>
+			<WTATTRIBUTE name="Title"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="DownTitle" entity="DownTitle" alias="dt"/>
+			<WTRELATIONSHIP name="Common" entity="DownTitle" alias="dt">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="dt" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+				<WTENTITY name="Title" entity="Title" alias="ti">
+					<WTATTRIBUTE alias="me" name="CompanyID" relalias="ti" relname="CompanyID"/>
+					<WTATTRIBUTE alias="dt" name="Title" relalias="ti" relname="TitleNo" connector="AND"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================-->
+		<WTPROCEDURE name="Adjust" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(Leg)" direction="input"/>
+			<WTPARAM name="ATTR(Title)" direction="input"/>
+			<WTPARAM name="ATTR(Cnt)" direction="input"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+<!--
+		<WTPROCEDURE name="DeleteLine"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE name="DeleteLineMember"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE name="DeleteMember"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="Cnt" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+-->
+		<!--===================================================================================-->
+		<WTPROCEDURE name="Summary" type="List" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(Line)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(DownTitle.DownTitleID)"/>
+					<WTATTRIBUTE value="ATTR(DownTitle.Title)"/>
+					<WTATTRIBUTE value="ATTR(DownTitle.Leg)"/>
+					<WTATTRIBUTE value="ATTR(DownTitle.Cnt)"/>
+					<WTATTRIBUTE value="ATTR(Title.TitleName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+
+	</WTWEBPAGES>
+</WTROOT>

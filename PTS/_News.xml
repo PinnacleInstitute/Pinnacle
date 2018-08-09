@@ -1,0 +1,1291 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="98" name="News" alias="nw" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="9801" name="NewsID" type="number" identity="true" min="1" required="true" source="entity"/>
+	
+		<!--Foreign LeadMains-->
+		<WTATTRIBUTE id="9802" name="CompanyID" type="number" source="entity"/>
+		<WTATTRIBUTE id="9803" name="AuthUserID" type="number" source="entity"/>
+		<WTATTRIBUTE id="9804" name="NewsTopicID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="9805" name="NameLast" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="AuthUser" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9806" name="NameFirst" type="text" length="30" min="1" max="30" source="join">
+			<WTJOIN entity="AuthUser" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9807" name="UserName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=" "/>
+			<WTCOMPUTE name="NameLast"/>
+		</WTATTRIBUTE>
+
+		<WTATTRIBUTE id="9809" name="NewsTopicName" type="text" length="80" source="join">
+			<WTJOIN entity="NewsTopic" name="NewsTopicName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="9810" name="Title" type="text" length="150" min="1" max="150" title="true" required="true" source="entity"/>
+		<WTATTRIBUTE id="9811" name="Description" type="text" length="1000" min="1" max="1000" source="entity" embedhtml="true"/>
+		<WTATTRIBUTE id="9812" name="CreateDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mmam/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9813" name="ActiveDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mmam/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9814" name="Image" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="9815" name="Tags" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="9816" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Submitted"/>
+			<WTENUM id="3" name="Approved"/>
+			<WTENUM id="4" name="Active"/>
+			<WTENUM id="5" name="InActive"/>
+			<WTENUM id="6" name="Cancelled"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9817" name="Seq" type="number" min="1" source="entity" seq="5"/>
+		<WTATTRIBUTE id="9818" name="LeadMain" type="number" source="entity">
+			<WTENUM id="1" name="Primary"/>
+			<WTENUM id="2" name="Secondary"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9819" name="LeadTopic" type="number" source="entity">
+			<WTENUM id="1" name="Primary"/>
+			<WTENUM id="2" name="Secondary"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="9820" name="IsBreaking" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="9821" name="IsBreaking2" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="9822" name="IsStrategic" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="9823" name="IsShare" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="9824" name="IsEditorial" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="9825" name="UserRole" type="number" source="entity">
+			<WTENUM id="1" name="Author"/>
+			<WTENUM id="2" name="Publisher"/>
+		</WTATTRIBUTE>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="9898" name="FromDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="9899" name="ToDate" type="date" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="NewsTopicID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="ActiveDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="News" entity="News" alias="nw"/>
+			<WTRELATIONSHIP name="Common" entity="News" alias="nw">
+				<WTENTITY name="AuthUser" entity="AuthUser" alias="au">
+					<WTATTRIBUTE alias="nw" name="AuthUserID" relalias="au" relname="AuthUserID"/>
+				</WTENTITY>
+				<WTENTITY name="NewsTopic" entity="NewsTopic" alias="nwt">
+					<WTATTRIBUTE alias="nw" name="NewsTopicID" relalias="nwt" relname="NewsTopicID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="ActiveDate" default="true"/>
+			<WTATTRIBUTE name="Title" contains="true"/>
+			<WTATTRIBUTE name="Description" contains="true"/>
+			<WTATTRIBUTE name="Tags" contains="true"/>
+			<WTATTRIBUTE name="Status"/>
+		</WTENUM>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="NEWS-PENDING" value="1"/>
+			<WTSYSCON name="NEWS-SUBMITTED" value="2"/>
+			<WTSYSCON name="NEWS-APPROVED" value="3"/>
+			<WTSYSCON name="NEWS-ACTIVE" value="4"/>
+			<WTSYSCON name="NEWS-INACTIVE" value="5"/>
+			<WTSYSCON name="NEWS-CANCELLED" value="6"/>
+			<WTSYSCON name="USERROLE-AUTHOR" value="1"/>
+			<WTSYSCON name="USERROLE-PUBLISHER" value="2"/>
+		</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(News.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindTopic" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(NewsTopicID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(News.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+			<WTCONDITION expr="ATTR(News.NewsTopicID)" oper="equal" value="PARAM(NewsTopicID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListNews" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Status)" direction="input"/> <!--List Option-->
+			<WTPARAM name="ATTR(NewsTopicID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(News.NewsID)"/>
+					<WTATTRIBUTE value="ATTR(News.UserName)" alias="UserName"/>
+					<WTATTRIBUTE value="ATTR(NewsTopic.NewsTopicName)"/>
+					<WTATTRIBUTE value="ATTR(News.Title)"/>
+					<WTATTRIBUTE value="ATTR(News.Description)"/>
+					<WTATTRIBUTE value="ATTR(News.CreateDate)"/>
+					<WTATTRIBUTE value="ATTR(News.ActiveDate)"/>
+					<WTATTRIBUTE value="ATTR(News.Image)"/>
+					<WTATTRIBUTE value="ATTR(News.Tags)"/>
+					<WTATTRIBUTE value="ATTR(News.Status)"/>
+					<WTATTRIBUTE value="ATTR(News.Seq)"/>
+					<WTATTRIBUTE value="ATTR(News.LeadMain)"/>
+					<WTATTRIBUTE value="ATTR(News.LeadTopic)"/>
+					<WTATTRIBUTE value="ATTR(News.IsBreaking)"/>
+					<WTATTRIBUTE value="ATTR(News.IsBreaking2)"/>
+					<WTATTRIBUTE value="ATTR(News.IsStrategic)"/>
+					<WTATTRIBUTE value="ATTR(News.UserRole)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListShare" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Status)" direction="input"/> <!-- Options -->
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(News.NewsID)"/>
+					<WTATTRIBUTE value="ATTR(NewsTopic.NewsTopicName)"/>
+					<WTATTRIBUTE value="ATTR(News.Title)"/>
+					<WTATTRIBUTE value="ATTR(News.Description)"/>
+					<WTATTRIBUTE value="ATTR(News.ActiveDate)"/>
+					<WTATTRIBUTE value="ATTR(News.Image)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Avatar" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(AuthUserID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="Image" direction="output" datatype="text" length="80"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="Search" type="Find" style="GenerateDataProc.xsl" template="new" searchlength="200" bookmarklength="14" nodata="true">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(News.NewsID)"/>
+					<WTATTRIBUTE value="ATTR(News.Title)"/>
+					<WTATTRIBUTE value="ATTR(News.Description)"/>
+					<WTATTRIBUTE value="ATTR(News.Tags)"/>
+					<WTATTRIBUTE value="ATTR(News.ActiveDate)"/>
+					<WTATTRIBUTE value="ATTR(News.Image)"/>
+					<WTATTRIBUTE value="ATTR(News.LeadMain)"/>
+					<WTATTRIBUTE value="ATTR(News.LeadTopic)"/>
+					<WTATTRIBUTE value="ATTR(News.IsBreaking)"/>
+					<WTATTRIBUTE value="ATTR(News.IsBreaking2)"/>
+					<WTATTRIBUTE value="ATTR(News.IsStrategic)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!-- =============================================================================================== -->
+		<WTWEBPAGE name="9801" caption="Find" action="5" header="false" navbar="false" footer="false"  wrapper="wrapper900"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!-- =============================================================================================== -->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="NewsTopicID" datatype="number"/>
+			<WTPARAM name="ShowSummary" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(ActiveDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Newss" project="ptsNewsUser" class="CNewss">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlNewss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+				<WTOBJECT name="NewsTopics" project="ptsNewsTopicUser" class="CNewsTopics"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Newss" project="ptsNewsUser" class="CNewss">
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(NewsTopicID)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindTopic">
+					<WTCONDITION expr="PARAM(NewsTopicID)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="NewsTopicID" direction="input" value="PARAM(NewsTopicID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlNewss" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="NewsTopics" project="ptsNewsTopicUser" class="CNewsTopics">
+				<WTMETHOD name="EnumCompany">
+					<WTPARAM name="xmlNewsTopics" direction="return" concat="true" datatype="text" />
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+					<WTPARAM name="ItemID" direction="input" value="CONST()" />
+					<WTPARAM name="Element" direction="input" value="CONST()" />
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+				</WTMETHOD>
+				<WTCUSTOM>xmlNewsTopics = Replace(xmlNewsTopics, "name="" """, "name=""All""")</WTCUSTOM>
+			</WTOBJECT>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="900" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="450" align="left"/>
+						<WTCOLUMN width="450" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="FindNews" class="PageHeading"/>
+							<WTSTATIC col="2" align="right">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="NewNews" space="1">
+									<WTLINK name="9803"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK>
+								</WTSTATIC>
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(newstopic.gif)" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="Topics" space="1">
+									<WTLINK name="14011"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Newss.FindTypeID)" translate="true" prespace="false"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true" prespace="false"/>
+					<WTSTATIC col="1" tag="NewsTopicID" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="PARAM(NewsTopicID)" datapath="/DATA/TXN/PTSNEWSTOPICS/ENUM" setselected="true" prespace="false"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+					<WTCHECK col="1" value="PARAM(ShowSummary)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTSTATIC label="ShowSummary"/>
+				<WTSTATIC label="HasImage"/>
+				<WTSTATIC label="EditNews"/>
+				<WTSTATIC label="PreviewNews"/>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="News">
+						<WTCOLUMN width="20" align="left" valign="top" label="NewsTopicName"/>
+						<WTCOLUMN width="60" align="left" valign="top" label="Title"/>
+						<WTCOLUMN width="8" align="left" valign="top" label="Status"/>
+						<WTCOLUMN width="12" align="left" valign="top" label="ActiveDate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(NewsTopicName)"/>
+							<WTSTATIC col="2">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Image)" oper="not-equal" value="CONST('')"/>
+									<WTIMAGE value="CONST(Images.gif)" alt="HasImage" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTSTATIC value="DATA(Title)" space="1" bold="true"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="EditNews" imgalign="absmiddle">
+										<WTLINK name="9803">
+											<WTPARAM name="NewsID" value="DATA(NewsID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Preview.gif)" alt="PreviewNews" imgalign="absmiddle">
+										<WTLINK name="9810" target="PreviewNews" return="false">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="NewsID" value="DATA(NewsID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC fontcolor="purple">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(UserRole)" oper="not-equal" value="CONST(0)"/>
+										<WTSTATIC value="DATA(UserRole)"/>
+										<WTSTATIC value="CONST(:)"/>
+									</WTCODEGROUP>
+									<WTSTATIC value="DATA(UserName)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Status)"/>
+							<WTSTATIC col="4" value="DATA(ActiveDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="PARAM(ShowSummary)" oper="equal" value="CONST(0)"/>
+							<WTSTATIC col="1" merge="4" valign="top">
+								<WTSTATIC value="DATA(News.Tags)" fontcolor="gray" space="1"/>
+								<WTSTATIC label="LeadMain1" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadMain)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC label="LeadMain2" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadMain)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC label="LeadTopic1" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadTopic)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC label="LeadTopic2" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadTopic)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC label="BreakingMain" space="1" fontcolor="green">
+									<WTCONDITION expr="DATA(IsBreaking)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC label="BreakingCategory" space="1" fontcolor="green">
+									<WTCONDITION expr="DATA(IsBreaking2)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Strategic" space="1" fontcolor="red">
+									<WTCONDITION expr="DATA(IsStrategic)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC label="IsShare" space="1" fontcolor="red">
+									<WTCONDITION expr="DATA(IsShare)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="PARAM(ShowSummary)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC col="1" valign="top">
+								<WTSTATIC value="DATA(News.Tags)" fontcolor="gray" newline="1"/>
+								<WTSTATIC label="LeadMain1" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadMain)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC label="LeadMain2" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadMain)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC label="LeadTopic1" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadTopic)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC label="LeadTopic2" space="1" fontcolor="blue">
+									<WTCONDITION expr="DATA(LeadTopic)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Breaking" space="1" fontcolor="red">
+									<WTCONDITION expr="DATA(IsBreaking)" oper="not-equal" value="CONST(0)"/>
+									<WTCONDITION expr="DATA(IsBreaking2)" oper="not-equal" value="CONST(0)" connector="or"/>
+								</WTSTATIC>
+								<WTSTATIC label="Strategic" space="1" fontcolor="red">
+									<WTCONDITION expr="DATA(IsStrategic)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" merge="3" value="DATA(News.Description)" embedhtml="true"/>
+						</WTROW>
+						<WTROW height="12">
+							<WTSTATIC col="1" merge="4"/>
+						</WTROW>
+
+				</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!-- =============================================================================================== -->
+		<WTWEBPAGE name="9811" page-width="580" page-left="0" margin-width="0" navbar="false" header="false" footer="false"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!-- =============================================================================================== -->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="BroadcastID" datatype="number"/>
+			<WTPARAM name="ListOption" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="UpdateParent" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTSUB function="ListNews(add)">
+				<WTCUSTOM>
+					tmpDate = Now()
+					tmpOption = 0
+					Select Case reqListOption
+					Case 0
+						tmpOption = 1
+					Case Else
+						reqToDate = DateAdd("h", (reqListOption-1) * -2, tmpDate )
+						reqFromDate = DateAdd("h", -2, reqToDate )
+					End Select
+				</WTCUSTOM>
+				<WTOBJECT name="Newss" project="ptsNewsUser" class="CNewss">
+					<WTMETHOD name="ListShare">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Status" direction="input" value="CONST(tmpOption)"/>
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlNewss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+
+<!-- detect and add any selected news for the broadcast -->
+<WTCUSTOM>
+	If add = 1 Then
+		tmpCnt = 0
+		Set oBroadcastNews = server.CreateObject("ptsBroadcastNewsUser.CBroadcastNews")
+		If oBroadcastNews Is Nothing Then
+			DoError Err.Number, Err.Source, "Unable to Create Object - ptsBroadcastNewsUser.CBroadcastNews"
+		Else
+			For Each oItem in oNewss
+				tmpID = oItem.NewsID
+				If Request.Form.Item(tmpID) = "on" Then
+					NewID = 0
+					NewID = oBroadcastNews.Add( reqBroadcastID, tmpID )
+					If (NewID &lt;&gt; 0)Then tmpCnt = tmpCnt + 1
+					If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+				End If
+			Next
+		End If
+		Set oBroadcastNews = Nothing
+		'If tmpCnt &gt; 0 Then reqUpdateParent = 1
+		DoError reqUploadError, "Include", tmpCnt &amp; " News Stories Added!"
+	End If
+
+	Set oAds = server.CreateObject("ptsAdUser.CAds")
+	If oAds Is Nothing Then
+		DoError Err.Number, Err.Source, "Unable to Create Object - ptsAdUser.CAds"
+	Else
+		With oAds
+		.SysCurrentLanguage = reqSysLanguage
+		UserType = 4
+		UserID = reqSysMemberID
+		If reqSysUserGroup = 1 Then
+			UserType = 1
+			UserID = 1
+		End If
+		If reqSysUserGroup = 51 OR reqSysUserGroup = 52 Then
+			UserType = 28
+			UserID = reqSysOrgID
+		End If
+		tmpStories = oNewss.Count(1)
+
+		.ListAds reqCompanyID, 4, tmpStories, UserType, UserID
+		If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+		tmpAds = .Count(1)
+	End With
+	End If
+
+	xmlNewss = "&lt;PTSNEWSS&gt;"
+	x = 1
+	For Each oItem in oNewss
+		With oItem
+			xmlNewss = xmlNewss + "&lt;PTSNEWS newsid=""" + .NewsID + """ newstopicname=""" + .NewsTopicName + """ title=""" + CleanXML(.Title) + """ activedate=""" + .ActiveDate + """ image=""" + .Image + """&gt;&lt;DESCRIPTION&gt;&lt;!-- " + Replace(.Description, "--", "- ") + " --&gt;&lt;/DESCRIPTION&gt;&lt;/PTSNEWS&gt;"
+		End With
+		If x &lt;= tmpAds Then
+			With oAds.Item(x,"",1)
+				xmlNewss = xmlNewss + "&lt;PTSNEWS title=""" + "" + """&gt;&lt;DESCRIPTION&gt;&lt;!-- " + Replace(.Msg, "--", "- ") + " --&gt;&lt;/DESCRIPTION&gt;&lt;/PTSNEWS&gt;"
+			End With
+			x = x + 1
+		End If
+	Next
+	xmlNewss = xmlNewss + "&lt;/PTSNEWSS&gt;"
+	Set oAds = Nothing
+</WTCUSTOM>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="ListNews(0)"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="AddNews" type="Add">
+				<WTCALLSUB name="ListNews(1)"/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="580" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(UpdateParent)"/>
+				</WTROW>
+
+				<WTFUNCTION name="UpDateParent()">
+					var upd = document.getElementById('UpdateParent').value;
+					if( upd != 0 ) { window.parent.doSubmit(0,'') }
+				</WTFUNCTION>
+				<WTLOAD>
+					UpDateParent();
+				</WTLOAD>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(UpdateParent)" oper="equal" value="CONST(0)"/>
+<!--
+					<WTROW margin-bottom="3">
+						<WTSTATIC col="1" label="AddNewsStories" class="PageHeading"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" label="AddNewsText" class="prompt"/>
+					</WTROW>
+
+					<WTROW margin-top="2" margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+-->					
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" tag="ListNews" class="ColumnHeader" align="center"/>
+						<WTCOMBO col="1" value="PARAM(ListOption)" prespace="false">
+							<WTOPTION id="0" label="Current"/>
+							<WTOPTION id="1" label="Hour2"/>
+							<WTOPTION id="2" label="Hour4"/>
+							<WTOPTION id="3" label="Hour6"/>
+							<WTOPTION id="4" label="Hour8"/>
+							<WTOPTION id="5" label="Hour10"/>
+							<WTOPTION id="6" label="Hour12"/>
+							<WTOPTION id="7" label="Hour14"/>
+							<WTOPTION id="8" label="Hour16"/>
+							<WTOPTION id="9" label="Hour18"/>
+							<WTOPTION id="10" label="Hour20"/>
+							<WTOPTION id="11" label="Hour22"/>
+							<WTOPTION id="12" label="Hour24"/>
+						</WTCOMBO>
+						<WTBUTTON col="1" action="0" value="CONST(View)" default="true"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="PARAM(ListOption)" oper="not-equal" value="CONST(0)" />
+						<WTSTATIC col="1" align="center" fontcolor="purple">
+							<WTSTATIC value="PARAM(FromDate)" space="1"/>
+							<WTSTATIC value="CONST(-)" space="1"/>
+							<WTSTATIC value="PARAM(ToDate)"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-bottom="6"/>
+					<WTROW margin-bottom="6">
+						<WTBUTTON col="1" action="5" align="center" value="CONST(AddNews)"/>
+						<WTBUTTON col="1" align="center" value="CONST(RefreshBroadcast)">
+							<WTCLICK>window.parent.doSubmit(0,'')</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="News">
+							<WTCOLUMN width="5" align="left" valign="top"/>
+							<WTCOLUMN width="60" align="left" valign="top" label="Title"/>
+							<WTCOLUMN width="20" align="left" valign="top" label="ActiveDate"/>
+							<WTCOLUMN width="15" align="left" valign="top" label="NewsTopicName"/>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Title)" oper="not-equal" value="CONST('')"/>
+								<WTROW>
+									<WTCHECK col="1" name="&lt;xsl:value-of select=&quot;@newsid&quot;/&gt;" valign="top"/>
+									<WTSTATIC col="2" value="DATA(Title)" bold="true"/>
+									<WTSTATIC col="3" value="DATA(ActiveDate)" valign="top" fontcolor="purple"/>
+									<WTSTATIC col="4" value="DATA(NewsTopicName)" valign="top"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2" merge="3">
+										<WTCODEGROUP>
+											<WTIMAGE value="DATA(Image)" path="CONST(News\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;\thumb)" imgwidth="75" imgheight="75" imgalign="left" hspace="10" vspace="10"/>
+										</WTCODEGROUP>
+										<WTSTATIC value="DATA(News.Description)" embedhtml="true"/>
+									</WTSTATIC>
+								</WTROW>
+							</WTCODEGROUP>
+							<WTROW>
+								<WTCONDITION expr="DATA(Title)" oper="equal" value="CONST('')"/>
+								<WTSTATIC col="1" merge="4" value="DATA(News.Description)" embedhtml="true" align="center"/>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTBUTTON col="1" action="5" align="center" value="CONST(AddNews)"/>
+						<WTBUTTON col="1" align="center" value="CONST(RefreshBroadcast)">
+							<WTCLICK>window.parent.doSubmit(0,'')</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="9803"  navbar="false" header="false" footer="false" wrapper="wrapper800"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="NewsID" datatype="number"/>
+			<WTPARAM name="UploadImage" datatype="text"/>
+			<WTPARAM name="ImagePath" datatype="text"/>
+
+			<WTINCLUDE name="Images.asp"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(NewsID)" oper="equal" value="CONST(0)"/>
+				<WTOBJECT name="News" project="ptsNewsUser" class="CNews">
+					<WTMETHOD name="Load">
+						<WTPARAM name="NewsID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(UserID)"/>
+					<WTSETATTRIBUTE name="ATTR(CreateDate)" value="SYS(Now)"/>
+					<WTSETATTRIBUTE name="ATTR(Title)" value="CONST(&quot;-&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(NEWS-PENDING)"/>
+					<WTSETATTRIBUTE name="ATTR(UserRole)" value="SYSCON(USERROLE-PUBLISHER)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="reqNewsID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+			
+			<WTSUB name="LoadNews">
+				<WTOBJECT name="News" project="ptsNewsUser" class="CNews">
+					<WTMETHOD name="Load">
+						<WTPARAM name="NewsID" direction="input" value="PARAM(NewsID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTSETATTRIBUTE name="PARAM(ImagePath)" value="CONST(&quot;news/&quot; + CStr(reqCompanyID))"/>
+					<WTSETATTRIBUTE name="ATTR(Title)" value="CONST(&quot;&quot;)">
+						<WTCONDITION expr="ATTR(Title)" oper="equal" value="CONST(&quot;-&quot;)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlNews" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTSUB>
+
+			<WTSUB name="LoadList">
+				<WTOBJECT name="NewsTopics" project="ptsNewsTopicUser" class="CNewsTopics">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlNewsTopics" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqNewsID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\News\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateNews">
+				<WTOBJECT name="News" project="ptsNewsUser" class="CNews">
+					<WTMETHOD name="Load">
+						<WTPARAM name="NewsID" direction="input" value="PARAM(NewsID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(ActiveDate)" value="SYS(Now)">
+						<WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(4)"/>
+						<WTCONDITION expr="ATTR(ActiveDate)" oper="equal" value="CONST(&quot;0&quot;)" connector="and"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlNews" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="ATTR(Image)" oper="not-equal" value="CONST(&quot;&quot;)" connector="and"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(IsStrategic)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="ATTR(IsShare)" oper="not-equal" value="CONST(0)" connector="or"/>
+							<WTCUSTOM>
+								fromImage = "images/news/" + CStr(reqCompanyID) + "/" + .Image
+								toImage = "images/news/" + CStr(reqCompanyID) + "/thumb/" + .Image
+								CreateThumbNail fromImage, 75, 75, toImage
+							</WTCUSTOM>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(LeadTopic)" oper="equal" value="CONST(1)"/>
+							<WTCUSTOM>
+								fromImage = "images/news/" + CStr(reqCompanyID) + "/" + .Image
+								toImage = "images/news/" + CStr(reqCompanyID) + "/topic/" + .Image
+								CreateThumbNail fromImage, 220, 80, toImage
+							</WTCUSTOM>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(IsBreaking)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="ATTR(IsBreaking2)" oper="not-equal" value="CONST(0)" connector="or"/>
+							<WTCUSTOM>
+								fromImage = "images/news/" + CStr(reqCompanyID) + "/" + .Image
+								toImage = "images/news/" + CStr(reqCompanyID) + "/break/" + .Image
+								CreateThumbNail fromImage, 200, 0, toImage
+							</WTCUSTOM>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqNewsID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\News\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadImage)" oper="not-equal" value="&quot;&quot;"/>
+				<WTOBJECT name="News" project="ptsNewsUser" class="CNews">
+					<WTMETHOD name="Load">
+						<WTPARAM name="NewsID" direction="input" value="PARAM(NewsID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Image)" value="PARAM(UploadImage)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadNews"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateNews"/>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTCONDITION expr="IsEmployee"/>
+				<WTOBJECT name="News" project="ptsNewsUser" class="CNews">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="NewsID" direction="input" value="PARAM(NewsID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadNews">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="UploadImage" type="Upload">
+				<WTCALLSUB name="UpdateNews"/>
+				<WTCALLSUB name="LoadNews">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="9820" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="NewsID" value="PARAM(NewsID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="700" align="left"/>
+
+				<WTFUNCTION name="UploadImages()">
+					var url, win;
+					var obj = document.getElementById('NewsTopicID');
+					var path = obj.options[obj.selectedIndex].text;
+					url = "9821.asp?companyid=" + document.getElementById('CompanyID').value + "&amp;path=" + path;
+					win = window.open(url,"UploadImages");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(NewsID)"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="400" align="left"/>
+						<WTCOLUMN width="400" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" align="left" class="PageHeading">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(news.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="NewsStory"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="ATTR(news.NewsID)"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTBUTTON col="2" align="right" action="1" value="CONST(Update)" btnclass="smbutton">
+								<WTCONDITION expr="IsActive"/>
+							</WTBUTTON>
+							<WTBUTTON col="2" action="3" value="CONST(Cancel)" btnclass="smbutton"/>
+							<WTBUTTON col="2" value="CONST(UploadImages)" btnclass="smbutton">
+								<WTCLICK>UploadImages()</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="UserName"/>
+					<WTSTATIC col="2" value="ATTR(News.UserName)" bold="true"/>
+					<WTSTATIC col="2" tag="UserRole"/>
+					<WTCOMBO col="2" value="ATTR(News.UserRole)" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(News.Status)"/>
+					<WTSTATIC col="2" tag="CreateDate"/>
+					<WTTEXT col="2" value="ATTR(News.CreateDate)" size="15" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="ActiveDate"/>
+					<WTTEXT col="2" value="ATTR(News.ActiveDate)" size="15" class="prompt"/>
+					<WTSTATIC col="2" label="ActiveDateText"/>
+					<!--
+					<WTSTATIC col="2" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(News.Seq)" size="2" prespace="false"/>
+-->					
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="NewsTopicID"/>
+					<WTCOMBO col="2" value="ATTR(News.NewsTopicID)" datapath="/DATA/TXN/PTSNEWSTOPICS/ENUM" setselected="true"/>
+					<WTCHECK col="2" value="ATTR(News.IsEditorial)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1">
+						<WTSTATIC tag="Title" newline="1"/>
+						<WTSTATIC label="TitleLength" space="1"/>
+					</WTSTATIC>
+					<WTMEMO col="2" align="left" value="ATTR(News.Title)" cols="75" rows="2"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Tags"/>
+					<WTTEXT col="2" value="ATTR(News.Tags)" size="100"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="TopStory" bold="true"/>
+					<WTSTATIC col="2" space="3"/>
+					<WTSTATIC col="2" tag="LeadMain"/>
+					<WTCOMBO col="2" value="ATTR(News.LeadMain)" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(News.IsBreaking)" prespace="false"/>
+					<WTSTATIC col="2"/>
+					<WTSTATIC col="2" tag="LeadTopic"/>
+					<WTCOMBO col="2" value="ATTR(News.LeadTopic)" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(News.IsBreaking2)" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(News.IsStrategic)"/>
+					<WTCHECK col="2" value="ATTR(News.IsShare)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Image"/>
+					<WTTEXT col="2" value="ATTR(News.Image)" size="60"/>
+					<WTBUTTON col="2" action="6" value="CONST(Upload)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTCONDITION expr="ATTR(News.Image)" oper="not-equal" value="CONST('')"/>
+					<WTIMAGE col="1" merge="2" value="ATTR(News.Image)" path="PARAM(ImagePath)" align="center"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(News.Description)" cols="72" rows="6" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" tag="Details" align="left"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="90" rows="40" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="9810" caption="News Story" navbar="false" header="false" footer="false" wrapper="false"
+			page-left="0" margin-width="0" navbar-width="0"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false">
+			<!--=============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="NewsID" datatype="number"/>
+			<WTPARAM name="ActiveDate" datatype="text"/>
+			<WTPARAM name="Avatar" datatype="text"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="News" project="ptsNewsUser" class="CNews">
+					<WTMETHOD name="Load">
+						<WTPARAM name="NewsID" direction="input" value="PARAM(NewsID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(ActiveDate)" value="CONST(FormatDateTime(.ActiveDate,1))"/>
+					<WTSETATTRIBUTE name="CONST(ActiveTime)" value="CONST(FormatDateTime(.ActiveDate,3))"/>
+					<WTSETATTRIBUTE name="PARAM(ActiveDate)" value="CONST(reqActiveDate + &quot; &quot; + ActiveTime)">
+						<WTCONDITION expr="CONST(ActiveTime)" oper="not-equal" value="CONST(&quot;12:00:00 AM&quot;)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlNews" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Avatar">
+						<WTPARAM name="reqAvatar" direction="return" datatype="text"/>
+						<WTPARAM name="AuthUserID" direction="input" value="ATTR(AuthUserID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqNewsID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\News\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="950" align="left"/>
+
+				<WTROW>
+					<WTIMAGE col="1" align="center" valign="top" value="SYS(headerimage)" path="CONST(Company\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1" height="40" padding="0" style="border: 1px #cccccc solid; background-color: #FFFFFF" firstrow="false">
+						<WTCOLUMN width="700" align="left"/>
+						<WTCOLUMN width="250" align="left"/>
+						<WTROW>
+							<!-- NEWS STORY -->
+							<WTTABLE col="1" valign="top" firstrow="false" style="border: 1px #cccccc solid;">
+								<WTCOLUMN width="20"/>
+								<WTCOLUMN width="670" align="left"/>
+								<WTCOLUMN width="10"/>
+								<WTROW margin-top="12" margin-bottom="12">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2" value="ATTR(News.Title)" fontsize="5" align="left"/>
+									<WTSTATIC col="3"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2" value="PARAM(ActiveDate)" align="left" fontcolor="gray"/>
+									<WTSTATIC col="3"/>
+								</WTROW>
+								<WTROW margin-bottom="12">
+									<WTCONDITION expr="ATTR(News.Image)" oper="not-equal" value="CONST('')"/>
+									<WTSTATIC col="1"/>
+									<WTIMAGE col="2" value="ATTR(News.Image)" path="CONST(News\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)" imgwidth="670" align="center"/>
+									<WTSTATIC col="3"/>
+								</WTROW>
+								<WTROW margin-top="6">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2" value="ATTR(HTMLFile.Data)" align="left" embedhtml="true"/>
+									<WTSTATIC col="3"/>
+								</WTROW>
+							</WTTABLE>
+
+							<!-- NEWS STORY COMMENTS -->
+							<WTTABLE col="2" valign="top" firstrow="false" style="border: 1px #cccccc solid;">
+								<WTCOLUMN width="10"/>
+								<WTCOLUMN width="230" align="left"/>
+								<WTCOLUMN width="10"/>
+
+								<WTROW margin-top="12" margin-bottom="12">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2" align="left" fontcolor="gray">
+										<WTCODEGROUP>
+											<WTCONDITION expr="ATTR(News.UserRole)" oper="not-equal" value="CONST(0)"/>
+											<WTSTATIC label="AuthoredBy" value="ATTR(News.UserName)" newline="2">
+												<WTCONDITION expr="ATTR(News.UserRole)" oper="equal" value="CONST(1)"/>
+											</WTSTATIC>
+											<WTSTATIC label="PublishedBy" value="ATTR(News.UserName)" newline="2">
+												<WTCONDITION expr="ATTR(News.UserRole)" oper="equal" value="CONST(2)"/>
+											</WTSTATIC>
+											<WTCODEGROUP>
+												<WTCONDITION expr="PARAM(Avatar)" oper="not-equal" value="CONST('')"/>
+												<WTIMAGE value="PARAM(Avatar)" valign="top" path="Member" imgwidth="100"/>
+												<WTSTATIC newline="2"/>
+											</WTCODEGROUP>
+										</WTCODEGROUP>
+										<WTSTATIC tag="Category" value="ATTR(News.NewsTopicName)" newline="2"/>
+										<WTSTATIC tag="TaggedUnder" value="ATTR(News.Tags)" newline="2"/>
+									</WTSTATIC>
+									<WTSTATIC col="3"/>
+								</WTROW>
+
+								<WTROW margin-top="6" margin-bottom="12">
+									<WTDIVIDER col="1" merge="3" height="1" color="cccccc"/>
+								</WTROW>
+								<WTROW margin-bottom="12">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2" label="Comments" fontsize="4" align="center"/>
+									<WTSTATIC col="3"/>
+								</WTROW>
+								<!--								
+								<WTROW>
+									<WTSTATIC col="1"/>
+									<WTTABLE col="2" valign="top" firstrow="false">
+										<WTCOLUMN width="230" align="left"/>
+										<WTREPEAT entity="Breaking">
+											<WTROW>
+												<WTCONDITION expr="DATA(Image)" oper="not-equal" value="CONST('')"/>
+												<WTIMAGE col="1" value="DATA(Image)" path="CONST(News\&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)" imgwidth="200" align="center"/>
+											</WTROW>
+											<WTROW>
+												<WTSTATIC col="1" value="DATA(Title)" fontcolor="1c1c1c" bold="true"/>
+											</WTROW>
+											<WTROW margin-top="6" margin-bottom="6">
+												<WTDIVIDER col="1" height="1" color="cccccc"/>
+											</WTROW>
+										</WTREPEAT>
+									</WTTABLE>
+								</WTROW>
+-->
+							</WTTABLE>
+
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--**************************************Image Upload Page**************************************-->
+		<!--===========================================================================================-->
+		<WTWEBPAGE name="9820" caption="Upload File" action="false" header="false" footer="false" navbar="false" wrapper="wrapper600"
+		   submit="9820Upload.asp" type="multi" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===========================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="NewsID" datatype="number"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+				<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+				</WTCUSTOM>
+			</WTCODEGROUP>
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="COMPANYID" value="PARAM(CompanyID)"/>
+				<WTSETCACHE name="NEWSID" value="PARAM(NewsID)"/>
+			</WTACTION>
+
+			<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+
+				<WTROW margin-top="18">
+					<WTSTATIC col="1" merge="3" label="UploadImageHeader" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="18">
+					<WTSTATIC col="1" merge="3" label="UploadImageText" class="Prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="18">
+					<WTSTATIC col="1"/>
+					<WTFILE col="2" align="center" value="upload" accept="*.gif, *.jpg, *.png"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" align="center" default="true" value="CONST(Submit)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--**************************************Image Upload Page**************************************-->
+		<!--===========================================================================================-->
+		<WTWEBPAGE name="9821" caption="Upload File" action="false" header="false" footer="false" navbar="false" wrapper="wrapper600"
+		   submit="9821Upload.asp" type="multi" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===========================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="UploadImage" datatype="text"/>
+			<WTPARAM name="Path" datatype="text"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+				<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+				</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="COMPANYID" value="PARAM(CompanyID)"/>
+				<WTSETCACHE name="PATH" value="PARAM(Path)"/>
+			</WTACTION>
+
+			<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+
+				<WTROW margin-top="18">
+					<WTSTATIC col="1" merge="3" class="PageHeading">
+						<WTSTATIC label="UploadImageHeader"/>
+						<WTSTATIC fontcolor="red">
+							<WTCONDITION expr="PARAM(UploadImage)" oper="not-equal" value="CONST('')"/>
+							<WTSTATIC space="5"/>
+							<WTSTATIC value="PARAM(UploadImage)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="3" label="UploadImageText2" class="Prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="18">
+					<WTCONDITION expr="PARAM(Path)" oper="not-equal" value="CONST('')"/>
+					<WTSTATIC col="1" merge="3" align="center" class="PageHeading">
+						<WTSTATIC tag="ImagePath" space="1"/>
+						<WTSTATIC value="PARAM(Path)" bold="true"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="18">
+					<WTSTATIC col="1"/>
+					<WTFILE col="2" align="center" value="upload" accept="*.gif, *.jpg, *.png"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" align="center" default="true" value="CONST(Submit)"/>
+					<WTBUTTON col="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

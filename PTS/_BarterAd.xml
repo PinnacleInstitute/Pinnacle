@@ -1,0 +1,3539 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="172" name="BarterAd" alias="bad" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="17201" name="BarterAdID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+    <!--Foreign Keys-->
+    <WTATTRIBUTE id="17202" name="ConsumerID" type="number" source="entity"/>
+    <WTATTRIBUTE id="17203" name="BarterArea1ID" type="number" source="entity"/>
+    <WTATTRIBUTE id="17204" name="BarterArea2ID" type="number" source="entity"/>
+    <WTATTRIBUTE id="17205" name="BarterCategoryID" type="number" source="entity"/>
+
+    <!--Foreign Table Fields-->
+
+    <!--Attributes-->
+    <WTATTRIBUTE id="17210" name="Title" type="text" length="100" title="true" source="entity"/>
+    <WTATTRIBUTE id="17211" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Pending"/>
+      <WTENUM id="2" name="Active"/>
+      <WTENUM id="3" name="Sold"/>
+      <WTENUM id="4" name="InActive"/>
+      <WTENUM id="5" name="Cancelled"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="17212" name="PostDate" type="date" source="entity">
+      <WTFORMAT value="m-d-yy h:mm am/pm"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="17213" name="UpdateDate" type="date" source="entity">
+      <WTFORMAT value="m-d-yy h:mm am/pm"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="17214" name="EndDate" type="date" source="entity">
+      <WTFORMAT value="m-d-yy h:mm am/pm"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="17215" name="Price" type="currency" source="entity"/>
+    <WTATTRIBUTE id="17216" name="Location" type="text" length="40" source="entity"/>
+    <WTATTRIBUTE id="17217" name="Zip" type="text" length="10" source="entity"/>
+    <WTATTRIBUTE id="17218" name="Description" type="text" length="4000" min="1" max="4000" source="entity" embedhtml="true"/>
+    <WTATTRIBUTE id="17219" name="Language" type="text" length="10" source="entity"/>
+    <WTATTRIBUTE id="17220" name="ContactName" type="text" length="40" source="entity"/>
+    <WTATTRIBUTE id="17221" name="ContactEmail" type="text" length="80" source="entity"/>
+    <WTATTRIBUTE id="17222" name="ContactPhone" type="text" length="40" source="entity"/>
+    <WTATTRIBUTE id="17223" name="IsEmail" type="yesno" source="entity" label="only"/>
+    <WTATTRIBUTE id="17224" name="IsPhone" type="yesno" source="entity" label="only"/>
+    <WTATTRIBUTE id="17225" name="IsText" type="yesno" source="entity" label="only"/>
+    <WTATTRIBUTE id="17226" name="IsMore" type="yesno" source="entity" label="only"/>
+    <WTATTRIBUTE id="17227" name="IsMap" type="yesno" source="entity" label="only"/>
+    <WTATTRIBUTE id="17228" name="IsContact" type="yesno" source="entity" label="only"/>
+    <WTATTRIBUTE id="17229" name="IsDealer" type="yesno" source="entity" label="only"/>
+
+    <WTATTRIBUTE id="17230" name="MapStreet1" type="text" length="60" min="1" max="60" source="entity"/>
+    <WTATTRIBUTE id="17231" name="MapStreet2" type="text" length="60" min="1" max="60" source="entity"/>
+    <WTATTRIBUTE id="17232" name="MapCity" type="text" length="30" min="1" max="30" source="entity"/>
+    <WTATTRIBUTE id="17233" name="MapZip" type="text" length="10" min="1" max="10" source="entity"/>
+    <WTATTRIBUTE id="17234" name="Options" type="text" length="20" min="1" max="20" source="entity" language="false"/>
+    <WTATTRIBUTE id="17235" name="Payments" type="text" length="20" min="1" max="20" source="entity" language="false"/>
+    <WTATTRIBUTE id="17236" name="Condition" type="number" source="entity">
+      <WTENUM id="1" name="New"/>
+      <WTENUM id="2" name="LikeNew"/>
+      <WTENUM id="3" name="Exellent"/>
+      <WTENUM id="4" name="Good"/>
+      <WTENUM id="5" name="Fair"/>
+      <WTENUM id="6" name="Poor"/>
+      <WTENUM id="7" name="Salvage"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="17237" name="Images" type="number" source="entity"/>
+    <WTATTRIBUTE id="17238" name="GeoCode" type="text" length="30" min="1" max="30" source="entity" language="false"/>
+
+    <WTATTRIBUTE id="17240" name="T1" type="text" length="40" min="1" max="40" source="entity" label="false"/>
+    <WTATTRIBUTE id="17241" name="T2" type="text" length="40" min="1" max="40" source="entity" label="false"/>
+    <WTATTRIBUTE id="17242" name="T3" type="text" length="40" min="1" max="40" source="entity" label="false"/>
+    <WTATTRIBUTE id="17243" name="T4" type="text" length="40" min="1" max="40" source="entity" label="false"/>
+    <WTATTRIBUTE id="17244" name="T5" type="text" length="40" min="1" max="40" source="entity" label="false"/>
+    <WTATTRIBUTE id="17245" name="N1" type="number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17246" name="N2" type="number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17247" name="N3" type="number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17248" name="N4" type="number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17249" name="N5" type="number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17250" name="L1" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17251" name="L2" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17252" name="L3" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17253" name="L4" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17254" name="L5" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17255" name="L6" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17256" name="L7" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17257" name="L8" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17258" name="L9" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17259" name="L10" type="tiny number" source="entity" label="false"/>
+    <WTATTRIBUTE id="17260" name="Y1" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17261" name="Y2" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17262" name="Y3" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17263" name="Y4" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17264" name="Y5" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17265" name="Y6" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17266" name="Y7" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17267" name="Y8" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17268" name="Y9" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17269" name="Y10" type="yesno" source="entity" label="false"/>
+    <WTATTRIBUTE id="17270" name="D1" type="date" source="entity" label="false"/>
+    <WTATTRIBUTE id="17271" name="D2" type="date" source="entity" label="false"/>
+    <WTATTRIBUTE id="17272" name="D3" type="date" source="entity" label="false"/>
+    <WTATTRIBUTE id="17273" name="D4" type="date" source="entity" label="false"/>
+    <WTATTRIBUTE id="17274" name="D5" type="date" source="entity" label="false"/>
+
+    <!-- Non Persist Fields -->
+    <WTATTRIBUTE id="17290" name="Image" type="text" length="80" source="entity" persist="false"/>
+    <WTATTRIBUTE id="17291" name="MainCategoryID" type="number" source="entity" persist="false"/>
+
+    <!--Indexes-->
+    <WTINDEX name="BarterArea1ID">
+      <WTATTRIBUTE name="BarterArea1ID"/>
+      <WTATTRIBUTE name="BarterCategoryID"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="BarterAd" entity="BarterAd" alias="bad"/>
+      <WTRELATIONSHIP name="Common" entity="BarterAd" alias="bad"/>
+    </WTRELATIONSHIPS>
+
+    <!-- System Constants -->
+
+    <!--List-->
+    <WTENUM id="1" type="find">
+      <WTATTRIBUTE name="PostDate" default="true"/>
+      <WTATTRIBUTE name="UpdateDate"/>
+      <WTATTRIBUTE name="Title" contains="true"/>
+      <WTATTRIBUTE name="BarterAdID"/>
+    </WTENUM>
+
+    <!-- System Constants -->
+    <WTSYSCONS>
+      <WTSYSCON name="BARTERAD-STATUS-PENDING" value="1"/>
+      <WTSYSCON name="BARTERAD-STATUS-ACTIVE" value="2"/>
+      <WTSYSCON name="BARTERAD-STATUS-INACTIVE" value="3"/>
+      <WTSYSCON name="BARTERAD-STATUS-CANCELLED" value="4"/>
+    </WTSYSCONS>
+
+	<WTCONDITIONS>
+  	<WTCONDITION name="IsBarterPaymentPoints"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;1&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterPaymentCash"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;2&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterPaymentCC"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;3&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentPP"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;4&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentBTC"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;A&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterPaymentNXC"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;B&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterPaymentETH"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;C&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterPaymentETC"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;D&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterPaymentLTC"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;E&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+  	<WTCONDITION name="IsBarterPaymentDASH"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;F&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentMonero"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;G&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentSteem"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;H&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentRipple"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;I&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentDoge"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;J&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentGCR"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;Y&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentOther"><WTCONDITION expr="CONST(InStr(reqPayments,&quot;Z&quot;))" oper="not-equal" value="CONST(0)"/></WTCONDITION>
+
+		<WTCONDITION name="_IsBarterPaymentPoints"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, '1'))"/></WTCONDITION>
+		<WTCONDITION name="IsBarterPaymentCash"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, '2'))"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentCC"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, '3'))"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentPP"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, '4'))"/></WTCONDITION>
+    <WTCONDITION name="IsBarterPaymentBTC"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'A'))"/></WTCONDITION>
+		<WTCONDITION name="IsBarterPaymentNXC"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'B'))"/></WTCONDITION>
+		<WTCONDITION name="IsBarterPaymentETH"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'C'))"/></WTCONDITION>
+		<WTCONDITION name="IsBarterPaymentETC"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'D'))"/></WTCONDITION>
+		<WTCONDITION name="IsBarterPaymentLTC"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'E'))"/></WTCONDITION>
+		<WTCONDITION name="IsBarterPaymentDASH"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'F'))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterPaymentMonero"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'G'))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterPaymentSteem"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'H'))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterPaymentRipple"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'I'))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterPaymentDoge"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'J'))"/></WTCONDITION>
+    <WTCONDITION name="_IsBarterPaymentGCR"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'Y'))"/></WTCONDITION>
+		<WTCONDITION name="_IsBarterPaymentOther"><WTCONDITION expr="CONST(contains)" value="CONST((/DATA/PARAM/@payments, 'Z'))"/></WTCONDITION>
+
+  </WTCONDITIONS>
+
+  </WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+    <WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+      <WTPARAM name="ATTR(ConsumerID)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTBOOKMARK name=""/>
+      <WTATTRIBUTE name="BarterAdID"/>
+      <WTATTRIBUTE name="Title"/>
+      <WTATTRIBUTE name="Status"/>
+      <WTATTRIBUTE name="Price"/>
+      <WTATTRIBUTE name="Condition"/>
+      <WTATTRIBUTE name="PostDate"/>
+      <WTATTRIBUTE name="UpdateDate"/>
+      <WTATTRIBUTE name="Images"/>
+      <WTATTRIBUTE name="Options"/>
+      <WTJOIN name="Common"/>
+      <WTCONDITION expr="ATTR(BarterAd.ConsumerID)" oper="equal" value="PARAM(ConsumerID)" connector="and"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Find" name="FindStatus" style="GenerateDataProc.xsl">
+      <WTPARAM name="ATTR(ConsumerID)" direction="input" required="false"/>
+      <WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+      <WTPARAM name="SYS(userid)" direction="input"/>
+      <WTBOOKMARK name=""/>
+      <WTATTRIBUTE name="BarterAdID"/>
+      <WTATTRIBUTE name="Title"/>
+      <WTATTRIBUTE name="Status"/>
+      <WTATTRIBUTE name="Price"/>
+      <WTATTRIBUTE name="Condition"/>
+      <WTATTRIBUTE name="PostDate"/>
+      <WTATTRIBUTE name="UpdateDate"/>
+      <WTATTRIBUTE name="Images"/>
+      <WTATTRIBUTE name="Options"/>
+      <WTJOIN name="Common"/>
+      <WTCONDITION expr="ATTR(BarterAd.ConsumerID)" oper="equal" value="PARAM(ConsumerID)" connector="and"/>
+      <WTCONDITION expr="ATTR(BarterAd.Status)" oper="equal" value="PARAM(Status)" connector="and"/>
+    </WTPROCEDURE>
+    <!--==================================================================================================================-->
+    <WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+    <!--============================================================================================-->
+      <WTPROCEDURE name="Search" type="Find" style="GenerateDataProc.xsl" template="new" searchlength="200" bookmarklength="20" nodata="true">
+      <WTPARAM name="ATTR(Status)" direction="input"/>
+      <WTPARAM name="ATTR(BarterArea1ID)" direction="input"/>
+      <WTPARAM name="ATTR(BarterArea2ID)" direction="input"/>
+      <WTPARAM name="ATTR(MainCategoryID)" direction="input"/>
+      <WTPARAM name="ATTR(BarterCategoryID)" direction="input"/>
+      <WTPARAM name="ATTR(Images)" direction="input"/>
+      <WTPARAM name="ATTR(Description)" direction="input"/>
+      <WTBOOKMARK name=""/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(BarterAd.BarterAdID)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.BarterArea1ID)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.BarterArea2ID)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.BarterCategoryID)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Title)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Price)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Location)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Zip)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.PostDate)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.UpdateDate)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Image)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Images)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.IsMap)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Language)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.MapStreet1)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.MapStreet2)"/>
+          <WTATTRIBUTE value="ATTR(BarterAd.Options)"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--==========================================================================================-->
+    <WTPROCEDURE type="XML" name="XMLFind" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true" options="true">
+      <WTATTRIBUTE value="BarterAdID"/>
+      <WTATTRIBUTE value="Title"/>
+      <WTATTRIBUTE value="Status"/>
+      <WTATTRIBUTE value="Price"/>
+      <WTATTRIBUTE value="Condition"/>
+      <WTATTRIBUTE value="PostDate"/>
+      <WTATTRIBUTE value="UpdateDate"/>
+      <WTATTRIBUTE value="Images"/>
+      <WTATTRIBUTE value="Options"/>
+    </WTPROCEDURE>
+    <!--==========================================================================================-->
+    <WTPROCEDURE type="XML" name="XMLSearch" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true" options="true">
+      <WTATTRIBUTE value="BarterAdID"/>
+      <WTATTRIBUTE value="BarterArea1ID"/>
+      <WTATTRIBUTE value="BarterArea2ID"/>
+      <WTATTRIBUTE value="BarterCategoryID"/>
+      <WTATTRIBUTE value="Title"/>
+      <WTATTRIBUTE value="Price"/>
+      <WTATTRIBUTE value="Location"/>
+      <WTATTRIBUTE value="Zip"/>
+      <WTATTRIBUTE value="PostDate">
+        <WTFORMAT value="mmm d"/>
+      </WTATTRIBUTE>
+      <WTATTRIBUTE value="UpdateDate"/>
+      <WTATTRIBUTE value="Image"/>
+      <WTATTRIBUTE value="Images"/>
+      <WTATTRIBUTE value="IsMap"/>
+      <WTATTRIBUTE value="Language"/>
+      <WTATTRIBUTE value="MapStreet1"/>
+      <WTATTRIBUTE value="MapStreet2"/>
+      <WTATTRIBUTE value="Options"/>
+    </WTPROCEDURE>
+    <!--============================================================================================-->
+    <WTPROCEDURE name="UpdateFT" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+      <WTPARAM name="ATTR(BarterAdID)" direction="input"/>
+      <WTPARAM name="ATTR(Title)" direction="input"/>
+      <WTPARAM name="ATTR(Location)" direction="input"/>
+      <WTPARAM name="ATTR(Zip)" direction="input"/>
+      <WTPARAM name="ATTR(Description)" direction="input"/>
+      <WTPARAM name="Result" datatype="number" direction="output"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+    <!--==================================================================================================================-->
+    <WTWEBPAGE name="17200" caption="Nexxus Barter" action="5" header="false" footer="false" navbar="false" wrapper="wrapper1200"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+      <!--==================================================================================================================-->
+      <WTPARAM name="ConsumerID" datatype="number"/>
+      <WTPARAM name="CompanyID" datatype="number"/>
+      <WTPARAM name="BarterAreaID" datatype="number"/>
+      <WTPARAM name="BarterSubAreaID" datatype="number"/>
+      <WTPARAM name="MainCategoryID" datatype="number"/>
+      <WTPARAM name="BarterCategoryID" datatype="number"/>
+      <WTPARAM name="AreaParentID" datatype="number"/>
+      <WTPARAM name="SearchAll" datatype="number"/>
+      <WTPARAM name="IsImages" datatype="number"/>
+      <WTPARAM name="SubAreas" datatype="number"/>
+      <WTPARAM name="MinPrice" datatype="currency"/>
+      <WTPARAM name="MaxPrice" datatype="currency"/>
+
+      <WTPARAM name="SearchText" datatype="text"/>
+      <WTPARAM name="FindTypeID" datatype="number"/>
+      <WTPARAM name="Bookmark" datatype="text"/>
+      <WTPARAM name="Direction" datatype="number"/>
+      <WTPARAM name="IsSearch" datatype="number"/>
+      <WTPARAM name="View" datatype="number"/>
+      <WTPARAM name="Sort" datatype="number"/>
+
+      <WTPARAM name="Title" datatype="text"/>
+      <WTPARAM name="BarterArea" datatype="text"/>
+      <WTPARAM name="MainCategory" datatype="text"/>
+      <WTPARAM name="SubCategory" datatype="text"/>
+      <WTPARAM name="ReferredBy" datatype="text"/>
+      <WTPARAM name="BarterAreas" datatype="text"/>
+
+      <WTPARAM name="NoPrice" datatype="number"/>
+      <WTPARAM name="NoCondition" datatype="number"/>
+      <WTPARAM name="Condition0" datatype="number"/>
+      <WTPARAM name="Condition1" datatype="number"/>
+      <WTPARAM name="Condition2" datatype="number"/>
+      <WTPARAM name="Condition3" datatype="number"/>
+      <WTPARAM name="Condition4" datatype="number"/>
+      <WTPARAM name="Condition5" datatype="number"/>
+      <WTPARAM name="Condition6" datatype="number"/>
+      <WTPARAM name="Condition7" datatype="number"/>
+      <WTPARAM name="Payment0" datatype="number"/>
+      <WTPARAM name="Payment1" datatype="number"/>
+      <WTPARAM name="Payment2" datatype="number"/>
+      <WTPARAM name="Payment3" datatype="number"/>
+      <WTPARAM name="Payment4" datatype="number"/>
+      <WTPARAM name="Payment5" datatype="number"/>
+      <WTPARAM name="Payment6" datatype="number"/>
+      <WTPARAM name="Payment7" datatype="number"/>
+      <WTPARAM name="Payment8" datatype="number"/>
+      <WTPARAM name="Payment9" datatype="number"/>
+      <WTPARAM name="Payment10" datatype="number"/>
+      <WTPARAM name="Payment11" datatype="number"/>
+      <WTPARAM name="Payment12" datatype="number"/>
+      <WTPARAM name="Payment13" datatype="number"/>
+      <WTPARAM name="Payment14" datatype="number"/>
+      <WTPARAM name="Payment15" datatype="number"/>
+      <WTPARAM name="Payment16" datatype="number"/>
+
+      <WTPARAM name="FilterOptions" datatype="text"/>
+      <WTPARAM name="Test" datatype="number"/>
+
+      <WTDATATXN name="AdCampaign"/>
+
+      <WTINCLUDE name="Search.asp" />
+      <WTINCLUDE name="BarterOptions.asp"/>
+      <WTSTYLESHEET name="Barter.css"/>
+
+      <WTSUB function="GetReferredBy(MemberID, MerchantID, ReferID)">
+        <WTSETATTRIBUTE name="PARAM(ReferredBy)" value="CONST(&quot;&quot;)"/>
+        <WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+          <WTCONDITION expr="CONST(MemberID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MemberID" direction="input" value="CONST(MemberID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(ReferredBy)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+        </WTOBJECT>
+        <WTOBJECT name="Merchant" project="ptsMerchantUser" class="CMerchant">
+          <WTCONDITION expr="CONST(MerchantID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MerchantID" direction="input" value="CONST(MerchantID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(ReferredBy)" value="ATTR(MerchantName)"/>
+        </WTOBJECT>
+        <WTOBJECT name="Consumer" project="ptsConsumerUser" class="CConsumer">
+          <WTCONDITION expr="CONST(ReferID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="ConsumerID" direction="input" value="CONST(ReferID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(ReferredBy)" value="CONST(reqReferredBy + &quot; / &quot; + .NameFirst + &quot; &quot; + .NameLast)"/>
+        </WTOBJECT>
+      </WTSUB>
+  
+      <WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+          <WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYSCON(NEXXUS)"/>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(ConsumerID)" oper="equal" value="CONST(0)"/>
+          <WTGETCACHE name="PARAM(ConsumerID)" value="CONSUMER" datatype="number"/>
+        </WTCODEGROUP>
+      </WTCODEGROUP>
+
+      <WTSUB name="LoadSearch">
+        <WTOBJECT name="Consumer" project="ptsConsumerUser" class="CConsumer">
+          <WTCONDITION expr="PARAM(ConsumerID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="ConsumerID" direction="input" value="PARAM(ConsumerID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Title)" value="CONST(CleanXML(.NameFirst + &quot; &quot; + .NameLast))"/>
+          <WTSETATTRIBUTE name="CONST(tmpBarterAreaID)" value="FORM(BarterAreaID)"/>
+          <WTSETATTRIBUTE name="CONST(tmpBarterCategoryID)" value="FORM(BarterCategoryID)"/>
+          <WTCALLSUB name="GetBarterAreaCategory .Barter, reqBarterAreaID, reqBarterCategoryID"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="CONST(tmpBarterAreaID)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+            <WTCONDITION expr="CONST(tmpBarterAreaID)" oper="not-equal" value="PARAM(BarterAreaID)" connector="and"/>
+            <WTSETATTRIBUTE name="PARAM(BarterAreaID)" value="FORM(BarterAreaID)"/>
+            <WTSETATTRIBUTE name="ATTR(Barter)" value="CONST(SetBarterAreaCategory(.Barter, reqBarterAreaID, reqBarterCategoryID ))"/>
+            <WTMETHOD name="Save">
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="CONST(tmpBarterCategoryID)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+            <WTCONDITION expr="CONST(tmpBarterCategoryID)" oper="not-equal" value="PARAM(BarterCategoryID)" connector="and"/>
+            <WTSETATTRIBUTE name="PARAM(BarterCategoryID)" value="FORM(BarterCategoryID)"/>
+            <WTSETATTRIBUTE name="ATTR(Barter)" value="CONST(SetBarterAreaCategory(.Barter, reqBarterAreaID, reqBarterCategoryID ))"/>
+            <WTMETHOD name="Save">
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTSETATTRIBUTE name="PARAM(Title)" value="CONST(reqTitle + &quot; - SELECT CITY&quot;)">
+            <WTCONDITION expr="PARAM(BarterAreaID)" oper="equal" value="CONST(0)"/>
+          </WTSETATTRIBUTE>
+          <WTCALLSUB name="GetReferredBy .MemberID, .MerchantID, .ReferID">
+            <WTCONDITION expr="PARAM(ReferredBy)" oper="equal" value="CONST(&quot;&quot;)"/>
+          </WTCALLSUB>
+        </WTOBJECT>
+        
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(BarterAreaID)" oper="not-equal" value="CONST(0)"/>
+          <WTOBJECT name="BarterArea" project="ptsBarterAreaUser" class="CBarterArea">
+            <WTMETHOD name="Load">
+              <WTPARAM name="BarterAreaID" direction="input" value="PARAM(BarterAreaID)"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="CONST(tmpCountryID)" value="ATTR(CountryID)"/>
+            <WTSETATTRIBUTE name="PARAM(AreaParentID)" value="ATTR(ParentID)"/>
+            <WTSETATTRIBUTE name="PARAM(Title)" value="CONST(reqTitle + &quot; - &quot; + .BarterAreaName)"/>
+          </WTOBJECT>
+          <WTOBJECT name="BarterAreas" project="ptsBarterAreaUser" class="CBarterAreas">
+            <WTMETHOD name="ListActive">
+              <WTPARAM name="ParentID" direction="input" value="PARAM(BarterAreaID)"/>
+              <WTPARAM name="CountryID" direction="input" value="CONST(tmpCountryID)"/>
+            </WTMETHOD>
+            <WTCODEGROUP>
+              <WTCUSTOM>
+              reqBarterAreas = "&lt;PTSBARTERAREAS&gt;&lt;ENUM id=""0"" name=""All Areas""/&gt;"
+              reqSubAreas = 0
+              For Each oItem in oBarterAreas
+                reqSubAreas = reqSubAreas + 1
+                With oItem
+                  reqBarterAreas = reqBarterAreas + "&lt;ENUM id=""" + .BarterAreaID + """ name=""" + .BarterAreaName+ """/&gt;"
+                End With
+              Next
+              reqBarterAreas = reqBarterAreas + "&lt;/PTSBARTERAREAS&gt;"
+              </WTCUSTOM>
+            </WTCODEGROUP>
+          </WTOBJECT>
+        </WTCODEGROUP>
+
+        <WTSETATTRIBUTE name="PARAM(MainCategoryID)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="PARAM(MainCategory)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(SubCategory)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(NoPrice)" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="PARAM(NoCondition)" value="CONST(0)"/>
+        <WTOBJECT name="BarterCategory" project="ptsBarterCategoryUser" class="CBarterCategory">
+          <WTCONDITION expr="PARAM(BarterCategoryID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterCategoryID" direction="input" value="PARAM(BarterCategoryID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="ATTR(ParentID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="PARAM(MainCategoryID)" value="PARAM(BarterCategoryID)"/>
+            <WTSETATTRIBUTE name="PARAM(BarterCategoryID)" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="PARAM(MainCategory)" value="ATTR(BarterCategoryName)"/>
+            <WTCODEGROUP>
+              <WTCUSTOM>
+                If InStr(.Options, "A") &gt; 0 Then reqNoPrice = 1
+                If InStr(.Options, "B") &gt; 0 Then reqNoCondition = 1
+              </WTCUSTOM>
+            </WTCODEGROUP>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="ATTR(ParentID)" oper="not-equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="PARAM(MainCategoryID)" value="ATTR(ParentID)"/>
+            <WTSETATTRIBUTE name="PARAM(SubCategory)" value="ATTR(BarterCategoryName)"/>
+            <WTCODEGROUP>
+              <WTCUSTOM>
+                If InStr(.Options, "A") &gt; 0 Then reqNoPrice = 1
+                If InStr(.Options, "B") &gt; 0 Then reqNoCondition = 1
+              </WTCUSTOM>
+            </WTCODEGROUP>
+            <WTMETHOD name="Load">
+              <WTPARAM name="BarterCategoryID" direction="input" value="ATTR(ParentID)"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="PARAM(MainCategory)" value="ATTR(BarterCategoryName)"/>
+          </WTCODEGROUP>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+        <WTSETATTRIBUTE name="PARAM(View)" value="CONST(1)"/>
+        <WTSETATTRIBUTE name="PARAM(Sort)" value="CONST(1)"/>
+        <WTSETATTRIBUTE name="PARAM(Condition0)" value="CONST(1)"/>
+        <WTOBJECT name="BarterAds" project="ptsBarterAdUser" class="CBarterAds"/>
+        <WTOBJECT name="BarterAreas" project="ptsBarterAreaUser" class="CBarterAreas"/>
+        <WTCALLSUB name="LoadSearch"/>
+      </WTACTION>
+
+      <WTACTION id="4" name="Refresh" type="New">
+        <WTCALLSUB name="LoadSearch"/>
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+        <WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTACTION id="5" name="Find" type="New">
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+        <WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+<!--
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(SearchText)" oper="equal" value="CONST(&quot;&quot;)"/>
+          <WTERROR number="10004" message="Oops, Please enter text to search for."/>
+          <WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(0)"/>
+        </WTCODEGROUP>
+-->        
+      </WTACTION>
+
+      <WTACTION id="6" name="Previous" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+        <WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTACTION id="7" name="Next" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+        <WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTOBJECT name="BarterAds" project="ptsBarterAdUser" class="CBarterAds">
+        <WTCONDITION expr="PARAM(IsSearch)" oper="equal" value="CONST(1)"/>
+        <WTCUSTOM>
+          xmlBarterAreas = reqBarterAreas
+          tmpOptions = ""
+          
+          If reqNoPrice = 0 Then
+            'BUILD PRICE OPTION
+            MinPrice = Numeric(Request.Form.Item("MinPrice"))
+            MaxPrice = Numeric(Request.Form.Item("MaxPrice"))
+            If MinPrice &gt; 0 OR MaxPrice &gt; 0 Then
+          If MaxPrice = 0 Then MaxPrice = 99999999
+          tmpOptions = tmpOptions + "Price:" + CSTR(MinPrice) + "," + CSTR(MaxPrice) + ";"
+          End If
+
+          'BUILD PAYMENT OPTION
+          tmp = Request.Form.Item("Payment0")
+          'check for all payments
+          If tmp = "" Then
+          str = ""
+          For x = 1 to 16
+          tmp = Request.Form.Item("Payment" + CSTR(x) )
+          If tmp = "1" Then
+          Select Case x
+          Case 1: str = str + "1,"
+          Case 2: str = str + "2,"
+          Case 3: str = str + "3,"
+          Case 4: str = str + "4,"
+          Case 5: str = str + "A,"
+          Case 6: str = str + "B,"
+          Case 7: str = str + "C,"
+          Case 8: str = str + "D,"
+          Case 9: str = str + "E,"
+          Case 10: str = str + "F,"
+          Case 11: str = str + "G,"
+          Case 12: str = str + "H,"
+          Case 13: str = str + "I,"
+          Case 14: str = str + "J,"
+          Case 15: str = str + "Y,"
+          Case 16: str = str + "Z,"
+          End Select
+          End If
+          Next
+          IF str &lt;&gt; "" Then tmpOptions = tmpOptions + "Payment:" + str
+            End If
+          End If
+
+          If reqNoCondition = 0 Then
+            'BUILD CONDITION OPTION
+            tmp = Request.Form.Item("Condition0")
+            'check for all conditions
+            If tmp = "" Then
+              str = ""
+              For x = 1 to 7
+                tmp = Request.Form.Item("Condition" + CSTR(x) )
+                If tmp = "1" Then str = str + CSTR(x) + ","
+              Next
+              IF str &lt;&gt; "" Then tmpOptions = tmpOptions + "Condition:" + str
+          End If
+          End If
+
+          If TRIM(reqSearchText) = "" Then
+          SearchType = 5
+          'reqBookmark = ""
+          'reqDirection = 1
+          tmpSearchText = ""
+          Else
+          SearchType = 1
+          tmpSearchText = SearchText(Trim(reqSearchText))
+          End If
+
+          SearchType = SearchType + (reqSort-1)
+          If reqView = 3 Then SearchType = SearchType + 10
+
+          tmpBarterAreaID = reqBarterAreaID
+          tmpBarterSubAreaID = reqBarterSubAreaID
+          If reqSearchAll = 1 Then
+          tmpBarterAreaID = 0
+          tmpBarterSubAreaID = 0
+          End If
+
+          If reqTest = 1 Then
+            response.write "&lt;BR&gt;Bookmark: " + reqBookmark
+            response.write "&lt;BR&gt;SearchText: " + tmpSearchText
+            response.write "&lt;BR&gt;SearchType: " + CSTR(SearchType)
+            response.write "&lt;BR&gt;City: " + CSTR(tmpBarterAreaID)
+            response.write "&lt;BR&gt;SubArea: " + CSTR(tmpBarterSubAreaID)
+            response.write "&lt;BR&gt;Main Category: " + CSTR(reqMainCategoryID)
+            response.write "&lt;BR&gt;Sub Category: " + CSTR(reqBarterCategoryID)
+            response.write "&lt;BR&gt;Only Images: " + CSTR(reqIsImages)
+            response.write "&lt;BR&gt;Options: " + tmpOptions
+            response.write "&lt;BR&gt;"
+          End If
+
+          reqBookmark = .Search(reqBookmark, tmpSearchText, reqDirection, SearchType, tmpBarterAreaID, tmpBarterSubAreaID, reqMainCategoryID, reqBarterCategoryID, reqIsImages, tmpOptions)
+
+          If reqTest = 1 Then
+          response.write "&lt;BR&gt;Bookmark: " + reqBookmark
+            response.write "&lt;BR&gt;"
+          End If
+
+          'Check for error for Noise Words only
+          If Err.Number = -2147217900 Then
+          Err.Number = 0
+          reqSearchText = ""
+          End If
+          If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+        </WTCUSTOM>
+        <WTMETHOD name="XMLSearch">
+          <WTPARAM name="xmlBarterAds" direction="return" datatype="text"/>
+        </WTMETHOD>
+      </WTOBJECT>
+      <WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+        <WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+        <WTMETHOD name="XML">
+          <WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+        </WTMETHOD>
+      </WTOBJECT>
+
+      <WTOBJECT name="BarterArea" project="ptsBarterAreaUser" class="CBarterArea">
+        <WTCONDITION expr="PARAM(IsSearch)" oper="equal" value="CONST(1)"/>
+        <WTCONDITION expr="PARAM(SearchAll)" oper="equal" value="CONST(0)" connector="and"/>
+        <WTCUSTOM>
+          If reqBarterSubAreaID &gt; 0 Then tmpBarterAreaID = reqBarterSubAreaID Else tmpBarterAreaID = reqBarterAreaID
+        </WTCUSTOM>
+        <WTMETHOD name="Custom">
+          <WTPARAM name="Status" direction="input" value="CONST(1)"/>
+          <WTPARAM name="BarterAreaID" direction="input" value="CONST(tmpBarterAreaID)"/>
+          <WTPARAM name="Locations" direction="return" datatype="text"/>
+        </WTMETHOD>
+      </WTOBJECT>
+      <WTOBJECT name="BarterAds" project="ptsBarterAdUser" class="CBarterAds">
+        <WTCONDITION expr="PARAM(IsSearch)" oper="equal" value="CONST(1)"/>
+        <WTCUSTOM>
+          'Get Ad Campaigns
+          'Build Ad Campaign Search String (k or p) and (s or m) and (c or a)
+          str = ""
+          If reqSearchText &lt;&gt; "" Then str = "((" + SearchText(Trim(reqSearchText)) + ") or ANY-KEY) and "
+          str = str + "("
+          If reqSubCategory &lt;&gt; "" Then str = str + """" + reqSubCategory + """"
+          If reqSubCategory &lt;&gt; "" AND reqMainCategory &lt;&gt; "" Then str = str + " or "
+          If reqMainCategory &lt;&gt; "" Then str = str + """" + reqMainCategory + """"
+          If reqSubCategory = "" And reqMainCategory = "" Then str = str + "ALL-CAT"
+          str = str + " or ANY-CAT) and ("
+          If reqSearchAll = 1 Then str = str + "ALL-LOC"
+          If reqSearchAll = 0 Then str = str + Locations
+          str = str + " or ANY-LOC)"
+          tmpSearchText = str
+          SearchType = 100
+
+          If reqTest = 2 Then response.write "&lt;BR&gt;SearchText: " + tmpSearchText
+
+          tmpBookmark = .Search(reqBookmark, tmpSearchText, reqDirection, SearchType, tmpBarterAreaID, tmpBarterSubAreaID, reqMainCategoryID, reqBarterCategoryID, reqIsImages, tmpOptions)
+        </WTCUSTOM>
+        <WTMETHOD name="XMLSearch">
+          <WTPARAM name="Options" direction="input" value="CONST()"/>
+          <WTPARAM name="ElementName" direction="input" value="CONST(&quot;AdCampaign&quot;)"/>
+          <WTPARAM name="xmlAdCampaign" direction="return" datatype="text"/>
+        </WTMETHOD>
+      </WTOBJECT>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="1200" align="left"/>
+
+        <WTFUNCTION name="SelectBarterArea()">
+          var pid = document.getElementById('AreaParentID').value;
+          var url = "17010.asp?barterareaid=" + pid
+          var win = window.open(url,"BarterArea","top=200,left=200,height=400,width=425,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1")
+					win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="SelectCategory()">
+          var pid = document.getElementById('MainCategoryID').value;
+          var url = "17112.asp?bartercategoryid=" + pid
+          var win = window.open(url,"BarterCategory","top=200,left=200,height=500,width=325,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1")
+					win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="ViewAds()">
+          var cid = document.getElementById('ConsumerID').value;
+          var url = "17201.asp?consumerid=" + cid
+          var win = window.open(url,'MyAds')
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="Suggestion()">
+          var cid = document.getElementById('ConsumerID').value;
+          var url = "9505.asp?companyid=21&amp;category=144&amp;t=151&amp;i=" + cid + "&amp;returnurl=9506.asp?contentpage=3%26popup=1%26companyid=21%26t=151%26i=" + cid
+          var win = window.open(url,'Suggestion')
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="UpdateLocation(id)">
+          document.getElementById('BarterAreaID').value = id;
+          doSubmit(4,'');
+        </WTFUNCTION>
+        <WTFUNCTION name="UpdateCategory(id)">
+          document.getElementById('BarterCategoryID').value = id;
+          doSubmit(4,'');
+        </WTFUNCTION>
+        <WTFUNCTION name="LoadPage()">
+          var id = document.getElementById('BarterAreaID').value;
+          if(id==0) {SelectBarterArea()}
+          SetFilterOptions();
+        </WTFUNCTION>
+        <WTFUNCTION name="SetFilterOptions()">
+          var str = document.getElementById('FilterOptions').value;
+          if( str.includes("C") ) { SetFilter('Condition',1) } else  { SetFilter('Condition',0) }
+          if( str.includes("P") ) { SetFilter('Payment',1) } else  { SetFilter('Payment',0) }
+        </WTFUNCTION>
+        <WTFUNCTION name="SetFilter(typ,opt)">
+          var obj = document.getElementById(typ+'Row');
+          if (obj != undefined) {
+            if(opt==0) {
+              document.getElementById(typ+'Row').style.display = 'none';
+              document.getElementById(typ+'Open').style.display = '';
+              document.getElementById(typ+'Close').style.display = 'none';
+            }
+            else {
+              document.getElementById(typ+'Row').style.display = '';
+              document.getElementById(typ+'Open').style.display = 'none';
+              document.getElementById(typ+'Close').style.display = '';
+            }
+          }
+          str = '';
+          var c_obj = document.getElementById('ConditionRow');
+          if (c_obj != undefined) {
+            if( c_obj.style.display == '' ) { str = str + 'C'; }
+          }
+          var p_obj = document.getElementById('PaymentRow');
+          if (p_obj != undefined) {
+            if( p_obj.style.display == '' ) { str = str + 'P'; }
+          }
+          document.getElementById('FilterOptions').value = str;
+        </WTFUNCTION>
+        <WTFUNCTION name="ViewHelp()">
+          var url = "pagex.asp?page=SearchHelp";
+          var win = window.open(url,"SearchHelp");
+          win.focus();
+        </WTFUNCTION>
+
+        <WTLOAD>
+					LoadPage();
+				</WTLOAD>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(ConsumerID)"/>
+          <WTHIDDEN value="PARAM(BarterAreaID)"/>
+          <WTHIDDEN value="PARAM(MainCategoryID)"/>
+          <WTHIDDEN value="PARAM(BarterCategoryID)"/>
+          <WTHIDDEN value="PARAM(AreaParentID)"/>
+          <WTHIDDEN value="PARAM(Title)"/>
+          <WTHIDDEN value="PARAM(ReferredBy)"/>
+          <WTHIDDEN value="PARAM(MainCategory)"/>
+          <WTHIDDEN value="PARAM(SubCategory)"/>
+          <WTHIDDEN value="PARAM(SubAreas)"/>
+          <WTHIDDEN value="PARAM(BarterAreas)"/>
+          <WTHIDDEN value="PARAM(FilterOptions)"/>
+          <WTHIDDEN value="PARAM(NoPrice)"/>
+          <WTHIDDEN value="PARAM(NoCondition)"/>
+        </WTROW>
+
+        <WTSTATIC label="SelectBarterArea"/>
+        <WTSTATIC label="LookupArea"/>
+        <WTSTATIC label="LookupCategory"/>
+        <WTSTATIC label="ViewMyAds"/>
+
+        <WTROW>
+          <WTTABLE col="1">
+            <WTCOLUMN width="300" align="left"/>
+            <WTCOLUMN width="900" align="center"/>
+            <WTROW>
+              <WTSTATIC col="1" class="PageHeadingLite" style="background-color:#ffffff">
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(NexxusBarterMobile.png)" imgalign="absmiddle" path="CONST(Company/&lt;xsl:value-of select=&quot;/DATA/PARAM/@companyid&quot;/&gt;)"/>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" class="PageHeadingLite" style="background-color:#ffffff">
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(ReferredBy)" oper="not-equal" value="CONST('')"/>
+                  <WTSPAN style="font-size:12pt; color:#c2c2c2;">
+                    <WTSTATIC label="ReferredBy" space="1"/>
+                    <WTSTATIC value="PARAM(ReferredBy)" newline="1"/>
+                  </WTSPAN>
+                </WTCODEGROUP>
+                <WTSTATIC value="PARAM(Title)" space="1"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(lookup24.png)" alt="LookupArea" imgalign="absmiddle">
+                    <WTLINK name="SelectBarterArea()" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTTABLE col="1">
+            <WTCOLUMN width="900" align="left"/>
+            <WTCOLUMN width="300" align="right"/>
+            <WTROW height="36">
+              <WTSTATIC col="1" class="PageHeadingLite">
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(MainCategory)" oper="equal" value="CONST('')"/>
+                  <WTSTATIC label="AllCategories" space="1"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(MainCategory)" oper="not-equal" value="CONST('')"/>
+                  <WTSTATIC label="AllCategories" space="1">
+                    <WTLINK name="UpdateCategory(0)" click="true"/>
+                  </WTSTATIC>
+                  <WTSTATIC value="CONST(/)" space="1"/>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(SubCategory)" oper="equal" value="CONST('')"/>
+                    <WTSTATIC value="PARAM(MainCategory)" space="1"/>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(SubCategory)" oper="not-equal" value="CONST('')"/>
+                    <WTSTATIC value="PARAM(MainCategory)" space="1">
+                      <WTLINK name="UpdateCategory(&lt;xsl:value-of select=&quot;/DATA/PARAM/@maincategoryid&quot;/&gt;)" click="true"/>
+                    </WTSTATIC>
+                    <WTSTATIC value="CONST(/)" space="1"/>
+                    <WTSTATIC value="PARAM(SubCategory)" space="1"/>
+                  </WTCODEGROUP>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(lookup24.png)" alt="LookupCategory" imgalign="absmiddle">
+                    <WTLINK name="SelectCategory()" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" class="PageHeadingLite">
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(myads24.png)" alt="ViewMyAds" imgalign="absmiddle">
+                    <WTLINK name="ViewAds()" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTSTATIC space="1"/>
+                <WTSTATIC label="MyAds" space="1">
+                  <WTLINK name="ViewAds()" click="true" />
+                </WTSTATIC>
+                <WTSTATIC space="2"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(BarterSuggestion.png)" alt="ViewMyAds" imgalign="absmiddle">
+                    <WTLINK name="Suggestion()" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTSTATIC space="1"/>
+                <WTSTATIC label="Suggestion" space="1">
+                  <WTLINK name="Suggestion()" click="true" />
+                </WTSTATIC>
+              </WTSTATIC>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+
+        <WTROW height="10">
+        </WTROW>
+
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(BarterAreaID)" oper="not-equal" value="CONST(0)"/>
+          <WTROW>
+            <WTTABLE col="1" valign="top">
+              <WTCOLUMN width="200" align="left"/>
+              <WTCOLUMN width="800" align="left"/>
+              <WTCOLUMN width="200" align="left"/>
+              <WTROW>
+                <WTTABLE col="1" align="center" valign="top" padding="0" tableclass="box-gray" style="background-color: #fcfde5; margin-right:10px">
+                  <WTCOLUMN width="190" align="left"/>
+                  <WTROW margin-top="12">
+                    <WTCONDITION expr="PARAM(SubAreas)" oper="not-equal" value="CONST(0)"/>
+                    <WTCOMBO col="1" value="PARAM(BarterSubAreaID)" datapath="/DATA/TXN/PTSBARTERAREAS/ENUM" setselected="true" align="center" valign="top"/>
+                  </WTROW>
+                  <WTROW margin-top="12" margin-bottom="6">
+                    <WTCHECK col="1" valign="top" value="PARAM(SearchAll)" label="SearchAll" align="center"/>
+                  </WTROW>
+                  <WTROW margin-bottom="12">
+                    <WTCHECK col="1" valign="top" value="PARAM(IsImages)" label="IsImage" align="center"/>
+                  </WTROW>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(NoPrice)" oper="equal" value="CONST(0)"/>
+                    <WTROW margin-bottom="6">
+                      <WTSTATIC col="1" tag="MinPrice" align="center"/>
+                      <WTTEXT col="1" value="PARAM(MinPrice)" size="5" prespace="false"/>
+                    </WTROW>
+                    <WTROW margin-bottom="12">
+                      <WTSTATIC col="1" tag="MaxPrice" align="center"/>
+                      <WTTEXT col="1" value="PARAM(MaxPrice)" size="5" prespace="false"/>
+                    </WTROW>
+                  </WTCODEGROUP>
+
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(NoCondition)" oper="equal" value="CONST(0)"/>
+                    <WTROW margin-top="6" margin-bottom="3">
+                      <WTSTATIC col="1" align="center" fontsize="3">
+                        <WTCODEGROUP>
+                          <WTIMAGE id="ConditionClose" value="CONST(arrow-button-up.gif)" imgalign="absmiddle">
+                            <WTLINK name="SetFilter('Condition',0)" click="true"/>
+                          </WTIMAGE>
+                        </WTCODEGROUP>
+                        <WTCODEGROUP>
+                          <WTIMAGE id="ConditionOpen" value="CONST(arrow-button-down.gif)" imgalign="absmiddle">
+                            <WTLINK name="SetFilter('Condition',1)" click="true"/>
+                          </WTIMAGE>
+                        </WTCODEGROUP>
+                        <WTSTATIC space="1"/>
+                        <WTSTATIC label="Condition"/>
+                      </WTSTATIC>
+                    </WTROW>
+                    <WTROW id="ConditionRow">
+                      <WTSTATIC col="1" align="left">
+                        <WTCODEGROUP>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Condition0)" label="Any"/>
+                          <WTSTATIC space="2"/>
+                          <WTCHECK value="PARAM(Condition1)" label="New"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Condition2)" label="LikeNew"/>
+                          <WTSTATIC space="2"/>
+                          <WTCHECK value="PARAM(Condition3)" label="Exellent"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Condition4)" label="Good"/>
+                          <WTSTATIC space="2"/>
+                          <WTCHECK value="PARAM(Condition5)" label="Fair"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Condition6)" label="Poor"/>
+                          <WTSTATIC space="2"/>
+                          <WTCHECK value="PARAM(Condition7)" label="Salvage"/>
+                          <WTSTATIC newline="2"/>
+                        </WTCODEGROUP>
+                      </WTSTATIC>
+                    </WTROW>
+                  </WTCODEGROUP>
+
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(NoPrice)" oper="equal" value="CONST(0)"/>
+                    <WTROW margin-top="6">
+                      <WTSTATIC col="1" align="center" fontsize="3">
+                        <WTCODEGROUP>
+                          <WTIMAGE id="PaymentClose" value="CONST(arrow-button-up.gif)" alt="LookupArea" imgalign="absmiddle">
+                            <WTLINK name="SetFilter('Payment',0)" click="true"/>
+                          </WTIMAGE>
+                        </WTCODEGROUP>
+                        <WTCODEGROUP>
+                          <WTIMAGE id="PaymentOpen" value="CONST(arrow-button-down.gif)" imgalign="absmiddle">
+                            <WTLINK name="SetFilter('Payment',1)" click="true"/>
+                          </WTIMAGE>
+                        </WTCODEGROUP>
+                        <WTSTATIC space="1"/>
+                        <WTSTATIC label="Payments"/>
+                      </WTSTATIC>
+                    </WTROW>
+                    <WTROW id="PaymentRow">
+                      <WTSTATIC col="1" align="left">
+                        <WTCODEGROUP>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment0)" label="Any"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment1)" label="BarterPaymentPoints"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment2)" label="BarterPaymentCash"/>
+                          <WTSTATIC space="1"/>
+                          <WTCHECK value="PARAM(Payment3)" label="BarterPaymentCC"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment4)" label="BarterPaymentPP"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment5)" label="BarterPaymentBTC"/>
+                          <WTSTATIC space="1"/>
+                          <WTCHECK value="PARAM(Payment6)" label="BarterPaymentNXC"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment7)" label="BarterPaymentETH"/>
+                          <WTSTATIC space="1"/>
+                          <WTCHECK value="PARAM(Payment8)" label="BarterPaymentETC"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment9)" label="BarterPaymentLTC"/>
+                          <WTSTATIC space="1"/>
+                          <WTCHECK value="PARAM(Payment10)" label="BarterPaymentDASH"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment11)" label="BarterPaymentMonero"/>
+                          <WTSTATIC space="1"/>
+                          <WTCHECK value="PARAM(Payment12)" label="BarterPaymentSteem"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment13)" label="BarterPaymentRipple"/>
+                          <WTSTATIC space="1"/>
+                          <WTCHECK value="PARAM(Payment14)" label="BarterPaymentDoge"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment15)" label="BarterPaymentGCR"/>
+                          <WTSTATIC newline="1"/>
+                          <WTSTATIC space="3"/>
+                          <WTCHECK value="PARAM(Payment16)" label="BarterPaymentOther"/>
+                          <WTSTATIC newline="2"/>
+                        </WTCODEGROUP>
+                      </WTSTATIC>
+                    </WTROW>
+                  </WTCODEGROUP>
+
+                  <WTROW height="50">
+                  </WTROW>
+                </WTTABLE>
+
+                <WTTABLE col="2" valign="top">
+                  <WTCOLUMN width="800" align="left"/>
+                  <WTROW margin-bottom="12">
+                    <WTTEXT col="1" value="PARAM(SearchText)" size="50" focus="true"  align="center"/>
+                    <WTBUTTON col="1" action="5" value="CONST(Search)" default="true"/>
+                    <WTBUTTON col="1" value="CONST(?)">
+                      <WTCLICK>ViewHelp()</WTCLICK>
+                    </WTBUTTON>
+                    <WTCOMBO col="1" value="PARAM(View)">
+                      <WTOPTION id="1" label="ListView"/>
+                      <WTOPTION id="2" label="ThumbView"/>
+                      <WTOPTION id="3" label="GridView"/>
+                    </WTCOMBO>
+                    <WTCOMBO col="1" value="PARAM(Sort)">
+                      <WTOPTION id="1" label="MostReleventSort"/>
+                      <WTOPTION id="2" label="MostCurrentSort"/>
+                      <WTOPTION id="3" label="LowPriceSort"/>
+                      <WTOPTION id="4" label="HighPriceSort"/>
+                    </WTCOMBO>
+                    <WTBUTTON col="1" value="CONST(Close)" btnclass="smbutton">
+                      <WTCLICK>window.close()</WTCLICK>
+                    </WTBUTTON>
+                  </WTROW>
+
+                  <WTROW>
+                    <WTSTATIC col="1" value="CONST(&lt;xsl:call-template name=&quot;PreviousNext&quot;/&gt;)" align="right"/>
+                  </WTROW>
+                  <WTROW>
+                    <WTDIVIDER col="1" height="2" color="#CCCCCC"/>
+                  </WTROW>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(View)" oper="less-equal" value="CONST(2)"/>
+                    <WTREPEAT entity="BarterAd">
+                      <WTROW height="30">
+                        <WTSTATIC col="1" valign="middle">
+                          <WTSTATIC space="1"/>
+                          <WTCODEGROUP>
+                            <WTCONDITION expr="PARAM(View)" oper="equal" value="CONST(2)"/>
+                            <WTIMAGE value="CONST(defaults.gif)" imgalign="absmiddle" path="barter">
+                              <WTCONDITION expr="DATA(Image)" oper="not-exist"/>
+                            </WTIMAGE>
+                            <WTIMAGE value="DATA(Image)" imgalign="absmiddle" path="barter">
+                              <WTCONDITION expr="DATA(Image)" oper="exist"/>
+                            </WTIMAGE>
+                            <WTSTATIC space="2"/>
+                          </WTCODEGROUP>
+                          <WTSTATIC value="DATA(PostDate)" fontsize="2" fontcolor="gray" space="1"/>
+                          <WTCODEGROUP>
+                            <WTCONDITION expr="__IsBarterOption_Title"/>
+                            <WTSTATIC value="DATA(Title)" fontsize="4" fontcolor="blue">
+                              <WTLINK name="17204" target="_blank"><WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/></WTLINK>
+                            </WTSTATIC>
+                          </WTCODEGROUP>
+                          <WTCODEGROUP>
+                            <WTCONDITION expr="__NotBarterOption_Title"/>
+                            <WTSTATIC value="DATA(Title)" fontsize="3">
+                              <WTLINK name="17204" target="_blank"><WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/></WTLINK>
+                            </WTSTATIC>
+                          </WTCODEGROUP>
+                          <WTSTATIC space="1"/>
+                          <WTCODEGROUP>
+                            <WTCONDITION expr="__NotBarterOption_NoPrice"/>
+                            <WTSTATIC value="CONST(-)" space="1"/>
+                            <WTSTATIC value="DATA(Price)" fontsize="3" fontcolor="blue">
+                              <WTCONDITION expr="__IsBarterOption_Title"/>
+                            </WTSTATIC>
+                            <WTSTATIC value="DATA(Price)" fontsize="3">
+                              <WTCONDITION expr="__NotBarterOption_Title"/>
+                            </WTSTATIC>
+                            <WTSTATIC space="1"/>
+                          </WTCODEGROUP>
+                          <WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@location,' ',@zip,')')&quot;/&gt;)" space="1"/>
+                          <WTSTATIC fontsize="2">
+                            <WTSTATIC label="pic" space="1" fontcolor="orange">
+                              <WTCONDITION expr="DATA(Images)" oper="equal" value="CONST(1)"/>
+                            </WTSTATIC>
+                            <WTSTATIC label="pics" space="1" fontcolor="orange">
+                              <WTCONDITION expr="DATA(Images)" oper="greater" value="CONST(1)"/>
+                            </WTSTATIC>
+                            <WTSTATIC label="map" space="1" fontcolor="green">
+                              <WTCONDITION expr="DATA(IsMap)" oper="not-equal" value="CONST(0)"/>
+                            </WTSTATIC>
+                          </WTSTATIC>
+                        </WTSTATIC>
+                      </WTROW>
+                    </WTREPEAT>
+                  </WTCODEGROUP>
+
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(View)" oper="equal" value="CONST(3)"/>
+                    <WTROW>
+                      <WTSTATIC col="1" align="left" valign="top">
+                        <WTREPEAT entity="BarterAd">
+                          <WTCODEGROUP division="box" class="BarterBox">
+                            <WTCONDITION expr="__NotBarterOption_Title"/>
+                            <WTCODEGROUP division="price" class="BarterPrice">
+                              <WTCONDITION expr="__NotBarterOption_NoPrice"/>
+                              <WTSTATIC value="DATA(Price)"/>
+                            </WTCODEGROUP>
+                            <WTIMAGE value="CONST(defaultm.gif)" imgalign="absmiddle" path="barter">
+                              <WTCONDITION expr="DATA(Image)" oper="not-exist"/>
+                            </WTIMAGE>
+                            <WTIMAGE value="DATA(Image)" imgalign="absmiddle" path="barter">
+                              <WTCONDITION expr="DATA(Image)" oper="exist"/>
+                            </WTIMAGE>
+                            <WTSTATIC newline="1"/>
+                            <WTSTATIC value="DATA(PostDate)" fontsize="2" fontcolor="gray" space="1"/>
+                            <WTCODEGROUP>
+                              <WTCONDITION expr="__IsBarterOption_Title"/>
+                              <WTSTATIC value="DATA(Title)" fontsize="4" fontcolor="blue">
+                                <WTLINK name="17204" target="_blank"><WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/></WTLINK>
+                              </WTSTATIC>
+                            </WTCODEGROUP>
+                            <WTCODEGROUP>
+                              <WTCONDITION expr="__NotBarterOption_Title"/>
+                              <WTSTATIC value="DATA(Title)" fontsize="3">
+                                <WTLINK name="17204" target="_blank"><WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/></WTLINK>
+                              </WTSTATIC>
+                            </WTCODEGROUP>
+                            <WTSTATIC space="1"/>
+                            <WTSTATIC value="CONST(-)" space="1"/>
+                            <WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@location,' ',@zip,')')&quot;/&gt;)" space="1"/>
+                            <WTSTATIC fontsize="2">
+                              <WTSTATIC label="pic" space="1" fontcolor="orange">
+                                <WTCONDITION expr="DATA(Images)" oper="equal" value="CONST(1)"/>
+                              </WTSTATIC>
+                              <WTSTATIC label="pics" space="1" fontcolor="orange">
+                                <WTCONDITION expr="DATA(Images)" oper="greater" value="CONST(1)"/>
+                              </WTSTATIC>
+                              <WTSTATIC label="map" space="1" fontcolor="green">
+                                <WTCONDITION expr="DATA(IsMap)" oper="not-equal" value="CONST(0)"/>
+                              </WTSTATIC>
+                            </WTSTATIC>
+                          </WTCODEGROUP>
+                          <WTCODEGROUP division="box" class="BarterBox2">
+                            <WTCONDITION expr="__IsBarterOption_Title"/>
+                            <WTCODEGROUP division="price" class="BarterPrice2">
+                              <WTCONDITION expr="__NotBarterOption_NoPrice"/>
+                              <WTSTATIC value="DATA(Price)"/>
+                            </WTCODEGROUP>
+                            <WTIMAGE value="CONST(defaultm.gif)" imgalign="absmiddle" path="barter">
+                              <WTCONDITION expr="DATA(Image)" oper="not-exist"/>
+                            </WTIMAGE>
+                            <WTIMAGE value="DATA(Image)" imgalign="absmiddle" path="barter">
+                              <WTCONDITION expr="DATA(Image)" oper="exist"/>
+                            </WTIMAGE>
+                            <WTSTATIC newline="1"/>
+                            <WTSTATIC value="DATA(PostDate)" fontsize="2" fontcolor="gray" space="1"/>
+                            <WTCODEGROUP>
+                              <WTCONDITION expr="__IsBarterOption_Title"/>
+                              <WTSTATIC value="DATA(Title)" fontsize="4" fontcolor="blue">
+                                <WTLINK name="17204" target="_blank">
+                                  <WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/>
+                                </WTLINK>
+                              </WTSTATIC>
+                            </WTCODEGROUP>
+                            <WTCODEGROUP>
+                              <WTCONDITION expr="__NotBarterOption_Title"/>
+                              <WTSTATIC value="DATA(Title)" fontsize="3">
+                                <WTLINK name="17204" target="_blank">
+                                  <WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/>
+                                </WTLINK>
+                              </WTSTATIC>
+                            </WTCODEGROUP>
+                            <WTSTATIC space="1"/>
+                            <WTSTATIC value="CONST(-)" space="1"/>
+                            <WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@location,' ',@zip,')')&quot;/&gt;)" space="1"/>
+                            <WTSTATIC fontsize="2">
+                              <WTSTATIC label="pic" space="1" fontcolor="orange">
+                                <WTCONDITION expr="DATA(Images)" oper="equal" value="CONST(1)"/>
+                              </WTSTATIC>
+                              <WTSTATIC label="pics" space="1" fontcolor="orange">
+                                <WTCONDITION expr="DATA(Images)" oper="greater" value="CONST(1)"/>
+                              </WTSTATIC>
+                              <WTSTATIC label="map" space="1" fontcolor="green">
+                                <WTCONDITION expr="DATA(IsMap)" oper="not-equal" value="CONST(0)"/>
+                              </WTSTATIC>
+                            </WTSTATIC>
+                          </WTCODEGROUP>
+                        </WTREPEAT>
+                      </WTSTATIC>
+                    </WTROW>
+                  </WTCODEGROUP>
+
+                  <WTROW height="30">
+                    <WTCONDITION expr="CONST(count(/DATA/TXN/PTSBARTERADS/PTSBARTERAD))" oper="equal" value="CONST(0)"/>
+                    <WTSTATIC col="1" align="left" class="NoItems">
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC label="NoItems" fontsize="3"/>
+                    </WTSTATIC>
+                  </WTROW>
+                  <WTROW>
+                    <WTDIVIDER col="1" height="2" color="#CCCCCC"/>
+                  </WTROW>
+                  <WTROW>
+                    <WTSTATIC col="1" value="CONST(&lt;xsl:call-template name=&quot;PreviousNext&quot;/&gt;)" align="right"/>
+                  </WTROW>
+
+                </WTTABLE>
+
+                <WTSTATIC col="3" valign="top" align="right">
+                  <WTREPEAT entity="AdCampaign">
+                      <WTCODEGROUP division="box" class="AdBox">
+                        <WTCONDITION expr="__NotBarterOption_Title"/>
+                        <WTCODEGROUP division="price" class="AdPrice">
+                          <WTCONDITION expr="__NotBarterOption_NoPrice"/>
+                          <WTSTATIC value="DATA(Price)"/>
+                        </WTCODEGROUP>
+                        <WTIMAGE value="CONST(defaultm.gif)" imgalign="absmiddle" path="barter" imgwidth="180">
+                          <WTCONDITION expr="DATA(Image)" oper="not-exist"/>
+                        </WTIMAGE>
+                        <WTIMAGE value="DATA(Image)" imgalign="absmiddle" path="barter" imgwidth="180">
+                          <WTCONDITION expr="DATA(Image)" oper="exist"/>
+                        </WTIMAGE>
+                        <WTSTATIC newline="1"/>
+                        <WTSTATIC value="DATA(PostDate)" fontsize="2" fontcolor="gray" space="1"/>
+                        <WTCODEGROUP>
+                          <WTCONDITION expr="__IsBarterOption_Title"/>
+                          <WTSTATIC value="DATA(Title)" fontsize="4" fontcolor="blue">
+                            <WTLINK name="17204" target="_blank">
+                              <WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/>
+                            </WTLINK>
+                          </WTSTATIC>
+                        </WTCODEGROUP>
+                        <WTCODEGROUP>
+                          <WTCONDITION expr="__NotBarterOption_Title"/>
+                          <WTSTATIC value="DATA(Title)" fontsize="3">
+                            <WTLINK name="17204" target="_blank">
+                              <WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/>
+                            </WTLINK>
+                          </WTSTATIC>
+                        </WTCODEGROUP>
+                        <WTSTATIC space="1"/>
+                        <WTSTATIC value="CONST(-)" space="1"/>
+                        <WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@location,' ',@zip,')')&quot;/&gt;)" space="1"/>
+                        <WTSTATIC fontsize="2">
+                          <WTSTATIC label="pic" space="1" fontcolor="orange">
+                            <WTCONDITION expr="DATA(Images)" oper="equal" value="CONST(1)"/>
+                          </WTSTATIC>
+                          <WTSTATIC label="pics" space="1" fontcolor="orange">
+                            <WTCONDITION expr="DATA(Images)" oper="greater" value="CONST(1)"/>
+                          </WTSTATIC>
+                          <WTSTATIC label="map" space="1" fontcolor="green">
+                            <WTCONDITION expr="DATA(IsMap)" oper="not-equal" value="CONST(0)"/>
+                          </WTSTATIC>
+                        </WTSTATIC>
+                      </WTCODEGROUP>
+                      <WTCODEGROUP division="box" class="AdBox2">
+                        <WTCONDITION expr="__IsBarterOption_Title"/>
+                        <WTCODEGROUP division="price" class="AdPrice2">
+                          <WTCONDITION expr="__NotBarterOption_NoPrice"/>
+                          <WTSTATIC value="DATA(Price)"/>
+                        </WTCODEGROUP>
+                        <WTIMAGE value="CONST(defaultm.gif)" imgalign="absmiddle" path="barter" imgwidth="180">
+                          <WTCONDITION expr="DATA(Image)" oper="not-exist"/>
+                        </WTIMAGE>
+                        <WTIMAGE value="DATA(Image)" imgalign="absmiddle" path="barter" imgwidth="180">
+                          <WTCONDITION expr="DATA(Image)" oper="exist"/>
+                        </WTIMAGE>
+                        <WTSTATIC newline="1"/>
+                        <WTSTATIC value="DATA(PostDate)" fontsize="2" fontcolor="gray" space="1"/>
+                        <WTCODEGROUP>
+                          <WTCONDITION expr="__IsBarterOption_Title"/>
+                          <WTSTATIC value="DATA(Title)" fontsize="4" fontcolor="blue">
+                            <WTLINK name="17204" target="_blank">
+                              <WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/>
+                            </WTLINK>
+                          </WTSTATIC>
+                        </WTCODEGROUP>
+                        <WTCODEGROUP>
+                          <WTCONDITION expr="__NotBarterOption_Title"/>
+                          <WTSTATIC value="DATA(Title)" fontsize="3">
+                            <WTLINK name="17204" target="_blank">
+                              <WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/>
+                            </WTLINK>
+                          </WTSTATIC>
+                        </WTCODEGROUP>
+                        <WTSTATIC space="1"/>
+                        <WTSTATIC value="CONST(-)" space="1"/>
+                        <WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@location,' ',@zip,')')&quot;/&gt;)" space="1"/>
+                        <WTSTATIC fontsize="2">
+                          <WTSTATIC label="pic" space="1" fontcolor="orange">
+                            <WTCONDITION expr="DATA(Images)" oper="equal" value="CONST(1)"/>
+                          </WTSTATIC>
+                          <WTSTATIC label="pics" space="1" fontcolor="orange">
+                            <WTCONDITION expr="DATA(Images)" oper="greater" value="CONST(1)"/>
+                          </WTSTATIC>
+                          <WTSTATIC label="map" space="1" fontcolor="green">
+                            <WTCONDITION expr="DATA(IsMap)" oper="not-equal" value="CONST(0)"/>
+                          </WTSTATIC>
+                        </WTSTATIC>
+                      </WTCODEGROUP>
+                    </WTREPEAT>
+                  </WTSTATIC>
+              </WTROW>
+            </WTTABLE>
+          </WTROW>
+        </WTCODEGROUP>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--==================================================================================================================-->
+    <WTWEBPAGE name="17201" caption="My Ads" action="5" header="false" footer="false" navbar="false" wrapper="wrapper1000"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+      <!--==================================================================================================================-->
+      <WTPARAM name="SearchText" datatype="text"/>
+      <WTPARAM name="FindTypeID" datatype="number"/>
+      <WTPARAM name="Bookmark" datatype="text"/>
+      <WTPARAM name="Direction" datatype="number"/>
+      <WTPARAM name="ConsumerID" datatype="number"/>
+      <WTPARAM name="Status" datatype="number"/>
+      <WTPARAM name="Title" datatype="text"/>
+
+      <WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(PostDate)">
+        <WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+      </WTSETATTRIBUTE>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+        <WTOBJECT name="BarterAds" project="ptsBarterAdUser" class="CBarterAds">
+          <WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterAds" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(14)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+        <WTOBJECT name="Consumer" project="ptsConsumerUser" class="CConsumer">
+          <WTCONDITION expr="PARAM(ConsumerID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="ConsumerID" direction="input" value="PARAM(ConsumerID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Title)" value="CONST(CleanXML(.NameFirst + &quot; &quot; + .NameLast))"/>
+        </WTOBJECT>
+      </WTACTION>
+
+      <WTACTION id="5" name="Find" type="New">
+        <WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTACTION id="6" name="Previous" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+      </WTACTION>
+
+      <WTACTION id="7" name="Next" type="New">
+        <WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+      </WTACTION>
+
+      <WTOBJECT name="BarterAds" project="ptsBarterAdUser" class="CBarterAds">
+        <WTMETHOD name="Find">
+          <WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+          <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+          <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+          <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+          <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+          <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+          <WTPARAM name="ConsumerID" direction="input" value="PARAM(ConsumerID)"/>
+          <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+        </WTMETHOD>
+        <WTMETHOD name="FindStatus">
+          <WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(0)"/>
+          <WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+          <WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+          <WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+          <WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+          <WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+          <WTPARAM name="ConsumerID" direction="input" value="PARAM(ConsumerID)"/>
+          <WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+          <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+        </WTMETHOD>
+        <WTMETHOD name="XMLFind">
+          <WTPARAM name="xmlBarterAds" direction="return" datatype="text"/>
+          <WTPARAM name="Option" direction="input" value="CONST(15)"/>
+        </WTMETHOD>
+      </WTOBJECT>
+      <WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+        <WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+        <WTMETHOD name="XML">
+          <WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+        </WTMETHOD>
+      </WTOBJECT>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="1000" align="left"/>
+
+        <WTFUNCTION name="NewBarterAd()">
+          var cid = document.getElementById('ConsumerID').value
+          var url = "17203.asp?consumerid=" + cid + "&amp;returnurl=17201.asp?consumerid=" + cid
+          window.location = url
+        </WTFUNCTION>
+        <WTFUNCTION name="PreviewBarterAd(id)">
+          var url = "17204.asp?barteradid=" + id
+          var win = window.open(url,"PreviewBarterAd");
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="BarterImages(id)">
+          var url = "17311.asp?BarterAdID=" + id
+          var win = window.open(url,"BarterImages","top=100,left=100,height=400,width=650,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="UpdateImages()">
+          window.location.reload();
+        </WTFUNCTION>
+        <WTFUNCTION name="BarterCredits(id)">
+          var cid = document.getElementById('ConsumerID').value
+          var url = "17411.asp?ConsumerID=" + cid + "&amp;BarterAdID=" + id
+          var win = window.open(url,"BarterCredits","top=100,left=100,height=550,width=500,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="AdCredits()">
+          var cid = document.getElementById('ConsumerID').value;
+          var url = "17401.asp?ownertype=151&amp;ownerid=" + cid;
+          var win = window.open(url,"AdCredits");
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="BarterCampaigns(id)">
+          var url;
+          if( id == 0 ) {
+          var cid = document.getElementById('ConsumerID').value;
+          url = "17501.asp?consumerid=" + cid
+          }
+          else {
+          url = "17501.asp?barteradid=" + id
+          }
+          var win = window.open(url,"BarterCampaigns");
+          win.focus();
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN name="ConsumerID" value="PARAM(ConsumerID)"/>
+          <WTHIDDEN name="Title" value="PARAM(Title)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" tag="BarterAds" value="PARAM(Title)" class="PageHeadingLite"/>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTBUTTON col="1" value="CONST(NewBarterAd)" align="center">
+            <WTCLICK>NewBarterAd()</WTCLICK>
+          </WTBUTTON>
+          <WTSTATIC col="1" space="2"/>
+          <WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+          <WTCOMBO col="1" value="ATTR(BarterAds.FindTypeID)" translate="true" prespace="false"/>
+          <WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+          <WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true" prespace="false"/>
+          <WTCOMBO col="1" value="PARAM(Status)">
+            <WTOPTION id="0" label="All"/>
+            <WTOPTION id="1" label="Pending"/>
+            <WTOPTION id="2" label="Active"/>
+            <WTOPTION id="3" label="InActive"/>
+            <WTOPTION id="4" label="Cancelled"/>
+          </WTCOMBO>
+          <WTBUTTON col="1" action="5" value="CONST(Search)" default="true"/>
+          <WTBUTTON col="1" value="CONST(AdCredits)" align="center">
+            <WTCLICK>AdCredits()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(AdCampaigns)" align="center">
+            <WTCLICK>BarterCampaigns(0)</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+        <WTSTATIC label="EditAd"/>
+        <WTSTATIC label="PreviewAd"/>
+        <WTSTATIC label="EditImages"/>
+        <WTSTATIC label="EditCredits"/>
+        <WTSTATIC label="EditCampaigns"/>
+        <WTSTATIC label="Feature_Title"/>
+        <WTSTATIC label="Feature_Images"/>
+        <WTSTATIC label="Feature_Images+"/>
+        <WTSTATIC label="Feature_Editor"/>
+        <WTSTATIC label="Feature_Long"/>
+        <WTSTATIC label="Feature_Listing"/>
+
+        <WTROW>
+          <WTRECORDSET col="1" graybar="true" prevnext="top" entity="BarterAd">
+            <WTCOLUMN width="45" align="left" label="Title"/>
+            <WTCOLUMN width="8" align="center" label="Status"/>
+            <WTCOLUMN width="8" align="center" label="Price"/>
+            <WTCOLUMN width="8" align="center" label="Condition"/>
+            <WTCOLUMN width="10" align="center" label="Features"/>
+            <WTCOLUMN width="8" align="center" label="PostDate"/>
+            <WTCOLUMN width="8" align="center" label="UpdateDate"/>
+            <WTCOLUMN width="5" align="center" label="BarterAdID"/>
+            <WTROW height="36">
+              <WTSTATIC col="1">
+                <WTSTATIC value="DATA(Title)" fontsize="3" fontcolor="blue">
+                  <WTCONDITION expr="DATA(Status)" oper="less-equal" value="CONST(1)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Title)" fontsize="3">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Title)" fontcolor="green">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Title)" fontcolor="gray">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(4)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Title)" fontcolor="red">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(5)"/>
+                </WTSTATIC>
+                <WTSTATIC space="2"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Status)" oper="less-equal" value="CONST(2)"/>
+                  <WTIMAGE value="CONST(Edit24.gif)" alt="EditAd" imgalign="absmiddle">
+                    <WTLINK name="17203"><WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/></WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(2)"/>
+                  <WTIMAGE value="CONST(Edit.gif)" alt="EditAd" imgalign="absmiddle">
+                    <WTLINK name="17203"><WTPARAM name="BarterAdID" value="DATA(BarterAdID)"/></WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTSTATIC space="2"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Status)" oper="less-equal" value="CONST(2)"/>
+                  <WTIMAGE value="CONST(Preview24.gif)" alt="PreviewAd" imgalign="absmiddle">
+                    <WTLINK name="PreviewBarterAd(&lt;xsl:value-of select=&quot;@barteradid&quot;/&gt;)" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Status)" oper="greater" value="CONST(2)"/>
+                  <WTIMAGE value="CONST(Preview.gif)" alt="PreviewAd" imgalign="absmiddle">
+                    <WTLINK name="PreviewBarterAd(&lt;xsl:value-of select=&quot;@barteradid&quot;/&gt;)" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Status)" oper="less-equal" value="CONST(2)"/>
+                  <WTSTATIC space="2"/>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Images)" oper="equal" value="CONST(0)"/>
+                    <WTIMAGE value="CONST(Images024.gif)" alt="EditImages" imgalign="absmiddle">
+                      <WTLINK name="BarterImages(&lt;xsl:value-of select=&quot;@barteradid&quot;/&gt;)" click="true" />
+                    </WTIMAGE>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Images)" oper="equal" value="CONST(1)"/>
+                    <WTIMAGE value="CONST(Images124.gif)" alt="EditImages" imgalign="absmiddle">
+                      <WTLINK name="BarterImages(&lt;xsl:value-of select=&quot;@barteradid&quot;/&gt;)" click="true" />
+                    </WTIMAGE>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="DATA(Images)" oper="greater" value="CONST(1)"/>
+                    <WTIMAGE value="CONST(Images224.gif)" alt="EditImages" imgalign="absmiddle">
+                      <WTLINK name="BarterImages(&lt;xsl:value-of select=&quot;@barteradid&quot;/&gt;)" click="true" />
+                    </WTIMAGE>
+                  </WTCODEGROUP>
+                </WTCODEGROUP>
+                <WTSTATIC space="2"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(BarterCredits.gif)" alt="EditCredits" imgalign="absmiddle">
+                    <WTLINK name="BarterCredits(&lt;xsl:value-of select=&quot;@barteradid&quot;/&gt;)" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTSTATIC space="2"/>
+                  <WTIMAGE value="CONST(BarterCampaign.gif)" alt="EditCampaigns" imgalign="absmiddle">
+                    <WTLINK name="BarterCampaigns(&lt;xsl:value-of select=&quot;@barteradid&quot;/&gt;)" click="true" />
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2">
+                <WTSTATIC value="DATA(Status)" fontcolor="blue">
+                  <WTCONDITION expr="DATA(Status)" oper="less-equal" value="CONST(1)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Status)">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(2)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Status)" fontcolor="green">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(3)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Status)" fontcolor="gray">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(4)"/>
+                </WTSTATIC>
+                <WTSTATIC value="DATA(Status)" fontcolor="red">
+                  <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(5)"/>
+                </WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="3">
+                <WTSTATIC value="DATA(Price)">
+                  <WTCONDITION expr="__NotBarterOption_NoPrice"/>
+                </WTSTATIC>
+              </WTSTATIC>
+              <WTSTATIC col="4">
+                <WTSTATIC value="DATA(Condition)">
+                  <WTCONDITION expr="__NotBarterOption_NoCondition"/>
+                </WTSTATIC>
+              </WTSTATIC>
+
+              <WTSTATIC col="5">
+                <WTCODEGROUP>
+                  <WTCONDITION expr="__IsBarterOption_Title"/>
+                  <WTIMAGE value="CONST(Feature_Title.gif)" alt="Feature_Title" imgalign="absmiddle"/>
+                  <WTSTATIC space="1"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="__IsBarterOption_Images"/>
+                  <WTIMAGE value="CONST(Feature_Images.gif)" alt="Feature_Images" imgalign="absmiddle"/>
+                  <WTSTATIC space="1"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="__IsBarterOption_Images+"/>
+                  <WTIMAGE value="CONST(Feature_Images2.gif)" alt="Feature_Images+" imgalign="absmiddle"/>
+                  <WTSTATIC space="1"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="__IsBarterOption_Editor"/>
+                  <WTIMAGE value="CONST(Feature_Editor.gif)" alt="Feature_Editor" imgalign="absmiddle"/>
+                  <WTSTATIC space="1"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="__IsBarterOption_Long"/>
+                  <WTIMAGE value="CONST(Feature_Long.gif)" alt="Feature_Long" imgalign="absmiddle"/>
+                  <WTSTATIC space="1"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="__IsBarterOption_Listing"/>
+                  <WTIMAGE value="CONST(Feature_Listing.gif)" alt="Feature_Listing" imgalign="absmiddle"/>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="6" value="DATA(PostDate)"/>
+              <WTSTATIC col="7" value="DATA(UpdateDate)"/>
+              <WTSTATIC col="8" value="DATA(BarterAdID)"/>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--============================================================================================-->
+		<WTWEBPAGE name="17203" caption="BarterAd" header="false" footer="false" navbar="false"  wrapper="wrapper850box"
+			page-image="bg7.jpg" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+      <WTPARAM name="BarterAdID" datatype="number"/>
+      <WTPARAM name="ConsumerID" datatype="number"/>
+      <WTPARAM name="BarterArea1ID" datatype="number"/>
+      <WTPARAM name="BarterArea2ID" datatype="number"/>
+      <WTPARAM name="BarterCategoryID" datatype="number"/>
+      <WTPARAM name="IsCustomFields" datatype="number"/>
+      <WTPARAM name="NoPrice" datatype="number"/>
+      <WTPARAM name="NoCondition" datatype="number"/>
+      <WTPARAM name="AreaCategory" datatype="text"/>
+      <WTPARAM name="Mode" datatype="number"/>
+      <WTPARAM name="MapErr" datatype="number"/>
+
+      <WTPARAM name="AreaParentID" datatype="number"/>
+      <WTPARAM name="CityAreas" datatype="number"/>
+
+      <WTPARAM name="BarterPaymentPoints" datatype="number"/>
+      <WTPARAM name="BarterPaymentCash" datatype="number"/>
+      <WTPARAM name="BarterPaymentCC" datatype="number"/>
+      <WTPARAM name="BarterPaymentPP" datatype="number"/>
+      <WTPARAM name="BarterPaymentBTC" datatype="number"/>
+      <WTPARAM name="BarterPaymentNXC" datatype="number"/>
+      <WTPARAM name="BarterPaymentETH" datatype="number"/>
+      <WTPARAM name="BarterPaymentETC" datatype="number"/>
+      <WTPARAM name="BarterPaymentLTC" datatype="number"/>
+      <WTPARAM name="BarterPaymentDASH" datatype="number"/>
+      <WTPARAM name="BarterPaymentMonero" datatype="number"/>
+      <WTPARAM name="BarterPaymentSteem" datatype="number"/>
+      <WTPARAM name="BarterPaymentRipple" datatype="number"/>
+      <WTPARAM name="BarterPaymentDoge" datatype="number"/>
+      <WTPARAM name="BarterPaymentGCR" datatype="number"/>
+      <WTPARAM name="BarterPaymentOther" datatype="number"/>
+
+      <WTDATATXN name="CustomFields"/>
+      <WTDATATXN name="HTMLFile"/>
+
+      <WTINCLUDE name="StripHTML.asp"/>
+      <WTINCLUDE name="BarterOptions.asp"/>
+      <WTINCLUDE name="GeoCode.asp"/>
+      <WTINCLUDE name="Languages.asp"/>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="PARAM(BarterAdID)" oper="equal" value="CONST(0)"/>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(BarterArea1ID)" oper="equal" value="CONST(0)"/>
+          <WTGETCACHE name="PARAM(BarterArea1ID)" value="BARTERCITY" datatype="number"/>
+        </WTCODEGROUP>
+      </WTCODEGROUP>
+
+      <WTSUB function="LoadCustomFields(cf, obj)">
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            Dim total, id, v
+            With cf
+              total = UBOUND(.CustomFields)
+              For x = 0 to total
+                id = .CustomFields(x).ID
+                With obj
+                  Select Case id
+                  Case "T1": v = .T1
+                  Case "T2": v = .T2
+                  Case "T3": v = .T3
+                  Case "T4": v = .T4
+                  Case "T5": v = .T5
+                  Case "N1": v = .N1
+                  Case "N2": v = .N2
+                  Case "N3": v = .N3
+                  Case "N4": v = .N4
+                  Case "N5": v = .N5
+                  Case "L1": v = .L1
+                  Case "L2": v = .L2
+                  Case "L3": v = .L3
+                  Case "L4": v = .L4
+                  Case "L5": v = .L5
+                  Case "L6": v = .L6
+                  Case "L7": v = .L7
+                  Case "L8": v = .L8
+                  Case "L9": v = .L9
+                  Case "L10": v = .L10
+                  Case "Y1": v = .Y1
+                  Case "Y2": v = .Y2
+                  Case "Y3": v = .Y3
+                  Case "Y4": v = .Y4
+                  Case "Y5": v = .Y5
+                  Case "Y6": v = .Y6
+                  Case "Y7": v = .Y7
+                  Case "Y8": v = .Y8
+                  Case "Y9": v = .Y9
+                  Case "Y10": v = .Y10
+                  Case "D1": v = .D1
+                  Case "D2": v = .D2
+                  Case "D3": v = .D3
+                  Case "D4": v = .D4
+                  Case "D5": v = .D5
+                  End Select
+                End With
+                .CustomFields(x).Value = v
+              Next
+            End With
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+
+      <WTSUB function="SaveCustomFields(obj, bvBarterCategoryID)">
+        <WTOBJECT name="BarterCategory" project="ptsBarterCategoryUser" class="CBarterCategory">
+          <WTCONDITION expr="PARAM(BarterCategoryID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterCategoryID" direction="input" value="CONST(bvBarterCategoryID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpCustomFields)" value="ATTR(CustomFields)"/>
+        </WTOBJECT>
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            Dim cf, id, v
+            Set cf = New CustomFields
+            With cf
+            .Load tmpCustomFields, "", False
+            .GetValues()
+            .Validate()
+            total = UBOUND(.CustomFields)
+            For x = 0 to total
+            id = .CustomFields(x).ID
+            v = .CustomFields(x).Value
+            With obj
+            Select Case id
+            Case "T1": .T1 = v
+            Case "T2": .T2 = v
+            Case "T3": .T3 = v
+            Case "T4": .T4 = v
+            Case "T5": .T5 = v
+            Case "N1": .N1 = v
+            Case "N2": .N2 = v
+            Case "N3": .N3 = v
+            Case "N4": .N4 = v
+            Case "N5": .N5 = v
+            Case "L1": .L1 = v
+            Case "L2": .L2 = v
+            Case "L3": .L3 = v
+            Case "L4": .L4 = v
+            Case "L5": .L5 = v
+            Case "L6": .L6 = v
+            Case "L7": .L7 = v
+            Case "L8": .L8 = v
+            Case "L9": .L9 = v
+            Case "L10": .L10 = v
+            Case "Y1": .Y1 = v
+            Case "Y2": .Y2 = v
+            Case "Y3": .Y3 = v
+            Case "Y4": .Y4 = v
+            Case "Y5": .Y5 = v
+            Case "Y6": .Y6 = v
+            Case "Y7": .Y7 = v
+            Case "Y8": .Y8 = v
+            Case "Y9": .Y9 = v
+            Case "Y10": .Y10 = v
+            Case "D1": .D1 = v
+            Case "D2": .D2 = v
+            Case "D3": .D3 = v
+            Case "D4": .D4 = v
+            Case "D5": .D5 = v
+            End Select
+            End With
+            Next
+            End With
+            Set cf = Nothing
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+  
+      <WTSUB function="SetPayments(opt)">
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            IF InStr(opt, "1") > 0 Then reqBarterPaymentPoints = 1
+            IF InStr(opt, "2") > 0 Then reqBarterPaymentCash = 1
+            IF InStr(opt, "3") > 0 Then reqBarterPaymentCC = 1
+            IF InStr(opt, "4") > 0 Then reqBarterPaymentPP = 1
+            IF InStr(opt, "A") > 0 Then reqBarterPaymentBTC = 1
+            IF InStr(opt, "B") > 0 Then reqBarterPaymentNXC = 1
+            IF InStr(opt, "C") > 0 Then reqBarterPaymentETH = 1
+            IF InStr(opt, "D") > 0 Then reqBarterPaymentETC = 1
+            IF InStr(opt, "E") > 0 Then reqBarterPaymentLTC = 1
+            IF InStr(opt, "F") > 0 Then reqBarterPaymentDASH = 1
+            IF InStr(opt, "G") > 0 Then reqBarterPaymentMonero = 1
+            IF InStr(opt, "H") > 0 Then reqBarterPaymentSteem = 1
+            IF InStr(opt, "I") > 0 Then reqBarterPaymentRipple = 1
+            IF InStr(opt, "J") > 0 Then reqBarterPaymentDoge = 1
+            IF InStr(opt, "Y") > 0 Then reqBarterPaymentGCR = 1
+            IF InStr(opt, "Z") > 0 Then reqBarterPaymentOther = 1
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+      <WTSUB function="GetPayments()">
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            opt =  ""
+            IF reqBarterPaymentPoints = 1 Then opt = opt + "1"
+            IF reqBarterPaymentCash   = 1 Then opt = opt + "2"
+            IF reqBarterPaymentCC     = 1 Then opt = opt + "3"
+            IF reqBarterPaymentPP     = 1 Then opt = opt + "3"
+            IF reqBarterPaymentBTC    = 1 Then opt = opt + "A"
+            IF reqBarterPaymentNXC    = 1 Then opt = opt + "B"
+            IF reqBarterPaymentETH    = 1 Then opt = opt + "C"
+            IF reqBarterPaymentETC    = 1 Then opt = opt + "D"
+            IF reqBarterPaymentLTC    = 1 Then opt = opt + "E"
+            IF reqBarterPaymentDASH   = 1 Then opt = opt + "F"
+            IF reqBarterPaymentMonero = 1 Then opt = opt + "G"
+            IF reqBarterPaymentSteem  = 1 Then opt = opt + "H"
+            IF reqBarterPaymentRipple = 1 Then opt = opt + "I"
+            IF reqBarterPaymentDoge   = 1 Then opt = opt + "J"
+            IF reqBarterPaymentGCR    = 1 Then opt = opt + "Y"
+            IF reqBarterPaymentOther  = 1 Then opt = opt + "Z"
+            GetPayments = opt
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+        
+      <WTSUB function="SetupBarterAd(obj, bvBarterAdID)">
+        <WTOBJECT name="BarterArea" project="ptsBarterAreaUser" class="CBarterArea">
+         <WTCONDITION expr="PARAM(BarterArea1ID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTCONDITION expr="PARAM(BarterArea1ID)" oper="not-equal" value="CONST(0)"/>
+            <WTPARAM name="BarterAreaID" direction="input" value="PARAM(BarterArea1ID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(AreaCategory)" value="ATTR(BarterAreaName)"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(BarterArea2ID)" oper="not-equal" value="CONST(0)"/>
+            <WTMETHOD name="Load">
+              <WTPARAM name="BarterAreaID" direction="input" value="PARAM(BarterArea2ID)"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="PARAM(AreaCategory)" value="CONST(reqAreaCategory + &quot; / &quot; + .BarterAreaName)"/>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="BarterCategory" project="ptsBarterCategoryUser" class="CBarterCategory">
+          <WTCONDITION expr="PARAM(BarterCategoryID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterCategoryID" direction="input" value="PARAM(BarterCategoryID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+            If InStr(.Options, "A") &gt; 0 Then reqNoPrice = 1
+            If InStr(.Options, "B") &gt; 0 Then reqNoCondition = 1
+            </WTCUSTOM>
+          </WTCODEGROUP>
+          <WTSETATTRIBUTE name="CONST(tmpCustomFields)" value="ATTR(CustomFields)"/>
+          <WTSETATTRIBUTE name="PARAM(IsCustomFields)" value="CONST(1)">
+            <WTCONDITION expr="CONST(tmpCustomFields)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+          </WTSETATTRIBUTE>
+          <WTSETATTRIBUTE name="PARAM(AreaCategory)" value="CONST(reqAreaCategory + &quot; / &quot; + .BarterCategoryName)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterCategory" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            Set cf = New CustomFields
+            With cf
+              .Load tmpCustomFields, "", True
+              If bvBarterAdID > 0 Then LoadCustomFields cf, obj
+              xmlCustomFields = .XML()
+            End With
+            Set cf = Nothing
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+
+      <WTSUB function="UpdateBarterAd(reload)">
+        <WTOBJECT name="BarterAd" project="ptsBarterAdUser" class="CBarterAd">
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpStatus)" value="ATTR(Status)"/>
+          <WTSETATTRIBUTE name="CONST(tmpMapStreet1)" value="ATTR(MapStreet1)"/>
+          <WTSETATTRIBUTE name="CONST(tmpMapStreet2)" value="ATTR(MapStreet2)"/>
+          <WTSETATTRIBUTE name="CONST(tmpMapCity)" value="ATTR(MapCity)"/>
+          <WTSETATTRIBUTE name="CONST(tmpMapZip)" value="ATTR(MapZip)"/>
+          <WTSETATTRIBUTES/>
+          <WTCALLSUB name="SaveCustomFields oBarterAd, .BarterCategoryID">
+            <WTCONDITION expr="PARAM(IsCustomFields)" oper="not-equal" value="CONST(0)"/>
+          </WTCALLSUB>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NoErrors"/>
+            <WTSETATTRIBUTE name="ATTR(UpdateDate)" value="SYS(Now)"/>
+            <WTSETATTRIBUTE name="ATTR(Payments)" value="CONST(GetPayments())"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="CONST(tmpStatus)" oper="not-equal" value="SYSCON(BARTERAD-STATUS-ACTIVE)"/>
+              <WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(BARTERAD-STATUS-ACTIVE)" connector="and"/>
+              <WTSETATTRIBUTE name="ATTR(PostDate)" value="SYS(Now)"/>
+              <WTSETATTRIBUTE name="ATTR(EndDate)" value="CONST(DateAdd(&quot;m&quot;,1,.PostDate))"/>
+            </WTCODEGROUP>
+            <WTSETATTRIBUTE name="ATTR(GeoCode)" value="CONST(&quot;&quot;)">
+              <WTCONDITION expr="ATTR(IsMap)" oper="not-equal" value="CONST(&quot;0&quot;)"/>
+            </WTSETATTRIBUTE>
+            <WTCODEGROUP>
+              <WTCONDITION expr="ATTR(IsMap)" oper="equal" value="CONST(&quot;1&quot;)"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(GeoCode)" oper="equal" value="CONST(&quot;&quot;)"/>
+                <WTCONDITION expr="ATTR(MapStreet1)" oper="not-equal" value="CONST(tmpMapStreet1)" connector="or"/>
+                <WTCONDITION expr="ATTR(MapStreet2)" oper="not-equal" value="CONST(tmpMapStreet2)" connector="or"/>
+                <WTCONDITION expr="ATTR(MapCity)" oper="not-equal" value="CONST(tmpMapCity)" connector="or"/>
+                <WTCONDITION expr="ATTR(MapZip)" oper="not-equal" value="CONST(tmpMapZip)" connector="or"/>
+                <WTCUSTOM>
+                  .GeoCode = GM_GeoCode(.MapStreet1 + "+" + .MapStreet2 + "+" + .MapCity + "+" + .MapZip)
+                  If InStr(.GeoCode, "Err:") &gt; 0 Then .IsMap = 0
+                </WTCUSTOM>
+              </WTCODEGROUP>
+            </WTCODEGROUP>
+            <WTSETATTRIBUTE name="PARAM(MapErr)" value="CONST(1)">
+              <WTCONDITION expr="CONST(InStr(.GeoCode, &quot;Err:&quot;))" oper="not-equal" value="CONST(0)"/>
+            </WTSETATTRIBUTE>
+            <WTSETATTRIBUTE name="ATTR(Options)" value="CONST(SetBarterAdOption(.Options, &quot;A&quot;, reqNoPrice))"/>
+            <WTSETATTRIBUTE name="ATTR(Options)" value="CONST(SetBarterAdOption(.Options, &quot;B&quot;, reqNoCondition))"/>
+            <WTMETHOD name="Save">
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCALLSUB name="UpdateBarterPayments(.Payments)">
+            <WTCONDITION expr="NoErrors"/>
+          </WTCALLSUB>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterAd" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NoErrors"/>
+            <WTSETATTRIBUTE name="CONST(tmpDescription)" value="CONST(StripHTML(.Description))"/>
+            <WTMETHOD name="UpdateFT">
+              <WTPARAM name="BarterAdID" direction="input" value="ATTR(BarterAdID)"/>
+              <WTPARAM name="Title" direction="input" value="ATTR(Title)"/>
+              <WTPARAM name="Location" direction="input" value="ATTR(Location)"/>
+              <WTPARAM name="Zip" direction="input" value="ATTR(Zip)"/>
+              <WTPARAM name="Description" direction="input" value="CONST(tmpDescription)"/>
+              <WTPARAM name="Result" direction="return" datatype="number"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCALLSUB name="SetupBarterAd oBarterAd, reqBarterAdID">
+            <WTCONDITION expr="IsErrors"/>
+            <WTCONDITION expr="CONST(reload)" oper="not-equal" value="CONST(0)" connector="or"/>
+          </WTCALLSUB>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NoErrors"/>
+            <WTCONDITION expr="IsBarterOptions_Long" connector="and"/>
+            <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+              <WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqBarterADID)"/>
+              <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Barter&quot;)"/>
+              <WTSETATTRIBUTE name="ATTR(Language)" value="FORM(Language)"/>
+              <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+              <WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+              <WTMETHOD name="Save"/>
+              <WTMETHOD name="XML">
+                <WTCONDITION expr="IsErrors"/>
+                <WTCONDITION expr="CONST(reload)" oper="not-equal" value="CONST(0)" connector="or"/>
+                <WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+              </WTMETHOD>
+            </WTOBJECT>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="BarterImages" project="ptsBarterImageUser" class="CBarterImages">
+          <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="ListAll">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterImages" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+      
+      <WTSUB function="AddBarterAd(reload)">
+        <WTOBJECT name="BarterAd" project="ptsBarterAdUser" class="CBarterAd">
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterAdID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTCALLSUB name="SaveCustomFields oBarterAd, .BarterCategoryID">
+            <WTCONDITION expr="PARAM(IsCustomFields)" oper="not-equal" value="CONST(0)"/>
+          </WTCALLSUB>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NoErrors"/>
+            <WTSETATTRIBUTE name="ATTR(UpdateDate)" value="SYS(Now)"/>
+            <WTSETATTRIBUTE name="ATTR(Payments)" value="CONST(GetPayments())"/>
+            <WTSETATTRIBUTE name="ATTR(Options)" value="CONST(SetBarterAdOption(.Options, &quot;A&quot;, reqNoPrice))"/>
+            <WTSETATTRIBUTE name="ATTR(Options)" value="CONST(SetBarterAdOption(.Options, &quot;B&quot;, reqNoCondition))"/>
+            <WTMETHOD name="Add">
+              <WTPARAM name="reqBarterAdID" direction="return" datatype="number"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCALLSUB name="UpdateBarterPayments(.Payments)">
+            <WTCONDITION expr="NoErrors"/>
+          </WTCALLSUB>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterAd" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NoErrors"/>
+            <WTSETATTRIBUTE name="CONST(tmpDescription)" value="CONST(StripHTML(.Description))"/>
+            <WTMETHOD name="UpdateFT">
+              <WTPARAM name="BarterAdID" direction="input" value="ATTR(BarterAdID)"/>
+              <WTPARAM name="Title" direction="input" value="ATTR(Title)"/>
+              <WTPARAM name="Location" direction="input" value="ATTR(Location)"/>
+              <WTPARAM name="Zip" direction="input" value="ATTR(Zip)"/>
+              <WTPARAM name="Description" direction="input" value="CONST(tmpDescription)"/>
+              <WTPARAM name="Result" direction="return" datatype="number"/>
+            </WTMETHOD>
+          </WTCODEGROUP>
+          <WTCALLSUB name="SetupBarterAd oBarterAd, reqBarterAdID">
+            <WTCONDITION expr="IsErrors"/>
+            <WTCONDITION expr="CONST(reload)" oper="not-equal" value="CONST(0)" connector="or"/>
+          </WTCALLSUB>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB function="UpdateBarterPayments(payments)">
+        <WTOBJECT name="Consumer" project="ptsConsumerUser" class="CConsumer">
+          <WTMETHOD name="Load">
+            <WTPARAM name="ConsumerID" direction="input" value="PARAM(ConsumerID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="ATTR(Barter)" value="CONST(SetBarterPayments(.Barter, payments ))"/>
+          <WTMETHOD name="Save">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+      </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="InitBarterAd">
+        <WTOBJECT name="Consumer" project="ptsConsumerUser" class="CConsumer">
+          <WTCONDITION expr="PARAM(BarterAdID)" oper="equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="ConsumerID" direction="input" value="PARAM(ConsumerID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpContactName)" value="CONST(.Namefirst + &quot; &quot; + .NameLast)"/>
+          <WTSETATTRIBUTE name="CONST(tmpContactEmail)" value="ATTR(Email)"/>
+          <WTSETATTRIBUTE name="CONST(tmpContactPhone)" value="ATTR(Phone)"/>
+          <WTCALLSUB name="GetBarterPayments .Barter, tmpPayments"/>
+        </WTOBJECT>
+        <WTOBJECT name="BarterAd" project="ptsBarterAdUser" class="CBarterAd">
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(MapErr)" value="CONST(1)">
+            <WTCONDITION expr="CONST(InStr(.GeoCode, &quot;Err:&quot;))" oper="not-equal" value="CONST(0)"/>
+          </WTSETATTRIBUTE>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="PARAM(BarterCategoryID)" value="ATTR(BarterCategoryID)"/>
+            <WTSETATTRIBUTE name="PARAM(BarterArea1ID)" value="ATTR(BarterArea1ID)"/>
+            <WTSETATTRIBUTE name="PARAM(BarterArea2ID)" value="ATTR(BarterArea2ID)"/>
+            </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(BarterAdID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(ConsumerID)" value="PARAM(ConsumerID)"/>
+            <WTSETATTRIBUTE name="ATTR(BarterArea1ID)" value="PARAM(BarterArea1ID)"/>
+            <WTSETATTRIBUTE name="ATTR(BarterArea2ID)" value="PARAM(BarterArea2ID)"/>
+            <WTSETATTRIBUTE name="ATTR(BarterCategoryID)" value="PARAM(BarterCategoryID)"/>
+            <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="ATTR(ContactName)" value="CONST(tmpContactName)"/>
+            <WTSETATTRIBUTE name="ATTR(ContactEmail)" value="CONST(tmpContactEmail)"/>
+            <WTSETATTRIBUTE name="ATTR(ContactPhone)" value="CONST(tmpContactPhone)"/>
+            <WTSETATTRIBUTE name="ATTR(IsEmail)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="ATTR(IsPhone)" value="CONST(1)"/>
+            <WTSETATTRIBUTE name="ATTR(Language)" value="CONST(&quot;en&quot;)"/>
+            <WTSETATTRIBUTE name="CONST(tmpPayments)" value="CONST(&quot;1&quot;)">
+              <WTCONDITION expr="CONST(tmpPayments)" oper="equal" value="CONST(&quot;&quot;)"/>
+            </WTSETATTRIBUTE>
+            <WTSETATTRIBUTE name="ATTR(Payments)" value="CONST(tmpPayments)"/>
+          </WTCODEGROUP>
+          <WTCALLSUB name="SetPayments(.Payments)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterAd" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+          <WTCALLSUB name="SetupBarterAd oBarterAd, reqBarterAdID"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsBarterOptions_Long"/>
+            <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+              <WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqBarterADID)"/>
+              <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Barter&quot;)"/>
+              <WTSETATTRIBUTE name="ATTR(Language)" value="FORM(Language)"/>
+              <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+              <WTMETHOD name="Load"/>
+              <WTMETHOD name="XML">
+                <WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+              </WTMETHOD>
+            </WTOBJECT>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="BarterImages" project="ptsBarterImageUser" class="CBarterImages">
+          <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="ListAll">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterImages" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTSUB name="SetupBarterCategorys">
+        <WTOBJECT name="BarterCategorys" project="ptsBarterCategoryUser" class="CBarterCategorys">
+          <WTMETHOD name="ListAll">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterCategorys" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="BarterArea" project="ptsBarterAreaUser" class="CBarterArea">
+          <WTCONDITION expr="PARAM(BarterArea1ID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTCONDITION expr="PARAM(BarterArea2ID)" oper="equal" value="CONST(0)"/>
+            <WTPARAM name="BarterAreaID" direction="input" value="PARAM(BarterArea1ID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="Load">
+            <WTCONDITION expr="PARAM(BarterArea2ID)" oper="not-equal" value="CONST(0)"/>
+            <WTPARAM name="BarterAreaID" direction="input" value="PARAM(BarterArea2ID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(AreaCategory)" value="ATTR(BarterAreaName)"/>
+          <WTSETATTRIBUTE name="PARAM(AreaParentID)" value="ATTR(ParentID)"/>
+          <WTSETATTRIBUTE name="PARAM(CityAreas)" value="ATTR(Children)"/>
+          <WTSETATTRIBUTE name="CONST(tmpCountryID)" value="ATTR(CountryID)"/>
+        </WTOBJECT>
+        <WTOBJECT name="BarterAreas" project="ptsBarterAreaUser" class="CBarterAreas">
+          <WTCONDITION expr="PARAM(CityAreas)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="ListActive">
+            <WTPARAM name="ParentID" direction="input" value="PARAM(BarterArea1ID)"/>
+            <WTPARAM name="CountryID" direction="input" value="CONST(tmpCountryID)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterAreas" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+      
+      <WTACTION id="0" name="New" type="New">
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+          <WTCONDITION expr="PARAM(BarterCategoryID)" oper="not-equal" value="CONST(0)" connector="or"/>
+          <WTCALLSUB name="InitBarterAd"/>
+          <WTSETATTRIBUTE name="PARAM(Mode)" value="CONST(1)"/>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(BarterAdID)" oper="equal" value="CONST(0)"/>
+          <WTCONDITION expr="PARAM(BarterCategoryID)" oper="equal" value="CONST(0)" connector="and"/>
+          <WTCALLSUB name="SetupBarterCategorys"/>
+        </WTCODEGROUP>
+      </WTACTION>
+
+      <WTACTION id="1" name="Update" type="Update">
+        <WTCALLSUB name="UpdateBarterAd 0"/>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="5" name="UpdateStay" type="Update">
+        <WTCALLSUB name="UpdateBarterAd 1"/>
+      </WTACTION>
+
+      <WTACTION id="2" name="Add" type="Add">
+        <WTCALLSUB name="AddBarterAd 0"/>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="6" name="AddStay" type="Add">
+        <WTCALLSUB name="AddBarterAd 1"/>
+      </WTACTION>
+
+      <WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="BarterAd" project="ptsBarterAdUser" class="CBarterAd">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="BarterAd" project="ptsBarterAdUser" class="CBarterAd">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBarterAd" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="850" align="left"/>
+        
+        <WTFUNCTION name="SetCategory(id,children)">
+          if( children == 0 ) {
+            var CityAreas = document.getElementById('CityAreas').value;
+            var aid = document.getElementById('BarterArea2ID').value;
+            if( CityAreas != 0 &amp;&amp; aid == 0 ) {
+              alert('Select City Area first to continue.'); 
+            }  
+            else {  
+              document.getElementById('BarterCategoryID').value = id;
+              doSubmit(0,'');
+            }
+          }
+        </WTFUNCTION>
+        <WTFUNCTION name="SetCityArea(id)">
+          document.getElementById('BarterArea2ID').value = id;
+        </WTFUNCTION>
+        <WTFUNCTION name="UpdateLocation(id)">
+          document.getElementById('BarterArea1ID').value = id;
+          doSubmit(0,'');
+        </WTFUNCTION>
+        <WTFUNCTION name="SelectBarterArea()">
+          document.getElementById('BarterArea2ID').value = 0;
+          document.getElementById('BarterCategoryID').value = 0;
+          var pid = document.getElementById('AreaParentID').value;
+          var url = "17010.asp?barterareaid=" + pid
+          var win = window.open(url,"BarterArea","top=200,left=200,height=400,width=425,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1")
+					win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="BarterImages()">
+          var baid = document.getElementById('BarterAdID').value;
+          var url = "17311.asp?BarterAdID=" + baid
+          var win = window.open(url,"BarterImages","top=100,left=100,height=400,width=650,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+          win.focus();
+        </WTFUNCTION>
+        <WTFUNCTION name="UpdateImages()">
+          doSubmit(5,'');
+        </WTFUNCTION>
+        <WTFUNCTION name="UpdateStatus(stat)">
+          document.getElementById('Status').value = stat;
+          doSubmit(5,'');
+        </WTFUNCTION>
+        <WTFUNCTION name="BarterCredits()">
+          var id = document.getElementById('BarterAdID').value
+          var cid = document.getElementById('ConsumerID').value
+          var url = "17411.asp?ConsumerID=" + cid + "&amp;BarterAdID=" + id
+          var win = window.open(url,"BarterCredits","top=100,left=100,height=550,width=500,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+          win.focus();
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(BarterAdID)"/>
+          <WTHIDDEN value="PARAM(AreaCategory)"/>
+          <WTHIDDEN value="PARAM(CityAreas)"/>
+          <WTHIDDEN value="PARAM(AreaParentID)"/>
+          <WTHIDDEN value="PARAM(IsCustomFields)"/>
+          <WTHIDDEN value="PARAM(Mode)"/>
+          <WTHIDDEN value="PARAM(NoPrice)"/>
+          <WTHIDDEN value="PARAM(NoCondition)"/>
+        </WTROW>
+
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(0)"/>
+          <WTROW>
+            <WTHIDDEN value="PARAM(BarterCategoryID)"/>
+            <WTHIDDEN value="PARAM(BarterArea1ID)"/>
+            <WTHIDDEN value="PARAM(BarterArea2ID)"/>
+          </WTROW>
+          
+          <WTROW margin-bottom="12">
+            <WTSTATIC col="1" label="NewBarterAd" class="PageHeading"/>
+          </WTROW>
+          
+          <WTROW>
+              <WTSTATIC col="1" class="PageHeadingLite" style="background-color:#ffffff">
+                <WTSTATIC value="PARAM(AreaCategory)" space="1"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(lookup24.png)" alt="LookupArea" imgalign="absmiddle">
+                    <WTLINK name="SelectBarterArea()" click="true"/>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+          </WTROW>
+          
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(CityAreas)" oper="not-equal" value="CONST(0)"/>
+          <WTROW margin-top="12" margin-bottom="12">
+              <WTSTATIC col="1" label="SelectCityArea" class="PageHeadingLite"/>
+            </WTROW>
+            <WTREPEAT entity="BarterArea">
+              <WTROW margin-bottom="6">
+                <WTCONDITION expr="DATA(BarterAreaName)" oper="not-equal" value="CONST('')"/>
+                <WTSTATIC col="1">
+                  <WTSTATIC space="3"/>
+                  <WTCODEGROUP>
+							      <WTRADIO name="0">
+                      <WTCLICK escape="false">SetCityArea(&lt;xsl:value-of select=&quot;@barterareaid&quot;/&gt;)</WTCLICK>
+							      </WTRADIO>
+                  </WTCODEGROUP>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="DATA(BarterAreaName)" fontsize="4"/>
+                </WTSTATIC>
+              </WTROW>
+            </WTREPEAT>
+          </WTCODEGROUP>
+
+          <WTROW margin-top="12" margin-bottom="12">
+            <WTSTATIC col="1" label="SelectCategory" class="PageHeadingLite"/>
+          </WTROW>
+          
+          <WTROW margin-bottom="12">
+            <WTTREE col="1" id="TreeView" entity="BarterCategory" tree-node-open="folder_open.gif" nodeid="BarterCategoryID" parentid="ParentID" height="0" width="600" treeheight="200" border="none" borderwidth="20">
+              <WTNODECLICK>SetCategory(&lt;xsl:value-of select=&quot;@bartercategoryid&quot;/&gt;,&lt;xsl:value-of select=&quot;@children&quot;/&gt;);</WTNODECLICK>
+              <WTCODEGROUP>
+                <WTCONDITION expr="DATA(Children)" oper="not-equal" value="CONST(0)"/>
+                <WTSTATIC value="DATA(BarterCategoryName)" fontsize="4">
+                  <WTLINK name="SetCategory(&lt;xsl:value-of select=&quot;@bartercategoryid&quot;/&gt;,&lt;xsl:value-of select=&quot;@children&quot;/&gt;);" click="true"/>
+                </WTSTATIC>
+              </WTCODEGROUP>
+              <WTCODEGROUP>
+                <WTCONDITION expr="DATA(Children)" oper="equal" value="CONST(0)"/>
+                <WTSTATIC value="DATA(BarterCategoryName)" fontsize="3">
+                  <WTLINK name="SetCategory(&lt;xsl:value-of select=&quot;@bartercategoryid&quot;/&gt;,&lt;xsl:value-of select=&quot;@children&quot;/&gt;);" click="true"/>
+                </WTSTATIC>
+              </WTCODEGROUP>
+            </WTTREE>
+          </WTROW>
+          
+          <WTROW margin-top="12" margin-bottom="12">
+            <WTBUTTON col="1" action="3" value="CONST(Cancel)" align="center"/>
+				  </WTROW>
+        </WTCODEGROUP>
+        
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(1)"/>
+          
+          <WTROW>
+            <WTSTATIC col="1" class="PageHeading" align="left">
+              <WTSTATIC tag="NewBarterAd">
+                <WTCONDITION expr="PARAM(BarterAdID)" oper="equal" value="CONST(0)"/>
+              </WTSTATIC>
+              <WTSTATIC tag="BarterAd">
+                <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+              </WTSTATIC>
+              <WTSTATIC value="PARAM(AreaCategory)"/>
+            </WTSTATIC>
+          </WTROW>
+
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsEmployee"/>
+            <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+            <WTROW margin-bottom="12">
+              <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #fcfde5;">
+                <WTCOLUMN width="850" align="left"/>  
+                <WTROW margin-top="12" margin-bottom="6">
+                  <WTSTATIC col="1">
+                    <WTCODEGROUP>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="ConsumerID"/>
+                      <WTTEXT value="ATTR(BarterAd.ConsumerID)" size="3"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="BarterArea1ID"/>
+                      <WTTEXT value="ATTR(BarterAd.BarterArea1ID)" size="3"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="BarterArea2ID"/>
+                      <WTTEXT value="ATTR(BarterAd.BarterArea2ID)" size="3"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="BarterCategoryID"/>
+                      <WTTEXT value="ATTR(BarterAd.BarterCategoryID)" size="3"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="Options"/>
+                      <WTTEXT value="ATTR(BarterAd.Options)" size="5"/>
+                    </WTCODEGROUP>
+                  </WTSTATIC>
+                </WTROW>
+                <WTROW margin-bottom="12">
+                  <WTSTATIC col="1">
+                    <WTCODEGROUP>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="Status"/>
+                      <WTCOMBO value="ATTR(BarterAd.Status)"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="PostDate"/>
+                      <WTTEXT value="ATTR(BarterAd.PostDate)" size="15"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="UpdateDate"/>
+                      <WTTEXT value="ATTR(BarterAd.UpdateDate)" size="15"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="EndDate"/>
+                      <WTTEXT value="ATTR(BarterAd.EndDate)" size="15"/>
+                    </WTCODEGROUP>
+                  </WTSTATIC>
+                </WTROW>
+              </WTTABLE>
+            </WTROW>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NotEmployee"/>
+            <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+            <WTROW margin-bottom="3">
+              <WTHIDDEN value="ATTR(BarterAd.ConsumerID)"/>
+              <WTHIDDEN value="ATTR(BarterAd.BarterArea1ID)"/>
+              <WTHIDDEN value="ATTR(BarterAd.BarterArea2ID)"/>
+              <WTHIDDEN value="ATTR(BarterAd.BarterCategoryID)"/>
+              <WTHIDDEN value="ATTR(BarterAd.Options)"/>
+              <WTHIDDEN value="ATTR(BarterAd.Status)"/>
+              <WTHIDDEN value="ATTR(BarterAd.PostDate)"/>
+              <WTHIDDEN value="ATTR(BarterAd.UpdateDate)"/>
+              <WTHIDDEN value="ATTR(BarterAd.EndDate)"/>
+            </WTROW>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+            <WTROW margin-bottom="12">
+              <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #fcfde5;">
+                <WTCOLUMN width="750" align="left"/>
+                <WTCOLUMN width="100" align="right"/>
+                <WTROW margin-top="12" margin-bottom="12">
+                  <WTSTATIC col="1">
+                    <WTCODEGROUP>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="Status"/>
+                      <WTSTATIC value="ATTR(BarterAd.Status)" bold="1"/>
+                      <WTCODEGROUP>
+                        <WTCONDITION expr="ATTR(BarterAd.Status)" oper="equal" value="SYSCON(BARTERAD-STATUS-ACTIVE)"/>
+                        <WTSTATIC space="3"/>
+                        <WTSTATIC tag="PostDate"/>
+                        <WTSTATIC value="ATTR(BarterAd.PostDate)" bold="1"/>
+                        <WTSTATIC space="3"/>
+                        <WTSTATIC tag="EndDate"/>
+                        <WTSTATIC value="ATTR(BarterAd.EndDate)" bold="1"/>
+                      </WTCODEGROUP>
+                      <WTSTATIC space="3"/>
+                      <WTSTATIC tag="UpdateDate"/>
+                      <WTSTATIC value="ATTR(BarterAd.UpdateDate)" bold="1"/>
+                    </WTCODEGROUP>
+                  </WTSTATIC>
+                  <WTSTATIC col="2">
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+                      <WTBUTTON action="5" value="CONST(Update)" btnclass="smbutton"/>
+                       <WTSTATIC space="2"/>
+                      <WTBUTTON action="3" value="CONST(Return)" btnclass="smbutton"/>
+                      <WTSTATIC space="2"/>
+                    </WTCODEGROUP>
+                  </WTSTATIC>
+                </WTROW>
+              </WTTABLE>
+            </WTROW>
+          </WTCODEGROUP>
+
+          <WTROW margin-bottom="12">
+            <WTTABLE col="1" align="left" valign="top">
+              <WTCOLUMN width="475" align="right"/>
+              <WTCOLUMN width="25" align="left"/>
+              <WTCOLUMN width="350" align="left"/>
+              <WTROW >
+                <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="margin-left:7px;">
+                  <WTCOLUMN width="100" align="right"/>
+                  <WTCOLUMN width="375" align="left"/>
+                  <WTROW margin-bottom="12">
+                    <WTSTATIC col="1" merge="2" class="PageHeader" align="left" fontsize="2">
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC label="ContactInfo"/>
+                    </WTSTATIC>
+                  </WTROW>
+                  <WTROW margin-bottom="6">
+                    <WTSTATIC col="1" tag="ContactName" align="right"/>
+                    <WTTEXT col="2" value="ATTR(BarterAd.ContactName)"/>
+                  </WTROW>
+                  <WTROW margin-bottom="6">
+                    <WTSTATIC col="1"/>
+                    <WTCHECK col="2" value="ATTR(BarterAd.IsEmail)" label="IsEmail" align="left"/>
+                    <WTTEXT col="2" value="ATTR(BarterAd.ContactEmail)"/>
+                  </WTROW>
+                  <WTROW margin-bottom="6">
+                    <WTSTATIC col="1"/>
+                    <WTCHECK col="2" value="ATTR(BarterAd.IsPhone)" label="IsPhone" align="left"/>
+                    <WTTEXT col="2" value="ATTR(BarterAd.ContactPhone)"/>
+                  </WTROW>
+                  <WTROW margin-bottom="12">
+                    <WTSTATIC col="1"/>
+                    <WTSTATIC col="2" space="5"/>
+                    <WTCHECK col="2" value="ATTR(BarterAd.IsText)" label="IsText" align="left"/>
+                  </WTROW>
+                </WTTABLE>
+                <WTSTATIC col="2"/>
+                <WTSTATIC col="3" valign="top">
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+                    <WTREPEAT entity="BarterImage">
+                      <WTCODEGROUP>
+                        <WTCONDITION expr="DATA(Ext)" oper="not-equal" value="CONST('')"/>
+                        <WTIMAGE value="CONST(&lt;xsl:value-of select=&quot;concat(@barterimageid,'s.',@ext)&quot;/&gt;)" path="barter/" imgalign="absmiddle"/>
+                      </WTCODEGROUP>
+                    </WTREPEAT>
+                    <WTSTATIC newline="2"/>
+                    <WTBUTTON value="CONST(AddImages)" btnclass="bigbutton">
+                      <WTCLICK>BarterImages()</WTCLICK>
+                    </WTBUTTON>
+                    <WTSTATIC newline="2"/>
+<!--
+                    <WTBUTTON value="CONST(AddFeatures)" btnclass="bigbutton">
+                      <WTCLICK>BarterCredits()</WTCLICK>
+                    </WTBUTTON>
+-->
+                    <WTSTATIC tag="Features" bold="true">
+                      <WTCONDITION expr="ATTR(BarterAd.Options)" oper="not-equal" value="CONST('')"/>
+                    </WTSTATIC>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="_IsBarterOption_Title"/>
+                      <WTIMAGE value="CONST(Feature_Title.gif)" alt="Feature_Title" imgalign="absmiddle"/>
+                      <WTSTATIC space="1"/>
+                    </WTCODEGROUP>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="_IsBarterOption_Images"/>
+                      <WTIMAGE value="CONST(Feature_Images.gif)" alt="Feature_Images" imgalign="absmiddle"/>
+                      <WTSTATIC space="1"/>
+                    </WTCODEGROUP>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="_IsBarterOption_Images+"/>
+                      <WTIMAGE value="CONST(Feature_Images2.gif)" alt="Feature_Images+" imgalign="absmiddle"/>
+                      <WTSTATIC space="1"/>
+                    </WTCODEGROUP>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="_IsBarterOption_Editor"/>
+                      <WTIMAGE value="CONST(Feature_Editor.gif)" alt="Feature_Editor" imgalign="absmiddle"/>
+                      <WTSTATIC space="1"/>
+                    </WTCODEGROUP>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="_IsBarterOption_Long"/>
+                      <WTIMAGE value="CONST(Feature_Long.gif)" alt="Feature_Long" imgalign="absmiddle"/>
+                      <WTSTATIC space="1"/>
+                    </WTCODEGROUP>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="_IsBarterOption_Listing"/>
+                      <WTIMAGE value="CONST(Feature_Listing.gif)" alt="Feature_Listing" imgalign="absmiddle"/>
+                    </WTCODEGROUP>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+            </WTTABLE>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #e3e4f5; margin-left:7px;">
+              <WTCOLUMN width="800" align="left"/>
+              <WTROW margin-top="12" margin-bottom="6">
+                <WTSTATIC col="1">
+                  <WTCODEGROUP>
+                    <WTSTATIC space="2"/>
+                    <WTSTATIC tag="Title"/>
+                    <WTTEXT value="ATTR(BarterAd.Title)" size="80"/>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="PARAM(NoPrice)" oper="equal" value="CONST(0)"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="Price"/>
+                      <WTTEXT value="ATTR(BarterAd.Price)" size="10"/>
+                    </WTCODEGROUP>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+              <WTROW margin-bottom="24">
+                <WTSTATIC col="1">
+                  <WTCODEGROUP>
+                    <WTSTATIC space="2"/>
+                    <WTSTATIC tag="Location"/>
+                    <WTTEXT value="ATTR(BarterAd.Location)" size="40"/>
+                    <WTSTATIC space="2"/>
+                    <WTSTATIC tag="Zip"/>
+                    <WTTEXT value="ATTR(BarterAd.Zip)" size="10"/>
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="PARAM(NoCondition)" oper="equal" value="CONST(0)"/>
+                      <WTSTATIC space="2"/>
+                      <WTSTATIC tag="Condition"/>
+                      <WTCOMBO value="ATTR(BarterAd.Condition)"/>
+                    </WTCODEGROUP>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+              <WTROW margin-bottom="6">
+                <WTTABLE col="1">
+                  <WTCOLUMN width="200" align="left"/>
+                  <WTCOLUMN width="575" align="right"/>
+                  <WTROW>
+                    <WTSTATIC col="1" space="2"/>
+                    <WTSTATIC col="1" label="Description"/>
+                    <WTSTATIC col="2" label="DescriptionText" fontsize="2" fontcolor="blue" italic="true"/>
+                  </WTROW>
+                </WTTABLE>
+              </WTROW>
+              <WTROW>
+                <WTSTATIC col="1">
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="_NotBarterOption_Editor"/>
+                    <WTSTATIC space="2"/>
+                    <WTMEMO value="ATTR(BarterAd.Description)" rows="10" cols="95"/>
+                    <WTSTATIC newline="2"/>
+                  </WTCODEGROUP>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="_IsBarterOption_Editor"/>
+                    <WTMEMO value="ATTR(BarterAd.Description)" rows="10" cols="95" htmleditor="simple2" wordcount="showParagraphs:false,showCharCount:true,countSpacesAsChars:true,countHTML:true,maxCharCount:4000"/>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+            </WTTABLE>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTCONDITION expr="PARAM(IsCustomFields)" oper="not-equal" value="CONST(0)"/>
+            <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #e3e4f5; margin-left:7px;">
+              <WTCOLUMN width="100" align="right"/>
+              <WTCOLUMN width="700" align="left"/>
+              <WTROW margin-bottom="12">
+                <WTSTATIC col="1" merge="2" class="PageHeader" align="left" fontsize="2">
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC tag="Details" value="ATTR(BarterCategory.BarterCategoryName)"/>
+                </WTSTATIC>
+              </WTROW>
+              <WTCODEGROUP>
+                <WTCUSTOMFIELDS name="Field"/>
+              </WTCODEGROUP>
+              <WTROW height="12"/>
+            </WTTABLE>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTCONDITION expr="_IsBarterOption_Long"/>
+            <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #e3e4f5; margin-left:7px;">
+              <WTCOLUMN width="825" align="left"/>
+              <WTROW>
+                <WTSTATIC col="1" class="PageHeader" align="left" fontsize="2">
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC label="LongDescription"/>
+                </WTSTATIC>
+              </WTROW>
+              <WTROW>
+                <WTMEMO col="1" align="left" value="ATTR(HTMLFile.Data)" cols="90" rows="20" htmleditor="simple2" embedhtml="true" wordcount="showCharCount:true"/>
+              </WTROW>
+            </WTTABLE>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #cefad2; margin-left:7px;">
+              <WTCOLUMN width="800" align="left"/>
+              <WTROW margin-bottom="12">
+                <WTSTATIC col="1" class="PageHeader" align="left" fontsize="2">
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC label="AcceptedPayments"/>
+                </WTSTATIC>
+              </WTROW>
+              <WTROW margin-bottom="6">
+                <WTSTATIC col="1" align="left">
+                  <WTCODEGROUP>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentPoints)" label="BarterPaymentPoints"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentCash)" label="BarterPaymentCash"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentCC)" label="BarterPaymentCC"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentPP)" label="BarterPaymentPP"/>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+              <WTROW margin-bottom="6">
+                <WTSTATIC col="1" align="left">
+                  <WTCODEGROUP>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentBTC)" label="BarterPaymentBTC"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentNXC)" label="BarterPaymentNXC"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentETH)" label="BarterPaymentETH"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentETC)" label="BarterPaymentETC"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentLTC)" label="BarterPaymentLTC"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentDASH)" label="BarterPaymentDASH"/>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+              <WTROW margin-bottom="12">
+                <WTSTATIC col="1" align="left">
+                  <WTCODEGROUP>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentMonero)" label="BarterPaymentMonero"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentSteem)" label="BarterPaymentSteem"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentRipple)" label="BarterPaymentRipple"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentDoge)" label="BarterPaymentDoge"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentGCR)" label="BarterPaymentGCR"/>
+                    <WTSTATIC space="2"/>
+                    <WTCHECK value="PARAM(BarterPaymentOther)" label="BarterPaymentOther"/>
+                  </WTCODEGROUP>
+                </WTSTATIC>
+              </WTROW>
+            </WTTABLE>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="margin-left:7px;">
+              <WTCOLUMN width="100" align="right"/>
+              <WTCOLUMN width="350" align="left"/>
+              <WTROW margin-top="6" margin-bottom="6">
+                <WTSTATIC col="1" merge="2" space="5" align="left"/>
+                <WTCHECK col="1" value="ATTR(BarterAd.IsMap)" label="IsMap"/>
+                <WTSTATIC col="1" label="MapErr" fontcolor="red">
+                  <WTCONDITION expr="PARAM(MapErr)" oper="not-equal" value="CONST(0)"/>
+                </WTSTATIC>
+              </WTROW>
+              <WTROW margin-bottom="6">
+                <WTSTATIC col="1" tag="MapStreet1"/>
+                <WTTEXT col="2" value="ATTR(BarterAd.MapStreet1)"/>
+                <WTSTATIC col="2" label="Optional" fontsize="2" fontcolor="blue" italic="true"/>
+              </WTROW>
+              <WTROW margin-bottom="6">
+                <WTSTATIC col="1" tag="MapStreet2"/>
+                <WTTEXT col="2" value="ATTR(BarterAd.MapStreet2)"/>
+                <WTSTATIC col="2" label="Optional" fontsize="2" fontcolor="blue" italic="true"/>
+              </WTROW>
+              <WTROW margin-bottom="12">
+                <WTSTATIC col="1" tag="MapCity"/>
+                <WTTEXT col="2" value="ATTR(BarterAd.MapCity)"/>
+                <WTTEXT col="2" value="ATTR(BarterAd.MapZip)"/>
+              </WTROW>
+            </WTTABLE>
+          </WTROW>
+
+          <WTROW margin-bottom="12">
+            <WTSTATIC col="1" merge="2" space="5" align="left"/>
+            <WTSTATIC col="1" tag="Language"/>
+            <WTCOMBO col="1" value="ATTR(BarterAd.Language)" prespace="false">
+              <WTOPTION id="en" label="English"/>
+              <WTOPTION id="af" label="Afrikaans"/>
+              <WTOPTION id="sq" label="Albanian"/>
+              <WTOPTION id="ar" label="Arabic"/>
+              <WTOPTION id="hy" label="Armenian"/>
+              <WTOPTION id="eu" label="Basque"/>
+              <WTOPTION id="be" label="Belarusian"/>
+              <WTOPTION id="bn" label="Bengali"/>
+              <WTOPTION id="bs" label="Bosnian"/>
+              <WTOPTION id="bg" label="Bulgarian"/>
+              <WTOPTION id="ca" label="Catalan"/>
+              <WTOPTION id="ce" label="Chechen"/>
+              <WTOPTION id="zh" label="Chinese"/>
+              <WTOPTION id="co" label="Croatian"/>
+              <WTOPTION id="cs" label="Czech"/>
+              <WTOPTION id="da" label="Danish"/>
+              <WTOPTION id="nl" label="Dutch"/>
+              <WTOPTION id="et" label="Estonia"/>
+              <WTOPTION id="fo" label="Faroese"/>
+              <WTOPTION id="fil" label="Filipino"/>
+              <WTOPTION id="fi" label="Finnish"/>
+              <WTOPTION id="fr" label="French"/>
+              <WTOPTION id="de" label="German"/>
+              <WTOPTION id="he" label="Hebrew"/>
+              <WTOPTION id="hi" label="Hindi"/>
+              <WTOPTION id="hu" label="Hungarian"/>
+              <WTOPTION id="ga" label="Irish"/>
+              <WTOPTION id="is" label="Icelandic"/>
+              <WTOPTION id="it" label="Italian"/>
+              <WTOPTION id="ja" label="Japanese"/>
+              <WTOPTION id="ko" label="Korean"/>
+              <WTOPTION id="mt" label="Maltese"/>
+              <WTOPTION id="mn" label="Mongolian"/>
+              <WTOPTION id="no" label="Norwegian"/>
+              <WTOPTION id="pt" label="Portuguese"/>
+              <WTOPTION id="ru" label="Russian"/>
+              <WTOPTION id="sr" label="Serbian"/>
+              <WTOPTION id="es" label="Spanish"/>
+              <WTOPTION id="sv" label="Swedish"/>
+              <WTOPTION id="th" label="Thai"/>
+              <WTOPTION id="tr" label="Turkish"/>
+              <WTOPTION id="vi" label="Vietnamese"/>
+            </WTCOMBO>
+          </WTROW>
+          <WTROW margin-bottom="6">
+            <WTSTATIC col="1" merge="2" space="5" align="left"/>
+            <WTSTATIC col="1" fontsize="3">
+              <WTCODEGROUP><WTCHECK value="ATTR(BarterAd.IsMore)" space="1"/></WTCODEGROUP>
+            </WTSTATIC>
+          </WTROW>
+          <WTROW margin-bottom="24">
+            <WTSTATIC col="1" merge="2" space="5" align="left"/>
+            <WTSTATIC col="1" fontsize="3">
+              <WTCODEGROUP><WTCHECK value="ATTR(BarterAd.IsContact)" space="1"/></WTCODEGROUP>
+            </WTSTATIC>
+          </WTROW>
+
+          <WTROW margin-top="12" margin-bottom="12">
+            <WTCONDITION expr="PARAM(BarterAdID)" oper="equal" value="CONST(0)"/>
+            <WTBUTTON col="1" action="6" value="CONST(Add)" align="center"/>
+<!--            <WTBUTTON col="1" action="2" value="CONST(AddExit)" align="center"/>-->
+            <WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+          </WTROW>
+
+          <WTROW margin-top="12" margin-bottom="12">
+            <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+            <WTBUTTON col="1" action="5" value="CONST(Update)" align="center"/>
+            <WTSTATIC col="1">
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(BarterAd.Status)" oper="equal" value="CONST(1)"/>
+                  <WTBUTTON value="CONST(Publish)">
+                  <WTCLICK>UpdateStatus(2)</WTCLICK>
+                </WTBUTTON>
+                <WTSTATIC space="2"/>
+              </WTCODEGROUP>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(BarterAd.Status)" oper="equal" value="CONST(2)"/>
+                <WTBUTTON value="CONST(SoldStatus)">
+                  <WTCLICK>UpdateStatus(3)</WTCLICK>
+                </WTBUTTON>
+                <WTSTATIC space="2"/>
+              </WTCODEGROUP>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(BarterAd.Status)" oper="equal" value="CONST(2)"/>
+                <WTBUTTON value="CONST(InactivateStatus)">
+                  <WTCLICK>UpdateStatus(4)</WTCLICK>
+                </WTBUTTON>
+                <WTSTATIC space="2"/>
+              </WTCODEGROUP>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(BarterAd.Status)" oper="equal" value="CONST(2)"/>
+                <WTBUTTON value="CONST(CancelStatus)">
+                  <WTCLICK>UpdateStatus(5)</WTCLICK>
+                </WTBUTTON>
+                <WTSTATIC space="2"/>
+              </WTCODEGROUP>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(BarterAd.Status)" oper="greater" value="CONST(2)"/>
+                <WTBUTTON value="CONST(Activate)">
+                  <WTCLICK>UpdateStatus(2)</WTCLICK>
+                </WTBUTTON>
+                <WTSTATIC space="2"/>
+              </WTCODEGROUP>
+            </WTSTATIC>
+            <WTBUTTON col="1" action="3" value="CONST(Return)"/>
+            <WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+          </WTROW>
+        
+        </WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="17204" caption="BarterAd" header="false" footer="false" navbar="false"  wrapper="wrapper1000"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false">
+      <!--============================================================================================-->
+      <WTPARAM name="BarterAdID" datatype="number"/>
+      <WTPARAM name="BarterArea1ID" datatype="number"/>
+      <WTPARAM name="BarterArea2ID" datatype="number"/>
+      <WTPARAM name="BarterCategoryID" datatype="number"/>
+      <WTPARAM name="NoPrice" datatype="number"/>
+      <WTPARAM name="NoCondition" datatype="number"/>
+      <WTPARAM name="AreaCategory" datatype="text"/>
+      <WTPARAM name="Location" datatype="text"/>
+      <WTPARAM name="Latitude" datatype="text"/>
+      <WTPARAM name="Longitude" datatype="text"/>
+      <WTPARAM name="GoogleURL" datatype="text"/>
+      <WTPARAM name="Popup" datatype="number"/>
+
+      <WTPARAM name="BarterPaymentPoints" datatype="number"/>
+      <WTPARAM name="BarterPaymentCash" datatype="number"/>
+      <WTPARAM name="BarterPaymentCC" datatype="number"/>
+      <WTPARAM name="BarterPaymentPP" datatype="number"/>
+      <WTPARAM name="BarterPaymentBTC" datatype="number"/>
+      <WTPARAM name="BarterPaymentNXC" datatype="number"/>
+      <WTPARAM name="BarterPaymentETH" datatype="number"/>
+      <WTPARAM name="BarterPaymentETC" datatype="number"/>
+      <WTPARAM name="BarterPaymentLTC" datatype="number"/>
+      <WTPARAM name="BarterPaymentDASH" datatype="number"/>
+      <WTPARAM name="BarterPaymentMonero" datatype="number"/>
+      <WTPARAM name="BarterPaymentSteem" datatype="number"/>
+      <WTPARAM name="BarterPaymentRipple" datatype="number"/>
+      <WTPARAM name="BarterPaymentDoge" datatype="number"/>
+      <WTPARAM name="BarterPaymentGCR" datatype="number"/>
+      <WTPARAM name="BarterPaymentOther" datatype="number"/>
+
+      <WTDATATXN name="CustomFields"/>
+      <WTDATATXN name="HTMLFile"/>
+
+      <WTINCLUDE name="BarterOptions.asp"/>
+      <WTINCLUDE name="LanguageCode.asp"/>
+
+      <WTSUB function="LoadCustomFields(cf, obj)">
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            Dim total, id, v
+            With cf
+            total = UBOUND(.CustomFields)
+            For x = 0 to total
+            id = .CustomFields(x).ID
+            With obj
+            Select Case id
+            Case "T1": v = .T1
+            Case "T2": v = .T2
+            Case "T3": v = .T3
+            Case "T4": v = .T4
+            Case "T5": v = .T5
+            Case "N1": v = .N1
+            Case "N2": v = .N2
+            Case "N3": v = .N3
+            Case "N4": v = .N4
+            Case "N5": v = .N5
+            Case "L1": v = .L1
+            Case "L2": v = .L2
+            Case "L3": v = .L3
+            Case "L4": v = .L4
+            Case "L5": v = .L5
+            Case "L6": v = .L6
+            Case "L7": v = .L7
+            Case "L8": v = .L8
+            Case "L9": v = .L9
+            Case "L10": v = .L10
+            Case "Y1": v = .Y1
+            Case "Y2": v = .Y2
+            Case "Y3": v = .Y3
+            Case "Y4": v = .Y4
+            Case "Y5": v = .Y5
+            Case "Y6": v = .Y6
+            Case "Y7": v = .Y7
+            Case "Y8": v = .Y8
+            Case "Y9": v = .Y9
+            Case "Y10": v = .Y10
+            Case "D1": v = .D1
+            Case "D2": v = .D2
+            Case "D3": v = .D3
+            Case "D4": v = .D4
+            Case "D5": v = .D5
+            End Select
+            End With
+            .CustomFields(x).Value = v
+            Next
+            End With
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+
+      <WTSUB function="SetPayments(opt)">
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            IF InStr(opt, "1") > 0 Then reqBarterPaymentPoints = 1
+            IF InStr(opt, "2") > 0 Then reqBarterPaymentCash = 1
+            IF InStr(opt, "3") > 0 Then reqBarterPaymentCC = 1
+            IF InStr(opt, "4") > 0 Then reqBarterPaymentPP = 1
+            IF InStr(opt, "A") > 0 Then reqBarterPaymentBTC = 1
+            IF InStr(opt, "B") > 0 Then reqBarterPaymentNXC = 1
+            IF InStr(opt, "C") > 0 Then reqBarterPaymentETH = 1
+            IF InStr(opt, "D") > 0 Then reqBarterPaymentETC = 1
+            IF InStr(opt, "E") > 0 Then reqBarterPaymentLTC = 1
+            IF InStr(opt, "F") > 0 Then reqBarterPaymentDASH = 1
+            IF InStr(opt, "G") > 0 Then reqBarterPaymentMonero = 1
+            IF InStr(opt, "H") > 0 Then reqBarterPaymentSteem = 1
+            IF InStr(opt, "I") > 0 Then reqBarterPaymentRipple = 1
+            IF InStr(opt, "J") > 0 Then reqBarterPaymentDoge = 1
+            IF InStr(opt, "Y") > 0 Then reqBarterPaymentGCR = 1
+            IF InStr(opt, "Z") > 0 Then reqBarterPaymentOther = 1
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+
+      <WTSUB function="SetupBarterAd(obj, bvBarterAdID)">
+        <WTOBJECT name="BarterArea" project="ptsBarterAreaUser" class="CBarterArea">
+          <WTCONDITION expr="PARAM(BarterArea1ID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTCONDITION expr="PARAM(BarterArea1ID)" oper="not-equal" value="CONST(0)"/>
+            <WTPARAM name="BarterAreaID" direction="input" value="PARAM(BarterArea1ID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(AreaCategory)" value="ATTR(BarterAreaName)"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(BarterArea2ID)" oper="not-equal" value="CONST(0)"/>
+            <WTMETHOD name="Load">
+              <WTPARAM name="BarterAreaID" direction="input" value="PARAM(BarterArea2ID)"/>
+              <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+            </WTMETHOD>
+            <WTSETATTRIBUTE name="PARAM(AreaCategory)" value="CONST(reqAreaCategory + &quot; / &quot; + .BarterAreaName)"/>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="BarterCategory" project="ptsBarterCategoryUser" class="CBarterCategory">
+          <WTCONDITION expr="PARAM(BarterCategoryID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterCategoryID" direction="input" value="PARAM(BarterCategoryID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              If InStr(.Options, "A") &gt; 0 Then reqNoPrice = 1
+              If InStr(.Options, "B") &gt; 0 Then reqNoCondition = 1
+            </WTCUSTOM>
+          </WTCODEGROUP>
+          <WTSETATTRIBUTE name="CONST(tmpCustomFields)" value="ATTR(CustomFields)"/>
+          <WTSETATTRIBUTE name="PARAM(AreaCategory)" value="CONST(reqAreaCategory + &quot; / &quot; + .BarterCategoryName)"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterCategory" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTCODEGROUP>
+          <WTCUSTOM>
+            Set cf = New CustomFields
+            With cf
+            .Load tmpCustomFields, "", True
+            If bvBarterAdID > 0 Then LoadCustomFields cf, obj
+            xmlCustomFields = .XML()
+            End With
+            Set cf = Nothing
+          </WTCUSTOM>
+        </WTCODEGROUP>
+      </WTSUB>
+
+      <WTSUB name="LoadBarterAd">
+        <WTOBJECT name="BarterAd" project="ptsBarterAdUser" class="CBarterAd">
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(BarterCategoryID)" value="ATTR(BarterCategoryID)"/>
+          <WTSETATTRIBUTE name="PARAM(BarterArea1ID)" value="ATTR(BarterArea1ID)"/>
+          <WTSETATTRIBUTE name="PARAM(BarterArea2ID)" value="ATTR(BarterArea2ID)"/>
+          <WTCALLSUB name="SetPayments(.Payments)"/>
+          <WTSETATTRIBUTE name="PARAM(Location)" value="CONST(&quot;(&quot; + .Location)"/>
+          <WTSETATTRIBUTE name="PARAM(Location)" value="CONST(reqLocation + &quot;, &quot; + .Zip)">
+            <WTCONDITION expr="ATTR(Zip)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+          </WTSETATTRIBUTE>
+          <WTSETATTRIBUTE name="PARAM(Location)" value="CONST(reqLocation + &quot;)&quot;)"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="ATTR(IsMap)" oper="equal" value="CONST(&quot;1&quot;)"/>
+            <WTCONDITION expr="ATTR(GeoCode)" oper="not-equal" value="CONST(&quot;&quot;)" connector="and"/>
+            <WTCUSTOM>
+              aGeoCode = Split(.GeoCode, ",")
+              If UBOUND(aGeoCode) = 1 Then
+              reqLatitude = aGeoCode(0)
+              reqLongitude = aGeoCode(1)
+              End If
+              'reqGoogleURL = "https://www.google.com/maps?q=loc:" + Replace( .MapStreet1 + " " + .MapStreet2 + " " +.MapCity + " " + .MapZip, " ", "+")
+              reqGoogleURL = "https://www.google.com/maps?q=loc:" + .GeoCode
+            </WTCUSTOM>
+          </WTCODEGROUP>
+          <WTSETATTRIBUTE name="ATTR(Language)" value="CONST(LanguageCode(.Language))"/>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterAd" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+          <WTCALLSUB name="SetupBarterAd oBarterAd, reqBarterAdID"/>
+          <WTCODEGROUP>
+            <WTCONDITION expr="IsBarterOptions_Long"/>
+            <WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+              <WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqBarterADID)"/>
+              <WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections/Barter&quot;)"/>
+              <WTSETATTRIBUTE name="ATTR(Language)" value="FORM(Language)"/>
+              <WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+              <WTMETHOD name="Load"/>
+              <WTMETHOD name="XML">
+                <WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+              </WTMETHOD>
+            </WTOBJECT>
+          </WTCODEGROUP>
+        </WTOBJECT>
+        <WTOBJECT name="BarterImages" project="ptsBarterImageUser" class="CBarterImages">
+          <WTCONDITION expr="PARAM(BarterAdID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="ListAll">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              For Each oItem in oBarterImages
+                With oItem
+                  tmpTitle = LCASE(.Title)
+                  If InStr( tmpTitle, ".jpg") > 0 Then .Title = "x"
+                  If InStr( tmpTitle, ".gif") > 0 Then .Title = "x"
+                  If InStr( tmpTitle, ".png") > 0 Then .Title = "x"
+                End With
+              Next
+            </WTCUSTOM>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterImages" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCALLSUB name="LoadBarterAd"/>
+      </WTACTION>
+
+      <WTACTION id="3" name="Cancel" type="Cancel">
+        <WTRETURN/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="1000" align="left"/>
+
+        <WTFUNCTION name="ShowContact()">
+          if( document.getElementById('ContactRow').style.display == 'none' ) {
+            document.getElementById('ContactRow').style.display = '';
+          }
+          else {
+            document.getElementById('ContactRow').style.display = 'none';
+          }
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #fcfde5;">
+            <WTCOLUMN width="1000" align="left"/>
+            <WTROW margin-top="12" margin-bottom="12">
+              <WTSTATIC col="1">
+                <WTCODEGROUP>
+                  <WTSTATIC space="2"/>
+                  <WTBUTTON value="CONST(Reply)">
+                    <WTCLICK>ShowContact()</WTCLICK>
+                  </WTBUTTON>
+                  <WTSTATIC space="5"/>
+                </WTCODEGROUP>
+                <WTSTATIC value="PARAM(AreaCategory)" fontsize="3" space="5"/>
+                <WTCODEGROUP>
+                  <WTBUTTON value="CONST(Close)">
+                    <WTCLICK>window.close()</WTCLICK>
+                  </WTBUTTON>
+                </WTCODEGROUP>
+              </WTSTATIC>
+            </WTROW>
+            <WTROW id="ContactRow" style="display:none">
+              <WTSTATIC col="1" fontsize="3">
+                <WTSTATIC space="2"/>
+                <WTSTATIC value="ATTR(BarterAd.ContactName)"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="ATTR(BarterAd.IsEmail)" oper="equal" value="CONST(1)"/>
+                  <WTSTATIC newline="1"/>
+                  <WTSTATIC space="5"/>
+                  <WTSTATIC tag="Email"/>
+                  <WTSTATIC value="ATTR(BarterAd.ContactEmail)">
+                    <WTLINK name="ATTR(BarterAd.ContactEmail)" type="mail" target="_blank"/>
+                  </WTSTATIC>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="ATTR(BarterAd.IsPhone)" oper="equal" value="CONST(1)"/>
+                  <WTSTATIC newline="1"/>
+                  <WTSTATIC space="5"/>
+                  <WTSTATIC tag="Phone" value="ATTR(BarterAd.ContactPhone)"/>
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="ATTR(BarterAd.IsText)" oper="equal" value="CONST(1)"/>
+                    <WTSTATIC space="2"/>
+                    <WTSTATIC label="TextMe" bold="true"/>
+                  </WTCODEGROUP>
+                </WTCODEGROUP>
+                <WTSTATIC newline="2"/>
+              </WTSTATIC>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="24">
+          <WTSTATIC col="1">
+            <WTSTATIC space="2"/>
+            <WTSTATIC fontsize="5">
+              <WTSTATIC value="ATTR(BarterAd.Title)" space="1"/>
+              <WTSTATIC value="CONST(-)" space="1"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="PARAM(NoPrice)" oper="equal" value="CONST(0)"/>
+                <WTSTATIC value="ATTR(BarterAd.Price)" space="1"/>
+              </WTCODEGROUP>
+            </WTSTATIC>
+            <WTSTATIC fontsize="3">
+              <WTSTATIC value="PARAM(Location)"/>
+            </WTSTATIC>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTTABLE col="1">
+            <WTCOLUMN width="600" align="left"/>
+            <WTCOLUMN width="400" align="left"/>
+            <WTROW margin-bottom="6">
+              <WTSTATIC col="1" valign="top">
+                  <WTCODEGROUP>
+                    <WTCONDITION expr="ATTR(BarterAd.Images)" oper="not-equal" value="CONST(0)"/>
+                    <WTDIVISION style="margin-bottom:5px;">
+                      <WTSLIDE2 name="BARTERIMAGE" datapath="/DATA/TXN/PTSBARTERIMAGES/PTSBARTERIMAGE[@ext!='']" width="600" height="450" animspeed="3000" animduration="500" showmarkers="true" showcontrols="true" prevtext="&lt;font size='5'&gt;&lt;&lt;/font&gt;" nexttext="&lt;font size='5'&gt;&gt;&lt;/font&gt;">
+                        <WTIMAGE value="CONST(&lt;xsl:value-of select=&quot;concat(@barterimageid,'l.',@ext)&quot;/&gt;)" path="barter" imgwidth="600" imgheight="450" titlex="&lt;xsl:value-of select=&quot;@title&quot;/&gt;">
+                          <WTCONDITION expr="DATA(Title)" oper="not-equal" value="CONST('x')"/>
+                        </WTIMAGE>
+                        <WTIMAGE value="CONST(&lt;xsl:value-of select=&quot;concat(@barterimageid,'l.',@ext)&quot;/&gt;)" path="barter" imgwidth="600" imgheight="450">
+                          <WTCONDITION expr="DATA(Title)" oper="equal" value="CONST('x')"/>
+                        </WTIMAGE>
+                      </WTSLIDE2>
+                    </WTDIVISION>
+<!--                    
+                    <WTCODEGROUP>
+                      <WTCONDITION expr="_NotBarterOption_Editor"/>
+                      <WTSTATIC newline="3"/>
+                    </WTCODEGROUP>
+-->                    
+                    <WTSTATIC newline="3"/>
+                  </WTCODEGROUP>
+                  <WTSTATIC fontsize="3">
+                    <WTSTATIC value="ATTR(BarterAd.Description)"/>
+                  </WTSTATIC>
+              </WTSTATIC>
+              <WTTABLE col="2" valign="top">
+                <WTCOLUMN width="400" align="left"/>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="ATTR(BarterAd.IsMap)" oper="equal" value="CONST(1)"/>
+                  <WTCONDITION expr="PARAM(Latitude)" oper="not-equal" value="CONST(0)" connector="and"/>
+                  <WTROW margin-bottom="3">
+                    <WTSTATIC col="1" align="center">
+                        <WTCODEGROUP>
+                        <WTOSMAP id="Map" style="width:300px; height:300px;" latitude="PARAM(Latitude)" longitude="PARAM(Longitude)" zoom="13" maxzoom="18" marker="true" fullscreen="true" attribution="Nexxus Map Data OpenStreetMap" token="pk.eyJ1IjoiYm9id29vZDU2IiwiYSI6ImNpdzJkbjdsZDA4YWsyb211cDN0ZTBtNDcifQ.N6KnGJe0MqEdpEdotkyF_w"/>
+                      </WTCODEGROUP>
+                    </WTSTATIC>
+                  </WTROW>
+                  <WTROW margin-bottom="6">
+                    <WTSTATIC col="1" align="center" fontsize="3">
+                      <WTSTATIC value="ATTR(BarterAd.MapStreet1)" space="1"/>
+                      <WTSTATIC value="ATTR(BarterAd.MapStreet2)" space="1"/>
+                      <WTSTATIC value="ATTR(BarterAd.MapCity)" space="1"/>
+                      <WTSTATIC value="ATTR(BarterAd.MapZip)"/>
+                    </WTSTATIC>
+                  </WTROW>
+                  <WTROW margin-bottom="18">
+                    <WTSTATIC col="1" align="center" fontsize="3">
+                      <WTSTATIC label="GoogleMaps" fontcolor="purple">
+                        <WTLINK name="PARAM(GoogleURL)" type="anchor" target="new"/>
+                      </WTSTATIC>
+                    </WTSTATIC>
+                  </WTROW>
+                </WTCODEGROUP>
+                <WTROW>
+                  <WTTABLE col="1">
+                    <WTCOLUMN width="40" align="left"/>
+                    <WTCOLUMN width="360" align="left"/>
+                    <WTROW>
+                      <WTSTATIC col="1"/>
+                      <WTTABLE col="2">
+                        <WTCOLUMN width="360" align="left"/>
+                        <WTCODEGROUP>
+                          <WTCONDITION expr="PARAM(NoCondition)" oper="equal" value="CONST(0)"/>
+                          <WTROW margin-bottom="6">
+                            <WTSTATIC col="1" fontsize="3">
+                              <WTSTATIC space="2"/>
+                              <WTSTATIC tag="Condition"/>
+                              <WTSTATIC value="ATTR(BarterAd.Condition)" bold="true"/>
+                            </WTSTATIC>
+                          </WTROW>
+                        </WTCODEGROUP>
+                        <WTCODEGROUP>
+                          <WTCUSTOMFIELDS name="Field" display="true"/>
+                        </WTCODEGROUP>
+                      </WTTABLE>
+                    </WTROW>
+                  </WTTABLE>
+                </WTROW>
+              </WTTABLE>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTCONDITION expr="_IsBarterOption_Long"/>
+          <WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+        </WTROW>
+
+        <WTROW>
+          <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #cefad2;">
+            <WTCOLUMN width="1000" align="left"/>
+            <WTROW margin-top="6" margin-bottom="6">
+              <WTSTATIC col="1">
+                <WTCODEGROUP>
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC tag="AcceptedPayments" bold="true"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentPoints)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentPoints"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentCash)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentCash"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentCC)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentCC"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentPP)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentPP"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentBTC)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentBTC"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentNXC)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentNXC"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentETH)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentETH"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentETC)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentETC"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentLTC)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentLTC"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentDASH)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentDASH"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentMonero)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentMonero"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentSteem)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentSteem"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentRipple)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentRipple"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentDoge)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentDoge"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentGCR)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentGCR"/>
+                </WTCODEGROUP>
+                <WTCODEGROUP>
+                  <WTCONDITION expr="PARAM(BarterPaymentOther)" oper="not-equal" value="CONST(0)"/>
+                  <WTSTATIC space="1"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="BarterPaymentOther"/>
+                </WTCODEGROUP>
+              </WTSTATIC>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTTABLE col="1" align="left" valign="top" padding="0" tableclass="box-gray" style="background-color: #fcfde5;">
+            <WTCOLUMN width="1000" align="left"/>
+            <WTROW margin-top="6" margin-bottom="6">
+              <WTSTATIC col="1">
+                <WTCODEGROUP>
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC value="ATTR(BarterAd.Language)" bold="true" space="5"/>
+                  <WTSTATIC value="CONST(-)" space="1"/>
+                  <WTSTATIC label="ContactMe">
+                    <WTCONDITION expr="ATTR(BarterAd.IsContact)" oper="not-equal" value="CONST(0)"/>
+                  </WTSTATIC>
+                  <WTSTATIC label="DontContactMe">
+                    <WTCONDITION expr="ATTR(BarterAd.IsContact)" oper="equal" value="CONST(0)"/>
+                  </WTSTATIC>
+                </WTCODEGROUP>
+              </WTSTATIC>
+            </WTROW>
+            <WTROW margin-bottom="6">
+              <WTSTATIC col="1" style="font-size:8pt;">
+                <WTCODEGROUP>
+                  <WTSTATIC space="2"/>
+                  <WTSTATIC label="PostID"/>
+                  <WTSTATIC value="ATTR(BarterAd.BarterAdID)" bold="true" space="3"/>
+                  <WTSTATIC tag="Posted"/>
+                  <WTSTATIC value="ATTR(BarterAd.PostDate)" bold="true"/>
+                </WTCODEGROUP>
+              </WTSTATIC>
+            </WTROW>
+          </WTTABLE>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+  </WTWEBPAGES>
+</WTROOT>

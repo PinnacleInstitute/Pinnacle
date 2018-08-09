@@ -1,0 +1,1393 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="03" name="Trainer" alias="tr" log="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="0301" name="TrainerID" type="number" identity="true" min="1" required="true" source="entity"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="0302" name="AuthUserID" type="number" source="entity"><WTINIT/></WTATTRIBUTE>
+		<WTATTRIBUTE id="0303" name="SponsorID" type="number" source="entity"/>
+		
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="0306" name="UserGroup" type="number" source="join" passthru="true">
+			<WTJOIN entity="AuthUser" name="UserGroup"/>
+			<WTENUM id="31" name="Trainer"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0307" name="UserStatus" type="number" source="join" passthru="true">
+			<WTJOIN entity="AuthUser" name="UserStatus"/>
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="InActive"/>
+			<WTENUM id="3" name="ReadOnly"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0308" name="SponsorName" type="text" length="40" min="1" max="40" source="join">
+			<WTJOIN entity="Member" name="CompanyName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="0310" name="CompanyName" type="text" length="60" min="1" max="60" title="true" source="entity"/>
+		<WTATTRIBUTE id="0311" name="NameLast" type="text" length="30" min="1" max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="0312" name="NameFirst" type="text" length="30" min="1" max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="0313" name="TrainerName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameLast"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0314" name="Email" type="text" length="80" min="1" max="80" source="entity" required="true"/>
+		<WTATTRIBUTE id="0315" name="Street" type="text" length="60" min="1" max="60" source="entity" required="true"/>
+		<WTATTRIBUTE id="0316" name="Unit" type="text" length="40" min="1" max="40" source="entity"/>
+		<WTATTRIBUTE id="0317" name="City" type="text" length="30" min="1" max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="0318" name="State" type="text" length="30" min="1"  max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="0319" name="Zip" type="text" length="20" min="1"  max="20" source="entity" required="true"/>
+		<WTATTRIBUTE id="0320" name="Country" type="text" length="30" min="1"  max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="0321" name="Phone1" type="text" length="30" min="1" max="30" source="entity" required="true"/>
+		<WTATTRIBUTE id="0322" name="Phone2" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="0323" name="Fax" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="0324" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="InActive"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0325" name="Tier" type="number" source="entity">
+			<WTENUM id="1" name="Tier1"/>
+			<WTENUM id="2" name="Tier2"/>
+			<WTENUM id="3" name="Tier3"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="0330" name="Website" type="text" length="80" min="1" max="80" source="entity" language="false"/>
+		<WTATTRIBUTE id="0335" name="URL" type="text" length="80" min="1" max="80" source="entity" language="false"/>
+		<WTATTRIBUTE id="0336" name="Image" type="text" length="30" min="1" max="30" source="entity" language="false"/>
+		<WTATTRIBUTE id="0338" name="EnrollDate" type="date" source="entity" required="true"/>
+<!--
+		<WTATTRIBUTE id="0339" name="IsUpload" type="yesno" source="entity"/>
+-->
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="0340" name="NewLogon" type="text" length="80" min="3" max="80" source="entity" persist="false" passthru="true"/>
+		<WTATTRIBUTE id="0341" name="NewPassword" type="password" length="30" min="3" max="30" source="entity" persist="false" passthru="true"/>
+
+		<!--Indexes-->
+		<WTINDEX name="AuthUserID">
+			<WTATTRIBUTE name="AuthUserID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Trainer" entity="Trainer" alias="tr"/>
+			<WTRELATIONSHIP name="Common" entity="Trainer" alias="tr">
+				<WTENTITY name="AuthUser" entity="AuthUser" alias="au">
+					<WTATTRIBUTE alias="tr" name="AuthUserID" relalias="au" relname="AuthUserID"/>
+				</WTENTITY>
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="tr" name="SponsorID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="CompanyName" default="true"/>
+			<WTATTRIBUTE name="TrainerName"/>
+			<WTATTRIBUTE name="TrainerID"/>
+			<WTATTRIBUTE name="Tier"/>
+			<WTATTRIBUTE name="Status"/>
+			<WTATTRIBUTE name="EnrollDate"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTSETVALUE name="AuthUserID" value="CONST(0)"/>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(0)"/>
+				<WTPROCEDURE name="AuthUser_Add">
+					<WTPARAM name="ATTR(Logon)" direction="input" value="PARAM(NewLogon)"/>
+					<WTPARAM name="ATTR(Password)" direction="input" value="PARAM(NewPassword)"/>
+					<WTPARAM name="ATTR(Email)" direction="input" value="PARAM(Email)"/>
+					<WTPARAM name="ATTR(NameLast)" direction="input" value="PARAM(NameLast)"/>
+					<WTPARAM name="ATTR(NameFirst)" direction="input" value="PARAM(NameFirst)"/>
+					<WTPARAM name="ATTR(UserGroup)" direction="input" value="PARAM(UserGroup)"/>
+					<WTPARAM name="ATTR(UserStatus)" direction="input" value="PARAM(UserStatus)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="AuthUserID" direction="output"/>
+				</WTPROCEDURE>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="AuthUserID" null="0"/>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTINSERT/>
+				<WTSETVALUE name="NewID" value="CONST(@@IDENTITY)"/>
+				<WTSETVALUE name="PARAM(TrainerID)" value="NewID"/>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="AuthUserID"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="Delete" type="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(TrainerID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Shortcut_DeleteItem">
+					<WTPARAM name="EntityID" direction="input" value="ENTITY(Trainer)"/>
+					<WTPARAM name="ItemID" direction="input" value="PARAM(TrainerID)"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="Trainer_FetchAuthUserID">
+					<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="AuthUserID" direction="output"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="AuthUser_Delete">
+					<WTPARAM name="ATTR(AuthUserID)" direction="input" value="AuthUserID"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTDELETE>
+					<WTJOIN name="Trainer" lock="true"/>
+					<WTCONDITION expr="ATTR(Trainer.TrainerID)" oper="equal" value="PARAM(TrainerID)"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Enum" name="Enum" style="GenerateDataProc.xsl" column="Email"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchAuthUserID" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(TrainerID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ATTR(AuthUserID)" direction="output"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="AuthUserID" value="ATTR(Trainer.AuthUserID)"/>
+					<WTJOIN name="Trainer" lock="false"/>
+					<WTCONDITION expr="ATTR(Trainer.TrainerID)" oper="equal" value="PARAM(TrainerID)"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="AuthUserID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="LoadAuthUser" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(Trainer.AuthUserID)" direction="input"/>
+			<WTPARAM name="ATTR(Trainer.TrainerID)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="CONST(@TrainerID)" value="ATTR(Trainer.TrainerID)"/>
+					<WTJOIN name="Trainer" lock="false"/>
+					<WTCONDITION expr="ATTR(Trainer.AuthUserID)" oper="equal" value="PARAM(AuthUserID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="Update" type="Update" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(AuthUserID)" oper="greater" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTPROCEDURE name="AuthUser_Delete">
+					<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+				</WTPROCEDURE>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="CONST(0)"/>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(AuthUserID)" oper="greater" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(0)" connector="and"/>
+				<WTPROCEDURE name="AuthUser_Update">
+					<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+					<WTPARAM name="ATTR(Email)" direction="input" value="PARAM(Email)"/>
+					<WTPARAM name="ATTR(NameLast)" direction="input" value="PARAM(NameLast)"/>
+					<WTPARAM name="ATTR(NameFirst)" direction="input" value="PARAM(NameFirst)"/>
+					<WTPARAM name="ATTR(UserGroup)" direction="input" value="PARAM(UserGroup)"/>
+					<WTPARAM name="ATTR(UserStatus)" direction="input" value="PARAM(UserStatus)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(AuthUserID)" oper="equal" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(0)" connector="and"/>
+				<WTPROCEDURE name="AuthUser_Add">
+					<WTPARAM name="ATTR(Logon)" direction="input" value="PARAM(NewLogon)"/>
+					<WTPARAM name="ATTR(Password)" direction="input" value="PARAM(NewPassword)"/>
+					<WTPARAM name="ATTR(Email)" direction="input" value="PARAM(Email)"/>
+					<WTPARAM name="ATTR(NameLast)" direction="input" value="PARAM(NameLast)"/>
+					<WTPARAM name="ATTR(NameFirst)" direction="input" value="PARAM(NameFirst)"/>
+					<WTPARAM name="ATTR(UserGroup)" direction="input" value="PARAM(UserGroup)"/>
+					<WTPARAM name="ATTR(UserStatus)" direction="input" value="PARAM(UserStatus)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="NewID" direction="output"/>
+				</WTPROCEDURE>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="NewID" null="0"/>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTUPDATE>
+					<WTJOIN name="Trainer" lock="true"/>
+					<WTCONDITION expr="ATTR(Trainer.TrainerID)" oper="equal" value="PARAM(TrainerID)"/>
+				</WTUPDATE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="List" name="ListEmail" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(Trainer.Email)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Trainer.TrainerID)"/>
+					<WTATTRIBUTE value="ATTR(Trainer.TrainerName)" alias="TrainerName"/>
+					<WTATTRIBUTE value="ATTR(Trainer.City)"/>
+					<WTATTRIBUTE value="ATTR(Trainer.State)"/>
+					<WTJOIN name="Trainer"/>
+					<WTCONDITION expr="ATTR(Trainer.Email)" oper="equal" value="PARAM(Email)"/>
+					<WTORDER name="ATTR(Trainer.TrainerName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="0301" caption="Find" action="5" header="false" footer="false" navbar="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="23">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CompanyName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Trainers" project="ptsTrainerUser" class="CTrainers">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTrainers" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Trainers" project="ptsTrainerUser" class="CTrainers">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlTrainers" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="Trainers" class="PageHeading"/>
+
+							<WTLINKGROUP  col="2" align="right" >
+								<WTLINK name="0302" label="NewTrainer" class="PageHeadingLink"/>
+							</WTLINKGROUP>
+						</WTROW>
+						</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="TrainerFindText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Trainers.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Trainer">
+						<WTCOLUMN width="45" align="left" valign="top" label="CompanyName"/>
+						<WTCOLUMN width="45" align="left" valign="top" label="TrainerName"/>
+						<WTCOLUMN width="10" align="right" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Trainer.CompanyName)" space="1"/>
+                <WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(' (#',@trainerid,')')&quot;/&gt;)" fontcolor="purple" space="1"/>
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+                    <WTLINK name="0303">
+                      <WTPARAM name="TrainerID" value="DATA(Trainer.TrainerID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Trainer.TrainerName)"/>
+								<WTSTATIC value="CONST( - )"/>
+								<WTSTATIC value="DATA(Trainer.Status)" space="1" fontcolor="green">
+									<WTCONDITION expr="DATA(Trainer.Status)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Trainer.Status)" space="1">
+									<WTCONDITION expr="DATA(Affiliate.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Trainer.Status)" space="1" fontcolor="red">
+									<WTCONDITION expr="DATA(Trainer.Status)" oper="equal" value="CONST(3)"/>
+								</WTSTATIC>
+
+								<WTSTATIC value="DATA(Trainer.Tier)"/>
+								<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(' (',@enrolldate,')')&quot;/&gt;)"/>
+							</WTSTATIC>
+              <WTSTATIC col="2">
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(entity11.gif)" alt="Courses" imgalign="absmiddle">
+                    <WTLINK name="1112" target="Courses">
+                      <WTPARAM name="TrainerID" value="DATA(Trainer.TrainerID)"/>
+                      <WTPARAM name="Popup" value="CONST(1)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(entity31.gif)" alt="Assessments" imgalign="absmiddle">
+                    <WTLINK name="3111" target="Assessments">
+                      <WTPARAM name="TrainerID" value="DATA(Trainer.TrainerID)"/>
+                      <WTPARAM name="Popup" value="CONST(1)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC space="5" fontcolor="gray"/>
+								<WTSTATIC value="DATA(Trainer.City)" space="1"/>
+								<WTSTATIC value="DATA(Trainer.State)" space="1"/>
+								<WTSTATIC value="DATA(Trainer.Zip)" space="1"/>
+								<WTSTATIC value="DATA(Trainer.Country)"/>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Trainer.Email)" fontcolor="gray"/>
+              <WTLINKGROUP col="3"/>
+            </WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="0302" caption="New Trainer" header="false" footer="false" navbar="false" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="23">
+		<!--============================================================================================-->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TrainerID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Trainer.Status)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Trainer.Tier)" value="CONST(3)"/>
+					<WTSETATTRIBUTE name="ATTR(EnrollDate)" value="SYS(date)"/>
+					<WTSETATTRIBUTE name="ATTR(Trainer.UserGroup)" value="CONST(31)"/>
+					<WTSETATTRIBUTE name="ATTR(Trainer.UserStatus)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Trainer.Country)" value="CONST(&quot;USA&quot;)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;0302.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Load">
+					<WTPARAM name="TrainerID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="CONST(tmpLogon)" value="ATTR(NewLogon)"/>
+					<WTSETATTRIBUTE name="ATTR(SponsorID)" value="SYS(affiliateid)"/>
+<WTCUSTOM>
+			tmpAgree = Request.Form.Item("Agree")
+			If .CompanyName = &quot;&quot; Then .CompanyName = .NameLast + &quot;, &quot; + .NameFirst
+			If .Website &lt;&gt; &quot;&quot; Then
+				.URL = .Website
+				If Left(.URL,4) &lt;&gt; &quot;http&quot; Then .URL = &quot;http://&quot; + .URL
+			End If
+</WTCUSTOM>
+					<WTCODEGROUP>
+		 				<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="CONST(Len(.NewLogon))" oper="greater" value="CONST(0)" connector="and"/>
+						<WTCONDITION expr="CONST(Len(.NewLogon))" oper="less" value="CONST(3)" connector="and"/>
+						<WTERROR number="10101" message="OOops, Your Logon Name must be at least three characters/numbers long."/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+		 				<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="CONST(Len(.NewPassword))" oper="greater" value="CONST(0)" connector="and"/>
+						<WTCONDITION expr="CONST(Len(.NewPassword))" oper="less" value="CONST(3)" connector="and"/>
+						<WTERROR number="10102" message="Oops, Your Password must be at least three characters/numbers long."/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+		 				<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="CONST(tmpAgree)" oper="not-equal" value="CONST(&quot;on&quot;)" connector="and"/>
+						<WTERROR number="10103" message="Oops, You must agree to the terms and conditions."/>
+					</WTCODEGROUP>
+					
+					<WTCODEGROUP>
+		 				<WTCONDITION expr="NoErrors"/>
+						<WTOBJECT name="AuthUser" project="ptsAuthUser" class="CAuthUser">
+							<WTMETHOD name="IsLogon">
+								<WTPARAM name="IsAvailable" direction="return" datatype="number"/>
+								<WTPARAM name="Logon" direction="input" value="CONST(tmpLogon)"/>
+							</WTMETHOD>
+						</WTOBJECT>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(IsAvailable)" oper="equal" value="CONST(0)"/>
+							<WTERROR number="-2147220513" message="Oops, The Logon is not available.  Please select another."/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+
+					<WTMETHOD name="Add">
+		 				<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="TrainerID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpAuthUser)" value="ATTR(Trainer.AuthUserID)"/>
+					<WTMETHOD name="XML">
+	 					<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;TrainerTemplate.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Trainer\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(TrainerID) + &quot;.htm&quot;)"/>
+					<WTMETHOD name="Save"/>
+				</WTOBJECT>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="CONST(tmpAuthUser)" oper="greater" value="CONST(0)" connector="and"/>
+					<WTRETURN>
+						<WTCONDITION expr="NotEmployee"/>
+						<WTLINK name="0105" return="false">
+							<WTPARAM name="AuthUserID" value="CONST(tmpAuthUser)"/>
+							<WTPARAM name="MailReturnURL" value="CONST(&quot;0330.asp?TrainerID=&quot; &amp; TrainerID)"/>
+						</WTLINK>
+					</WTRETURN>
+					<WTRETURN>
+						<WTCONDITION expr="IsEmployee"/>
+						<WTLINK name="0105" return="false">
+							<WTPARAM name="AuthUserID" value="CONST(tmpAuthUser)"/>
+							<WTPARAM name="MailReturnURL" value="CONST(Replace(GetCache(&quot;0302URL&quot;), &quot;%26&quot;, &quot;&amp;&quot;))"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="120" align="right"/>
+				<WTCOLUMN width="530" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="3"  align="left" label="NewTrainer" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(step1.gif)" align="center" valign="top"/>
+					<WTSTATIC col="2" merge="2" align="left" label="NewTrainerText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="CompanyName"/>
+					<WTTEXT col="3" value="ATTR(Trainer.CompanyName)" size="60" focus="true"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Status"/>
+					<WTCOMBO col="3" value="ATTR(Trainer.Status)"/>
+					<WTCOMBO col="3" value="ATTR(Trainer.Tier)"/>
+					<WTTEXT col="3" value="ATTR(Trainer.EnrollDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Trainer.Status)"/>
+					<WTHIDDEN value="ATTR(Trainer.Tier)"/>
+					<WTHIDDEN value="ATTR(Trainer.EnrollDate)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="TrainerName"/>
+					<WTTEXT col="3" value="ATTR(Trainer.NameFirst)" width="200" label="NameFirst" size="25"/>
+					<WTTEXT col="3" value="ATTR(Trainer.NameLast)" width="330" label="NameLast" size="25"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Email"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Email)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTIMAGE col="1" value="CONST(step2.gif)" align="center" valign="top"/>
+					<WTSTATIC col="2" merge="2" align="left" label="LogonText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="NewLogon"/>
+					<WTTEXT col="3" value="ATTR(Trainer.NewLogon)" size="20"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="NewPassword"/>
+					<WTTEXT col="3" value="ATTR(Trainer.NewPassword)" size="20"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTIMAGE col="1" value="CONST(step3.gif)" align="center" valign="top"/>
+					<WTSTATIC col="2" tag="Address"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Street)" width="294" label="Street" size="40"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Unit)" width="236" label="Unit" size="10"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2"/>
+					<WTTEXT col="3" value="ATTR(Trainer.City)" width="200" label="City" size="25"/>
+					<WTTEXT col="3" value="ATTR(Trainer.State)" width="330" label="State" size="25"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Zip)" width="200" label="Zip" size="25"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Country)" width="330" label="Country" size="25"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" merge="2"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Phone1"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Phone1)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Phone2"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Phone2)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Fax"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Fax)" size="15"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" merge="2"/>
+					<WTDIVIDER col="3" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" tag="Website"/>
+					<WTTEXT col="3" value="ATTR(Trainer.Website)" size="60"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTDIVIDER col="2" merge="2" align="left" height="12"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" tag="UserAccess"/>
+						<WTCOMBO col="3" value="ATTR(Trainer.UserGroup)"/>
+						<WTCOMBO col="3" value="ATTR(Trainer.UserStatus)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Trainer.UserGroup)"/>
+					<WTHIDDEN value="ATTR(Trainer.UserStatus)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="24">
+					<WTIMAGE col="1" value="CONST(step4.gif)" align="center" valign="top"/>
+					<WTSTATIC col="2" merge="2" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2"/>
+					<WTCHECK col="3" name="Agree"/>
+					<WTSTATIC col="3" label="Agree"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" merge="2" align="center" action="2" value="CONST(Submit)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" merge="2" align="center" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="0303" header="false" footer="false" navbar="false" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="31">
+		<!--==================================================================-->
+			<WTPARAM name="TrainerID" datatype="number"/>
+			<WTPARAM name="UploadImageFile" datatype="text"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="NotTrainer"/>
+				<WTRETURN/>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadImageFile)" oper="not-equal" value="&quot;&quot;"/>
+					<WTGETCACHE name="PARAM(TrainerID)" value="TRAINERID"/>
+					<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+						<WTMETHOD name="Load">
+							<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(Image)" value="PARAM(UploadImageFile)"/>
+						<WTMETHOD name="Save">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTSUB name="UpdateTrainer">
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+<WTCUSTOM>
+			If .CompanyName = &quot;&quot; Then .CompanyName = .NameLast + &quot;, &quot; + .NameFirst
+			If .URL = &quot;&quot; and .Website &lt;&gt; &quot;&quot; Then
+				.URL = .Website
+				If Left(.URL,4) &lt;&gt; &quot;http&quot; Then .URL = &quot;http://&quot; + .URL
+			End If
+</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+						If .Image &lt;&gt; &quot;&quot; Then
+							.Image = .TrainerID &amp; Right(.Image, 4)
+						End If
+</WTCUSTOM>				
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqTrainerID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Trainer\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+						If .Image &lt;&gt; &quot;&quot; Then
+							.Image = .TrainerID &amp; Right(.Image, 4)
+						End If
+</WTCUSTOM>				
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqTrainerID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Trainer\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateTrainer"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION id="6" name="UploadImage" type="Upload">
+				<WTCALLSUB name="UpdateTrainer"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="0320" return="false">
+						<WTPARAM name="TrainerID" value="PARAM(TrainerID)"/>
+					</WTLINK>
+				</WTRETURN>			
+			</WTACTION>
+
+	 		<!--************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Trainer" value="ATTR(Trainer.CompanyName)" class="PageHeading" align="left"/>
+					<WTIMAGE col="1" merge="2" value="CONST(Shortcut.gif)">
+						<WTCONDITION expr="NotMemberOnly"/>
+						<WTCONDITION expr="_IsShortcuts" connector="or"/>
+						<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+							<WTPARAM name="EntityID" value="ENTITY(Trainer)"/>
+							<WTPARAM name="ItemID" value="ATTR(Trainer.TrainerID)"/>
+							<WTPARAM name="Name" value="ATTR(Trainer.CompanyName)" clean="true"/>
+							<WTPARAM name="URL" value="SYS(PageURL)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+
+				<WTROW>
+   				 <WTCONDITION expr="IsEmployee"/>
+					 <WTCONDITION expr="IsActive" connector="and"/>
+					 <WTSTATIC col="1"/>
+					 <WTLINKGROUP col="2" align="right">
+						<WTLINK name="1112" label="Courses" class="PageHeadingLink">
+							<WTPARAM name="TrainerID" value="ATTR(Trainer.TrainerID)"/>
+						</WTLINK>
+						<WTLINK name="3111" label="Assessments" class="PageHeadingLink">
+							<WTPARAM name="TrainerID" value="ATTR(Trainer.TrainerID)"/>
+						</WTLINK>
+						<WTLINK name="8001" label="Attachments" target="Attachments">
+							<WTPARAM name="TrainerID" value="ATTR(Trainer.TrainerID)"/>
+						</WTLINK>
+						<WTLINK name="0911" label="Commissions" class="PageHeadingLink">
+							<WTPARAM name="OwnerType" value="CONST(3)"/>
+							<WTPARAM name="OwnerID" value="ATTR(Trainer.TrainerID)"/>
+						</WTLINK>
+						<WTLINK name="0811" label="Payouts" class="PageHeadingLink">
+							<WTPARAM name="OwnerType" value="CONST(3)"/>
+							<WTPARAM name="OwnerID" value="ATTR(Trainer.TrainerID)"/>
+						</WTLINK>
+						<WTLINK name="0104" label="ResetLogon" class="PageHeadingLink">
+							<WTCONDITION expr="ATTR(UserGroup)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="AuthUserID" value="ATTR(Trainer.AuthUserID)"/>
+						</WTLINK>
+					 </WTLINKGROUP>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(record.gif)" align="center"/>
+					<WTSTATIC col="2" label="EditTrainerText" align="left" valign="center" class="Prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsManager"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="SponsorID"/>
+						<WTTEXT col="2" value="ATTR(Trainer.SponsorID)" valign="center" label="SponsorID" size="6"/>
+						<WTLINKGROUP col="2" valign="center">
+							<WTLINK name="0403"  label="ATTR(Trainer.SponsorName)" >
+					 			<WTPARAM name="MemberID" value="ATTR(Trainer.SponsorID)"/>
+					 		</WTLINK>
+						</WTLINKGROUP>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotManager"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="SponsorName" height="18"/>
+						<WTSTATIC col="2" value="ATTR(Trainer.SponsorName)" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTHIDDEN value="ATTR(Trainer.SponsorID)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="TrainerID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Trainer.TrainerID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CompanyName"/>
+					<WTTEXT col="2" value="ATTR(Trainer.CompanyName)" size="60" focus="true"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Trainer.Status)"/>
+					<WTCOMBO col="2" value="ATTR(Trainer.Tier)"/>
+					<WTTEXT col="2" value="ATTR(Trainer.EnrollDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Trainer.Status)"/>
+					<WTHIDDEN value="ATTR(Trainer.Tier)"/>
+					<WTHIDDEN value="ATTR(Trainer.EnrollDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TrainerName"/>
+					<WTTEXT col="2" value="ATTR(Trainer.NameFirst)" width="200" label="NameFirst" size="25"/>
+					<WTTEXT col="2" value="ATTR(Trainer.NameLast)" width="240" label="NameLast" size="25"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Email)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Address"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Street)" width="294" label="Street" size="40"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Unit)" width="146" label="Unit" size="10"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Trainer.City)" width="200" label="City" size="25"/>
+					<WTTEXT col="2" value="ATTR(Trainer.State)" width="240" label="State" size="25"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Zip)" width="200" label="Zip" size="25"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Country)" width="240" label="Country" size="25"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Phone1"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Phone1)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Phone2"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Phone2)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Fax"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Fax)" size="15"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Website"/>
+					<WTTEXT col="2" value="ATTR(Trainer.Website)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" tag="URL"/>
+					<WTTEXT col="2" value="ATTR(Trainer.URL)" size="60"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="left" label="ImageHelp" class="Prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" valign="bottom" tag="Image"/>
+					<WTBUTTON col="2" action="6" value="CONST(Upload)"/>
+					<WTIMAGE col="2" value="ATTR(Trainer.Image)" align="left" valign="top" imgwidth="100" path="Trainer">
+						<WTCONDITION expr="ATTR(Trainer.Image)" oper="not-equal" value="''"/>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" tag="Description"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" value="ATTR(HTMLFile.Data)" rows="25" cols="72" htmleditor="true" embedhtml="true"/>
+				</WTROW>							
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW margin-top="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTFRAME col="1" merge="2" src="CONST(9011.asp?Height=150&amp;amp;OwnerType=3&amp;amp;OwnerID=&lt;xsl:value-of select=&quot;/DATA/PARAM/@trainerid&quot;/&gt;&amp;amp;Title=&lt;xsl:value-of select=&quot;/DATA/TXN/PTSTRAINER/@trainername&quot;/&gt;)" name="NotesFrame" frmclass="FrameNoScroll" frmwidth="600" frmheight="150" label="NoFrameSupport" border="0"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="UserAccess"/>
+						<WTCOMBO col="2" value="ATTR(Trainer.UserGroup)"/>
+						<WTCOMBO col="2" value="ATTR(Trainer.UserStatus)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTROW>
+						<WTHIDDEN value="ATTR(Trainer.URL)"/>
+<!--						
+						<WTHIDDEN value="ATTR(Trainer.IsUpload)"/>
+-->						
+						<WTHIDDEN value="ATTR(Trainer.UserGroup)"/>
+						<WTHIDDEN value="ATTR(Trainer.UserStatus)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsManager"/>
+						<WTCONDITION expr="IsActive" connector="and"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="0305" caption="Trainer Back-Office" header="false" footer="false" navbar="false" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="31">
+		<!--============================================================================================-->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;0305.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCUSTOM>
+			xmlHTMLFile = Replace( xmlHTMLFile, "{id}", reqSysTrainerID )
+</WTCUSTOM>
+				<WTOBJECT name="Shortcuts" project="ptsShortcutUser" class="CShortcuts">
+					<WTMETHOD name="ListPinned">
+						<WTPARAM name="AuthUserID" direction="input" value="SYS(UserID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlShortcuts" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="center"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSSHORTCUTS/PTSSHORTCUT))" oper="greater" value="CONST(0)"/>
+					<WTROW>
+						<WTTABLE col="1">
+							<WTCOLUMN width="100" align="center"/>
+							<WTCOLUMN width="100" align="center"/>
+							<WTCOLUMN width="100" align="center"/>
+							<WTCOLUMN width="100" align="center"/>
+							<WTCOLUMN width="100" align="center"/>
+							<WTCOLUMN width="100" align="center"/>
+
+							<WTREPEAT xpath="/DATA/TXN/PTSSHORTCUTS/PTSSHORTCUT[position() mod 6 = 1]">
+								<WTROW margin-top="3">
+									<WTREPEAT xpath=".|following-sibling::PTSSHORTCUT[position() &amp;lt; 6]">
+										<WTSTATIC col="1" valign="top">
+											<WTCODEGROUP>
+					 							<WTCONDITION expr="DATA(IsPopup)" oper="equal" value="CONST(0)"/>
+												<WTIMAGE valign="center" value="CONST(entity&lt;xsl:value-of select=&quot;@entityid&quot;/&gt;a.gif)">
+													<WTLINK name="DATA(Shortcut.URL)" type="anchor" return="true" nodata="true"/>
+												</WTIMAGE>
+											</WTCODEGROUP>
+											<WTCODEGROUP>
+					 							<WTCONDITION expr="DATA(IsPopup)" oper="not-equal" value="CONST(0)"/>
+												<WTIMAGE valign="center" value="CONST(entity&lt;xsl:value-of select=&quot;@entityid&quot;/&gt;a.gif)">
+													<WTLINK name="DATA(Shortcut.URL)" type="anchor" target="new"/>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+									</WTREPEAT>
+								</WTROW>
+								<WTROW>
+									<WTREPEAT xpath=".|following-sibling::PTSSHORTCUT[position() &amp;lt; 6]">
+										<WTSTATIC col="1" valign="top">
+											<WTSTATIC value="DATA(Shortcut.ShortcutName)">
+					 							<WTCONDITION expr="DATA(IsPopup)" oper="equal" value="CONST(0)"/>
+												<WTLINK name="DATA(Shortcut.URL)" type="anchor" return="true" nodata="true"/>
+											</WTSTATIC>
+											<WTSTATIC value="DATA(Shortcut.ShortcutName)">
+					 							<WTCONDITION expr="DATA(IsPopup)" oper="not-equal" value="CONST(0)"/>
+												<WTLINK name="DATA(Shortcut.URL)" type="anchor" target="new"/>
+											</WTSTATIC>
+										</WTSTATIC>
+									</WTREPEAT>
+								</WTROW>
+							</WTREPEAT>
+						</WTTABLE>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW>
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="0308" caption="Trainer Information" contentpage="true" header="false" navbar="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="TrainerID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+						If .Image &lt;&gt; &quot;&quot; Then
+							.Image = .TrainerID &amp; Right(.Image, 4)
+						End If
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(CStr(reqTrainerID) + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Trainer\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Continue" type="Continue">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="50"/>
+				<WTCOLUMN width="160" align="left"/>
+				<WTCOLUMN width="340" align="left"/>
+				<WTCOLUMN width="50"/>
+				
+				<WTLOAD>
+			    	content	=	window.parent.document.forms[0].SearchText
+			    	if(content)
+			    		content.scrollIntoView();
+				</WTLOAD>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1"/>
+					<WTIMAGE col="2" value="ATTR(Trainer.Image)" align="center" valign="top" imgwidth="100" path="Trainer">
+						<WTCONDITION expr="ATTR(Trainer.Image)" oper="not-equal" value="''"/>
+					</WTIMAGE>
+					<WTSTATIC col="3" class="PageHeading">
+						<WTCONDITION expr="ATTR(Trainer.CompanyName)" oper="not-equal" value="ATTR(Trainer.TrainerName)"/>
+						<WTSTATIC value="ATTR(Trainer.CompanyName)" newline="1"/>
+						<WTSTATIC value="ATTR(Trainer.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Trainer.NameLast)" newline="1"/>
+						<WTSTATIC value="ATTR(Trainer.Email)" newline="1"/>
+					</WTSTATIC>
+					<WTSTATIC col="3" class="PageHeading" prespace="false">
+						<WTCONDITION expr="ATTR(Trainer.CompanyName)" oper="equal" value="ATTR(Trainer.TrainerName)"/>
+						<WTSTATIC value="ATTR(Trainer.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Trainer.NameLast)" newline="1"/>
+						<WTSTATIC value="ATTR(Trainer.Email)" newline="1"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" merge="2" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTCONDITION expr="ATTR(Trainer.URL)" oper="not-equal" value="''"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" merge="2" label="AffiliateLink" class="PageHeading"/>
+					<WTSTATIC col="2" merge="2" value="ATTR(Trainer.Website)" >
+						<WTLINK name="ATTR(Trainer.URL)" type="anchor" return="false" target="Trainer"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" merge="4" align="center" action="1" value="CONST(Close)">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--**************************************Image Upload Page**************************************-->
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="0320" caption="Upload File" header="false" footer="false" navbar="false" action="false" submit="0320Upload.asp" type="multi" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="TrainerID" datatype="number"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="TRAINERID" value="PARAM(TrainerID)"/>
+			</WTACTION>
+				
+	
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+
+				<WTROW margin-top="19">
+					<WTSTATIC col="1" merge="3" label="UploadImageHeader" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="19">
+					<WTSTATIC col="1" merge="3" label="UploadImageText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="19">
+					<WTSTATIC col="1"/>
+					<WTFILE col="2"  align="center" value="upload" accept="*.jpg, *.gif"/>
+					<WTBUTTON col="2" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="0330" caption="Confirmation" header="PageHeaderPublic" footer="PageFooterPublic"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false">
+		<!--=============================================================================================-->
+			<WTPARAM name="TrainerID" datatype="number"/>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;0330.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Continue" type="Continue">
+				<WTRETURN>
+					<WTLINK name="0101"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="50" align="right"/>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="490" align="left"/>
+				<WTCOLUMN width="50"/>
+	
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" merge="2" align="left" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+				
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" merge="2" tag="CompanyName" height="18" bold="true"/>
+					<WTSTATIC col="3" value="ATTR(Trainer.CompanyName)"  class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" merge="2" tag="TrainerName" height="18" bold="true"/>
+					<WTSTATIC col="3" value="ATTR(Trainer.NameFirst)"  class="PageHeading"/>
+					<WTSTATIC col="3" value="ATTR(Trainer.NameLast)"  class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" merge="2" tag="Email" height="18" bold="true"/>
+					<WTSTATIC col="3" value="ATTR(Trainer.Email)"  class="PageHeading"/>
+				</WTROW>
+					
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" merge="4" align="center" action="1" value="Continue"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+	</WTWEBPAGES>
+</WTROOT>

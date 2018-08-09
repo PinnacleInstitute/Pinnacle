@@ -1,0 +1,17 @@
+EXEC [dbo].pts_CheckTable 'LifeTime'
+ GO
+
+CREATE TABLE [dbo].[LifeTime] (
+   [LifeTimeID] int IDENTITY (1,1) NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[LifeTime] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[LifeTime] WITH NOCHECK ADD
+   CONSTRAINT [PK_LifeTime] PRIMARY KEY NONCLUSTERED
+   ([LifeTimeID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

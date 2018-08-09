@@ -1,0 +1,3698 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="102" name="Debt" alias="de">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="10201" name="DebtID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="10202" name="MemberID" type="number" title="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="10204" name="DebtType" type="number" source="entity">
+			<WTENUM id="1" name="DebtType1"/>
+			<WTENUM id="2" name="DebtType2"/>
+			<WTENUM id="3" name="DebtType3"/>
+			<WTENUM id="4" name="DebtType4"/>
+			<WTENUM id="5" name="DebtType5"/>
+			<WTENUM id="6" name="DebtType6"/>
+			<WTENUM id="7" name="DebtType7"/>
+			<WTENUM id="8" name="DebtType8"/>
+			<WTENUM id="9" name="DebtType9"/>
+			<WTENUM id="10" name="DebtType10"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="10205" name="DebtName" type="text" length="30" source="entity"/>
+		<WTATTRIBUTE id="10206" name="Balance" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10207" name="Payment" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10208" name="MinPayment" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10209" name="IntRate" type="currency" min="0" max="99.99" source="entity">
+			<WTFORMAT value="#0.00"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="10210" name="IntPaid" type="currency" source="entity"/>
+		<WTATTRIBUTE id="10211" name="MonthsPaid" type="number" source="entity"/>
+		<WTATTRIBUTE id="10212" name="IsActive" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="10213" name="IsConsolidate" type="yesno" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="10290" name="RegInterest" type="text" length="20" source="entity" persist="false"/>
+		<WTATTRIBUTE id="10291" name="RegMonths" type="text" length="20" source="entity" persist="false"/>
+		<WTATTRIBUTE id="10292" name="AccInterest" type="text" length="20" source="entity" persist="false"/>
+		<WTATTRIBUTE id="10293" name="AccMonths" type="text" length="20" source="entity" persist="false"/>
+		<WTATTRIBUTE id="10294" name="Margin" type="currency" source="entity" persist="false"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Debt" entity="Debt" alias="de"/>
+			<WTRELATIONSHIP name="Common" entity="Debt" alias="de"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchConsolidate" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ATTR(DebtID)" direction="output"/>
+			<WTDECLARE name="DebtID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="DebtID" value="ATTR(Debt.DebtID)"/>
+					<WTJOIN name="Debt" lock="false"/>
+					<WTCONDITION expr="ATTR(Debt.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(Debt.IsConsolidate)" oper="not-equal" value="CONST(0)" connector="and"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(DebtID)" value="DebtID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(DebtType)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Debt.DebtID)"/>
+					<WTATTRIBUTE value="ATTR(Debt.DebtType)"/>
+					<WTATTRIBUTE value="ATTR(Debt.DebtName)"/>
+					<WTATTRIBUTE value="ATTR(Debt.Balance)"/>
+					<WTATTRIBUTE value="ATTR(Debt.Payment)"/>
+					<WTATTRIBUTE value="ATTR(Debt.MinPayment)"/>
+					<WTATTRIBUTE value="ATTR(Debt.IntRate)"/>
+					<WTATTRIBUTE value="ATTR(Debt.IntPaid)"/>
+					<WTATTRIBUTE value="ATTR(Debt.MonthsPaid)"/>
+					<WTATTRIBUTE value="ATTR(Debt.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(Debt.IsConsolidate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10201" caption="Debt Manager" header="false" footer="false" navbar="false" wrapper="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+			<WTPARAM name="RemoveID" datatype="number"/>
+			<WTPARAM name="ActiveID" datatype="number"/>
+			<WTPARAM name="ExtraPayment" datatype="number"/>
+			<WTPARAM name="IsMinPayment" datatype="number"/>
+			<WTPARAM name="Expired" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)"/>
+			</WTCODEGROUP>
+
+      <!-- CHECK FOR ILLEGAL ACCESS -->
+      <WTCODEGROUP>
+        <WTCONDITION expr="IsMemberOnly"/>
+        <WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(RemoveID)" oper="not-equal" value="CONST(0)"/>
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="DebtID" direction="input" value="PARAM(RemoveID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTLINK name="10201" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(ActiveID)" oper="not-equal" value="CONST(0)"/>
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DebtID" direction="input" value="PARAM(ActiveID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+					If .IsActive = 0 Then
+						.IsActive = 1
+					Else
+						.IsActive = 0
+					End If	
+					</WTCUSTOM>					
+					<WTSETATTRIBUTE name="PARAM(ActiveID)" value="CONST(0)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTLINK name="10201" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTSUB name="CheckExpired">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+	If CLng(.Level) = 3 Then
+'		If .Title = 11 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "d", 14, .EnrollDate) )
+'		If .Title = 12 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "m", 1, .EnrollDate) )
+'		If .Title = 13 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "m", 3, .EnrollDate) )
+'		If .Title = 14 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "m", 9, .EnrollDate) )
+		If .Title = 11 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "d", 45, .EnrollDate) )
+		If .Title = 12 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "m", 2, .EnrollDate) )
+		If .Title = 13 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "m", 4, .EnrollDate) )
+		If .Title = 14 Then reqExpired = DATEDIFF( "d", reqSysDate, DATEADD( "m", 10, .EnrollDate) )
+	End If
+</WTCUSTOM>						
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadFinance">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="ATTR(FinanceID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Payoff)" value="CONST(1)"/>
+<!--						<WTSETATTRIBUTE name="ATTR(Payment)" value="CONST(100)"/>-->
+						<WTSETATTRIBUTE name="ATTR(Payment)" value="CONST(0)"/>
+<!--						<WTSETATTRIBUTE name="ATTR(Savings)" value="CONST(10)"/>-->
+						<WTSETATTRIBUTE name="ATTR(Savings)" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(StartDate)" value="CONST(Date())"/>
+						<WTSETATTRIBUTE name="ATTR(ROI)" value="CONST(5)"/>
+<!--						<WTSETATTRIBUTE name="ATTR(SavingsRate)" value="CONST(3)"/>-->
+						<WTSETATTRIBUTE name="ATTR(SavingsRate)" value="CONST(0)"/>
+						<WTMETHOD name="Add">
+							<WTPARAM name="reqFinanceID" direction="return" datatype="number"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTSETATTRIBUTE name="PARAM(ExtraPayment)" value="ATTR(Payment)"/>
+					<WTSETATTRIBUTE name="PARAM(IsMinPayment)" value="ATTR(IsMinPayment)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="ListDebt">
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(0)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+	For Each oItem in oDebts
+		With oItem
+			.Margin = CCUR(.Payment) - CCUR(.MinPayment)
+			If reqIsMinPayment &lt;&gt; 0 Then
+				reqExtraPayment = reqExtraPayment + CCUR(.Margin)
+			End If	
+		End With
+	Next	
+	reqExtraPayment = FormatCurrency(reqExtraPayment)
+</WTCUSTOM>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;DebtMgr.htm&quot;)" />
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)" />
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)" />
+					<WTMETHOD name="Load" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="CheckExpired"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Expired)" oper="greater-equal" value="CONST(0)"/>
+					<WTCALLSUB name="LoadFinance"/>
+					<WTCALLSUB name="ListDebt"/>
+				</WTCODEGROUP>
+			</WTACTION>
+
+			<WTACTION id="5" name="Options" type="New">
+				<WTRETURN>
+					<WTLINK name="10103" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="AddDebt" type="New">
+				<WTRETURN>
+					<WTLINK name="10202" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTFUNCTION name="AnalyzeDebt(id)">
+					var url, win;
+					url = "10210.asp?memberid=" + id
+		            win = window.open(url,"AnalyzeDebt");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTSTATIC label="EditDebt"/>
+				<WTSTATIC label="DeleteDebt"/>
+				<WTSTATIC label="AnalyzeDebt"/>
+				<WTSTATIC label="ActivateDebt"/>
+				
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true" align="left"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Expired)" oper="greater-equal" value="CONST(0)"/>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSDEBTS/PTSDEBT))" oper="equal" value="CONST(0)" connector="and"/>
+					<WTROW margin-bottom="12">
+						<WTBUTTON col="1" action="6" value="CONST(NewDebt)" align="center"/>
+<!--
+						<WTBUTTON col="1" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+-->						
+					</WTROW>
+				</WTCODEGROUP>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSDEBTS/PTSDEBT))" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" align="center" fontsize="2" bold="true">
+							<WTSTATIC label="Process" space="1"/>
+							<WTSTATIC label="Payoff1">
+								<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(1)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Payoff2">
+								<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(2)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Payoff3">
+								<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(3)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Payoff4">
+								<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(4)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Payoff5">
+								<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(5)"/>
+							</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="First" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ExtraPayment)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="PARAM(ExtraPayment)" space="1"/>
+							<WTSTATIC label="ExtraPayment" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Min$" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.Savings)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="ATTR(Finance.Savings)"/>
+							<WTSTATIC label="%" space="1"/>
+							<WTSTATIC label="Savings" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.SavingsRate)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+						</WTSTATIC>
+						<WTBUTTON col="1" action="5" value="CONST(AdvancedOptions)"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+
+					<WTROW>
+						<WTTABLE col="1">
+							<WTCOLUMN width="25" align="left"/>
+							<WTCOLUMN width="700" align="left"/>
+							<WTCOLUMN width="25" align="left"/>
+
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" align="left">
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(debticon.jpg)" imgalign="absmiddle"/>
+										<WTSTATIC space="3"/>
+										<WTSTATIC label="YourDebts" fontsize="3" fontcolor="#000070" bold="true"/>
+										<WTSTATIC space="3"/>
+										<WTBUTTON action="6" value="CONST(NewDebt)" btnclass="smbutton"/>
+										<WTSTATIC space="3"/>
+										<WTSTATIC label="EditDebts" fontcolor="#004080"/>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW margin-bottom="6">
+								<WTSTATIC col="1"/>
+								<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+							</WTROW>
+
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTRECORDSET col="2" width="700" graybar="true" entity="Debt">
+									<WTCOLUMN width="16" align="left" valign="top" label="DebtType"/>
+									<WTCOLUMN width="25" align="left" valign="top" label="DebtName"/>
+									<WTCOLUMN width="12" align="left" valign="top" label="Balance"/>
+									<WTCOLUMN width="10" align="left" valign="top" label="Payment"/>
+									<WTCOLUMN width="10" align="left" valign="top" label="Minimum"/>
+									<WTCOLUMN width="10" align="left" valign="top" label="Margin"/>
+									<WTCOLUMN width="8" align="left" valign="top" label="Rate"/>
+									<WTCOLUMN width="6" align="center" valign="top" label="IsActive"/>
+									<WTCOLUMN width="5" align="right"/>
+									
+									<WTROW height="24">
+										<WTCONDITION expr="DATA(IsActive)" oper="not-equal" value="CONST(0)"/>
+										<WTSTATIC col="1">
+											<WTCODEGROUP>
+												<WTIMAGE valign="center" value="CONST(debttype&lt;xsl:value-of select=&quot;@debttype&quot;/&gt;.gif)" imgalign="absmiddle"/>
+											</WTCODEGROUP>
+											<WTSTATIC space="1"/>
+											<WTSTATIC value="DATA(Debt.DebtType)"/>
+										</WTSTATIC>
+										<WTSTATIC col="2">
+											<WTSTATIC value="DATA(Debt.DebtName)"/>
+											<WTSTATIC space="1"/>
+											<WTCODEGROUP>
+												<WTIMAGE value="CONST(Edit.gif)" alt="EditDebt" imgalign="absmiddle">
+													<WTLINK name="10203" nolocaldata="true"><WTPARAM name="DebtID" value="DATA(Debt.DebtID)"/></WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+										<WTSTATIC col="3" value="DATA(Debt.Balance)"/>
+										<WTSTATIC col="4" value="DATA(Debt.Payment)"/>
+										<WTSTATIC col="5" value="DATA(Debt.MinPayment)"/>
+										<WTSTATIC col="6" value="DATA(Debt.Margin)"/>
+										<WTSTATIC col="7">
+											<WTSTATIC value="DATA(Debt.IntRate)"/>
+											<WTSTATIC label="%"/>
+										</WTSTATIC>
+										<WTSTATIC col="8">
+											<WTCODEGROUP>
+												<WTCONDITION expr="DATA(IsActive)" oper="equal" value="CONST(0)"/>
+												<WTIMAGE value="CONST(uncheckedbox.gif)" alt="ActivateDebt" imgalign="absmiddle">
+													<WTLINK name="10201" return="false">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="ActiveID" value="DATA(DebtID)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+											<WTCODEGROUP>
+												<WTCONDITION expr="DATA(IsActive)" oper="not-equal" value="CONST(0)"/>
+												<WTIMAGE value="CONST(checkedbox.gif)" alt="ActivateDebt" imgalign="absmiddle">
+													<WTLINK name="10201" return="false">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="ActiveID" value="DATA(DebtID)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+										<WTSTATIC col="9">
+											<WTCODEGROUP>
+												<WTIMAGE value="CONST(Trash.gif)" alt="DeleteDebt" imgalign="absmiddle">
+													<WTLINK name="10201" return="false">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="RemoveID" value="DATA(DebtID)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+									</WTROW>
+									
+									<WTROW height="24">
+										<WTCONDITION expr="DATA(IsActive)" oper="equal" value="CONST(0)"/>
+										<WTSTATIC col="1">
+											<WTCODEGROUP>
+												<WTIMAGE valign="center" value="CONST(debttype&lt;xsl:value-of select=&quot;@debttype&quot;/&gt;.gif)" imgalign="absmiddle"/>
+											</WTCODEGROUP>
+											<WTSTATIC space="1"/>
+											<WTSTATIC value="DATA(Debt.DebtType)" fontcolor="gray"/>
+										</WTSTATIC>
+										<WTSTATIC col="2">
+											<WTSTATIC value="DATA(Debt.DebtName)" fontcolor="gray"/>
+											<WTSTATIC space="1"/>
+											<WTCODEGROUP>
+												<WTIMAGE value="CONST(Edit.gif)" alt="EditDebt" imgalign="absmiddle">
+													<WTLINK name="10203" nolocaldata="true"><WTPARAM name="DebtID" value="DATA(Debt.DebtID)"/></WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+										<WTSTATIC col="3" value="DATA(Debt.Balance)" fontcolor="gray"/>
+										<WTSTATIC col="4" value="DATA(Debt.Payment)" fontcolor="gray"/>
+										<WTSTATIC col="5" value="DATA(Debt.MinPayment)" fontcolor="gray"/>
+										<WTSTATIC col="6" value="DATA(Debt.Margin)" fontcolor="gray"/>
+										<WTSTATIC col="7">
+											<WTSTATIC value="DATA(Debt.IntRate)" fontcolor="gray"/>
+											<WTSTATIC label="%"/>
+										</WTSTATIC>
+										<WTSTATIC col="8">
+											<WTCODEGROUP>
+												<WTCONDITION expr="DATA(IsActive)" oper="equal" value="CONST(0)"/>
+												<WTIMAGE value="CONST(uncheckedbox.gif)" alt="ActivateDebt" imgalign="absmiddle">
+													<WTLINK name="10201" return="false">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="ActiveID" value="DATA(DebtID)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+											<WTCODEGROUP>
+												<WTCONDITION expr="DATA(IsActive)" oper="not-equal" value="CONST(0)"/>
+												<WTIMAGE value="CONST(checkedbox.gif)" alt="ActivateDebt" imgalign="absmiddle">
+													<WTLINK name="10201" return="false">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="ActiveID" value="DATA(DebtID)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+										<WTSTATIC col="9">
+											<WTCODEGROUP>
+												<WTIMAGE value="CONST(Trash.gif)" alt="DeleteDebt" imgalign="absmiddle">
+													<WTLINK name="10201" return="false">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="RemoveID" value="DATA(DebtID)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+									</WTROW>
+
+								</WTRECORDSET>
+								<WTSTATIC col="3"/>
+							</WTROW>
+						</WTTABLE>
+					</WTROW>
+
+					<WTROW margin-top="24">
+						<WTCONDITION expr="PARAM(Expired)" oper="greater-equal" value="CONST(0)"/>
+						<WTSTATIC col="1" fontsize="3" align="center" valign="top">
+							<WTCODEGROUP>
+								<WTIMAGE value="CONST(calculator.jpg)" alt="AnalyzeDebt" imgalign="absmiddle">
+									<WTLINK name="AnalyzeDebt(&lt;xsl:value-of select=&quot;/DATA/PARAM/@memberid&quot;/&gt;)" click="true" />
+								</WTIMAGE>
+								<WTSTATIC newline="1"/>
+								<WTSTATIC label="AnalyzeDebt"/>
+							</WTCODEGROUP>
+						</WTSTATIC>
+					</WTROW>
+
+					<WTROW margin-top="12">
+						<WTCONDITION expr="PARAM(Expired)" oper="greater" value="CONST(0)"/>
+						<WTSTATIC col="1" fontsize="3" fontcolor="blue" align="center" valign="top">
+							<WTSTATIC value="PARAM(Expired)" space="1"/>
+							<WTSTATIC label="DaysLeft"/>
+						</WTSTATIC>
+					</WTROW>
+<!--					
+					<WTROW margin-top="24" margin-bottom="12">
+						<WTBUTTON col="1" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+-->
+				</WTCODEGROUP>
+
+				<WTROW margin-top="24">
+					<WTCONDITION expr="PARAM(Expired)" oper="less" value="CONST(0)"/>
+					<WTSTATIC col="1" label="Expired" fontsize="4" fontcolor="red" align="center" valign="top"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10202" caption="Add Debt" header="false" footer="false" navbar="false" wrapper="false" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Txn" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+
+      <!-- CHECK FOR ILLEGAL ACCESS -->
+      <WTCODEGROUP>
+        <WTCONDITION expr="IsMemberOnly"/>
+        <WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTSUB name="NewDebt">
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DebtID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(IsActive)" value="CONST(1)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AddDebt">
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DebtID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTES/>
+<WTCUSTOM>
+If CCUR(.MinPayment) = 0 Then
+	.MinPayment = ROUND( CCUR(.Balance) * ( CLNG(.IntRate) / 1200 ), 2 ) 
+End If
+If CCUR(.Payment) &lt; CCUR(.MinPayment) Then .Payment = .MinPayment
+IntPaid = 0
+Months = 0
+CalcRegularPayoff .Balance, .Payment, .IntRate, IntPaid, Months 
+.IntPaid = IntPaid
+.MonthsPaid = Months 
+</WTCUSTOM>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(MonthsPaid)" oper="less" value="CONST(0)"/>
+						<WTERROR number="10117" message="Oops, The payment is too small to payoff the interest."/>
+					</WTCODEGROUP>
+					<WTMETHOD name="Add">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="DebtID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlDebt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="NewDebt"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTCALLSUB name="AddDebt"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="AddAgin" type="Add">
+				<WTCALLSUB name="AddDebt"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCALLSUB name="NewDebt"/>
+					<WTSETATTRIBUTE name="PARAM(Txn)" value="CONST(1)"/>
+				</WTCODEGROUP>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="310" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTSTATIC label="NewDebt" space="1"/>
+						<WTSTATIC label="AddSuccess" fontcolor="red">
+							<WTCONDITION expr="PARAM(Txn)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="DebtType"/>
+					<WTCOMBO col="2" value="ATTR(Debt.DebtType)"/>
+					<WTCHECK col="2" value="ATTR(Debt.IsActive)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="DebtName"/>
+					<WTTEXT col="2" value="ATTR(Debt.DebtName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Balance"/>
+					<WTTEXT col="2" value="ATTR(Debt.Balance)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Payment"/>
+					<WTTEXT col="2" value="ATTR(Debt.Payment)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MinPayment"/>
+					<WTTEXT col="2" value="ATTR(Debt.MinPayment)" class="prompt"/>
+					<WTSTATIC col="2" label="MinPaymentText"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="IntRate"/>
+					<WTTEXT col="2" value="ATTR(Debt.IntRate)" class="prompt"/>
+					<WTSTATIC col="2" label="IntRateText"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(AddAgain)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10203" caption="Edit Debt" header="false" footer="false" navbar="false" wrapper="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="DebtID" datatype="number"/>
+			<WTPARAM name="MinPayment" datatype="currency"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+
+			<WTSUB name="LoadDebt">
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DebtID" direction="input" value="PARAM(DebtID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+reqMinPayment = FormatCurrency( ROUND( CCUR(.Balance) * ( CLNG(.IntRate) / 1200 ), 2 ) )
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateDebt">
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DebtID" direction="input" value="PARAM(DebtID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+<WTCUSTOM>
+If CCUR(.MinPayment) = 0 Then
+	.MinPayment = ROUND( CCUR(.Balance) * ( CLNG(.IntRate) / 1200 ), 2 ) 
+End If
+If CCUR(.Payment) &lt; CCUR(.MinPayment) Then .Payment = .MinPayment
+IntPaid = 0
+Months = 0
+CalcRegularPayoff .Balance, .Payment, .IntRate, IntPaid, Months 
+.IntPaid = IntPaid
+.MonthsPaid = Months 
+</WTCUSTOM>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(MonthsPaid)" oper="less" value="CONST(0)"/>
+						<WTERROR number="10117" message="Oops, The payment is too small to payoff the interest."/>
+					</WTCODEGROUP>
+					<WTMETHOD name="Save">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlDebt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadDebt"/>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateDebt"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="Calc" type="Update">
+				<WTCALLSUB name="UpdateDebt"/>
+				<WTCALLSUB name="LoadDebt"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="DebtID" direction="input" value="PARAM(DebtID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsErrors"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="DebtID" direction="input" value="PARAM(DebtID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTMETHOD name="XML">
+							<WTPARAM name="xmlDebt" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="290" align="right"/>
+				<WTCOLUMN width="460" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTSTATIC tag="Debt"/>
+						<WTCODEGROUP>
+							<WTIMAGE valign="center" value="CONST(debttype&lt;xsl:value-of select=&quot;/DATA/TXN/PTSDEBT/@debttype&quot;/&gt;.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC value="ATTR(Debt.DebtName)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="ATTR(Debt.MonthsPaid)" oper="less" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" label="TooSmallPayment" class="PageHeading" align="center" fontcolor="red"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="DebtType"/>
+					<WTCOMBO col="2" value="ATTR(Debt.DebtType)"/>
+					<WTCHECK col="2" value="ATTR(Debt.IsActive)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="DebtName"/>
+					<WTTEXT col="2" value="ATTR(Debt.DebtName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Balance"/>
+					<WTTEXT col="2" value="ATTR(Debt.Balance)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Payment"/>
+					<WTTEXT col="2" value="ATTR(Debt.Payment)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MinPayment"/>
+					<WTTEXT col="2" value="ATTR(Debt.MinPayment)" class="prompt"/>
+					<WTSTATIC col="2">
+						<WTSTATIC label="MinPaymentText" space="1"/>
+						<WTSTATIC value="PARAM(MinPayment)" bold="true"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="IntRate"/>
+					<WTTEXT col="2" value="ATTR(Debt.IntRate)" class="prompt"/>
+					<WTSTATIC col="2" label="IntRateText"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="IntPaid"/>
+					<WTSTATIC col="2" value="ATTR(Debt.IntPaid)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MonthsPaid"/>
+					<WTSTATIC col="2" value="ATTR(Debt.MonthsPaid)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(CalcPayoff)"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10204" caption="Debt Consolidation" footer="false" navbar="false" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="DebtID" datatype="number"/>
+			<WTPARAM name="Txn" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+
+			<WTSUB name="LoadDebts">
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="FetchConsolidate">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(DebtID)" value="ATTR(DebtID)"/>
+					<WTSETATTRIBUTE name="ATTR(IntRate)" value="CONST(00.00)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(DebtID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="DebtID" direction="input" value="PARAM(DebtID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(0)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				For Each oItem in oDebts
+					With oItem
+						If .IsActive = 0 Then .IsActive = 1 Else .IsActive = 0
+					End With
+				Next
+</WTCUSTOM>					
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadDebts"/>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Update" type="Update">
+				<WTSETATTRIBUTE name="CONST(IntRate)" value="FORM(IntRate)"/>
+				<WTSETATTRIBUTE name="PARAM(Txn)" value="CONST(1)"/>
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="FetchConsolidate">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(DebtID)" value="ATTR(DebtID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(DebtID)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+						<WTSETATTRIBUTE name="ATTR(DebtType)" value="CONST(8)"/>
+						<WTSETATTRIBUTE name="ATTR(DebtName)" value="CONST(&quot;Consolidation&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(IntRate)" value="CONST(IntRate)"/>
+						<WTSETATTRIBUTE name="ATTR(IsActive)" value="CONST(1)"/>
+						<WTSETATTRIBUTE name="ATTR(IsConsolidate)" value="CONST(1)"/>
+						<WTMETHOD name="Add">
+							<WTPARAM name="reqDebtID" direction="return" datatype="number"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+				
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(0)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+Balance = 0
+Payment = 0
+For Each oItem in oDebts
+	With oItem
+		If .IsConsolidate = 0 Then
+			tmpID = .DebtID
+			If Request.Form.Item(tmpID) = "on" Then
+				Balance = Balance + CCur(.Balance)
+				Payment = Payment + CCur(.Payment)
+				.IsActive = 0
+			Else	
+				.IsActive = 1
+			End If
+			.MemberID = reqMemberID
+			.Save 1
+		End If
+	End With
+Next
+</WTCUSTOM>					
+				</WTOBJECT>
+
+				<WTOBJECT name="Debt" project="ptsDebtUser" class="CDebt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DebtID" direction="input" value="PARAM(DebtID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Balance)" value="CONST(Balance)"/>
+					<WTSETATTRIBUTE name="ATTR(Payment)" value="CONST(Payment)"/>
+					<WTSETATTRIBUTE name="ATTR(IntRate)" value="CONST(IntRate)"/>
+<WTCUSTOM>
+.MinPayment = ROUND( CCUR(.Balance) * ( CLNG(.IntRate) / 1200 ), 2 ) 
+If CCUR(.Payment) &lt; CCUR(.MinPayment) Then .Payment = .MinPayment
+IntPaid = 0
+Months = 0
+CalcRegularPayoff .Balance, .Payment, .IntRate, IntPaid, Months 
+.IntPaid = IntPaid
+.MonthsPaid = Months 
+</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTCALLSUB name="LoadDebts"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="4" fontcolor="darkblue">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(consolidate48.gif)" imgalign="absmiddle"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="DebtConsolidation"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="50" align="left"/>
+						<WTCOLUMN width="650" align="center"/>
+						<WTCOLUMN width="50" align="left"/>
+
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(Txn)" oper="not-equal" value="CONST(0)"/>
+							<WTROW margin-bottom="12">
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" align="center" class="PageHeading" fontcolor="red">
+									<WTSTATIC tag="NewConsolidation" space="3"/>
+									<WTSTATIC tag="Balance" value="ATTR(Debt.Balance)" space="3"/>
+									<WTSTATIC tag="Payment" value="ATTR(Debt.Payment)"/>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW margin-bottom="18">
+								<WTSTATIC col="1"/>
+								<WTBUTTON col="2" value="CONST(Continue)" align="center">
+									<WTCLICK>
+										window.parent.opener.parent.opener.location.reload();
+										window.parent.opener.location.reload();
+										window.close()
+									</WTCLICK>
+								</WTBUTTON>
+							</WTROW>
+						</WTCODEGROUP>
+
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" label="ConsolidateText" fontsize="2" align="left" fontcolor="#004080"/>
+						</WTROW>
+
+						<WTROW margin-bottom="18">
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" tag="ConsolidateIntRate" align="center"/>
+							<WTTEXT col="2" value="ATTR(Debt.IntRate)" size="5" prespace="false"/>
+							<WTSTATIC col="2" label="IntRateText" fontcolor="#004080"/>
+						</WTROW>
+
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTRECORDSET col="2" width="650" graybar="true" entity="Debt">
+								<WTCOLUMN width="13" align="center" valign="top" label="Consolidate"/>
+								<WTCOLUMN width="18" align="left" valign="top" label="DebtType"/>
+								<WTCOLUMN width="28" align="left" valign="top" label="DebtName"/>
+								<WTCOLUMN width="13" align="center" valign="top" label="Balance"/>
+								<WTCOLUMN width="13" align="center" valign="top" label="Payment"/>
+								<WTCOLUMN width="20" align="center" valign="top" label="IntRate"/>
+
+								<WTROW height="24">
+									<WTCONDITION expr="DATA(IsConsolidate)" oper="equal" value="CONST(0)"/>
+									<WTCHECK col="1" name="&lt;xsl:value-of select=&quot;@debtid&quot;/&gt;" datapathx="@isactive=1"/>
+									<WTSTATIC col="2">
+										<WTCODEGROUP>
+											<WTIMAGE valign="center" value="CONST(debttype&lt;xsl:value-of select=&quot;@debttype&quot;/&gt;.gif)" imgalign="absmiddle"/>
+										</WTCODEGROUP>
+										<WTSTATIC space="1"/>
+										<WTSTATIC value="DATA(Debt.DebtType)"/>
+									</WTSTATIC>
+									<WTSTATIC col="3">
+										<WTSTATIC value="DATA(Debt.DebtName)"/>
+									</WTSTATIC>
+									<WTSTATIC col="4" value="DATA(Debt.Balance)"/>
+									<WTSTATIC col="5" value="DATA(Debt.Payment)"/>
+									<WTSTATIC col="6">
+										<WTSTATIC value="DATA(Debt.IntRate)"/>
+										<WTSTATIC label="%"/>
+									</WTSTATIC>
+								</WTROW>
+							</WTRECORDSET>
+							<WTSTATIC col="3"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="18" margin-bottom="12">
+					<WTBUTTON col="1" action="1" value="CONST(Consolidate)" align="center"/>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(Txn)" oper="equal" value="CONST(0)"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10210" caption="Debt Analysis" footer="false" navbar="false" wrapper="wrapper750"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+			<WTPARAM name="ExtraPayment" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+			<WTDATATXN name="DA"/>
+
+			<!-- CHECK FOR ILLEGAL ACCESS -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="NotEmployee"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+				<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+<WTCUSTOM>
+Dim Debt
+Payoff = 0
+Payment = 0
+Savings = 0
+StartDate = 0
+ROI = 0
+SavingsRate = 0
+IsMinPayment = 0
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadMember">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadFinance">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="ATTR(FinanceID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(Payoff)" value="ATTR(Payoff)"/>
+						<WTSETATTRIBUTE name="CONST(Payment)" value="ATTR(Payment)"/>
+						<WTSETATTRIBUTE name="CONST(Savings)" value="ATTR(Savings)"/>
+						<WTSETATTRIBUTE name="CONST(StartDate)" value="ATTR(StartDate)"/>
+						<WTSETATTRIBUTE name="CONST(ROI)" value="ATTR(ROI)"/>
+						<WTSETATTRIBUTE name="CONST(SavingsRate)" value="ATTR(SavingsRate)"/>
+						<WTSETATTRIBUTE name="CONST(IsMinPayment)" value="ATTR(IsMinPayment)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AnalyzeDebt">
+				<WTCALLSUB name="LoadMember"/>
+				<WTCALLSUB name="LoadFinance"/>
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(Payoff)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+SavingsMoRate = (CleanNumber( SavingsRate ) / 12) / 100
+
+'Count number of debts to process
+x = 0
+For Each oItem in oDebts
+   x = x + 1
+Next
+
+'Create two dimensional array of debts to process
+ReDim Debt(x-1,10)
+x = 0
+For Each oItem in oDebts
+	With oItem
+		Debt(x,0) = .DebtID
+		Debt(x,1) = .DebtType
+		Debt(x,2) = .DebtName
+		Debt(x,3) = .Balance
+		If IsMinPayment = 0 Then
+			Debt(x,4) = .Payment
+		Else
+			Debt(x,4) = .MinPayment
+			Payment = Payment + ( CCUR(.Payment) - CCUR(.MinPayment) )
+			.Payment = .MinPayment
+		End If	
+		Debt(x,5) = .IntRate
+		Debt(x,6) = .IntPaid
+		Debt(x,7) = .MonthsPaid
+	End With
+	x = x + 1
+Next
+
+reqExtraPayment = FormatCurrency(Payment)
+ExtraPayment = Payment * 1.00
+Savings = Savings / 100
+TotalRegularInterest = 0
+TotalRegularMonths = 0
+TotalInterest = 0
+TotalMonths = 0
+TotalSavings = 0
+TotalBalance = 0
+TotalPayment = 0
+OverPayment = 0
+ProcessMonth = 0
+Investment = 0
+
+For x = 0 to UBound(Debt)
+'response.write "&lt;BR&gt;Debt: " + Debt(x,2) + " - " + Debt(x,7) + " - " + Debt(x,6)
+	
+	'Accumulate total regular interest and months
+	TotalRegularInterest = TotalRegularInterest + CleanNumber( Debt(x,6) )
+	Months = Numeric(Debt(x,7))
+	If Months &gt; TotalRegularMonths Then TotalRegularMonths = Months
+
+	'Get variables for calculating accelerated payoff
+	MoRate = (CleanNumber( Debt(x,5) ) / 12) / 100
+	StartingBalance = CleanNumber( Debt(x,3) )
+	Balance = StartingBalance
+	CurrentPayment = CleanNumber( Debt(x,4) )
+	Payment = CurrentPayment
+	TotalBalance = TotalBalance + Balance
+	TotalPayment = TotalPayment + Payment
+
+	DebtInterest = 0
+	Months = 0
+	
+	'StartingBalance test will make sure we don't have an increasing balance
+	'from a monthly payment that is smaller than the monthly interest
+	While Balance &gt; 0 And Balance &lt;= StartingBalance
+		Months = Months + 1
+		adjPayment = Payment
+		SavingsAmt = 0
+
+		'add overpayment from previous debt
+		If Months = ProcessMonth Then
+			If OverPayment &gt; 0 Then
+				adjPayment = adjPayment + OverPayment
+				OverPayment = 0
+			End If
+		End If
+
+		'add extra payment if it is not being used by another debt
+		If Months &gt; ProcessMonth Then
+			Payment = CurrentPayment + ExtraPayment
+			ProcessMonth = Months
+
+			'Savings is a percentage of the extra payment amount	
+			SavingsAmt = Round( ExtraPayment * Savings, 2 )
+			TotalSavings = TotalSavings + SavingsAmt
+			TotalSavings = TotalSavings + (TotalSavings * SavingsMoRate)
+			'Take savings amount from the monthly payment
+			adjPayment = Payment - SavingsAmt
+		End If
+		
+		'calculate interest
+		Interest = Round(Balance * MoRate, 2)
+		DebtInterest = DebtInterest + Interest
+		TotalInterest = TotalInterest + Interest
+		'add calculated monthly interest to balance
+		Balance = Balance + Interest
+
+		'handle over payment of last payment for this debt
+		If ( Balance - adjPayment ) &lt; 0 Then
+			OverPayment = adjPayment - Balance
+			adjPayment = Balance
+		End If
+
+'response.write "&lt;BR&gt;...Month: " &amp; Months &amp; " - " &amp; FormatCurrency(Balance) &amp; " - " &amp; FormatCurrency(adjPayment)
+'response.write " - " &amp; FormatCurrency(Interest) &amp; " - " &amp; FormatCurrency(TotalInterest) &amp; " - " &amp; FormatCurrency(SavingsAmt) &amp; " - " &amp; FormatCurrency(TotalSavings) &amp; " - " &amp; FormatCurrency(ExtraPayment)
+		
+		'reduce balance by monthly payment
+		Balance = Round( Balance - adjPayment, 2 )
+
+	Wend
+	If Months &gt; TotalMonths Then TotalMonths = Months
+	ExtraPayment = ExtraPayment + CurrentPayment
+	
+	'Save accelerated interest and months for this debt.
+	Debt(x,8) = DebtInterest
+	Debt(x,9) = Months
+Next
+
+'Calculate ROI on Debt Payment for the remainder of the regular payoff period
+If ROI &gt; 0 Then
+	Investment = 0
+	InvestRate = (CleanNumber( ROI ) / 12) / 100
+	x = TotalMonths
+	While x &lt;= TotalRegularMonths
+		Investment = Investment + ExtraPayment
+		Investment = Investment + Round(Investment * InvestRate, 2)
+		x = x + 1
+'response.write "&lt;BR&gt;Payment: " &amp; x &amp; " - " &amp; FormatCurrency(Investment)
+	Wend
+End If
+
+xmlDA = "&lt;PTSDA "
+xmlDA = xmlDA + "regularinterest=""" + FormatCurrency(TotalRegularInterest) + """ "
+xmlDA = xmlDA + "acceleratedinterest=""" + FormatCurrency(TotalInterest) + """ "
+xmlDA = xmlDA + "savingsinterest=""" + FormatCurrency(TotalRegularInterest-TotalInterest) + """ "
+xmlDA = xmlDA + "regularmonths=""" + YrMo(TotalRegularMonths) + """ "
+xmlDA = xmlDA + "acceleratedmonths=""" + YrMo(TotalMonths) + """ "
+xmlDA = xmlDA + "savingsmonths=""" + YrMo(TotalRegularMonths-TotalMonths) + """ "
+xmlDA = xmlDA + "totalsavings=""" + FormatCurrency(TotalSavings) + """ "
+xmlDA = xmlDA + "totalbalance=""" + FormatCurrency(TotalBalance) + """ "
+xmlDA = xmlDA + "totalpayment=""" + FormatCurrency(TotalPayment) + """ "
+xmlDA = xmlDA + "investment=""" + FormatCurrency(Investment) + """ "
+xmlDA = xmlDA + "debtfreedate=""" + FormatDateTime( DateAdd( "m", TotalMonths, StartDate ), 1 ) + """ "
+xmlDA = xmlDA + "regdebtfreedate=""" + FormatDateTime( DateAdd( "m", TotalRegularMonths, StartDate ), 1 ) + """ "
+xmlDA = xmlDA + "/&gt;"
+
+'response.write "&lt;BR&gt;Total Regular Interest ....... " &amp; FormatCurrency(TotalRegularInterest)
+'response.write "&lt;BR&gt;Total Accelerated Interest ... " &amp; FormatCurrency(TotalInterest)
+'response.write "&lt;BR&gt;Total Regular Months ......... " &amp; TotalRegularMonths
+'response.write "&lt;BR&gt;Total Accelerated Months ..... " &amp; TotalMonths
+'response.write "&lt;BR&gt;Total Savings Account ........ " &amp; FormatCurrency(TotalSavings)
+
+'Save calculated values in the objects
+x = 0
+For Each oItem in oDebts
+	With oItem
+		.RegInterest = FormatCurrency( Debt(x,6) )
+		.RegMonths = YrMo( Debt(x,7) )
+		.AccInterest = FormatCurrency( Debt(x,8) )
+		.AccMonths = YrMo( Debt(x,9) )
+	End With
+	x = x + 1
+Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="AnalyzeDebt"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTFUNCTION name="DebtReport(rpt,id)">
+					var url, win;
+					url = "1021" + rpt + ".asp?memberid=" + id
+			        win = window.open(url,"DebtReport");
+					win.focus();
+				</WTFUNCTION>
+				<WTFUNCTION name="Consolidate(id)">
+					var url, win;
+					url = "10204.asp?memberid=" + id
+			        win = window.open(url,"Consolidate");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="4" fontcolor="darkblue" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(debtmgr.gif)" imgalign="absmiddle"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="DebtAnalysis" newline="1"/>
+							<WTSTATIC  fontsize="3" fontcolor="black">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" space="3"/>
+								<WTSTATIC value="SYS(Date)"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="2" fontcolor="black" bold="true">
+						<WTSTATIC label="Process" space="1"/>
+						<WTSTATIC label="Payoff1">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff2">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff3">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff4">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff5">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="First" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ExtraPayment)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="PARAM(ExtraPayment)" space="1"/>
+							<WTSTATIC label="ExtraPayment" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Min$" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.Savings)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="ATTR(Finance.Savings)"/>
+							<WTSTATIC label="%" space="1"/>
+							<WTSTATIC label="Savings" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.SavingsRate)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.ROI)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Invest" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.ROI)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" class="PageHeading" align="center" fontsize="4" fontcolor="black">
+						<WTSTATIC label="YouDebtFree" space="1"/>
+						<WTSTATIC value="ATTR(DA.DebtFreeDate)" fontcolor="darkgoldenrod"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="3" fontcolor="black">
+						<WTSTATIC label="YouRegDebtFree" space="1"/>
+						<WTSTATIC value="ATTR(DA.RegDebtFreeDate)" bold="true" fontcolor="red"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" class="PageHeading" align="center" fontsize="4" fontcolor="black">
+						<WTSTATIC label="YourInvestment" space="1"/>
+						<WTSTATIC value="ATTR(DA.Investment)" fontcolor="green"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="2" fontcolor="black">
+						<WTSTATIC label="YourInvestmentText1" space="1"/>
+						<WTSTATIC value="ATTR(DA.RegDebtFreeDate)" space="1" bold="true"/>
+						<WTSTATIC label="YourInvestmentText2" space="1"/>
+						<WTSTATIC bold="true">
+							<WTSTATIC value="ATTR(Finance.ROI)"/>
+							<WTSTATIC label="%"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" class="PageHeading" align="center" fontcolor="black">
+						<WTSTATIC label="YouSaved" space="1"/>
+						<WTSTATIC value="ATTR(DA.SavingsInterest)" space="1" fontcolor="green"/>
+						<WTSTATIC label="And" space="1"/>
+						<WTSTATIC value="ATTR(DA.SavingsMonths)" fontcolor="darkgoldenrod"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="75"/>
+						<WTCOLUMN width="600"/>
+						<WTCOLUMN width="75"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid" backcolor="#F0F0F0">
+								<WTCOLUMN width="150" align="right"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+
+								<WTROW height="36">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2" label="Regular" bold="true" fontsize="2" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="3" label="Accelerated" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="4" label="Saved" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								</WTROW>
+								<WTROW>
+									<WTDIVIDER col="1" merge="4" align="left" height="1" color="#5084A2"/>
+								</WTROW>
+								<WTROW height="36">
+									<WTSTATIC col="1" label="TotalInterestPaid" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="2" value="ATTR(DA.RegularInterest)" class="PageHeading" fontcolor="darkblue"/>
+									<WTSTATIC col="3" value="ATTR(DA.AcceleratedInterest)" class="PageHeading" fontcolor="darkblue"/>
+									<WTSTATIC col="4" value="ATTR(DA.SavingsInterest)" class="PageHeading" fontcolor="darkblue"/>
+								</WTROW>
+								<WTROW height="36">
+									<WTSTATIC col="1" label="DebtFreeDate" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="2" value="ATTR(DA.RegularMonths)" class="PageHeading" fontcolor="darkblue"/>
+									<WTSTATIC col="3" value="ATTR(DA.AcceleratedMonths)" class="PageHeading" fontcolor="darkblue"/>
+									<WTSTATIC col="4" value="ATTR(DA.SavingsMonths)" class="PageHeading" fontcolor="darkblue"/>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1" class="PageHeading" align="center" fontcolor="black">
+						<WTSTATIC label="YourSavingsAccount" space="1"/>
+						<WTSTATIC value="ATTR(DA.TotalSavings)" fontcolor="green"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(bluecheck.gif)" imgalign="absmiddle"/>
+					<WTSTATIC col="1" label="YourCurrentDebts" bold="true" fontsize="4"/>
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1" valign="top" style="border: 1px #5084A2 solid">
+						<WTCOLUMN width="155" align="center"/>
+						<WTCOLUMN width="85" align="center"/>
+						<WTCOLUMN width="85" align="center"/>
+						<WTCOLUMN width="85" align="center"/>
+						<WTCOLUMN width="85" align="center"/>
+						<WTCOLUMN width="85" align="center"/>
+						<WTCOLUMN width="85" align="center"/>
+						<WTCOLUMN width="85" align="center"/>
+
+						<WTROW height="24">
+							<WTSTATIC col="1" label="DebtName" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="2" label="Balance" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="3" label="Payment" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="4" label="IntRate" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="5" merge="2" label="RegularPayoff" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="7" merge="2" label="AcceleratedPayoff" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+						</WTROW>
+						<WTROW>
+							<WTDIVIDER col="1" merge="8" align="left" height="1" color="#5084A2"/>
+						</WTROW>
+
+						<WTREPEAT entity="Debt">
+							<WTROW height="24">
+								<WTSTATIC col="1">
+									<WTCODEGROUP>
+										<WTIMAGE valign="center" value="CONST(debttype&lt;xsl:value-of select=&quot;@debttype&quot;/&gt;.gif)" imgalign="absmiddle"/>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="DATA(Debt.DebtName)"/>
+								</WTSTATIC>
+								<WTSTATIC col="2" value="DATA(Debt.Balance)"/>
+								<WTSTATIC col="3" value="DATA(Debt.Payment)"/>
+								<WTSTATIC col="4">
+									<WTSTATIC value="DATA(Debt.IntRate)"/>
+									<WTSTATIC label="%"/>
+								</WTSTATIC>
+								<WTSTATIC col="5" value="DATA(Debt.RegInterest)" backcolor="lightyellow"/>
+								<WTSTATIC col="6" value="DATA(Debt.RegMonths)" backcolor="lightyellow"/>
+								<WTSTATIC col="7" value="DATA(Debt.AccInterest)" backcolor="honeydew"/>
+								<WTSTATIC col="8" value="DATA(Debt.AccMonths)" backcolor="honeydew"/>
+							</WTROW>
+						</WTREPEAT>
+						<WTROW>
+							<WTDIVIDER col="1" merge="8" align="left" height="1" color="#5084A2"/>
+						</WTROW>
+						<WTROW height="24">
+							<WTSTATIC col="1" label="Totals" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="2" value="ATTR(DA.TotalBalance)" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="3" value="ATTR(DA.TotalPayment)" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="4" backcolor="#F0F0F0"/>
+							<WTSTATIC col="5" value="ATTR(DA.RegularInterest)" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="6" backcolor="#F0F0F0"/>
+							<WTSTATIC col="7" value="ATTR(DA.AcceleratedInterest)" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							<WTSTATIC col="8" backcolor="#F0F0F0"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="24">
+					<WTIMAGE col="1" value="CONST(bluecheck.gif)" imgalign="absmiddle"/>
+					<WTSTATIC col="1" label="YourDebtReports" bold="true" fontsize="4"/>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="30"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="30"/>
+						<WTROW margin-bottom="12">
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" fontsize="3" align="center" valign="top">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(DocumentsCheck48.gif)" alt="DebtReport1" imgalign="absmiddle">
+										<WTLINK name="DebtReport(1,&lt;xsl:value-of select=&quot;/DATA/PARAM/@memberid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+									<WTSTATIC newline="1"/>
+									<WTSTATIC label="DebtReport1"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" fontsize="3" align="center" valign="top">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(DocumentsCheck48.gif)" alt="DebtReport2" imgalign="absmiddle">
+										<WTLINK name="DebtReport(2,&lt;xsl:value-of select=&quot;/DATA/PARAM/@memberid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+									<WTSTATIC newline="1"/>
+									<WTSTATIC label="DebtReport2"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4" fontsize="3" align="center" valign="top">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(DocumentsCheck48.gif)" alt="DebtReport3" imgalign="absmiddle">
+										<WTLINK name="DebtReport(3,&lt;xsl:value-of select=&quot;/DATA/PARAM/@memberid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+									<WTSTATIC newline="1"/>
+									<WTSTATIC label="DebtReport3"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW margin-bottom="12">
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" fontsize="3" align="center" valign="top">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(DocsInfo48.gif)" alt="DebtReport4" imgalign="absmiddle">
+										<WTLINK name="DebtReport(4,&lt;xsl:value-of select=&quot;/DATA/PARAM/@memberid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+									<WTSTATIC newline="1"/>
+									<WTSTATIC label="DebtReport4"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" fontsize="3" align="center" valign="top">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(DocsInfo48.gif)" alt="DebtReport1" imgalign="absmiddle">
+										<WTLINK name="DebtReport(5,&lt;xsl:value-of select=&quot;/DATA/PARAM/@memberid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+									<WTSTATIC newline="1"/>
+									<WTSTATIC label="DebtReport5"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(bluecheck.gif)" imgalign="absmiddle"/>
+					<WTSTATIC col="1" label="YourDebtTools" bold="true" fontsize="4"/>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="30"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="170"/>
+						<WTCOLUMN width="30"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" fontsize="3" align="center" valign="top">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Consolidate48.gif)" alt="Consolidate" imgalign="absmiddle">
+										<WTLINK name="Consolidate(&lt;xsl:value-of select=&quot;/DATA/PARAM/@memberid&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+									<WTSTATIC newline="1"/>
+									<WTSTATIC label="Consolidate"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3"/>
+							<WTSTATIC col="4"/>
+							<WTSTATIC col="5"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10211" caption="Individual Payment Schedule" footer="false" navbar="false" wrapper="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+			<WTPARAM name="ExtraPayment" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+			<WTDATATXN name="DA"/>
+
+			<!-- CHECK FOR ILLEGAL ACCESS -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="NotEmployee"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+				<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+<WTCUSTOM>
+Dim Debt
+Payoff = 0
+Payment = 0
+Savings = 0
+StartDate = 0
+IsMinPayment = 0
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadMember">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadFinance">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="ATTR(FinanceID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(Payoff)" value="ATTR(Payoff)"/>
+						<WTSETATTRIBUTE name="CONST(Payment)" value="ATTR(Payment)"/>
+						<WTSETATTRIBUTE name="CONST(Savings)" value="ATTR(Savings)"/>
+						<WTSETATTRIBUTE name="CONST(StartDate)" value="ATTR(StartDate)"/>
+						<WTSETATTRIBUTE name="CONST(IsMinPayment)" value="ATTR(IsMinPayment)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AnalyzeDebt">
+				<WTCALLSUB name="LoadMember"/>
+				<WTCALLSUB name="LoadFinance"/>
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(Payoff)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+'Count number of debts to process
+x = 0
+For Each oItem in oDebts
+   x = x + 1
+Next
+
+'Create two dimensional array of debts to process
+ReDim Debt(x-1,10)
+x = 0
+For Each oItem in oDebts
+	With oItem
+		Debt(x,0) = .DebtID
+		Debt(x,1) = .DebtType
+		Debt(x,2) = .DebtName
+		Debt(x,3) = .Balance
+		If IsMinPayment = 0 Then
+			Debt(x,4) = .Payment
+		Else
+			Debt(x,4) = .MinPayment
+			Payment = Payment + ( CCUR(.Payment) - CCUR(.MinPayment) )
+		End If	
+		Debt(x,5) = .IntRate
+		Debt(x,6) = .IntPaid
+		Debt(x,7) = .MonthsPaid
+	End With
+	x = x + 1
+Next
+
+reqExtraPayment = FormatCurrency(Payment)
+ExtraPayment = Payment * 1.00
+Savings = Savings / 100
+TotalRegularInterest = 0
+TotalRegularMonths = 0
+TotalInterest = 0
+TotalMonths = 0
+TotalSavings = 0
+TotalBalance = 0
+TotalPayment = 0
+OverPayment = 0
+ProcessMonth = 0
+
+xmlDA = "&lt;PTSDAS&gt;"
+
+For x = 0 to UBound(Debt)
+	'Accumulate total regular interest and months
+	TotalRegularInterest = TotalRegularInterest + CleanNumber( Debt(x,6) )
+	Months = Numeric(Debt(x,7))
+	If Months &gt; TotalRegularMonths Then TotalRegularMonths = Months
+
+	'Get variables for calculating accelerated payoff
+	MoRate = (CleanNumber( Debt(x,5) ) / 12) / 100
+	StartingBalance = CleanNumber( Debt(x,3) )
+	Balance = StartingBalance
+	CurrentPayment = CleanNumber( Debt(x,4) )
+	Payment = CurrentPayment
+	TotalBalance = TotalBalance + Balance
+	TotalPayment = TotalPayment + Payment
+
+	DebtInterest = 0
+	Months = 0
+	
+	'StartingBalance test will make sure we don't have an increasing balance
+	'from a monthly payment that is smaller than the monthly interest
+	While Balance &gt; 0 And Balance &lt;= StartingBalance
+		Months = Months + 1
+		adjPayment = Payment
+		SavingsAmt = 0
+
+		'add overpayment from previous debt
+		If Months = ProcessMonth Then
+			If OverPayment &gt; 0 Then
+				adjPayment = adjPayment + OverPayment
+				OverPayment = 0
+			End If
+		End If
+
+		'add extra payment if it is not being used by another debt
+		If Months &gt; ProcessMonth Then
+			Payment = CurrentPayment + ExtraPayment
+			ProcessMonth = Months
+
+			'Savings is a percentage of the extra payment amount	
+			SavingsAmt = Round( ExtraPayment * Savings, 2 )
+			TotalSavings = TotalSavings + SavingsAmt
+			'Take savings amount from the monthly payment
+			adjPayment = Payment - SavingsAmt
+		End If
+		
+		'calculate interest
+		Interest = Round(Balance * MoRate, 2)
+		DebtInterest = DebtInterest + Interest
+		TotalInterest = TotalInterest + Interest
+		'add calculated monthly interest to balance
+		Balance = Balance + Interest
+
+		'handle over payment of last payment for this debt
+		If ( Balance - adjPayment ) &lt; 0 Then
+			OverPayment = OverPayment + ( adjPayment - Balance )
+			adjPayment = Balance
+		End If
+
+		tmpDate = DateAdd( "m", Months-1, StartDate )
+		tmpYear = Year( tmpDate )
+		tmpMonth = Month( tmpDate )
+		Select Case tmpMonth
+			Case 1: tmpMonthName = "Jan"
+			Case 2: tmpMonthName = "Feb"
+			Case 3: tmpMonthName = "Mar"
+			Case 4: tmpMonthName = "Apr"
+			Case 5: tmpMonthName = "May"
+			Case 6: tmpMonthName = "Jun"
+			Case 7: tmpMonthName = "Jul"
+			Case 8: tmpMonthName = "Aug"
+			Case 9: tmpMonthName = "Sep"
+			Case 10: tmpMonthName = "Oct"
+			Case 11: tmpMonthName = "Nov"
+			Case 12: tmpMonthName = "Dec"
+		End Select	
+
+		xmlDA = xmlDA + "&lt;PTSDA "
+		xmlDA = xmlDA + "debtid=""" + Debt(x,0) + """ "
+		xmlDA = xmlDA + "date=""" + tmpMonthName + " " + Cstr(tmpYear) + """ "
+		xmlDA = xmlDA + "balance=""" + FormatCurrency(Balance) + """ "
+
+		'reduce balance by monthly payment
+		Balance = Round( Balance - adjPayment, 2 )
+
+		xmlDA = xmlDA + "payment=""" + FormatCurrency(adjPayment) + """ "
+		xmlDA = xmlDA + "interest=""" + FormatCurrency(Interest) + """ "
+		xmlDA = xmlDA + "newbalance=""" + FormatCurrency(Balance) + """ "
+		xmlDA = xmlDA + "/&gt;"
+
+	Wend
+	If Months &gt; TotalMonths Then TotalMonths = Months
+	ExtraPayment = ExtraPayment + CurrentPayment
+	
+	'Save accelerated interest and months for this debt.
+	Debt(x,8) = DebtInterest
+	Debt(x,9) = Months
+Next
+
+xmlDA = xmlDA + "&lt;/PTSDAS&gt;"
+
+'Save calculated values in the objects
+x = 0
+For Each oItem in oDebts
+	With oItem
+		.RegInterest = FormatCurrency( Debt(x,6) )
+		.RegMonths = YrMo( Debt(x,7) )
+		.AccInterest = FormatCurrency( Debt(x,8) )
+		.AccMonths = YrMo( Debt(x,9) )
+	End With
+	x = x + 1
+Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="AnalyzeDebt"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="4" fontcolor="darkblue" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(debtmgr.gif)" imgalign="absmiddle"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="DebtReport1" newline="1"/>
+							<WTSTATIC  fontsize="3" fontcolor="black">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" space="3"/>
+								<WTSTATIC value="SYS(Date)"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="2" fontcolor="black" bold="true">
+						<WTSTATIC label="Process" space="1"/>
+						<WTSTATIC label="Payoff1">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff2">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff3">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff4">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff5">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="First" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ExtraPayment)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="PARAM(ExtraPayment)" space="1"/>
+							<WTSTATIC label="ExtraPayment" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Min$" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.Savings)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="ATTR(Finance.Savings)"/>
+							<WTSTATIC label="%" space="1"/>
+							<WTSTATIC label="Savings" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.SavingsRate)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.ROI)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Invest" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.ROI)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTREPEAT entity="Debt">
+					<WTROW margin-bottom="12">
+						<WTTABLE col="1">
+							<WTCOLUMN width="125"/>
+							<WTCOLUMN width="500"/>
+							<WTCOLUMN width="125"/>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid">
+									<WTCOLUMN width="100" align="center"/>
+									<WTCOLUMN width="100" align="center"/>
+									<WTCOLUMN width="100" align="center"/>
+									<WTCOLUMN width="100" align="center"/>
+									<WTCOLUMN width="100" align="center"/>
+
+									<WTROW>
+										<WTSTATIC col="1" merge="5" bold="true" backcolor="#F0F0F0" >
+											<WTCODEGROUP>
+												<WTIMAGE valign="center" value="CONST(debttype&lt;xsl:value-of select=&quot;@debttype&quot;/&gt;.gif)" imgalign="absmiddle"/>
+											</WTCODEGROUP>
+											<WTSTATIC space="1"/>
+											<WTSTATIC value="DATA(DebtName)" fontsize="4" fontcolor="red" newline="1"/>
+											<WTSTATIC tag="Balance" value="DATA(Balance)" newline="1"/>
+											<WTSTATIC tag="Payment"/>
+											<WTSTATIC value="DATA(Payment)" newline="1">
+												<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="equal" value="CONST(0)"/>
+											</WTSTATIC>
+											<WTSTATIC value="DATA(MinPayment)" newline="1">
+												<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+											</WTSTATIC>
+											<WTSTATIC tag="IntRate" value="DATA(IntRate)"/>
+											<WTSTATIC label="%" newline="1"/>
+										</WTSTATIC>
+									</WTROW>
+									<WTROW>
+										<WTDIVIDER col="1" merge="5" align="left" height="1" color="#5084A2"/>
+									</WTROW>
+									<WTROW height="24">
+										<WTSTATIC col="1" label="Date" bold="true" fontsize="2" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+										<WTSTATIC col="2" label="Balance" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+										<WTSTATIC col="3" label="Payment" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+										<WTSTATIC col="4" label="Interest" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+										<WTSTATIC col="5" label="NewBalance" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									</WTROW>
+									<WTROW>
+										<WTDIVIDER col="1" merge="5" align="left" height="1" color="#5084A2"/>
+									</WTROW>
+									<WTREPEAT entity="DA">
+										<WTFILTER name="DATA(DebtID)" oper="equal" value="DATA(Current.DebtID)"/>
+										<WTROW height="24">
+											<WTSTATIC col="1" value="DATA(Date)"/>
+											<WTSTATIC col="2" value="DATA(Balance)"/>
+											<WTSTATIC col="3" value="DATA(Payment)"/>
+											<WTSTATIC col="4" value="DATA(Interest)"/>
+											<WTSTATIC col="5" value="DATA(NewBalance)"/>
+										</WTROW>
+										<WTROW>
+											<WTDIVIDER col="1" merge="5" align="left" height="1" color="#5084A2"/>
+										</WTROW>
+									</WTREPEAT>
+								</WTTABLE>
+							</WTROW>
+						</WTTABLE>
+					</WTROW>
+				</WTREPEAT>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10212" caption="Monthly Payment Schedule" footer="false" navbar="false" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+			<WTPARAM name="ExtraPayment" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+			<WTDATATXN name="YEAR"/>
+			<WTDATATXN name="DA"/>
+
+			<!-- CHECK FOR ILLEGAL ACCESS -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="NotEmployee"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+				<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+<WTCUSTOM>
+Dim Debt
+Payoff = 0
+Payment = 0
+Savings = 0
+StartDate = 0
+IsMinPayment = 0
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadMember">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadFinance">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="ATTR(FinanceID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(Payoff)" value="ATTR(Payoff)"/>
+						<WTSETATTRIBUTE name="CONST(Payment)" value="ATTR(Payment)"/>
+						<WTSETATTRIBUTE name="CONST(Savings)" value="ATTR(Savings)"/>
+						<WTSETATTRIBUTE name="CONST(StartDate)" value="ATTR(StartDate)"/>
+						<WTSETATTRIBUTE name="CONST(IsMinPayment)" value="ATTR(IsMinPayment)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AnalyzeDebt">
+				<WTCALLSUB name="LoadMember"/>
+				<WTCALLSUB name="LoadFinance"/>
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(Payoff)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+'Count number of debts to process
+x = 0
+For Each oItem in oDebts
+   x = x + 1
+Next
+
+'Create two dimensional array of debts to process
+ReDim Debt(x-1,10)
+x = 0
+For Each oItem in oDebts
+	With oItem
+		Debt(x,0) = .DebtID
+		Debt(x,1) = .DebtType
+		Debt(x,2) = .DebtName
+		Debt(x,3) = .Balance
+		If IsMinPayment = 0 Then
+			Debt(x,4) = .Payment
+		Else
+			Debt(x,4) = .MinPayment
+			Payment = Payment + ( CCUR(.Payment) - CCUR(.MinPayment) )
+		End If	
+		Debt(x,5) = .IntRate
+		Debt(x,6) = .IntPaid
+		Debt(x,7) = .MonthsPaid
+	End With
+	x = x + 1
+Next
+
+reqExtraPayment = FormatCurrency(Payment)
+ExtraPayment = Payment * 1.00
+Savings = Savings / 100
+TotalRegularInterest = 0
+TotalRegularMonths = 0
+TotalInterest = 0
+TotalMonths = 0
+TotalSavings = 0
+TotalBalance = 0
+TotalPayment = 0
+OverPayment = 0
+ProcessMonth = 0
+LastYear = 0
+
+xmlDA = "&lt;PTSDAS&gt;"
+
+For x = 0 to UBound(Debt)
+	'Accumulate total regular interest and months
+	TotalRegularInterest = TotalRegularInterest + CleanNumber( Debt(x,6) )
+	Months = Numeric(Debt(x,7))
+	If Months &gt; TotalRegularMonths Then TotalRegularMonths = Months
+
+	'Get variables for calculating accelerated payoff
+	MoRate = (CleanNumber( Debt(x,5) ) / 12) / 100
+	StartingBalance = CleanNumber( Debt(x,3) )
+	Balance = StartingBalance
+	CurrentPayment = CleanNumber( Debt(x,4) )
+	Payment = CurrentPayment
+	TotalBalance = TotalBalance + Balance
+	TotalPayment = TotalPayment + Payment
+
+	DebtInterest = 0
+	Months = 0
+	LastYear = 0
+	
+	'StartingBalance test will make sure we don't have an increasing balance
+	'from a monthly payment that is smaller than the monthly interest
+	While Balance &gt; 0 And Balance &lt;= StartingBalance
+		Months = Months + 1
+		adjPayment = Payment
+		SavingsAmt = 0
+
+		'add overpayment from previous debt
+		If Months = ProcessMonth Then
+			If OverPayment &gt; 0 Then
+				adjPayment = adjPayment + OverPayment
+				OverPayment = 0
+			End If
+		End If
+
+		'add extra payment if it is not being used by another debt
+		If Months &gt; ProcessMonth Then
+			Payment = CurrentPayment + ExtraPayment
+			ProcessMonth = Months
+
+			'Savings is a percentage of the extra payment amount	
+			SavingsAmt = Round( ExtraPayment * Savings, 2 )
+			TotalSavings = TotalSavings + SavingsAmt
+			'Take savings amount from the monthly payment
+			adjPayment = Payment - SavingsAmt
+		End If
+		
+		'calculate interest
+		Interest = Round(Balance * MoRate, 2)
+		DebtInterest = DebtInterest + Interest
+		TotalInterest = TotalInterest + Interest
+		'add calculated monthly interest to balance
+		Balance = Balance + Interest
+
+		'handle over payment of last payment for this debt
+		If ( Balance - adjPayment ) &lt; 0 Then
+			OverPayment = OverPayment + ( adjPayment - Balance )
+			adjPayment = Balance
+		End If
+
+		'reduce balance by monthly payment
+		Balance = Round( Balance - adjPayment, 2 )
+
+		tmpDate = DateAdd( "m", Months-1, StartDate )
+		tmpYear = Year( tmpDate )
+		tmpMonth = Month( tmpDate )
+		Select Case tmpMonth
+			Case 1: tmpMonthName = "jan"
+			Case 2: tmpMonthName = "feb"
+			Case 3: tmpMonthName = "mar"
+			Case 4: tmpMonthName = "apr"
+			Case 5: tmpMonthName = "may"
+			Case 6: tmpMonthName = "jun"
+			Case 7: tmpMonthName = "jul"
+			Case 8: tmpMonthName = "aug"
+			Case 9: tmpMonthName = "sep"
+			Case 10: tmpMonthName = "oct"
+			Case 11: tmpMonthName = "nov"
+			Case 12: tmpMonthName = "dec"
+		End Select	
+
+		If tmpYear &lt;&gt; LastYear Then
+			xmlDA = xmlDA + "&lt;PTSDA "
+			xmlDA = xmlDA + "year=""" + CStr(tmpYear) + """ "
+			xmlDA = xmlDA + "debttype=""" + Debt(x,1) + """ "
+			xmlDA = xmlDA + "debtname=""" + Debt(x,2) + """ "
+		End If
+		LastYear = tmpYear
+
+		xmlDA = xmlDA + tmpMonthName + "1=""" + FormatCurrency(adjPayment) + """ "
+		xmlDA = xmlDA + tmpMonthName + "2=""" + FormatCurrency(Balance) + """ "
+
+		If tmpMonth = 12 OR Balance = 0 Then
+			xmlDA = xmlDA + "/&gt;"
+		End If
+
+	Wend
+	If Months &gt; TotalMonths Then TotalMonths = Months
+	ExtraPayment = ExtraPayment + CurrentPayment
+	
+	'Save accelerated interest and months for this debt.
+	Debt(x,8) = DebtInterest
+	Debt(x,9) = Months
+Next
+
+xmlDA = xmlDA + "&lt;/PTSDAS&gt;"
+
+'Create XML for each year
+FirstYear = Year( StartDate )
+tmpDate = DateAdd( "m", TotalMonths, StartDate )
+LastYear = Year( tmpDate )
+xmlYEAR = "&lt;PTSYEARS&gt;"
+For x = FirstYear to LastYear
+	xmlYEAR = xmlYEAR + "&lt;PTSYEAR "
+	xmlYEAR = xmlYEAR + "year=""" + CStr(x) + """ "
+	xmlYEAR = xmlYEAR + "/&gt;"
+Next
+xmlYEAR = xmlYEAR + "&lt;/PTSYEARS&gt;"
+
+'Save calculated values in the objects
+x = 0
+For Each oItem in oDebts
+	With oItem
+		.RegInterest = FormatCurrency( Debt(x,6) )
+		.RegMonths = YrMo( Debt(x,7) )
+		.AccInterest = FormatCurrency( Debt(x,8) )
+		.AccMonths = YrMo( Debt(x,9) )
+	End With
+	x = x + 1
+Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="AnalyzeDebt"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="1050" align="left"/>
+				
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="4" fontcolor="darkblue" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(debtmgr.gif)" imgalign="absmiddle"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="DebtReport2" newline="1"/>
+							<WTSTATIC  fontsize="3" fontcolor="black">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" space="3"/>
+								<WTSTATIC value="SYS(Date)"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="2" fontcolor="black" bold="true">
+						<WTSTATIC label="Process" space="1"/>
+						<WTSTATIC label="Payoff1">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff2">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff3">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff4">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff5">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="First" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ExtraPayment)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="PARAM(ExtraPayment)" space="1"/>
+							<WTSTATIC label="ExtraPayment" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Min$" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.Savings)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="ATTR(Finance.Savings)"/>
+							<WTSTATIC label="%" space="1"/>
+							<WTSTATIC label="Savings" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.SavingsRate)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.ROI)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Invest" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.ROI)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTREPEAT entity="Year">
+					<WTROW margin-bottom="12">
+						<WTTABLE col="1" valign="top" style="border: 1px #5084A2 solid">
+							<WTCOLUMN width="150" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+							<WTCOLUMN width="75" align="center"/>
+
+							<WTROW>
+								<WTSTATIC col="1" merge="13" bold="true" backcolor="#F0F0F0" >
+									<WTSTATIC value="DATA(Year)" fontsize="4" fontcolor="red"/>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW>
+								<WTDIVIDER col="1" merge="13" align="left" height="1" color="#5084A2"/>
+							</WTROW>
+							<WTROW height="24">
+								<WTSTATIC col="1" label="DebtName" bold="true" fontsize="2" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="2" label="Jan" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="3" label="Feb" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="4" label="Mar" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="5" label="Apr" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="6" label="May" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="7" label="Jun" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="8" label="Jul" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="9" label="Aug" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="10" label="Sep" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="11" label="Oct" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="12" label="Nov" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								<WTSTATIC col="13" label="Dec" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+							</WTROW>
+							<WTROW>
+								<WTDIVIDER col="1" merge="13" align="left" height="1" color="#5084A2"/>
+							</WTROW>
+							<WTREPEAT entity="DA">
+								<WTFILTER name="DATA(Year)" oper="equal" value="DATA(Current.Year)"/>
+								<WTROW height="42">
+									<WTSTATIC col="1" backcolor="#F0F0F0">
+										<WTCODEGROUP>
+											<WTIMAGE valign="center" value="CONST(debttype&lt;xsl:value-of select=&quot;@debttype&quot;/&gt;.gif)" imgalign="absmiddle"/>
+										</WTCODEGROUP>
+										<WTSTATIC space="1"/>
+										<WTSTATIC value="DATA(DebtName)"/>
+									</WTSTATIC>
+									<WTSTATIC col="2">
+										<WTSTATIC value="DATA(Jan1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Jan2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="3">
+										<WTSTATIC value="DATA(Feb1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Feb2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="4">
+										<WTSTATIC value="DATA(Mar1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Mar2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="5">
+										<WTSTATIC value="DATA(Apr1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Apr2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="6">
+										<WTSTATIC value="DATA(May1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(May2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="7">
+										<WTSTATIC value="DATA(Jun1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Jun2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="8">
+										<WTSTATIC value="DATA(Jul1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Jul2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="9">
+										<WTSTATIC value="DATA(Aug1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Aug2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="10">
+										<WTSTATIC value="DATA(Sep1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Sep2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="11">
+										<WTSTATIC value="DATA(Oct1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Oct2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="12">
+										<WTSTATIC value="DATA(Nov1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Nov2)" fontsize="1"/>
+									</WTSTATIC>
+									<WTSTATIC col="13">
+										<WTSTATIC value="DATA(Dec1)" newline="1" fontsize="1"/>
+										<WTSTATIC value="DATA(Dec2)" fontsize="1"/>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW>
+									<WTDIVIDER col="1" merge="13" align="left" height="1" color="#5084A2"/>
+								</WTROW>
+							</WTREPEAT>
+						</WTTABLE>
+					</WTROW>
+				</WTREPEAT>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10213" caption="Monthly Payment Summary" footer="false" navbar="false" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+			<WTPARAM name="ExtraPayment" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+			<WTDATATXN name="DA"/>
+
+			<!-- CHECK FOR ILLEGAL ACCESS -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="NotEmployee"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+				<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+<WTCUSTOM>
+Dim Debt
+Payoff = 0
+Payment = 0
+Savings = 0
+StartDate = 0
+IsMinPayment = 0
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadMember">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadFinance">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="ATTR(FinanceID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(Payoff)" value="ATTR(Payoff)"/>
+						<WTSETATTRIBUTE name="CONST(Payment)" value="ATTR(Payment)"/>
+						<WTSETATTRIBUTE name="CONST(Savings)" value="ATTR(Savings)"/>
+						<WTSETATTRIBUTE name="CONST(StartDate)" value="ATTR(StartDate)"/>
+						<WTSETATTRIBUTE name="CONST(IsMinPayment)" value="ATTR(IsMinPayment)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AnalyzeDebt">
+				<WTCALLSUB name="LoadMember"/>
+				<WTCALLSUB name="LoadFinance"/>
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(Payoff)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+'Count number of debts to process
+x = 0
+For Each oItem in oDebts
+   x = x + 1
+Next
+
+'Create two dimensional array of debts to process
+ReDim Debt(x-1,10)
+x = 0
+For Each oItem in oDebts
+	With oItem
+		Debt(x,0) = .DebtID
+		Debt(x,1) = .DebtType
+		Debt(x,2) = .DebtName
+		Debt(x,3) = .Balance
+		If IsMinPayment = 0 Then
+			Debt(x,4) = .Payment
+		Else
+			Debt(x,4) = .MinPayment
+			Payment = Payment + ( CCUR(.Payment) - CCUR(.MinPayment) )
+		End If	
+		Debt(x,5) = .IntRate
+		Debt(x,6) = .IntPaid
+		Debt(x,7) = .MonthsPaid
+	End With
+	x = x + 1
+Next
+
+reqExtraPayment = FormatCurrency(Payment)
+ExtraPayment = Payment * 1.00
+Savings = Savings / 100
+TotalRegularInterest = 0
+TotalRegularMonths = 0
+TotalInterest = 0
+TotalMonths = 0
+TotalSavings = 0
+TotalBalance = 0
+TotalPayment = 0
+OverPayment = 0
+ProcessMonth = 0
+ReDim aPayment(100)
+ReDim aInterest(100)
+ReDim aBalance(100)
+
+For x = 0 to UBound(Debt)
+	'Accumulate total regular interest and months
+	TotalRegularInterest = TotalRegularInterest + CleanNumber( Debt(x,6) )
+	Months = Numeric(Debt(x,7))
+	If Months &gt; TotalRegularMonths Then TotalRegularMonths = Months
+
+	'Get variables for calculating accelerated payoff
+	MoRate = (CleanNumber( Debt(x,5) ) / 12) / 100
+	StartingBalance = CleanNumber( Debt(x,3) )
+	Balance = StartingBalance
+	CurrentPayment = CleanNumber( Debt(x,4) )
+	Payment = CurrentPayment
+	TotalBalance = TotalBalance + Balance
+	TotalPayment = TotalPayment + Payment
+
+	DebtInterest = 0
+	Months = 0
+	
+	'StartingBalance test will make sure we don't have an increasing balance
+	'from a monthly payment that is smaller than the monthly interest
+	While Balance &gt; 0 And Balance &lt;= StartingBalance
+		Months = Months + 1
+		adjPayment = Payment
+		SavingsAmt = 0
+
+		'add overpayment from previous debt
+		If Months = ProcessMonth Then
+			If OverPayment &gt; 0 Then
+				adjPayment = adjPayment + OverPayment
+				OverPayment = 0
+			End If
+		End If
+
+		'add extra payment if it is not being used by another debt
+		If Months &gt; ProcessMonth Then
+			Payment = CurrentPayment + ExtraPayment
+			ProcessMonth = Months
+
+			'Savings is a percentage of the extra payment amount	
+			SavingsAmt = Round( ExtraPayment * Savings, 2 )
+			TotalSavings = TotalSavings + SavingsAmt
+			'Take savings amount from the monthly payment
+			adjPayment = Payment - SavingsAmt
+		End If
+		
+		'calculate interest
+		Interest = Round(Balance * MoRate, 2)
+		DebtInterest = DebtInterest + Interest
+		TotalInterest = TotalInterest + Interest
+		'add calculated monthly interest to balance
+		Balance = Balance + Interest
+
+		'handle over payment of last payment for this debt
+		If ( Balance - adjPayment ) &lt; 0 Then
+			OverPayment = OverPayment + ( adjPayment - Balance )
+			adjPayment = Balance
+		End If
+
+		'reduce balance by monthly payment
+		Balance = Round( Balance - adjPayment, 2 )
+
+		'accumulate calculated values
+		y = UBound( aPayment )
+		If Months &gt; y Then
+			Redim Preserve aPayment( y + 50 )
+			Redim Preserve aInterest( y + 50 )
+			Redim Preserve aBalance( y + 50 )
+		End If
+		aPayment(Months) = aPayment(Months) + adjPayment 
+		aInterest(Months) = aInterest(Months) + Interest 
+		aBalance(Months) = aBalance(Months) + Balance 
+	Wend
+	If Months &gt; TotalMonths Then TotalMonths = Months
+	ExtraPayment = ExtraPayment + CurrentPayment
+	
+	'Save accelerated interest and months for this debt.
+	Debt(x,8) = DebtInterest
+	Debt(x,9) = Months
+Next
+
+'create xml of summarized values
+xmlDA = "&lt;PTSDAS&gt;"
+For x = 1 to TotalMonths
+	tmpDate = DateAdd( "m", x-1, StartDate )
+	tmpYear = Year( tmpDate )
+	tmpMonth = Month( tmpDate )
+	Select Case tmpMonth
+		Case 1: tmpMonthName = "Jan"
+		Case 2: tmpMonthName = "Feb"
+		Case 3: tmpMonthName = "Mar"
+		Case 4: tmpMonthName = "Apr"
+		Case 5: tmpMonthName = "May"
+		Case 6: tmpMonthName = "Jun"
+		Case 7: tmpMonthName = "Jul"
+		Case 8: tmpMonthName = "Aug"
+		Case 9: tmpMonthName = "Sep"
+		Case 10: tmpMonthName = "Oct"
+		Case 11: tmpMonthName = "Nov"
+		Case 12: tmpMonthName = "Dec"
+	End Select	
+	xmlDA = xmlDA + "&lt;PTSDA "
+	xmlDA = xmlDA + "date=""" + tmpMonthName + " " + Cstr(tmpYear) + """ "
+	xmlDA = xmlDA + "payment=""" + FormatCurrency( aPayment(x) ) + """ "
+	xmlDA = xmlDA + "interest=""" + FormatCurrency( aInterest(x) ) + """ "
+	xmlDA = xmlDA + "balance=""" + FormatCurrency( aBalance(x) ) + """ "
+	xmlDA = xmlDA + "/&gt;"
+Next
+xmlDA = xmlDA + "&lt;/PTSDAS&gt;"
+
+'Save calculated values in the objects
+x = 0
+For Each oItem in oDebts
+	With oItem
+		.RegInterest = FormatCurrency( Debt(x,6) )
+		.RegMonths = YrMo( Debt(x,7) )
+		.AccInterest = FormatCurrency( Debt(x,8) )
+		.AccMonths = YrMo( Debt(x,9) )
+	End With
+	x = x + 1
+Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="AnalyzeDebt"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="4" fontcolor="darkblue" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(debtmgr.gif)" imgalign="absmiddle"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="DebtReport3" newline="1"/>
+							<WTSTATIC  fontsize="3" fontcolor="black">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" space="3"/>
+								<WTSTATIC value="SYS(Date)"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="2" fontcolor="black" bold="true">
+						<WTSTATIC label="Process" space="1"/>
+						<WTSTATIC label="Payoff1">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff2">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff3">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff4">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff5">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="First" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ExtraPayment)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="PARAM(ExtraPayment)" space="1"/>
+							<WTSTATIC label="ExtraPayment" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Min$" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.Savings)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="ATTR(Finance.Savings)"/>
+							<WTSTATIC label="%" space="1"/>
+							<WTSTATIC label="Savings" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.SavingsRate)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.ROI)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Invest" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.ROI)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="75"/>
+						<WTCOLUMN width="600"/>
+						<WTCOLUMN width="75"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid">
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+
+								<WTROW height="24">
+									<WTSTATIC col="1" label="Date" bold="true" fontsize="2" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="2" label="Payment" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="3" label="Interest" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="4" label="Balance" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								</WTROW>
+								<WTROW>
+									<WTDIVIDER col="1" merge="4" align="left" height="1" color="#5084A2"/>
+								</WTROW>
+								<WTREPEAT entity="DA">
+									<WTROW height="24">
+										<WTSTATIC col="1" value="DATA(Date)"/>
+										<WTSTATIC col="2" value="DATA(Payment)"/>
+										<WTSTATIC col="3" value="DATA(Interest)"/>
+										<WTSTATIC col="4" value="DATA(Balance)"/>
+									</WTROW>
+									<WTROW>
+										<WTDIVIDER col="1" merge="4" align="left" height="1" color="#5084A2"/>
+									</WTROW>
+								</WTREPEAT>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10214" caption="Savings Account Report" footer="false" navbar="false" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+			<WTPARAM name="ExtraPayment" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+			<WTDATATXN name="DA"/>
+
+			<!-- CHECK FOR ILLEGAL ACCESS -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="NotEmployee"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+				<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+<WTCUSTOM>
+Dim Debt
+Payoff = 0
+Payment = 0
+Savings = 0
+StartDate = 0
+ROI = 0
+SavingsRate = 0
+IsMinPayment = 0
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadMember">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadFinance">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="ATTR(FinanceID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(Payoff)" value="ATTR(Payoff)"/>
+						<WTSETATTRIBUTE name="CONST(Payment)" value="ATTR(Payment)"/>
+						<WTSETATTRIBUTE name="CONST(Savings)" value="ATTR(Savings)"/>
+						<WTSETATTRIBUTE name="CONST(StartDate)" value="ATTR(StartDate)"/>
+						<WTSETATTRIBUTE name="CONST(ROI)" value="ATTR(ROI)"/>
+						<WTSETATTRIBUTE name="CONST(SavingsRate)" value="ATTR(SavingsRate)"/>
+						<WTSETATTRIBUTE name="CONST(IsMinPayment)" value="ATTR(IsMinPayment)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AnalyzeDebt">
+				<WTCALLSUB name="LoadMember"/>
+				<WTCALLSUB name="LoadFinance"/>
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(Payoff)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+SavingsMoRate = (CleanNumber( SavingsRate ) / 12) / 100
+
+'Count number of debts to process
+x = 0
+For Each oItem in oDebts
+   x = x + 1
+Next
+
+'Create two dimensional array of debts to process
+ReDim Debt(x-1,10)
+x = 0
+For Each oItem in oDebts
+	With oItem
+		Debt(x,0) = .DebtID
+		Debt(x,1) = .DebtType
+		Debt(x,2) = .DebtName
+		Debt(x,3) = .Balance
+		If IsMinPayment = 0 Then
+			Debt(x,4) = .Payment
+		Else
+			Debt(x,4) = .MinPayment
+			Payment = Payment + ( CCUR(.Payment) - CCUR(.MinPayment) )
+		End If	
+		Debt(x,5) = .IntRate
+		Debt(x,6) = .IntPaid
+		Debt(x,7) = .MonthsPaid
+	End With
+	x = x + 1
+Next
+
+reqExtraPayment = FormatCurrency(Payment)
+ExtraPayment = Payment * 1.00
+Savings = Savings / 100
+TotalRegularInterest = 0
+TotalRegularMonths = 0
+TotalInterest = 0
+TotalMonths = 0
+TotalSavings = 0
+TotalBalance = 0
+TotalPayment = 0
+OverPayment = 0
+ProcessMonth = 0
+
+xmlDA = "&lt;PTSDAS&gt;"
+
+For x = 0 to UBound(Debt)
+	'Accumulate total regular interest and months
+	TotalRegularInterest = TotalRegularInterest + CleanNumber( Debt(x,6) )
+	Months = Numeric(Debt(x,7))
+	If Months &gt; TotalRegularMonths Then TotalRegularMonths = Months
+
+	'Get variables for calculating accelerated payoff
+	MoRate = (CleanNumber( Debt(x,5) ) / 12) / 100
+	StartingBalance = CleanNumber( Debt(x,3) )
+	Balance = StartingBalance
+	CurrentPayment = CleanNumber( Debt(x,4) )
+	Payment = CurrentPayment
+	TotalBalance = TotalBalance + Balance
+	TotalPayment = TotalPayment + Payment
+
+	DebtInterest = 0
+	Months = 0
+	
+	'StartingBalance test will make sure we don't have an increasing balance
+	'from a monthly payment that is smaller than the monthly interest
+	While Balance &gt; 0 And Balance &lt;= StartingBalance
+		Months = Months + 1
+		adjPayment = Payment
+		SavingsAmt = 0
+
+		'add overpayment from previous debt
+		If Months = ProcessMonth Then
+			If OverPayment &gt; 0 Then
+				adjPayment = adjPayment + OverPayment
+				OverPayment = 0
+			End If
+		End If
+
+		'add extra payment if it is not being used by another debt
+		If Months &gt; ProcessMonth Then
+			Payment = CurrentPayment + ExtraPayment
+			ProcessMonth = Months
+
+			'Savings is a percentage of the extra payment amount	
+			SavingsAmt = Round( ExtraPayment * Savings, 2 )
+			TotalSavings = TotalSavings + SavingsAmt
+			SavingsInterest = TotalSavings * SavingsMoRate
+			TotalSavings = TotalSavings + SavingsInterest
+			'Take savings amount from the monthly payment
+			adjPayment = Payment - SavingsAmt
+
+			tmpDate = DateAdd( "m", Months-1, StartDate )
+			tmpYear = Year( tmpDate )
+			tmpMonth = Month( tmpDate )
+			Select Case tmpMonth
+				Case 1: tmpMonthName = "Jan"
+				Case 2: tmpMonthName = "Feb"
+				Case 3: tmpMonthName = "Mar"
+				Case 4: tmpMonthName = "Apr"
+				Case 5: tmpMonthName = "May"
+				Case 6: tmpMonthName = "Jun"
+				Case 7: tmpMonthName = "Jul"
+				Case 8: tmpMonthName = "Aug"
+				Case 9: tmpMonthName = "Sep"
+				Case 10: tmpMonthName = "Oct"
+				Case 11: tmpMonthName = "Nov"
+				Case 12: tmpMonthName = "Dec"
+			End Select	
+			xmlDA = xmlDA + "&lt;PTSDA "
+			xmlDA = xmlDA + "date=""" + tmpMonthName + " " + Cstr(tmpYear) + """ "
+			xmlDA = xmlDA + "saving=""" + FormatCurrency(SavingsAmt) + """ "
+			xmlDA = xmlDA + "interest=""" + FormatCurrency(SavingsInterest) + """ "
+			xmlDA = xmlDA + "totalsaving=""" + FormatCurrency(TotalSavings) + """ "
+			xmlDA = xmlDA + "/&gt;"
+		End If
+		
+		'calculate interest
+		Interest = Round(Balance * MoRate, 2)
+		DebtInterest = DebtInterest + Interest
+		TotalInterest = TotalInterest + Interest
+		'add calculated monthly interest to balance
+		Balance = Balance + Interest
+
+		'handle over payment of last payment for this debt
+		If ( Balance - adjPayment ) &lt; 0 Then
+			OverPayment = OverPayment + ( adjPayment - Balance )
+			adjPayment = Balance
+		End If
+		
+		'reduce balance by monthly payment
+		Balance = Round( Balance - adjPayment, 2 )
+
+	Wend
+	If Months &gt; TotalMonths Then TotalMonths = Months
+	ExtraPayment = ExtraPayment + CurrentPayment
+	
+	'Save accelerated interest and months for this debt.
+	Debt(x,8) = DebtInterest
+	Debt(x,9) = Months
+Next
+
+xmlDA = xmlDA + "&lt;/PTSDAS&gt;"
+
+'Save calculated values in the objects
+x = 0
+For Each oItem in oDebts
+	With oItem
+		.RegInterest = FormatCurrency( Debt(x,6) )
+		.RegMonths = YrMo( Debt(x,7) )
+		.AccInterest = FormatCurrency( Debt(x,8) )
+		.AccMonths = YrMo( Debt(x,9) )
+	End With
+	x = x + 1
+Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="AnalyzeDebt"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="4" fontcolor="darkblue" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(debtmgr.gif)" imgalign="absmiddle"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="DebtReport4" newline="1"/>
+							<WTSTATIC  fontsize="3" fontcolor="black">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" space="3"/>
+								<WTSTATIC value="SYS(Date)"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="2" fontcolor="black" bold="true">
+						<WTSTATIC label="Process" space="1"/>
+						<WTSTATIC label="Payoff1">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff2">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff3">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff4">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff5">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="First" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ExtraPayment)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="PARAM(ExtraPayment)" space="1"/>
+							<WTSTATIC label="ExtraPayment" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Min$" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.Savings)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="ATTR(Finance.Savings)"/>
+							<WTSTATIC label="%" space="1"/>
+							<WTSTATIC label="Savings" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.SavingsRate)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.ROI)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Invest" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.ROI)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="75"/>
+						<WTCOLUMN width="600"/>
+						<WTCOLUMN width="75"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid">
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+
+								<WTROW height="24">
+									<WTSTATIC col="1" label="Date" bold="true" fontsize="2" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="2" label="Saving" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="3" label="Interest" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="4" label="Total" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								</WTROW>
+								<WTROW>
+									<WTDIVIDER col="1" merge="4" align="left" height="1" color="#5084A2"/>
+								</WTROW>
+								<WTREPEAT entity="DA">
+									<WTROW height="24">
+										<WTSTATIC col="1" value="DATA(Date)"/>
+										<WTSTATIC col="2" value="DATA(Saving)"/>
+										<WTSTATIC col="3" value="DATA(Interest)"/>
+										<WTSTATIC col="4" value="DATA(TotalSaving)"/>
+									</WTROW>
+									<WTROW>
+										<WTDIVIDER col="1" merge="4" align="left" height="1" color="#5084A2"/>
+									</WTROW>
+								</WTREPEAT>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10215" caption="Investment Account Report" footer="false" navbar="false" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+			<WTPARAM name="ExtraPayment" datatype="number"/>
+
+			<WTINCLUDE name="Debt.asp"/>
+			<WTDATATXN name="DA"/>
+
+			<!-- CHECK FOR ILLEGAL ACCESS -->
+			<WTCODEGROUP>
+				<WTCONDITION expr="NotEmployee"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+				<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+<WTCUSTOM>
+Dim Debt
+Payoff = 0
+Payment = 0
+Savings = 0
+StartDate = 0
+ROI = 0
+IsMinPayment = 0
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadMember">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadFinance">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="ATTR(FinanceID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(FinanceID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="CONST(Payoff)" value="ATTR(Payoff)"/>
+						<WTSETATTRIBUTE name="CONST(Payment)" value="ATTR(Payment)"/>
+						<WTSETATTRIBUTE name="CONST(Savings)" value="ATTR(Savings)"/>
+						<WTSETATTRIBUTE name="CONST(StartDate)" value="ATTR(StartDate)"/>
+						<WTSETATTRIBUTE name="CONST(ROI)" value="ATTR(ROI)"/>
+						<WTSETATTRIBUTE name="CONST(IsMinPayment)" value="ATTR(IsMinPayment)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="AnalyzeDebt">
+				<WTCALLSUB name="LoadMember"/>
+				<WTCALLSUB name="LoadFinance"/>
+				<WTOBJECT name="Debts" project="ptsDebtUser" class="CDebts">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="DebtType" direction="input" value="CONST(Payoff)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+'Count number of debts to process
+x = 0
+For Each oItem in oDebts
+   x = x + 1
+Next
+
+'Create two dimensional array of debts to process
+ReDim Debt(x-1,10)
+x = 0
+For Each oItem in oDebts
+	With oItem
+		Debt(x,0) = .DebtID
+		Debt(x,1) = .DebtType
+		Debt(x,2) = .DebtName
+		Debt(x,3) = .Balance
+		If IsMinPayment = 0 Then
+			Debt(x,4) = .Payment
+		Else
+			Debt(x,4) = .MinPayment
+			Payment = Payment + ( CCUR(.Payment) - CCUR(.MinPayment) )
+		End If	
+		Debt(x,5) = .IntRate
+		Debt(x,6) = .IntPaid
+		Debt(x,7) = .MonthsPaid
+	End With
+	x = x + 1
+Next
+
+reqExtraPayment = FormatCurrency(Payment)
+ExtraPayment = Payment * 1.00
+Savings = Savings / 100
+TotalRegularInterest = 0
+TotalRegularMonths = 0
+TotalInterest = 0
+TotalMonths = 0
+TotalSavings = 0
+TotalBalance = 0
+TotalPayment = 0
+OverPayment = 0
+ProcessMonth = 0
+
+xmlDA = "&lt;PTSDAS&gt;"
+
+For x = 0 to UBound(Debt)
+	'Accumulate total regular interest and months
+	TotalRegularInterest = TotalRegularInterest + CleanNumber( Debt(x,6) )
+	Months = Numeric(Debt(x,7))
+	If Months &gt; TotalRegularMonths Then TotalRegularMonths = Months
+
+	'Get variables for calculating accelerated payoff
+	MoRate = (CleanNumber( Debt(x,5) ) / 12) / 100
+	StartingBalance = CleanNumber( Debt(x,3) )
+	Balance = StartingBalance
+	CurrentPayment = CleanNumber( Debt(x,4) )
+	Payment = CurrentPayment
+	TotalBalance = TotalBalance + Balance
+	TotalPayment = TotalPayment + Payment
+
+	DebtInterest = 0
+	Months = 0
+	
+	'StartingBalance test will make sure we don't have an increasing balance
+	'from a monthly payment that is smaller than the monthly interest
+	While Balance &gt; 0 And Balance &lt;= StartingBalance
+		Months = Months + 1
+		adjPayment = Payment
+		SavingsAmt = 0
+
+		'add overpayment from previous debt
+		If Months = ProcessMonth Then
+			If OverPayment &gt; 0 Then
+				adjPayment = adjPayment + OverPayment
+				OverPayment = 0
+			End If
+		End If
+
+		'add extra payment if it is not being used by another debt
+		If Months &gt; ProcessMonth Then
+			Payment = CurrentPayment + ExtraPayment
+			ProcessMonth = Months
+
+			'Savings is a percentage of the extra payment amount	
+			SavingsAmt = Round( ExtraPayment * Savings, 2 )
+			TotalSavings = TotalSavings + SavingsAmt
+			'Take savings amount from the monthly payment
+			adjPayment = Payment - SavingsAmt
+		End If
+		
+		'calculate interest
+		Interest = Round(Balance * MoRate, 2)
+		DebtInterest = DebtInterest + Interest
+		TotalInterest = TotalInterest + Interest
+		'add calculated monthly interest to balance
+		Balance = Balance + Interest
+
+		'handle over payment of last payment for this debt
+		If ( Balance - adjPayment ) &lt; 0 Then
+			OverPayment = OverPayment + ( adjPayment - Balance )
+			adjPayment = Balance
+		End If
+		
+		'reduce balance by monthly payment
+		Balance = Round( Balance - adjPayment, 2 )
+
+	Wend
+	If Months &gt; TotalMonths Then TotalMonths = Months
+	ExtraPayment = ExtraPayment + CurrentPayment
+	
+	'Save accelerated interest and months for this debt.
+	Debt(x,8) = DebtInterest
+	Debt(x,9) = Months
+Next
+
+'Calculate ROI on Debt Payment for the remainder of the regular payoff period
+If ROI &gt; 0 Then
+	Investment = 0
+	InvestRate = (CleanNumber( ROI ) / 12) / 100
+	x = TotalMonths
+	While x &lt;= TotalRegularMonths
+		Investment = Investment + ExtraPayment
+		Interest = Round(Investment * InvestRate, 2)
+		Investment = Investment + Interest
+		x = x + 1
+		
+		tmpDate = DateAdd( "m", x, StartDate )
+		tmpYear = Year( tmpDate )
+		tmpMonth = Month( tmpDate )
+		Select Case tmpMonth
+			Case 1: tmpMonthName = "Jan"
+			Case 2: tmpMonthName = "Feb"
+			Case 3: tmpMonthName = "Mar"
+			Case 4: tmpMonthName = "Apr"
+			Case 5: tmpMonthName = "May"
+			Case 6: tmpMonthName = "Jun"
+			Case 7: tmpMonthName = "Jul"
+			Case 8: tmpMonthName = "Aug"
+			Case 9: tmpMonthName = "Sep"
+			Case 10: tmpMonthName = "Oct"
+			Case 11: tmpMonthName = "Nov"
+			Case 12: tmpMonthName = "Dec"
+		End Select	
+		xmlDA = xmlDA + "&lt;PTSDA "
+		xmlDA = xmlDA + "date=""" + tmpMonthName + " " + Cstr(tmpYear) + """ "
+		xmlDA = xmlDA + "investment=""" + FormatCurrency(ExtraPayment) + """ "
+		xmlDA = xmlDA + "interest=""" + FormatCurrency(Interest) + """ "
+		xmlDA = xmlDA + "balance=""" + FormatCurrency(Investment) + """ "
+		xmlDA = xmlDA + "/&gt;"
+	Wend
+End If
+
+
+xmlDA = xmlDA + "&lt;/PTSDAS&gt;"
+
+'Save calculated values in the objects
+x = 0
+For Each oItem in oDebts
+	With oItem
+		.RegInterest = FormatCurrency( Debt(x,6) )
+		.RegMonths = YrMo( Debt(x,7) )
+		.AccInterest = FormatCurrency( Debt(x,8) )
+		.AccMonths = YrMo( Debt(x,9) )
+	End With
+	x = x + 1
+Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDebts" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="AnalyzeDebt"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="4" fontcolor="darkblue" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(debtmgr.gif)" imgalign="absmiddle"/>
+							<WTSTATIC newline="1"/>
+							<WTSTATIC label="DebtReport5" newline="1"/>
+							<WTSTATIC  fontsize="3" fontcolor="black">
+								<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Member.NameLast)" space="3"/>
+								<WTSTATIC value="SYS(Date)"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" fontsize="2" fontcolor="black" bold="true">
+						<WTSTATIC label="Process" space="1"/>
+						<WTSTATIC label="Payoff1">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff2">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff3">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(3)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff4">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(4)"/>
+						</WTSTATIC>
+						<WTSTATIC label="Payoff5">
+							<WTCONDITION expr="ATTR(Finance.Payoff)" oper="equal" value="CONST(5)"/>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="First" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ExtraPayment)" oper="not-equal" value="CONST('$0.00')"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="PARAM(ExtraPayment)" space="1"/>
+							<WTSTATIC label="ExtraPayment" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.IsMinPayment)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Min$" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.Savings)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC value="ATTR(Finance.Savings)"/>
+							<WTSTATIC label="%" space="1"/>
+							<WTSTATIC label="Savings" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.SavingsRate)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Finance.ROI)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(|)" space="1"/>
+							<WTSTATIC label="Invest" space="1"/>
+							<WTSTATIC label="@" space="1"/>
+							<WTSTATIC value="ATTR(Finance.ROI)"/>
+							<WTSTATIC label="%" space="1"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="75"/>
+						<WTCOLUMN width="600"/>
+						<WTCOLUMN width="75"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTTABLE col="2" valign="top" style="border: 1px #5084A2 solid">
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+								<WTCOLUMN width="150" align="center"/>
+
+								<WTROW height="24">
+									<WTSTATIC col="1" label="Date" bold="true" fontsize="2" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="2" label="Investment" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="3" label="Interest" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+									<WTSTATIC col="4" label="Total" bold="true" fontcolor="#3266D2" backcolor="#F0F0F0"/>
+								</WTROW>
+								<WTROW>
+									<WTDIVIDER col="1" merge="4" align="left" height="1" color="#5084A2"/>
+								</WTROW>
+								<WTREPEAT entity="DA">
+									<WTROW height="24">
+										<WTSTATIC col="1" value="DATA(Date)"/>
+										<WTSTATIC col="2" value="DATA(Investment)"/>
+										<WTSTATIC col="3" value="DATA(Interest)"/>
+										<WTSTATIC col="4" value="DATA(Balance)"/>
+									</WTROW>
+									<WTROW>
+										<WTDIVIDER col="1" merge="4" align="left" height="1" color="#5084A2"/>
+									</WTROW>
+								</WTREPEAT>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+<!--
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

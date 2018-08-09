@@ -1,0 +1,180 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="101" name="Finance" alias="fi">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="10101" name="FinanceID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="10102" name="MemberID" type="number" title="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="10104" name="Payoff" type="number" source="entity">
+			<WTENUM id="1" name="Payoff1"/>
+			<WTENUM id="2" name="Payoff2"/>
+			<WTENUM id="3" name="Payoff3"/>
+			<WTENUM id="4" name="Payoff4"/>
+			<WTENUM id="5" name="Payoff5"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="10105" name="Payment" type="currency" min="0" max="999999.99" source="entity"/>
+		<WTATTRIBUTE id="10106" name="Savings" type="number" source="entity"/>
+		<WTATTRIBUTE id="10107" name="StartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="10108" name="ROI" type="currency" min="0" max="99.99" source="entity">
+			<WTFORMAT value="#0.00"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="10109" name="SavingsRate" type="currency" min="0" max="99.99" source="entity">
+			<WTFORMAT value="#0.00"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="10110" name="IsMinPayment" type="yesno" source="entity"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Finance" entity="Finance" alias="fi"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchMemberID" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ATTR(FinanceID)" direction="output"/>
+			<WTDECLARE name="FinanceID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="FinanceID" value="ATTR(Finance.FinanceID)"/>
+					<WTJOIN name="Finance" lock="false"/>
+					<WTCONDITION expr="ATTR(Finance.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(FinanceID)" value="FinanceID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="10103" caption="Finance Options" navbar="false" header="false" footer="false" wrapper="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FinanceID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="(FinanceID)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Finance" project="ptsFinanceUser" class="CFinance">
+					<WTMETHOD name="FetchMemberID">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FinanceID)" value="(FinanceID)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="FinanceID" direction="input" value="PARAM(FinanceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlFinance" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="right"/>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="450" align="left"/>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="3" label="DebtManagerOptions" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(FinanceID)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Payoff"/>
+					<WTCOMBO col="2" value="ATTR(Finance.Payoff)"/>
+					<WTSTATIC col="3" label="PayoffText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Finance.StartDate)"/>
+					<WTSTATIC col="3" label="StartDateText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Payment"/>
+					<WTTEXT col="2" value="ATTR(Finance.Payment)" size="5"/>
+					<WTSTATIC col="3" label="PaymentText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Finance.IsMinPayment)"/>
+					<WTSTATIC col="3" label="IsMinPaymentText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="Savings"/>
+					<WTTEXT col="2" value="ATTR(Finance.Savings)" size="2"/>
+					<WTSTATIC col="3" label="SavingsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="SavingsRate"/>
+					<WTTEXT col="2" value="ATTR(Finance.SavingsRate)" size="3"/>
+					<WTSTATIC col="3" label="SavingsRateText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" tag="ROI"/>
+					<WTTEXT col="2" value="ATTR(Finance.ROI)" size="3"/>
+					<WTSTATIC col="3" label="ROIText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,439 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="173" name="BarterImage" alias="bai" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="17301" name="BarterImageID" type="number" identity="true" title="true" min="1" required="true" source="entity"/>
+
+    <!--Foreign Keys-->
+    <WTATTRIBUTE id="17302" name="BarterAdID" type="number" source="entity"/>
+
+    <!--Foreign Table Fields-->
+
+    <!--Attributes-->
+    <WTATTRIBUTE id="17310" name="Title" type="text" length="100" source="entity" language="false"/>
+    <WTATTRIBUTE id="17311" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Active"/>
+      <WTENUM id="2" name="InActive"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="17312" name="Seq" type="number" source="entity"/>
+    <WTATTRIBUTE id="17313" name="Ext" type="text" length="5" source="entity" language="false"/>
+
+    <!-- Non Persist Fields -->
+
+    <!--Indexes-->
+    <WTINDEX name="BarterAdID">
+      <WTATTRIBUTE name="BarterAdID"/>
+      <WTATTRIBUTE name="Seq"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="BarterImage" entity="BarterImage" alias="bai"/>
+      <WTRELATIONSHIP name="Common" entity="BarterImage" alias="bai"/>
+    </WTRELATIONSHIPS>
+
+    <!-- System Constants -->
+
+  </WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+    <WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+      <WTJOIN name="Common"/>
+    </WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+    <!--===================================================================================-->
+    <WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(BarterAdID)" direction="input" required="false" passthru="true"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(BarterImage.BarterImageID)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.BarterAdID)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Title)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Status)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Seq)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Ext)"/>
+          <WTJOIN name="Common"/>
+          <WTCONDITION expr="ATTR(BarterAdID)" oper="equal" value="PARAM(BarterAdID)"/>
+          <WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(1)" connector="and"/>
+          <WTORDER name="ATTR(BarterImage.BarterAdID)"/>
+          <WTORDER name="ATTR(BarterImage.Seq)"/>
+          <WTORDER name="ATTR(BarterImage.BarterImageID)"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--===================================================================================-->
+    <WTPROCEDURE type="List" name="ListAll" style="GenerateDataProc.xsl" template="new" passthru="true">
+      <WTPARAM name="ATTR(BarterAdID)" direction="input" required="false" passthru="true"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE value="ATTR(BarterImage.BarterImageID)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.BarterAdID)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Title)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Status)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Seq)"/>
+          <WTATTRIBUTE value="ATTR(BarterImage.Ext)"/>
+          <WTJOIN name="Common"/>
+          <WTCONDITION expr="ATTR(BarterAdID)" oper="equal" value="PARAM(BarterAdID)"/>
+          <WTORDER name="ATTR(BarterImage.BarterAdID)"/>
+          <WTORDER name="ATTR(BarterImage.Seq)"/>
+          <WTORDER name="ATTR(BarterImage.BarterImageID)"/>
+        </WTSELECT>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+    <!--==================================================================================================-->
+    <WTPROCEDURE name="UpdateBarterAdImages" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+      <WTPARAM name="ATTR(BarterAdID)" direction="input" required="false" passthru="true"/>
+      <WTPARAM name="Status" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+    <WTWEBPAGE name="17303" caption="BarterImage" page-left="5" page-top="0" navbar="false" header="false" footer="false"
+			page-width="100%" margin-width="0%" navbar-width="0%" content-width="100%" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false">
+		<!--============================================================================================-->
+      <WTPARAM name="BarterImageID" datatype="number"/>
+      <WTPARAM name="BarterAdID" datatype="number"/>
+
+      <WTSUB name="UpdateBarterImage">
+        <WTOBJECT name="BarterImage" project="ptsBarterImageUser" class="CBarterImage">
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterImageID" direction="input" value="PARAM(BarterImageID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Save">
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="UpdateBarterAdImages">
+            <WTCONDITION expr="NoErrors"/>
+            <WTPARAM name="BarterAdID" direction="input" value="ATTR(BarterAdID)"/>
+            <WTPARAM name="Status" direction="return" datatype="number"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlBarterImage" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+      
+      <WTSUB name="AddBarterImage">
+        <WTOBJECT name="BarterImage" project="ptsBarterImageUser" class="CBarterImage">
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterImageID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="ATTR(BarterAdID)" value="PARAM(BarterAdID)"/>
+          <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+          <WTMETHOD name="Add">
+            <WTPARAM name="reqBarterImageID" direction="return" datatype="number"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="UpdateBarterAdImages">
+            <WTCONDITION expr="NoErrors"/>
+            <WTPARAM name="BarterAdID" direction="input" value="ATTR(BarterAdID)"/>
+            <WTPARAM name="Status" direction="return" datatype="number"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlBarterImage" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION id="0" name="New" type="New">
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(BarterImageID)" oper="equal" value="CONST(0)"/>
+          <WTCALLSUB name="AddBarterImage"/>
+          <WTRETURN>
+            <WTLINK name="17304">
+              <WTPARAM name="BarterImageID" value="PARAM(BarterImageID)"/>
+            </WTLINK>
+          </WTRETURN>
+        </WTCODEGROUP>
+        
+        <WTOBJECT name="BarterImage" project="ptsBarterImageUser" class="CBarterImage">
+          <WTCONDITION expr="PARAM(BarterImageID)" oper="not-equal" value="CONST(0)"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterImageID" direction="input" value="PARAM(BarterImageID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterImage" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTACTION>
+
+      <WTACTION id="1" name="Update" type="Update">
+        <WTCALLSUB name="UpdateBarterImage"/>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="BarterImage" project="ptsBarterImageUser" class="CBarterImage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BarterImageID" direction="input" value="PARAM(BarterImageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTSETATTRIBUTE name="CONST(tmpBarterAdID)" value="ATTR(BarterAdID)"/>
+          <WTMETHOD name="Delete">
+            <WTPARAM name="BarterImageID" direction="input" value="PARAM(BarterImageID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="UpdateBarterAdImages">
+            <WTPARAM name="BarterAdID" direction="input" value="CONST(tmpBarterAdID)"/>
+            <WTPARAM name="Status" direction="return" datatype="number"/>
+          </WTMETHOD>
+        </WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+      <WTACTION id="5" name="UploadImage" type="Upload">
+        <WTCALLSUB name="UpdateBarterImage"/>
+        <WTCODEGROUP>
+          <WTCONDITION expr="NoErrors"/>
+          <WTRETURN>
+            <WTLINK name="17304">
+              <WTPARAM name="BarterImageID" value="PARAM(BarterImageID)"/>
+            </WTLINK>
+          </WTRETURN>
+        </WTCODEGROUP>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="25" align="right"/>
+				<WTCOLUMN width="75" align="left"/>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(BarterImageID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" merge="2" tag="BarterImage" value="ATTR(BarterImage.BarterImageID)" class="PageHeading" align="left"/>
+        </WTROW>
+
+        <WTCODEGROUP>
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+          <WTROW margin-bottom="3">
+            <WTSTATIC col="1" tag="BarterAdID"/>
+            <WTTEXT col="2" value="ATTR(BarterImage.BarterAdID)" size="3"/>
+          </WTROW>
+        </WTCODEGROUP>
+        <WTCODEGROUP>
+          <WTCONDITION expr="NotEmployee"/>
+          <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+          <WTCONDITION expr="NotOrgManagerOnly" connector="and"/>
+          <WTROW margin-bottom="3">
+            <WTHIDDEN value="ATTR(BarterImage.BarterAdID)"/>
+          </WTROW>
+        </WTCODEGROUP>
+
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" tag="Title"/>
+          <WTTEXT col="2" value="ATTR(BarterImage.Title)" size="60"/>
+        </WTROW>
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(BarterImage.Status)"/>
+          <WTSTATIC col="2" tag="Seq"/>
+          <WTTEXT col="2" value="ATTR(BarterImage.Seq)" size="2" prespace="false"/>
+          <WTSTATIC col="2" tag="Ext"/>
+          <WTSTATIC col="2" value="ATTR(BarterImage.Ext)" prespace="false"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(BarterImageID)" oper="not-equal" value="CONST(0)"/>
+          <WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="5" value="CONST(UploadImage)"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+    <!--============================================================================================-->
+    <WTWEBPAGE name="17311" caption="Barter Images" page-left="5" page-top="0" navbar="false" header="false" footer="false"
+			page-width="100%" margin-width="0%" navbar-width="0%" content-width="100%" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false">
+      <!--============================================================================================-->
+      <WTPARAM name="BarterAdID" datatype="number"/>
+      <WTPARAM name="Images" datatype="number"/>
+      <WTPARAM name="Total" datatype="number"/>
+
+      <WTSUB name="LoadBarterImages">
+        <WTOBJECT name="BarterAd" project="ptsBarterAdUser" class="CBarterAd">
+          <WTMETHOD name="Load">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="PARAM(Images)" value="CONST(2)"/>
+          <WTSETATTRIBUTE name="PARAM(Images)" value="CONST(10)">
+            <WTCONDITION expr="IsBarterOptions_Images"/>
+          </WTSETATTRIBUTE>
+          <WTSETATTRIBUTE name="PARAM(Images)" value="CONST(20)">
+            <WTCONDITION expr="IsBarterOptions_Images+"/>
+          </WTSETATTRIBUTE>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterAd" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTOBJECT name="BarterImages" project="ptsBarterImageUser" class="CBarterImages">
+          <WTMETHOD name="ListAll">
+            <WTPARAM name="BarterAdID" direction="input" value="PARAM(BarterAdID)"/>
+          </WTMETHOD>
+          <WTCODEGROUP>
+            <WTCUSTOM>
+              reqTotal = 0
+              For Each oItem in oBarterImages
+              reqTotal = reqTotal + 1
+              Next
+            </WTCUSTOM>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlBarterImages" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(13)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTCALLSUB name="LoadBarterImages"/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="100" align="left"/>
+
+        <WTFUNCTION name="NewBarterImage()">
+          var pid = document.getElementById('BarterAdID').value
+          var url = "17303.asp?BarterAdID=" + pid + "&amp;returnurl=17311.asp?BarterAdID=" + pid
+          window.location = url
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN value="PARAM(BarterAdID)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="12">
+          <WTSTATIC col="1" tag="BarterImages" value="ATTR(BarterAD.Title)" class="PageHeading"/>
+        </WTROW>
+
+        <WTROW margin-bottom="6">
+          <WTRECORDSET col="1" graybar="true" entity="BarterImage">
+            <WTCOLUMN width="10" align="left"/>
+            <WTCOLUMN width="60" align="left" label="Title"/>
+            <WTCOLUMN width="10" align="center" label="Status"/>
+            <WTCOLUMN width="10" align="center" label="Seq"/>
+            <WTCOLUMN width="10" align="center" label="Ext"/>
+
+            <WTROW height="30">
+              <WTSTATIC col="1">
+                <WTCODEGROUP>
+                  <WTCONDITION expr="DATA(Ext)" oper="not-equal" value="CONST('')"/>
+                  <WTIMAGE value="CONST(&lt;xsl:value-of select=&quot;concat(@barterimageid,'s.',@ext)&quot;/&gt;)" path="barter/" imgalign="absmiddle"/>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2">
+                <WTSTATIC value="DATA(Title)" fontsize="3"/>
+                <WTCODEGROUP>
+                  <WTSTATIC space="2"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="17303">
+                      <WTPARAM name="BarterImageID" value="DATA(BarterImageID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="3" value="DATA(Status)"/>
+              <WTSTATIC col="4" value="DATA(Seq)"/>
+              <WTSTATIC col="5" value="DATA(Ext)"/>
+            </WTROW>
+          </WTRECORDSET>
+        </WTROW>
+        <WTROW margin-bottom="6">
+          <WTSTATIC col="1" fontsize="3">
+            <WTSTATIC value="PARAM(Total)" space="1"/>
+            <WTSTATIC label="of" space="1"/>
+            <WTSTATIC value="PARAM(Images)" space="1"/>
+            <WTSTATIC label="TotalImages"/>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" value="CONST(NewBarterImage)" align="center">
+            <WTCONDITION expr="PARAM(Total)" oper="less" value="PARAM(Images)"/>
+            <WTCLICK>NewBarterImage()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+            <WTCLICK>window.opener.UpdateImages();window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+    <!--**************************************Image Upload Page**************************************-->
+    <!--=============================================================================================-->
+    <WTWEBPAGE name="17304" caption="Upload Image" page-left="5" page-top="0" navbar="false" header="false" footer="false"
+			page-width="100%" margin-width="0%" navbar-width="0%" content-width="100%" viewport="width=device-width"
+			submit="17304Upload.asp" type="multi" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+      <!--=============================================================================================-->
+      <WTPARAM name="BarterImageID" datatype="number"/>
+      <WTPARAM name="UploadError" datatype="number"/>
+      <WTPARAM name="UploadErrorDesc" datatype="text"/>
+
+      <WTCODEGROUP>
+        <WTSETCACHE name="BARTERIMAGEID" value="PARAM(BarterImageID)"/>
+      </WTCODEGROUP>
+      <WTCODEGROUP>
+        <WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+        <WTCUSTOM>
+          DoError reqUploadError, "Upload", reqUploadErrorDesc
+        </WTCUSTOM>
+      </WTCODEGROUP>
+
+      <!--*******************************************************************************************-->
+      <WTCONTENT>
+        <WTCOLUMN width="100" align="left"/>
+
+        <WTROW>
+          <WTSTATIC col="1" label="UploadImageHeader" class="PageHeading"/>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="18">
+          <WTSTATIC col="1" label="UploadImageText" class="prompt"/>
+        </WTROW>
+        <WTROW margin-bottom="18">
+          <WTSTATIC col="1" label="UploadImageWarning" fontsize="4" fontcolor="red" align="center"/>
+        </WTROW>
+        <WTROW margin-bottom="12">
+          <WTFILE col="1"  align="center" value="upload" accept="*.jpg, *.gif, *.png"/>
+          <WTBUTTON col="1" align="center" default="true" action="1" value="CONST(Submit)"/>
+        </WTROW>
+
+      </WTCONTENT>
+    </WTWEBPAGE>
+
+  </WTWEBPAGES>
+</WTROOT>

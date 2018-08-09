@@ -1,0 +1,397 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="164" name="CoinAddress" alias="ca">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="16401" name="CoinAddressID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="16402" name="MerchantID" type="number" required="true" source="entity"/>
+
+		<!--Attributes-->
+    <WTATTRIBUTE id="16403" name="Coin" type="number" title="true" source="entity">
+      <WTENUM id="1" name="Coin1"/>
+      <WTENUM id="2" name="Coin2"/>
+      <WTENUM id="3" name="Coin3"/>
+      <WTENUM id="4" name="Coin4"/>
+      <WTENUM id="5" name="Coin5"/>
+      <WTENUM id="6" name="Coin6"/>
+      <WTENUM id="7" name="Coin7"/>
+      <WTENUM id="8" name="Coin8"/>
+      <WTENUM id="9" name="Coin9"/>
+      <WTENUM id="10" name="Coin10"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16404" name="Status" type="number" source="entity">
+      <WTENUM id="1" name="Active"/>
+      <WTENUM id="2" name="Inactive"/>
+    </WTATTRIBUTE>
+    <WTATTRIBUTE id="16405" name="Address" type="text" length="60" min="1" max="60" source="entity" language="false"/>
+
+    <WTINDEX name="Code">
+      <WTATTRIBUTE name="MerchantID"/>
+      <WTATTRIBUTE name="Coin"/>
+    </WTINDEX>
+
+    <WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="CoinAddress" entity="CoinAddress" alias="ca"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MerchantID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(CoinAddress.CoinAddressID)"/>
+          <WTATTRIBUTE value="ATTR(CoinAddress.Coin)"/>
+          <WTATTRIBUTE value="ATTR(CoinAddress.Status)"/>
+          <WTATTRIBUTE value="ATTR(CoinAddress.Address)"/>
+          <WTJOIN name="CoinAddress"/>
+					<WTCONDITION expr="ATTR(MerchantID)" oper="equal" value="PARAM(MerchantID)"/>
+					<WTORDER name="ATTR(CoinAddress.Coin)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+    <!--================================================================================================-->
+    <WTPROCEDURE name="FetchMerchantCoin" type="Fetch" style="GenerateDataProc.xsl" template="new">
+      <WTPARAM name="ATTR(MerchantID)" direction="input" required="false"/>
+      <WTPARAM name="ATTR(Coin)" direction="input"/>
+      <WTPARAM name="ATTR(CoinAddressID)" direction="output"/>
+      <WTPARAM name="ATTR(Address)" direction="output"/>
+      <WTDECLARE name="CoinAddressID" datatype="number"/>
+      <WTDECLARE name="Address" datatype="text" length="60"/>
+      <WTCODEGROUP>
+        <WTSELECT>
+          <WTATTRIBUTE name="CoinAddressID" value="ATTR(CoinAddress.CoinAddressID)"/>
+          <WTATTRIBUTE name="Address" value="ATTR(CoinAddress.Address)"/>
+          <WTJOIN name="CoinAddress" lock="false"/>
+          <WTCONDITION expr="ATTR(CoinAddress.MerchantID)" oper="equal" value="PARAM(MerchantID)"/>
+          <WTCONDITION expr="ATTR(CoinAddress.Coin)" oper="equal" value="PARAM(Coin)" connector="and"/>
+          <WTCONDITION expr="ATTR(CoinAddress.Status)" oper="equal" value="CONST(1)" connector="and"/>
+        </WTSELECT>
+        <WTSETVALUE name="PARAM(CoinAddressID)" value="CoinAddressID" null="0"/>
+        <WTSETVALUE name="PARAM(Address)" value="Address" null="0"/>
+      </WTCODEGROUP>
+    </WTPROCEDURE>
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="16403" caption="CoinAddress" header="false" footer="false" navbar="false"  wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+      <WTPARAM name="MerchantID" datatype="number"/>
+      <WTPARAM name="CoinAddressID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="CoinAddress" project="ptsCoinAddressUser" class="CCoinAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoinAddressID" direction="input" value="PARAM(CoinAddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(CoinAddressID)" oper="equal" value="CONST(0)"/>
+            <WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+          </WTCODEGROUP>
+          <WTCODEGROUP>
+            <WTCONDITION expr="PARAM(CoinAddressID)" oper="not-equal" value="CONST(0)"/>
+            <WTCODEGROUP>
+              <WTCONDITION expr="NotEmployee"/>
+              <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+              <WTGETCACHE name="CONST(SysMerchantID)" value="MERCHANT" datatype="number"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="CONST(CLng(.MerchantID))" oper="not-equal" value="CONST(SysMerchantID)"/>
+                <WTCUSTOM>AbortUser()</WTCUSTOM>
+              </WTCODEGROUP>
+            </WTCODEGROUP>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+						<WTPARAM name="xmlCoinAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="CoinAddress" project="ptsCoinAddressUser" class="CCoinAddress">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoinAddressID" direction="input" value="PARAM(CoinAddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCoinAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+      <WTACTION id="2" name="Add" type="Add">
+        <WTOBJECT name="CoinAddress" project="ptsCoinAddressUser" class="CCoinAddress">
+          <WTMETHOD name="Load">
+            <WTPARAM name="CoinAddressID" direction="input" value="CONST(0)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTSETATTRIBUTE name="ATTR(MerchantID)" value="PARAM(MerchantID)"/>
+          <WTSETATTRIBUTES/>
+          <WTMETHOD name="Add">
+            <WTPARAM name="CoinAddressID" direction="return" datatype="number"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTCONDITION expr="IsErrors"/>
+            <WTPARAM name="xmlCoinAddress" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTRETURN>
+          <WTCONDITION expr="NoErrors"/>
+        </WTRETURN>
+      </WTACTION>
+      
+      <WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="CoinAddress" project="ptsCoinAddressUser" class="CCoinAddress">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="CoinAddressID" direction="input" value="PARAM(CoinAddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="CoinAddress" project="ptsCoinAddressUser" class="CCoinAddress">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CoinAddressID" direction="input" value="PARAM(CoinAddressID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoinAddress" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+        <WTROW>
+          <WTCONDITION expr="PARAM(CoinAddressID)" oper="equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" label="NewCoinAddress" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW>
+          <WTCONDITION expr="PARAM(CoinAddressID)" oper="not-equal" value="CONST(0)"/>
+          <WTSTATIC col="1" merge="2" tag="CoinAddress" value="ATTR(CoinAddress.Coin)" class="PageHeading" align="left"/>
+        </WTROW>
+        <WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Coin"/>
+          <WTCOMBO col="2" value="ATTR(CoinAddress.Coin)">
+            <WTOPTION id="1" label="Coin1"/>
+<!--            
+            <WTOPTION id="2" label="Coin2"/>
+            <WTOPTION id="3" label="Coin3"/>
+            <WTOPTION id="4" label="Coin4"/>
+            <WTOPTION id="5" label="Coin5"/>
+            <WTOPTION id="6" label="Coin6"/>
+            <WTOPTION id="7" label="Coin7"/>
+            <WTOPTION id="8" label="Coin8"/>
+            <WTOPTION id="9" label="Coin9"/>
+            <WTOPTION id="10" label="Coin10"/>
+-->            
+          </WTCOMBO>
+        </WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Status"/>
+          <WTCOMBO col="2" value="ATTR(CoinAddress.Status)"/>
+        </WTROW>
+
+        <WTROW margin-bottom="3">
+          <WTSTATIC col="1" tag="Address"/>
+          <WTTEXT col="2" value="ATTR(CoinAddress.Address)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(CoinAddressID)" oper="equal" value="CONST(0)"/>
+          <WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+          <WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTCONDITION expr="PARAM(CoinAddressID)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="16411" caption="CoinAddresss" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MerchantID" datatype="number"/>
+
+      <WTINCLUDE name="2FA.asp"/>
+      <WTCODEGROUP><WTCALLSUB name="Check2FAMerchant reqMerchantID"/></WTCODEGROUP>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="PARAM(MerchantID)" oper="equal" value="CONST(0)"/>
+        <WTSETATTRIBUTE name="PARAM(MerchantID)" value="CONST(-21)"/>
+      </WTCODEGROUP>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="NotSysAdmin"/>
+        <WTCONDITION expr="PARAM(MerchantID)" oper="equal" value="CONST(-21)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="NotEmployee"/>
+        <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+        <WTGETCACHE name="CONST(SysMerchantID)" value="MERCHANT" datatype="number"/>
+        <WTCODEGROUP>
+          <WTCONDITION expr="PARAM(MerchantID)" oper="not-equal" value="CONST(SysMerchantID)"/>
+          <WTCUSTOM>AbortUser()</WTCUSTOM>
+        </WTCODEGROUP>
+      </WTCODEGROUP>
+
+      <WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Merchant" project="ptsMerchantUser" class="CMerchant">
+					<WTMETHOD name="Load">
+            <WTCONDITION expr="PARAM(MerchantID)" oper="greater" value="CONST(0)"/>
+            <WTPARAM name="MerchantID" direction="input" value="PARAM(MerchantID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTSETATTRIBUTE name="ATTR(MerchantName)" value="CONST(&quot;Nexxus Rewards&quot;)">
+            <WTCONDITION expr="PARAM(MerchantID)" oper="equal" value="CONST(-21)"/>
+          </WTSETATTRIBUTE>
+          <WTMETHOD name="XML">
+						<WTPARAM name="xmlMerchant" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+        </WTOBJECT>
+				<WTOBJECT name="CoinAddresss" project="ptsCoinAddressUser" class="CCoinAddresss">
+					<WTMETHOD name="List">
+						<WTPARAM name="MerchantID" direction="input" value="PARAM(MerchantID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCoinAddresss" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+        <WTFUNCTION name="NewCoinAddress()">
+          var url, mid;
+          mid = document.getElementById('MerchantID').value
+          url = "16403.asp?merchantid=" + mid
+          window.location = url + "&amp;returnurl=16411.asp?merchantid=" + mid
+        </WTFUNCTION>
+
+        <WTROW>
+          <WTHIDDEN name="MerchantID" value="PARAM(MerchantID)"/>
+        </WTROW>
+
+        <WTROW>
+					<WTSTATIC col="1" tag="CoinAddresss" value="ATTR(Merchant.MerchantName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="CoinAddressText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTRECORDSET col="1" graybar="true" entity="CoinAddress">
+						<WTCOLUMN width="35" align="left" label="Coin"/>
+						<WTCOLUMN width="45" align="left" label="Address"/>
+            <WTCOLUMN width="205" align="center" label="Status"/>
+
+            <WTROW height="36">
+              <WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(1)"/>
+              <WTSTATIC col="1">
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(Coin&lt;xsl:value-of select=&quot;@coin&quot;/&gt;.gif)" imgalign="absmiddle"/>
+                </WTCODEGROUP>
+                <WTSTATIC space="1"/>
+                <WTSTATIC value="DATA(Coin)"/>
+                <WTCODEGROUP>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="16403">
+                      <WTPARAM name="CoinAddressID" value="DATA(CoinAddressID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(Address)"/>
+              <WTSTATIC col="3" value="DATA(Status)"/>
+            </WTROW>
+            
+            <WTROW height="36">
+              <WTCONDITION expr="DATA(Status)" oper="not-equal" value="CONST(1)"/>
+              <WTSTATIC col="1">
+                <WTCODEGROUP>
+                  <WTIMAGE value="CONST(Coin&lt;xsl:value-of select=&quot;@coin&quot;/&gt;.gif)" imgalign="absmiddle"/>
+                </WTCODEGROUP>
+                <WTSTATIC space="1"/>
+                <WTSTATIC value="DATA(Coin)" fontcolor="gray"/>
+                <WTCODEGROUP>
+                  <WTSTATIC space="1"/>
+                  <WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+                    <WTLINK name="16403">
+                      <WTPARAM name="CoinAddressID" value="DATA(CoinAddressID)"/>
+                    </WTLINK>
+                  </WTIMAGE>
+                </WTCODEGROUP>
+              </WTSTATIC>
+              <WTSTATIC col="2" value="DATA(Address)" fontcolor="gray"/>
+              <WTSTATIC col="3" value="DATA(Status)" fontcolor="red"/>
+            </WTROW>
+
+          </WTRECORDSET>
+				</WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" value="CONST(NewCoinAddress)" align="center">
+            <WTCLICK>NewCoinAddress()</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+      </WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

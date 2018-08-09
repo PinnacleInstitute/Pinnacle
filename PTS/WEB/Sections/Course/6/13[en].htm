@@ -1,0 +1,65 @@
+<FONT face="MS Sans Serif">Headings work great for identifying major sections of your Web page, however sometimes you need to change font size without adding a line break or bolding text. The &lt;FONT&gt; tag can control the size, color, and shape of your text. </FONT>
+<P>Let's get started. 
+<P><B>Step 1 - Change Text Size using &lt;FONT&gt; tag and the "size" attribute</B>
+<BR>Let's change the font size of our corporate headquartes address. Font sizes range from 1-7 with 1 being the smallest and 7 being the largest. If this sounds like the opposite of how headings behave, it is... 
+<P>Add this code
+<BR><B>&lt;FONT SIZE="2"&gt;</B>Corporate Headquarters:<B>&lt;/FONT&gt;</B> 
+<P>The default size for text is 3. By changing the size to 2 it will become smaller. When I change font sizes the text does not break or become bold, I can have several font sizes on the same line. I have decided to display all of the contact information in font size 2 so my code will look like this. 
+<P><B>&lt;FONT SIZE="2"&gt;</B>
+<BR>Corporate Headquarters:
+<BR>&lt;br /&gt;
+<BR>Burnt Pan Productions
+<BR>&lt;br /&gt;
+<BR>01010 Digital Drive
+<BR>&lt;br /&gt;
+<BR>Etherware, CA 10101
+<BR>&lt;br /&gt;
+<BR>(800) 123-4567
+<BR><B>&lt;/FONT&gt;</B> 
+<P>Notice I turned on the Font tag before typing "Corporate Headquarters" and then turned it off several lines later after the phone #. You do NOT need to declare a font size for every line of text. You also do not need to include the attribute <B>size=2</B> in the ending font tag. When you end the font tag all the attrbutes are ended as well. 
+<P><B>Step 2 - Controlling the Shape of Text using the &lt;FONT&gt; tag and the "face" attribute</B>
+<BR>If you have a desktop publishing background, this step sounds pretty exciting. Well... there are a few things you should know. You can identify any font face you want but it will display only IF the computer displaying your page has that font installed. So, if you declare this tag 
+<P><B>&lt;FONT FACE="arial, helvetica, sans-serif"&gt; </B>
+<P>Chances are good that someone viewing your Web page in Kansas will display the text with the correct font. However if you are counting on that same computer having "Comic Sans" or "Playbill", you may be disappointed. If you declare a font face which is not installed on the users computer, the browser usually substitutes "Times Roman". 
+<P>Lets change the font face for the entire page. After the &lt;BODY&gt; tag insert this code 
+<P><B>&lt;FONT FACE="Arial, Helvetica, sans-serif"&gt;</B> 
+<P>This turns on the font face "arial". At the end of the document I will end the font tag 
+<P><B>&lt;/FONT&gt;</B>
+<BR>&lt;/BODY&gt;
+<BR>&lt;/HTML&gt; 
+<P><B>Step 3 - Changing Text Color using the&gt;&lt;FONT&gt; tag and the "color" attribute</B>
+<BR>For the copy of your Web page, I recommend Black text on a White background. However, there may be situations where you want to emphasize text by changing the color. Let's say I want to change part of the company slogan to a rust color. I add the color attribute to the font tag. 
+<P>move over Pet Rock...&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <B>&lt;FONT color="#993300"&gt;</B>there's a new Pet in town<B>&lt;/FONT&gt;</B> 
+<P>So where did 993300 come from? Well... that is a Hexidecimal number which controls the color displayed by the browser. 
+<P>Many people surf the net with a monitor set to read only 256 colors. If you specify a color that is not one of the defined browser safe colors, then the browser will display either the closest color, or a dithered (spotty) color. There is a palette of the 216 Browser Safe Colors which can be displayed by all Windows and Macintosh computers. These colors can be declared using Hexadecimal values. To find out what those values are use the Browser Safe Color Palette found at the <A href="http://www.visibone.com/colorlab/">visibone site.</A> 
+<P>Your document should now look something like this: 
+<P>&lt;HTML&gt;
+<BR>&lt;HEAD&gt;
+<BR>&lt;TITLE&gt;Funny Fake Fish for Home or Office &lt;/TITLE&gt; 
+<BR>&lt;META name="description" content=" FunnyFakeFish.com has the perfect gag gift for your family and co-workers. Humorous, witty, fake fish produces a joke of the day. Provides fun, laughter, and surprises" /&gt;
+<BR>&lt;/HEAD&gt;
+<BR>&lt;BODY&gt;
+<BR><B>&lt;FONT FACE="arial, helvetica, sans-serif"&gt; </B>
+<BR>&lt;H1&gt;"FunnyFakeFish.com" &lt;/H1&gt; 
+<BR><B>&lt;FONT COLOR="#993300"&gt;</B>move over Pet Rock...&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; there's a new Pet in town<B>&lt;/FONT&gt;</B>
+<BR>&lt;P&gt;
+<BR>This is a fictitious website created as a learning tool for my students. The subject of the web project was chosen because I enjoy creating websites and my husband enjoys fish. I buy computers and software, he buys live rock, filters, pumps, and corals. Our mission is to raise money thru online courses and educational materials so that he can have a 500 gallon tank and I can have a flat panel display.
+<BR>&lt;/P&gt;
+<BR>&lt;br /&gt; &lt;br /&gt; &lt;br /&gt; &lt;hr width=60% /&gt;
+<BR>&lt;hr width=40% /&gt;
+<BR>&lt;hr width=20% /&gt;
+<BR><B>&lt;FONT SIZE="2"&gt;</B>Corporate Headquarters:
+<BR>&lt;br /&gt;
+<BR>Burnt Pan Productions
+<BR>&lt;br /&gt;
+<BR>01010 Digital Drive
+<BR>&lt;br /&gt;
+<BR>Etherware, CA 10101
+<BR>&lt;br /&gt;
+<BR>(800) 123-4567
+<BR><B>&lt;/FONT&gt;
+<BR>&lt;/FONT&gt;
+<BR></B>&lt;/BODY&gt;
+<BR>&lt;/HTML&gt; 
+<P><B><CENTER></CENTER></B>
+<P> 

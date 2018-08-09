@@ -1,0 +1,46 @@
+
+<P><B> What Is A Subform?</B>
+<P>A subform is a form that is placed in a parent form, called the main form. Subforms are particularly useful to display data from tables and queries that have one-to-many relationships. For example, in the sample below, data on the main form is drawn from an item information table while the subform contains all of the orders for that item. The item record is the "one" part of this one-to-many relationship while the orders are the "many" side of the relationship since many orders can be placed for the one item.
+<P align=center><IMG height=242 alt="[Sample Subform]" src="http://www.fgcu.edu/support/office2000/access/images/samplesubform.gif" width=475 border=1>
+<P>The remainder of this page explains three methods for creating subforms and they assume that the data tables and/or queries have already been created.
+<P><B> Create a Form and Subform at Once</B>
+<P>Use this method if neither form has already been created. A main form and subform can be created automatically using the form wizard if <A href="http://www.fgcu.edu/support/office2000/access/tables3.html">table relationships</A> are set properly or if a query involving multiple tables is selected. For example, a relationship can be set between a table containing customer information and one listing customer orders so the orders for each customer are displayed together using a main form and subform. Follow these steps to create a subform within a form:
+<OL>
+<LI>Double-click <B>Create form by using wizard</B> on the database window. 
+<LI>From the <B>Tables/Queries</B> drop-down menu, select the first table or query from which the main form will display its data. Select the fields that should appear on the form by highlighting the field names in the <B>Available Fields</B> list on the left and clicking the single arrow <B>&gt;</B> button or click the double arrows <B>&gt;&gt;</B> to choose all of the fields.
+<BR><IMG height=360 alt="[Form Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/subform1.gif" width=486 vspace=10 border=1> 
+<LI>From the same window, select another table or query from the <B>Tables/Queries</B> drop-down menu and choose the fields that should appear on the form. Click <B>Next</B> to continue after all fields have been selected.
+<BR>
+<LI>Choose an arrangement for the forms by selecting <B>form with subform(s)</B> if the forms should appear on the same page or <B>Linked forms</B> if there are many controls on the main form and a subform will not fit. Click <B>Next</B> to proceed to the next page of options.
+<BR><IMG height=360 alt="[Form Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/subform2.gif" width=486 vspace=10 border=1> 
+<BR>
+<LI>Select a tabular or datasheet layout for the form and click <B>Next</B>.
+<BR><IMG height=360 alt="[Form Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/subform3.gif" width=486 vspace=10 border=1> 
+<BR>
+<LI>Select a style for the form and click <B>Next</B>.
+<BR><IMG height=360 alt="[Form Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/subform4.gif" width=486 vspace=10 border=1> 
+<LI>Enter the names for the main form and subform. Click <B>Finish</B> to create the forms.
+<BR><IMG height=360 alt="[Form Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/subform5.gif" width=486 vspace=10 border=1> 
+<LI>New records can be added to both tables or queries at once by using the new combination form. 
+</OL>
+<P><B> Subform Wizard</B>
+<P>If the main form or both forms already exist, the Subform Wizard can be used to combine the forms. Follow these steps to use the Subform Wizard:
+<OL>
+<LI>Open the main form in <B>Design View</B> and make sure the <B>Control Wizard</B> button <IMG height=26 alt="[Control Wizard button]" src="http://www.fgcu.edu/support/office2000/access/images/controlwizard.gif" width=27 border=1> on the toolbox is pressed in. 
+<LI>Click the <B>Subform/Subreport</B> icon <IMG height=17 alt="[Subform icon]" src="http://www.fgcu.edu/support/office2000/access/images/subformicon.gif" width=19 border=1> on the toolbox and draw the outline of the subform on the main form. The Subform Wizard dialog box will appear when the mouse button is released. 
+<LI>If the subform has not been created yet, select "Use existing Tables and Queries". Otherwise, select the existing form that will become the subform. Click <B>Next</B> to continue.
+<BR><IMG height=359 alt="[SubForm Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/subformwiz1.gif" width=497 vspace=10 border=1> 
+<LI>The next dialog window will display table relationships assumed by Access. Select one of these relationships or define your own and click <B>Next</B>.
+<BR><IMG height=359 alt="[SubForm Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/subformwiz2a.gif" width=497 vspace=10 border=1> 
+<LI>On the final dialog box, enter the name of the subform and click <B>Finish</B>. 
+</OL>
+<P><B> Drag-and-Drop Method</B>
+<P>Use this method to create subforms from two forms that already exist. Make sure that the table relationships have already been set before proceeding with these steps.
+<OL>
+<LI>Open the main form in <B>Design View</B> and select <B>Window|Tile Vertically</B> to display both the database window and the form side-by-side.
+<BR><IMG height=319 alt="[Drag-and-Drop example]" src="http://www.fgcu.edu/support/office2000/access/images/draganddrop.gif" width=588 vspace=10 border=1> 
+<BR>
+<LI>Drag the form icon beside the name of the subform onto the detail section of the main form design.
+<BR><IMG height=319 alt="[Drag-and-Drop example]" src="http://www.fgcu.edu/support/office2000/access/images/draganddrop2.gif" width=589 vspace=10 border=1> 
+<BR>
+</OL>

@@ -1,0 +1,2651 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="22" name="Lead" alias="ld" audit="false">
+	
+		<!--Identity-->
+		<WTATTRIBUTE id="2201" name="LeadID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="2202" name="MemberID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="2203" name="SalesCampaignID" type="number" source="entity" />
+		<WTATTRIBUTE id="2204" name="ProspectTypeID" type="number" source="entity" />
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="2205" name="SalesCampaignName" type="text" length="40" source="join">
+			<WTJOIN entity="SalesCampaign" name="SalesCampaignName" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2206" name="ProspectTypeName" type="text" length="40" source="join">
+			<WTJOIN entity="ProspectType" name="ProspectTypeName" />
+		</WTATTRIBUTE>
+
+		<!--Attribute-->
+		<WTATTRIBUTE id="2210" name="NameLast" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="2211" name="NameFirst" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="2212" name="LeadName" type="text" length="62" min="1" max="62" source="entity" title="true">
+			<WTCOMPUTE name="NameLast"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=""/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2213" name="LeadDate" type="date" source="entity" />
+		<WTATTRIBUTE id="2214" name="Email" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="2215" name="Phone1" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="2216" name="Phone2" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="2217" name="Street" type="text" length="60" min="1" max="60" source="entity" />
+		<WTATTRIBUTE id="2218" name="Unit" type="text" length="40" min="1" max="40" source="entity" />
+		<WTATTRIBUTE id="2219" name="City" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="2220" name="State" type="text" length="30" min="1" max="30" source="entity" />
+		<WTATTRIBUTE id="2221" name="Zip" type="text" length="20" min="1" max="20" source="entity" />
+		<WTATTRIBUTE id="2222" name="Country" type="text" length="30" min="1" max="30" source="entity" />
+
+		<WTATTRIBUTE id="2223" name="Comment" type="text" length="500" min="1" max="500" source="entity" />
+		<WTATTRIBUTE id="2224" name="Source" type="text" length="20" min="1" max="20" source="entity" />
+		<WTATTRIBUTE id="2225" name="Status" type="number" source="entity">
+			<WTENUM id="0" name="New"/>
+			<WTENUM id="1" name="Contact1"/>
+			<WTENUM id="2" name="Contact2"/>
+			<WTENUM id="3" name="Contact3"/>
+			<WTENUM id="4" name="NoContact"/>
+			<WTENUM id="5" name="CallBack"/>
+			<WTENUM id="6" name="Dead"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2226" name="Priority" type="text" length="4" source="entity"/>
+		<WTATTRIBUTE id="2227" name="CallBackDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="2228" name="CallBackTime" type="text" length="8" min="1" max="8" source="entity" language="false" />
+		<WTATTRIBUTE id="2229" name="TimeZone" type="number" source="entity" blankrow="false">
+			<WTENUM id="-12" name="GMTm12"/>
+			<WTENUM id="-11" name="GMTm11"/>
+			<WTENUM id="-10" name="GMTm10"/>
+			<WTENUM id="-9" name="GMTm9"/>
+			<WTENUM id="-8" name="GMTm8"/>
+			<WTENUM id="-7" name="GMTm7"/>
+			<WTENUM id="-6" name="GMTm6"/>
+			<WTENUM id="-5" name="GMTm5"/>
+			<WTENUM id="-4" name="GMTm4"/>
+			<WTENUM id="-3" name="GMTm3"/>
+			<WTENUM id="-2" name="GMTm2"/>
+			<WTENUM id="-1" name="GMTm1"/>
+			<WTENUM id="0" name="GMT"/>
+			<WTENUM id="1" name="GMTp1"/>
+			<WTENUM id="2" name="GMTp2"/>
+			<WTENUM id="3" name="GMTp3"/>
+			<WTENUM id="4" name="GMTp4"/>
+			<WTENUM id="5" name="GMTp5"/>
+			<WTENUM id="6" name="GMTp6"/>
+			<WTENUM id="7" name="GMTp7"/>
+			<WTENUM id="8" name="GMTp8"/>
+			<WTENUM id="9" name="GMTp9"/>
+			<WTENUM id="10" name="GMTp10"/>
+			<WTENUM id="11" name="GMTp11"/>
+			<WTENUM id="12" name="GMTp12"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2230" name="BestTime" type="number" source="entity">
+			<WTENUM id="1" name="Morning"/>
+			<WTENUM id="2" name="Afternoon"/>
+			<WTENUM id="3" name="Evening"/>
+			<WTENUM id="4" name="Weekend"/>
+		</WTATTRIBUTE>
+
+		<WTATTRIBUTE id="2231" name="DistributorID" type="number" source="entity" />
+		<WTATTRIBUTE id="2232" name="DistributeDate" type="date" source="entity" />
+		<WTATTRIBUTE id="2233" name="Code" type="number" source="entity" />
+
+		<!--Indexes-->
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Lead" entity="Lead" alias="ld"/>
+			<WTRELATIONSHIP name="Common" entity="Lead" alias="ld">
+				<WTENTITY name="ProspectType" entity="ProspectType" alias="pt">
+					<WTATTRIBUTE alias="ld" name="ProspectTypeID" relalias="pt" relname="ProspectTypeID"/>
+				</WTENTITY>
+				<WTENTITY name="SalesCampaign" entity="SalesCampaign" alias="sc">
+					<WTATTRIBUTE alias="ld" name="SalesCampaignID" relalias="sc" relname="SalesCampaignID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="LeadName" contains="true" default="true"/>
+			<WTATTRIBUTE name="Priority"/>
+			<WTATTRIBUTE name="LeadDate"/>
+			<WTATTRIBUTE name="CallBackDate"/>
+			<WTATTRIBUTE name="SalesCampaignName"/>
+			<WTATTRIBUTE name="ProspectTypeName"/>
+			<WTATTRIBUTE name="Email"/>
+			<WTATTRIBUTE name="Phone1"/>
+			<WTATTRIBUTE name="Phone2"/>
+			<WTATTRIBUTE name="Source"/>
+		</WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="STATUS-NEW" value="0"/>
+			<WTSYSCON name="PROSPECT_CREATED" value="1" />
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<!--Procedures-->
+	<WTPROCEDURES>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindStatus" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name="" />
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTJOIN name="Common" />
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="equal" value="PARAM(Status)" connector="and" />
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindActive" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name="" />
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTJOIN name="Common" />
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="greater-equal" value="CONST(1)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="less-equal" value="CONST(3)" connector="and" />
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindLive" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name="" />
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTJOIN name="Common" />
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="less-equal" value="CONST(5)" connector="and" />
+		</WTPROCEDURE>
+
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="ExpMember" style="GenerateDataProc.xsl">
+			<WTSEARCH name="" />
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTATTRIBUTE name="LeadID"/>
+			<WTATTRIBUTE name="NameFirst"/>
+			<WTATTRIBUTE name="NameLast"/>
+			<WTATTRIBUTE name="SalesCampaignName"/>
+			<WTATTRIBUTE name="ProspectTypeName"/>
+			<WTATTRIBUTE name="Status"/>
+			<WTATTRIBUTE name="Priority"/>
+			<WTATTRIBUTE name="LeadDate"/>
+			<WTATTRIBUTE name="Source"/>
+			<WTATTRIBUTE name="CallBackDate"/>
+			<WTATTRIBUTE name="CallBackTime"/>
+			<WTATTRIBUTE name="TimeZone"/>
+			<WTATTRIBUTE name="BestTime"/>
+			<WTATTRIBUTE name="Email"/>
+			<WTATTRIBUTE name="Phone1"/>
+			<WTATTRIBUTE name="Phone2"/>
+			<WTATTRIBUTE name="Street"/>
+			<WTATTRIBUTE name="Unit"/>
+			<WTATTRIBUTE name="City"/>
+			<WTATTRIBUTE name="State"/>
+			<WTATTRIBUTE name="Zip"/>
+			<WTATTRIBUTE name="Country"/>
+			<WTJOIN name="Common" />
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="ExpStatus" style="GenerateDataProc.xsl">
+			<WTSEARCH name="" />
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="ATTR(Status)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTATTRIBUTE name="LeadID"/>
+			<WTATTRIBUTE name="NameFirst"/>
+			<WTATTRIBUTE name="NameLast"/>
+			<WTATTRIBUTE name="SalesCampaignName"/>
+			<WTATTRIBUTE name="ProspectTypeName"/>
+			<WTATTRIBUTE name="Status"/>
+			<WTATTRIBUTE name="Priority"/>
+			<WTATTRIBUTE name="LeadDate"/>
+			<WTATTRIBUTE name="Source"/>
+			<WTATTRIBUTE name="CallBackDate"/>
+			<WTATTRIBUTE name="CallBackTime"/>
+			<WTATTRIBUTE name="TimeZone"/>
+			<WTATTRIBUTE name="BestTime"/>
+			<WTATTRIBUTE name="Email"/>
+			<WTATTRIBUTE name="Phone1"/>
+			<WTATTRIBUTE name="Phone2"/>
+			<WTATTRIBUTE name="Street"/>
+			<WTATTRIBUTE name="Unit"/>
+			<WTATTRIBUTE name="City"/>
+			<WTATTRIBUTE name="State"/>
+			<WTATTRIBUTE name="Zip"/>
+			<WTATTRIBUTE name="Country"/>
+			<WTJOIN name="Common" />
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="equal" value="PARAM(Status)" connector="and" />
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="ExpActive" style="GenerateDataProc.xsl">
+			<WTSEARCH name="" />
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTATTRIBUTE name="LeadID"/>
+			<WTATTRIBUTE name="NameFirst"/>
+			<WTATTRIBUTE name="NameLast"/>
+			<WTATTRIBUTE name="SalesCampaignName"/>
+			<WTATTRIBUTE name="ProspectTypeName"/>
+			<WTATTRIBUTE name="Status"/>
+			<WTATTRIBUTE name="Priority"/>
+			<WTATTRIBUTE name="LeadDate"/>
+			<WTATTRIBUTE name="Source"/>
+			<WTATTRIBUTE name="CallBackDate"/>
+			<WTATTRIBUTE name="CallBackTime"/>
+			<WTATTRIBUTE name="TimeZone"/>
+			<WTATTRIBUTE name="BestTime"/>
+			<WTATTRIBUTE name="Email"/>
+			<WTATTRIBUTE name="Phone1"/>
+			<WTATTRIBUTE name="Phone2"/>
+			<WTATTRIBUTE name="Street"/>
+			<WTATTRIBUTE name="Unit"/>
+			<WTATTRIBUTE name="City"/>
+			<WTATTRIBUTE name="State"/>
+			<WTATTRIBUTE name="Zip"/>
+			<WTATTRIBUTE name="Country"/>
+			<WTJOIN name="Common" />
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="greater-equal" value="CONST(1)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="less-equal" value="CONST(3)" connector="and" />
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="ExpLive" style="GenerateDataProc.xsl">
+			<WTSEARCH name="" />
+			<WTPARAM name="ATTR(MemberID)" direction="input" />
+			<WTPARAM name="SYS(userid)" direction="input" />
+			<WTATTRIBUTE name="LeadID"/>
+			<WTATTRIBUTE name="NameFirst"/>
+			<WTATTRIBUTE name="NameLast"/>
+			<WTATTRIBUTE name="SalesCampaignName"/>
+			<WTATTRIBUTE name="ProspectTypeName"/>
+			<WTATTRIBUTE name="Status"/>
+			<WTATTRIBUTE name="Priority"/>
+			<WTATTRIBUTE name="LeadDate"/>
+			<WTATTRIBUTE name="Source"/>
+			<WTATTRIBUTE name="CallBackDate"/>
+			<WTATTRIBUTE name="CallBackTime"/>
+			<WTATTRIBUTE name="TimeZone"/>
+			<WTATTRIBUTE name="BestTime"/>
+			<WTATTRIBUTE name="Email"/>
+			<WTATTRIBUTE name="Phone1"/>
+			<WTATTRIBUTE name="Phone2"/>
+			<WTATTRIBUTE name="Street"/>
+			<WTATTRIBUTE name="Unit"/>
+			<WTATTRIBUTE name="City"/>
+			<WTATTRIBUTE name="State"/>
+			<WTATTRIBUTE name="Zip"/>
+			<WTATTRIBUTE name="Country"/>
+			<WTJOIN name="Common" />
+			<WTCONDITION expr="ATTR(Lead.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and" />
+			<WTCONDITION expr="ATTR(Lead.Status)" oper="less-equal" value="CONST(5)" connector="and" />
+		</WTPROCEDURE>
+		<!--==========================================================================================-->
+		<WTPROCEDURE type="XML" name="XMLExport" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true" options="true">
+			<WTATTRIBUTE value="LeadID"/>
+			<WTATTRIBUTE value="NameFirst"/>
+			<WTATTRIBUTE value="NameLast"/>
+			<WTATTRIBUTE value="SalesCampaignName"/>
+			<WTATTRIBUTE value="ProspectTypeName"/>
+			<WTATTRIBUTE value="Status"/>
+			<WTATTRIBUTE value="Priority"/>
+			<WTATTRIBUTE value="LeadDate"/>
+			<WTATTRIBUTE value="Source"/>
+			<WTATTRIBUTE value="CallBackDate"/>
+			<WTATTRIBUTE value="CallBackTime"/>
+			<WTATTRIBUTE value="TimeZone"/>
+			<WTATTRIBUTE value="BestTime"/>
+			<WTATTRIBUTE value="Email"/>
+			<WTATTRIBUTE value="Phone1"/>
+			<WTATTRIBUTE value="Phone2"/>
+			<WTATTRIBUTE value="Street"/>
+			<WTATTRIBUTE value="Unit"/>
+			<WTATTRIBUTE value="City"/>
+			<WTATTRIBUTE value="State"/>
+			<WTATTRIBUTE value="Zip"/>
+			<WTATTRIBUTE value="Country"/>
+		</WTPROCEDURE>
+
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+<!--
+		<WTPROCEDURE name="TimeZone" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true" >
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+		</WTPROCEDURE>
+-->		
+		<!--================================================================================================-->
+		<WTPROCEDURE name="UpdateCode" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true" >
+			<WTPARAM name="ATTR(LeadID)" direction="input"/>
+			<WTPARAM name="ATTR(Code)" direction="input" required="false" passthru="true"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+	    <!--============================================================================================-->
+		<WTWEBPAGE name="2201" caption="Leads" action="5" navbar="false" header="false" footer="false" wrapper="wrapper800" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(LeadDate)">
+					<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)"/>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<!-- SAVE MEMBERID BEING MENTORED -->
+				<WTSETCACHE name="MentoringID" value="PARAM(MemberID)">
+					<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+				</WTSETCACHE>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeads" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindStatus">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-1)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="Status" direction="input" value="CONST(0)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindActive">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-2)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindLive">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-3)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindStatus">
+					<WTCONDITION expr="PARAM(Status)" oper="greater" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlLeads" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="800" align="left"/>
+
+				<WTFUNCTION name="Search()">
+					var url, win, FindTypeID, SearchText, MemberID, Status;
+					FindTypeID = document.getElementById('FindTypeID').value
+					SearchText = document.getElementById('SearchText').value
+					MemberID = document.getElementById('MemberID').value
+					Status = document.getElementById('Status').value
+					url = "2218.asp?FindTypeID=" + FindTypeID + "&amp;SearchText=" + SearchText + "&amp;MemberID=" + MemberID + "&amp;Status=" + Status
+		            win = window.open(url,"Export");
+					win.focus();
+				</WTFUNCTION>
+				<WTFUNCTION name="Distribute()">
+					var url, win, FindTypeID, SearchText, MemberID, Status;
+					FindTypeID = document.getElementById('FindTypeID').value
+					SearchText = document.getElementById('SearchText').value
+					MemberID = document.getElementById('MemberID').value
+					Status = document.getElementById('Status').value
+					url = "2227.asp?FindTypeID=" + FindTypeID + "&amp;SearchText=" + SearchText + "&amp;MemberID=" + MemberID + "&amp;Status=" + Status
+		            win = window.open(url,"Distribute");
+					win.focus();
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTSTATIC label="Edit"/>
+				<WTSTATIC label="ExportLeads"/>
+
+				<WTROW>
+					<WTSTATIC col="1" align="right" bold="true">
+						<WTCODEGROUP>
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCODEGROUP><WTIMAGE value="CONST(import.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="ImportLeads" space="1">
+								<WTLINK name="2206" target="import">
+									<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+						<WTCODEGROUP><WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewLead" space="1">
+							<WTCONDITION expr="IsActive"/>
+							<WTLINK name="2202">
+								<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+							</WTLINK>
+						</WTSTATIC>
+						<WTCODEGROUP><WTIMAGE value="CONST(distribute.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="DistributeLeads">
+							<WTLINK name="Distribute()" click="true" />
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" class="PageHeading">
+						<WTCODEGROUP><WTIMAGE value="CONST(Suspect.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="Leads"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-CONTACTS)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="FindLeadText" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTSTATIC tag="Mentoring" fontcolor="red"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Leads.FindTypeID)" translate="true" prespace="false"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="15" focus="true" prespace="false"/>
+					<WTSTATIC col="1" tag="Status" class="ColumnHeader" />
+					<WTCOMBO col="1" value="PARAM(Status)" prespace="false">
+						<WTOPTION id="0" label="All"/>
+						<WTOPTION id="-1" label="StatusNew"/>
+						<WTOPTION id="-2" label="StatusActive"/>
+						<WTOPTION id="-3" label="StatusLive"/>
+						<WTOPTION id="-4" value="CONST(----------)"/>
+						<WTOPTION id="1" label="StatusContact1" />
+						<WTOPTION id="2" label="StatusContact2" />
+						<WTOPTION id="3" label="StatusContact3" />
+						<WTOPTION id="4" label="StatusNoContact" />
+						<WTOPTION id="5" label="StatusCallBack" />
+						<WTOPTION id="6" label="StatusDead" />
+					</WTCOMBO>
+					<WTSTATIC col="1" prespace="false" space="1" />
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true" prespace="false"/>
+					<WTIMAGE col="1" value="CONST(Export.gif)" alt="ExportLeads" imgalign="absmiddle">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTLINK name="Search()" click="true" />
+					</WTIMAGE>
+<!--
+					<WTSTATIC col="1" prespace="false" space="1" />
+					<WTBUTTON col="1" action="3" value="CONST(Close)" prespace="false" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+-->					
+				</WTROW>
+				
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Lead">
+						<WTCOLUMN width="30" align="left" label="LeadName"/>
+						<WTCOLUMN width="10" align="left" label="Status"/>
+						<WTCOLUMN width="8" align="center" label="Priority"/>
+						<WTCOLUMN width="25" align="left" label="TimeZone"/>
+						<WTCOLUMN width="15" align="left" label="Source"/>
+						<WTCOLUMN width="12" align="left" label="LeadDate"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Lead.LeadName)" bold="true"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="2203"><WTPARAM name="LeadID" value="DATA(LeadID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Lead.Code)" oper="not-equal" value="CONST(0)"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(SymbolCheck.gif)" imgalign="absmiddle">
+										<WTCONDITION expr="DATA(Lead.Code)" oper="greater" value="CONST(0)"/>
+									</WTIMAGE>
+									<WTIMAGE value="CONST(SymbolDelete.gif)" imgalign="absmiddle">
+										<WTCONDITION expr="DATA(Lead.Code)" oper="less" value="CONST(0)"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Lead.Status)">
+									<WTCONDITION expr="DATA(Lead.Status)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC label="New">
+									<WTCONDITION expr="DATA(Lead.Status)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Lead.Priority)"/>
+							<WTSTATIC col="4" value="DATA(Lead.TimeZone)"/>
+							<WTSTATIC col="5" value="DATA(Lead.Source)"/>
+							<WTSTATIC col="6" value="DATA(Lead.LeadDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="4" fontcolor="gray">
+								<WTSTATIC value="DATA(Phone1)" spacex="1" />
+								<WTSTATIC value="DATA(Phone2)" spacex="1" />
+								<WTSTATIC value="DATA(Street)" spacex="1" />
+								<WTSTATIC value="DATA(Unit)" spacex="1" />
+								<WTSTATIC value="DATA(City)" spacex="1" />
+								<WTSTATIC value="DATA(State)" spacex="1" />
+								<WTSTATIC value="DATA(Zip)" spacex="1" />
+								<WTSTATIC value="DATA(Country)" spacex="1" />
+								<WTSTATIC value="DATA(Email)" />
+							</WTSTATIC>
+							<WTSTATIC col="5" merge="2" fontcolor="gray">
+								<WTSTATIC value="DATA(Lead.CallBackDate)" space="1"/>
+								<WTSTATIC value="DATA(Lead.CallBackTime)"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="DATA(Lead.SalesCampaignID)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="DATA(Lead.ProspectTypeID)" oper="not-equal" value="CONST(0)" connector="or"/>
+							<WTSTATIC col="1" merge="6" fontcolor="gray">
+								<WTSTATIC value="DATA(SalesCampaignName)"/>
+								<WTSTATIC value="CONST(/)"/>
+								<WTSTATIC value="DATA(ProspectTypeName)"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="m_2201" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="wrapperMobile"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" viewport="width=device-width"
+		    aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="52">
+			<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(LeadDate)">
+					<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)"/>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeads" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindStatus">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-1)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="Status" direction="input" value="CONST(0)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindActive">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-2)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindLive">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-3)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindStatus">
+					<WTCONDITION expr="PARAM(Status)" oper="greater" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlLeads" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTSTATIC label="Edit"/>
+				<WTROW margin-top="2" margin-bottom="2">
+					<WTTABLE col="1">
+						<WTCOLUMN width="50" align="left" />
+						<WTCOLUMN width="50" align="right" />
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="MyContacts"/>
+							</WTSTATIC>
+							<WTSTATIC col="2" align="right" bold="true">
+								<WTCODEGROUP><WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="NewContact">
+									<WTLINK name="m_2202"><WTPARAM name="MemberID" value="PARAM(MemberID)"/></WTLINK>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="33" align="right" />
+						<WTCOLUMN width="67" align="left" />
+						<WTROW>
+							<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+							<WTCOMBO col="2" value="ATTR(Leads.FindTypeID)" translate="true"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+							<WTTEXT col="2" value="ATTR(Bookmark.SearchText)" size="15" focus="true"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" tag="Status" class="ColumnHeader" />
+							<WTCOMBO col="2" value="PARAM(Status)">
+								<WTOPTION id="0" label="All"/>
+								<WTOPTION id="-1" label="StatusNew"/>
+								<WTOPTION id="-2" label="StatusActive"/>
+								<WTOPTION id="-3" label="StatusLive"/>
+								<WTOPTION id="-4" value="CONST(----------)"/>
+								<WTOPTION id="1" label="StatusContact1" />
+								<WTOPTION id="2" label="StatusContact2" />
+								<WTOPTION id="3" label="StatusContact3" />
+								<WTOPTION id="4" label="StatusNoContact" />
+								<WTOPTION id="5" label="StatusCallBack" />
+								<WTOPTION id="6" label="StatusDead" />
+							</WTCOMBO>
+							<WTBUTTON col="2" action="5" value="CONST(Go)" default="true"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" prevnext="top" entity="Lead">
+						<WTCOLUMN width="53" align="left" label="LeadName"/>
+						<WTCOLUMN width="25" align="left" label="Status"/>
+						<WTCOLUMN width="22" align="left" label="LeadDate"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Lead.LeadName)" bold="true" space="1"/>
+								<WTSTATIC value="CONST((&lt;xsl:value-of select=&quot;@priority&quot;/&gt;))">
+									<WTCONDITION expr="DATA(Priority)" oper="not-equal" value="CONST('')"/>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="m_2203">
+											<WTPARAM name="LeadID" value="DATA(LeadID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Lead.Status)">
+									<WTCONDITION expr="DATA(Lead.Status)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC label="New">
+									<WTCONDITION expr="DATA(Lead.Status)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Lead.LeadDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="3" fontcolor="gray">
+								<WTSTATIC value="DATA(Phone1)" spacex="1" />
+								<WTSTATIC value="DATA(Phone2)" spacex="1" />
+								<WTSTATIC fontcolor="purple">
+									<WTSTATIC value="DATA(Lead.CallBackDate)" spacex="1"/>
+									<WTSTATIC value="DATA(Lead.CallBackTime)" spacex="1"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Lead.TimeZone)"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2202" caption="Add Leads" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+ 		<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			
+			<WTACTION id="0" name="New" type="New">
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(LeadDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(STATUS-NEW)"/>
+<WTCUSTOM>
+			For x = 1 To 10
+				first = trim(Request.Form.Item("First" &amp; x))
+				last = trim(Request.Form.Item("Last" &amp; x))
+				If first &lt;&gt; "" OR last &lt;&gt; "" Then 
+					.NameFirst = trim(first)
+					.NameLast = trim(last)
+					.Phone1 = trim(Request.Form.Item("Phone" &amp; x))
+					.Email = trim(Request.Form.Item("Email" &amp; x))
+					.Priority = trim(Request.Form.Item("Priority" &amp; x))
+					.Comment = trim(Request.Form.Item("Note" &amp; x))
+					LeadID = CLng(.Add(CLng(reqSysUserID)))
+				End If	
+			Next
+</WTCUSTOM>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="20" align="left" />
+				<WTCOLUMN width="120" align="left" />
+				<WTCOLUMN width="120" align="left" />
+				<WTCOLUMN width="340" align="left" />
+				<WTROW>
+					<WTSTATIC col="1" merge="4" align="left" label="NewLead" class="PageHeading">
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-CONTACTS)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="4" align="left" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW>
+					<WTIMAGE col="1" merge="2" value="CONST(Suspect.gif)" align="center"/>
+					<WTSTATIC col="3" merge="2" align="left" class="prompt">
+						<WTSTATIC label="NewLeadText"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="6">
+					<WTDIVIDER col="1" merge="4" height="1" color="SYS(divider)" />
+				</WTROW>
+
+				<WTROW>
+					<WTTABLE col="1" merge="4">
+						<WTCOLUMN width="120" align="left" />
+						<WTCOLUMN width="120" align="left" />
+						<WTCOLUMN width="100" align="left" />
+						<WTCOLUMN width="245" align="left" />
+						<WTCOLUMN width="5" align="left" />
+
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTSTATIC col="1" label="NameFirst"/>
+							<WTSTATIC col="2" label="NameLast"/>
+							<WTSTATIC col="3" label="Phone"/>
+							<WTSTATIC col="4" label="Email"/>
+							<WTSTATIC col="5" label="Priority"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First1" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last1" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone1" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email1" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority1" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note1" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First2" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last2" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone2" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email2" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority2" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note2" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First3" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last3" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone3" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email3" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority3" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note3" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First4" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last4" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone4" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email4" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority4" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note4" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First5" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last5" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone5" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email5" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority5" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note5" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First6" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last6" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone6" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email6" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority6" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note6" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First7" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last7" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone7" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email7" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority7" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note7" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First8" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last8" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone8" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email8" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority8" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note8" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First9" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last9" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone9" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email9" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority9" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note9" size="80" maxlength="80"/>
+						</WTROW>
+						<WTROW>
+							<WTTEXT col="1" name="First10" size="17" maxlength="30"/>
+							<WTTEXT col="2" name="Last10" size="17" maxlength="30"/>
+							<WTTEXT col="3" name="Phone10" size="15" maxlength="30"/>
+							<WTTEXT col="4" name="Email10" size="30" maxlength="80"/>
+							<WTTEXT col="5" name="Priority10" size="3" maxlength="4"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" align="right" tag="Note"/>
+							<WTTEXT col="2" merge="4" name="Note10" size="80" maxlength="80"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="4" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive" />
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="4" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_2202" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="wrapperMobile"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" mobile="MobileHome.asp" secured="98">
+			<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTSUB name="LoadLead">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(STATUS-NEW)"/>
+					<WTSETATTRIBUTE name="ATTR(LeadDate)" value="SYS(Date)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLead" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			<WTSUB name="AddLead">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="LeadID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLead" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadLead"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTCALLSUB name="AddLead"/>
+				<WTCALLSUB name="LoadLead">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="m_2201" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="AddAnother" type="Add">
+				<WTCALLSUB name="AddLead"/>
+				<WTCALLSUB name="LoadLead"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="m_2201" return="false">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="25" align="right"/>
+				<WTCOLUMN width="75" align="left"/>
+
+				<WTFUNCTION name="AddTimeStamp()">
+					var d = new Date();
+					var year = d.getFullYear()
+					if(year&lt;1000) year+=1900
+					var curHour = d.getHours();
+					var curMin = d.getMinutes();
+					var curAMPM = "am ";
+					var curTime = "";
+					var newline = "";
+					var comment = document.getElementById('Comment').value;
+					if (comment != '') newline = "\n";
+					if (curHour &gt;= 12){
+					curHour -= 12;
+					curAMPM = "pm ";
+					}
+					if (curHour == 0) curHour = 12;
+					curTime = curHour + ":" + ((curMin &lt; 10) ? "0" : "") + curMin + curAMPM
+					document.getElementById('Comment').value = comment + newline + (d.getMonth()+1) + "/" + d.getDate() + "/" + (year+"").substring(2,4) + " " + curTime
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="NewContact" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadName"/>
+					<WTTEXT col="2" value="ATTR(Lead.NameFirst)" width="120" label="NameFirst" size="15"/>
+					<WTTEXT col="2" value="ATTR(Lead.NameLast)" width="120" label="NameLast" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Lead.Status)"/>
+					<WTSTATIC col="2" tag="Priority" />
+					<WTTEXT col="2" value="ATTR(Lead.Priority)" size="1" prespace="false" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Lead.Email)" size="30"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Phone"/>
+					<WTTEXT col="2" value="ATTR(Lead.Phone1)" width="120" label="Phone1" size="15"/>
+					<WTTEXT col="2" value="ATTR(Lead.Phone2)" width="120" label="Phone2" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TimeZone" />
+					<WTCOMBO col="2" value="ATTR(Lead.TimeZone)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="BestTime" />
+					<WTCOMBO col="2" value="ATTR(Lead.BestTime)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CallBackDate"/>
+					<WTTEXT col="2" value="ATTR(Lead.CallBackDate)"/>
+					<WTSTATIC col="2" tag="CallBackTime"/>
+					<WTTEXT col="2" value="ATTR(Lead.CallBackTime)" size="6" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Comment" align="left" />
+					<WTIMAGE col="1" merge="2" value="CONST(clock.gif)" imgalign="absmiddle" prespace="false">
+						<WTLINK click="true" name="CONST(AddTimeStamp())"/>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Lead.Comment)" rows="5" cols="35" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Source"/>
+					<WTTEXT col="2" value="ATTR(Lead.Source)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadDate"/>
+					<WTTEXT col="2" value="ATTR(Lead.LeadDate)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Address" />
+					<WTTEXT col="2" value="ATTR(Lead.Street)" width="180" label="Street" size="25" />
+					<WTTEXT col="2" value="ATTR(Lead.Unit)" width="60" label="Unit" size="5" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTTEXT col="2" value="ATTR(Lead.City)" width="120" label="City" size="15" />
+					<WTTEXT col="2" value="ATTR(Lead.State)" width="120" label="State" size="15" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTTEXT col="2" value="ATTR(Lead.Zip)" width="120" label="Zip" size="15" />
+					<WTTEXT col="2" value="ATTR(Lead.Country)" width="120" label="Country" size="15" />
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(AddAnother)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_2203" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="wrapperMobile"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" mobile="MobileHome.asp" secured="98">
+			<!--===============================================================================-->
+			<WTPARAM name="LeadID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSUB name="LoadLead">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(Lead.MemberID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLead" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)" />
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="CONST(tmpMemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateLead">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadLead"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateLead"/>
+				<WTCALLSUB name="LoadLead">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadLead">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="25" align="right"/>
+				<WTCOLUMN width="75" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(LeadID)"/>
+				</WTROW>
+				<WTFUNCTION name="ViewDrip()">
+					var url, win, id;
+					id = document.getElementById('LeadID').value;
+					url = "11611.asp?target=1&amp;targetid=" + id
+					win = window.open(url,"DripCampaigns","top=100,left=100,height=200,width=525,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+				<WTFUNCTION name="AddTimeStamp()">
+					var d = new Date();
+					var year = d.getFullYear()
+					if(year&lt;1000) year+=1900
+					var curHour = d.getHours();
+					var curMin = d.getMinutes();
+					var curAMPM = "am ";
+					var curTime = "";
+					var newline = "";
+					var comment = document.getElementById('Comment').value;
+					if (comment != '') newline = "\n";
+					if (curHour &gt;= 12){
+					curHour -= 12;
+					curAMPM = "pm ";
+					}
+					if (curHour == 0) curHour = 12;
+					curTime = curHour + ":" + ((curMin &lt; 10) ? "0" : "") + curMin + curAMPM
+					document.getElementById('Comment').value = comment + newline + (d.getMonth()+1) + "/" + d.getDate() + "/" + (year+"").substring(2,4) + " " + curTime
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2">
+						<WTCONDITION expr="ATTR(Lead.Email)" oper="not-equal" value="CONST('')"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(entity88.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="SendEmail">
+							<WTLINK name="0502" target="mail" targetstyle="width=640,height=620,resizable=yes">
+								<WTPARAM name="OwnerType" value="ENTITY(Lead)" />
+								<WTPARAM name="OwnerID" value="PARAM(LeadID)" />
+								<WTPARAM name="MemberID" value="ATTR(Lead.MemberID)" />
+							</WTLINK>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(entity88.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="LeadEmails">
+							<WTLINK name="0513" target="mail" targetstyle="width=640,height=620,resizable=yes">
+								<WTPARAM name="OwnerType" value="ENTITY(Lead)" />
+								<WTPARAM name="OwnerID" value="PARAM(LeadID)" />
+								<WTPARAM name="MemberID" value="ATTR(Lead.MemberID)" />
+							</WTLINK>
+						</WTSTATIC>
+						<WTSTATIC space="1"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(entity88.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="DripCampaigns">
+							<WTLINK click="true" name="CONST(ViewDrip())"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadName"/>
+					<WTTEXT col="2" value="ATTR(Lead.NameFirst)" width="120" label="NameFirst" size="15"/>
+					<WTTEXT col="2" value="ATTR(Lead.NameLast)" width="120" label="NameLast" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Lead.Status)"/>
+					<WTSTATIC col="2" tag="Priority" />
+					<WTTEXT col="2" value="ATTR(Lead.Priority)" size="1" prespace="false" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Lead.Email)" size="30"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Phone"/>
+					<WTTEXT col="2" value="ATTR(Lead.Phone1)" width="120" label="Phone1" size="15"/>
+					<WTTEXT col="2" value="ATTR(Lead.Phone2)" width="120" label="Phone2" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TimeZone" />
+					<WTCOMBO col="2" value="ATTR(Lead.TimeZone)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="BestTime" />
+					<WTCOMBO col="2" value="ATTR(Lead.BestTime)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CallBackDate"/>
+					<WTTEXT col="2" value="ATTR(Lead.CallBackDate)"/>
+					<WTSTATIC col="2" tag="CallBackTime"/>
+					<WTTEXT col="2" value="ATTR(Lead.CallBackTime)" size="6" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" tag="Comment" align="left" />
+					<WTIMAGE col="1" merge="2" value="CONST(clock.gif)" imgalign="absmiddle" prespace="false">
+						<WTLINK click="true" name="CONST(AddTimeStamp())"/>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Lead.Comment)" rows="5" cols="35" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Source"/>
+					<WTTEXT col="2" value="ATTR(Lead.Source)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadDate"/>
+					<WTTEXT col="2" value="ATTR(Lead.LeadDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Address" />
+					<WTTEXT col="2" value="ATTR(Lead.Street)" width="180" label="Street" size="25" />
+					<WTTEXT col="2" value="ATTR(Lead.Unit)" width="60" label="Unit" size="5" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTTEXT col="2" value="ATTR(Lead.City)" width="120" label="City" size="15" />
+					<WTTEXT col="2" value="ATTR(Lead.State)" width="120" label="State" size="15" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTTEXT col="2" value="ATTR(Lead.Zip)" width="120" label="Zip" size="15" />
+					<WTTEXT col="2" value="ATTR(Lead.Country)" width="120" label="Country" size="15" />
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2203" caption="Edit Lead" navbar="false" header="false" footer="false" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--===============================================================================-->
+			<WTPARAM name="LeadID" datatype="number"/>
+			<WTPARAM name="ProspectID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTSUB name="MoveLead">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(MemberID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSalesCampaignID)" value="ATTR(SalesCampaignID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpProspectTypeID)" value="ATTR(ProspectTypeID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpNameLast)" value="ATTR(NameLast)"/>
+					<WTSETATTRIBUTE name="CONST(tmpNameFirst)" value="ATTR(NameFirst)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEmail)" value="ATTR(Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPhone1)" value="ATTR(Phone1)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPhone2)" value="ATTR(Phone2)"/>
+					<WTSETATTRIBUTE name="CONST(tmpStreet)" value="ATTR(Street)"/>
+					<WTSETATTRIBUTE name="CONST(tmpUnit)" value="ATTR(Unit)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCity)" value="ATTR(City)"/>
+					<WTSETATTRIBUTE name="CONST(tmpState)" value="ATTR(State)"/>
+					<WTSETATTRIBUTE name="CONST(tmpZip)" value="ATTR(Zip)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCountry)" value="ATTR(Country)"/>
+					<WTSETATTRIBUTE name="CONST(tmpComment)" value="ATTR(Comment)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSource)" value="ATTR(Source)"/>
+					<WTSETATTRIBUTE name="CONST(tmpTimeZone)" value="ATTR(TimeZone)"/>
+					<WTSETATTRIBUTE name="CONST(tmpBestTime)" value="ATTR(BestTime)"/>
+					<WTSETATTRIBUTE name="CONST(tmpDistributorID)" value="ATTR(DistributorID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpDistributeDate)" value="ATTR(DistributeDate)"/>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Prospect" project="ptsProspectUser" class="CProspect">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProspectID" direction="input" value="CONST(0)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="SYS(CompanyID)" />
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(PROSPECT_CREATED)"/>
+					<WTSETATTRIBUTE name="ATTR(CreateDate)" value="SYS(date)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="CONST(tmpMemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(SalesCampaignID)" value="CONST(tmpSalesCampaignID)"/>
+					<WTSETATTRIBUTE name="ATTR(ProspectTypeID)" value="CONST(tmpProspectTypeID)"/>
+					<WTSETATTRIBUTE name="ATTR(NameLast)" value="CONST(tmpNameLast)"/>
+					<WTSETATTRIBUTE name="ATTR(NameFirst)" value="CONST(tmpNameFirst)"/>
+					<WTSETATTRIBUTE name="ATTR(ProspectName)" value="CONST(tmpNameFirst + &quot; &quot; + tmpNameLast)"/>
+					<WTSETATTRIBUTE name="ATTR(Email)" value="CONST(tmpEmail)"/>
+					<WTSETATTRIBUTE name="ATTR(Phone1)" value="CONST(tmpPhone1)"/>
+					<WTSETATTRIBUTE name="ATTR(Phone2)" value="CONST(tmpPhone2)"/>
+					<WTSETATTRIBUTE name="ATTR(Street)" value="CONST(tmpStreet)"/>
+					<WTSETATTRIBUTE name="ATTR(Unit)" value="CONST(tmpUnit)"/>
+					<WTSETATTRIBUTE name="ATTR(City)" value="CONST(tmpCity)"/>
+					<WTSETATTRIBUTE name="ATTR(State)" value="CONST(tmpState)"/>
+					<WTSETATTRIBUTE name="ATTR(Zip)" value="CONST(tmpZip)"/>
+					<WTSETATTRIBUTE name="ATTR(Country)" value="CONST(tmpCountry)"/>
+					<WTSETATTRIBUTE name="ATTR(Source)" value="CONST(tmpSource)"/>
+					<WTSETATTRIBUTE name="ATTR(Description)" value="CONST(CSTR(tmpTimeZone) + &quot; &quot; + CSTR(tmpBestTime) + &quot; &quot; + tmpComment)"/>
+					<WTSETATTRIBUTE name="ATTR(DistributorID)" value="CONST(tmpDistributorID)"/>
+					<WTSETATTRIBUTE name="ATTR(DistributeDate)" value="CONST(tmpDistributeDate)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(ProspectID)" value="ATTR(ProspectID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Mail" project="ptsMailUser" class="CMail">
+					<WTMETHOD name="Move">
+						<WTPARAM name="OwnerType" direction="input" value="ENTITY(Lead)"/>
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="MoveOwnerType" direction="input" value="ENTITY(Prospect)"/>
+						<WTPARAM name="MoveOwnerID" direction="input" value="PARAM(ProspectID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadLead">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(Lead.MemberID)" />
+					<WTSETATTRIBUTE name="CONST(tmpSalesCampaignID)" value="ATTR(Lead.SalesCampaignID)" />
+					<WTSETATTRIBUTE name="CONST(tmpProspectTypeID)" value="ATTR(Lead.ProspectTypeID)" />
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLead" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)" />
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="CONST(tmpMemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="ProspectTypes" project="ptsProspectTypeUser" class="CProspectTypes">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlProspectTypes" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ItemID" direction="input" value="CONST(tmpProspectTypeID)"/>
+						<WTPARAM name="Element" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTGETCACHE name="CONST(tmpGroupID)" value="GROUPID"/>
+				<WTOBJECT name="SalesCampaigns" project="ptsSalesCampaignUser" class="CSalesCampaigns">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlSalesCampaigns" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="GroupID" direction="input" value="CONST(tmpGroupID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST(tmpSalesCampaignID)" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateLead">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadLead"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="UpdateExit" type="Update">
+				<WTCALLSUB name="UpdateLead"/>
+				<WTCALLSUB name="LoadLead">
+					<WTCONDITION expr="IsErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="or"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="Update" type="Update">
+				<WTCALLSUB name="UpdateLead"/>
+				<WTCALLSUB name="LoadLead"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(LeadID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadLead">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="Move" type="Update">
+				<WTCALLSUB name="MoveLead"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="6" name="MoveGo" type="Update">
+				<WTCALLSUB name="MoveLead"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="8103" return="false">
+						<WTPARAM name="ProspectID" value="PARAM(ProspectID)"/>
+						<WTPARAM name="ContentPage" value="CONST(3)"/>
+						<WTPARAM name="Popup" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(LeadID)"/>
+				</WTROW>
+				<WTFUNCTION name="ViewDrip()">
+					var url, win, id;
+					id = document.getElementById('LeadID').value;
+					url = "11611.asp?target=1&amp;targetid=" + id
+					win = window.open(url,"DripCampaigns","top=100,left=100,height=200,width=525,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+					win.focus();
+				</WTFUNCTION>
+				<WTFUNCTION name="AddTimeStamp()">
+					var d = new Date();
+					var year = d.getFullYear()
+					if(year&lt;1000) year+=1900
+					var curHour = d.getHours();
+					var curMin = d.getMinutes();
+					var curAMPM = "am ";
+					var curTime = "";
+					var newline = "";
+					var comment = document.getElementById('Comment').value;
+					if (comment != '') newline = "\n";
+					if (curHour &gt;= 12){
+						curHour -= 12;
+						curAMPM = "pm ";
+					}
+					if (curHour == 0) curHour = 12;
+					curTime = curHour + ":" + ((curMin &lt; 10) ? "0" : "") + curMin + curAMPM
+					document.getElementById('Comment').value = comment + newline + (d.getMonth()+1) + "/" + d.getDate() + "/" + (year+"").substring(2,4) + " " + curTime
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTCODEGROUP><WTIMAGE value="CONST(Contact32.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="ATTR(Lead.LeadName)" space="1"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="NotMemberOnly"/>
+									<WTCONDITION expr="_IsShortcuts" connector="or"/>
+									<WTIMAGE value="CONST(Shortcut.gif)">
+										<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+											<WTPARAM name="EntityID" value="ENTITY(Lead)" />
+											<WTPARAM name="ItemID" value="ATTR(Lead.LeadID)" />
+											<WTPARAM name="Name" value="ATTR(Lead.LeadName)" clean="true" />
+											<WTPARAM name="URL" value="SYS(PageURL)" />
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="_IsPinnacleTutorial"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+										<WTLINK name="Tutorial" target="Tutorial">
+											<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-CONTACTS)"/>
+											<WTPARAM name="contentpage" value="CONST(3)"/>
+											<WTPARAM name="popup" value="CONST(1)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="ATTR(Lead.Code)" oper="not-equal" value="CONST(0)"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="Approved" fontcolor="green">
+										<WTCONDITION expr="ATTR(Lead.Code)" oper="greater" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC label="Disapproved" fontcolor="red">
+										<WTCONDITION expr="ATTR(Lead.Code)" oper="less" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="IsMemberOnly"/>
+									<WTHIDDEN value="ATTR(Lead.Code)"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="NotMemberOnly"/>
+									<WTSTATIC space="1"/>
+									<WTTEXT value="ATTR(Lead.Code)" size="1"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTCONDITION expr="ATTR(Lead.Email)" oper="not-equal" value="CONST('')"/>
+								<WTCODEGROUP><WTIMAGE value="CONST(entity88.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="SendEmail">
+									<WTLINK name="0502" target="mail" targetstyle="width=640,height=620,resizable=yes">
+										<WTPARAM name="OwnerType" value="ENTITY(Lead)" />
+										<WTPARAM name="OwnerID" value="PARAM(LeadID)" />
+										<WTPARAM name="MemberID" value="ATTR(Lead.MemberID)" />
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP><WTIMAGE value="CONST(entity88.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="LeadEmails">
+									<WTLINK name="0513" target="mail" targetstyle="width=640,height=620,resizable=yes">
+										<WTPARAM name="OwnerType" value="ENTITY(Lead)" />
+										<WTPARAM name="OwnerID" value="PARAM(LeadID)" />
+										<WTPARAM name="MemberID" value="ATTR(Lead.MemberID)" />
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC newline="1"/>
+								<WTCODEGROUP><WTIMAGE value="CONST(entity88.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="DripCampaigns">
+									<WTLINK click="true" name="CONST(ViewDrip())"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="EditLeadText">
+							<WTCONDITION expr="_NotSales"/>
+						</WTSTATIC>
+						<WTSTATIC label="MoveLeadText">
+							<WTCONDITION expr="_IsSales"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="3" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="SalesCampaignID" />
+					<WTCOMBO col="2" value="ATTR(Lead.SalesCampaignID)" datapath="/DATA/TXN/PTSSALESCAMPAIGNS/ENUM" />
+					<WTSTATIC col="2" tag="ProspectTypeID" />
+					<WTCOMBO col="2" value="ATTR(Lead.ProspectTypeID)" datapath="/DATA/TXN/PTSPROSPECTTYPES/ENUM" prespace="false" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Lead.Status)"/>
+					<WTSTATIC col="2" tag="Priority" />
+					<WTTEXT col="2" value="ATTR(Lead.Priority)" size="2" prespace="false" />
+					<WTSTATIC col="2" label="PriorityHelp" fontcolor="darkblue" italic="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadName"/>
+					<WTTEXT col="2" value="ATTR(Lead.NameFirst)" width="200" label="NameFirst" size="25"/>
+					<WTTEXT col="2" value="ATTR(Lead.NameLast)" width="240" label="NameLast" size="25"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Lead.Email)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Phone1" />
+					<WTTEXT col="2" value="ATTR(Lead.Phone1)" size="20" />
+					<WTSTATIC col="2" tag="Phone2" />
+					<WTTEXT col="2" value="ATTR(Lead.Phone2)" size="20" prespace="false" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TimeZone" />
+					<WTCOMBO col="2" value="ATTR(Lead.TimeZone)" />
+					<WTSTATIC col="2" tag="BestTime" />
+					<WTCOMBO col="2" value="ATTR(Lead.BestTime)" prespace="false" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CallBackDate"/>
+					<WTTEXT col="2" value="ATTR(Lead.CallBackDate)"/>
+					<WTSTATIC col="2" tag="CallBackTime"/>
+					<WTTEXT col="2" value="ATTR(Lead.CallBackTime)" size="6" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadDate"/>
+					<WTTEXT col="2" value="ATTR(Lead.LeadDate)"/>
+					<WTSTATIC col="2" tag="Source"/>
+					<WTTEXT col="2" value="ATTR(Lead.Source)" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Comment" align="left" />
+					<WTIMAGE col="1" merge="2" value="CONST(clock.gif)" imgalign="absmiddle" prespace="false">
+						<WTLINK click="true" name="CONST(AddTimeStamp())"/>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Lead.Comment)" rows="5" cols="72" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Address" />
+					<WTTEXT col="2" value="ATTR(Lead.Street)" width="290" label="Street" size="40" />
+					<WTTEXT col="2" value="ATTR(Lead.Unit)" width="150" label="Unit" size="10" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTTEXT col="2" value="ATTR(Lead.City)" width="200" label="City" size="25" />
+					<WTTEXT col="2" value="ATTR(Lead.State)" width="240" label="State" size="25" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" />
+					<WTTEXT col="2" value="ATTR(Lead.Zip)" width="200" label="Zip" size="25" />
+					<WTTEXT col="2" value="ATTR(Lead.Country)" width="240" label="Country" size="25" />
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" merge="2" label="DistributorID" align="center"/>
+						<WTTEXT col="1" value="ATTR(Lead.DistributorID)" size="4"/>
+						<WTSTATIC col="1" label="on"/>
+						<WTTEXT col="1" value="ATTR(Lead.DistributeDate)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTCONDITION expr="ATTR(Lead.DistributorID)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)" />
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" merge="2" label="DistributorID" align="center"/>
+						<WTSTATIC col="1" value="ATTR(Lead.DistributorID)" prespace="false"/>
+						<WTSTATIC col="2" label="on"/>
+						<WTSTATIC col="2" value="ATTR(Lead.DistributeDate)"/>
+					</WTROW>
+					<WTROW>
+						<WTHIDDEN value="ATTR(Lead.DistributorID)"/>
+						<WTHIDDEN value="ATTR(Lead.DistributeDate)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12">
+					<WTBUTTON col="1" merge="2" action="7" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(UpdateExit)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" />
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(MoveProspect)" align="center" msg="ConfirmMove">
+						<WTCONDITION expr="IsActive"/>
+						<WTCONDITION expr="_IsSales" connector="and"/>
+						<WTCONDITION expr="ATTR(Lead.NameFirst)" oper="not-equal" value="CONST('')" connector="and"/>
+						<WTCONDITION expr="ATTR(Lead.NameLast)" oper="not-equal" value="CONST('')" connector="and"/>
+						<WTCONDITION expr="ATTR(Lead.Email)" oper="not-equal" value="CONST('')" connector="and"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="6" value="CONST(MoveGoProspect)" msg="ConfirmMove">
+						<WTCONDITION expr="IsActive"/>
+						<WTCONDITION expr="_IsSales" connector="and"/>
+						<WTCONDITION expr="ATTR(Lead.NameFirst)" oper="not-equal" value="CONST('')" connector="and"/>
+						<WTCONDITION expr="ATTR(Lead.NameLast)" oper="not-equal" value="CONST('')" connector="and"/>
+						<WTCONDITION expr="ATTR(Lead.Email)" oper="not-equal" value="CONST('')" connector="and"/>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTSTATIC label="ConfirmMove"/>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2206" caption="Import Leads" action="false" navbar="false" secured="61" langfile="2206"
+		submit="2206Upload.asp" type="multi" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="Leads" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(Leads)" oper="equal" value="CONST(-1)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Import", "No Leads Imported!"
+</WTCUSTOM>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(Leads)" oper="greater" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Import", reqLeads &amp; " Leads Successfully Imported!"
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="MEMBERID" value="PARAM(MemberID)"/>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" label="UploadLeads" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="UploadLeadsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="UploadLeadsFormat" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="UploadLeadsExample" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="24">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="24">
+					<WTFILE col="1" value="upload" align="center" size="40"/>
+					<WTBUTTON col="1" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2218" header="false" footer="false" navbar="false" margin-left="0"
+		 aspstyle="GenerateWebASPOpen.xsl" xslstyle="GenerateWebXSLOpen.xsl" langfile="2218">
+		<!--=============================================================================================-->
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+					<WTMETHOD name="ExpMember">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpStatus">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-1)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Status" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpActive">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-2)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpLive">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-3)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpStatus">
+						<WTCONDITION expr="PARAM(Status)" oper="greater" value="CONST(0)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="XMLExport">
+						<WTPARAM name="xmlLeads" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+			
+			<WTCODEGROUP>
+				<WTTABLE col="1" firstrow="false">
+				<WTCOLUMN width="20" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="125" align="left"/>
+				<WTCOLUMN width="125" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="75" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="75" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="200" align="left"/>
+				<WTCOLUMN width="125" align="left"/>
+				<WTCOLUMN width="125" align="left"/>
+				<WTCOLUMN width="200" align="left"/>
+				<WTCOLUMN width="50" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="50" align="left"/>
+				<WTCOLUMN width="100" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" label="#" bold="true"/>
+					<WTSTATIC col="2" label="NameFirst" bold="true"/>
+					<WTSTATIC col="3" label="NameLast" bold="true"/>
+					<WTSTATIC col="4" label="SalesCampaignName" bold="true"/>
+					<WTSTATIC col="5" label="ProspectTypeName" bold="true"/>
+					<WTSTATIC col="6" label="Status" bold="true"/>
+					<WTSTATIC col="7" label="Priority" bold="true"/>
+					<WTSTATIC col="8" label="LeadDate" bold="true"/>
+					<WTSTATIC col="9" label="Source" bold="true"/>
+					<WTSTATIC col="10" label="CallBackDate" bold="true"/>
+					<WTSTATIC col="11" label="CallBackTime" bold="true"/>
+					<WTSTATIC col="12" label="TimeZone" bold="true"/>
+					<WTSTATIC col="13" label="BestTime" bold="true"/>
+					<WTSTATIC col="14" label="Email" bold="true"/>
+					<WTSTATIC col="15" label="Phone1" bold="true"/>
+					<WTSTATIC col="16" label="Phone2" bold="true"/>
+					<WTSTATIC col="17" label="Street" bold="true"/>
+					<WTSTATIC col="18" label="Unit" bold="true"/>
+					<WTSTATIC col="19" label="City" bold="true"/>
+					<WTSTATIC col="20" label="State" bold="true"/>
+					<WTSTATIC col="21" label="Zip" bold="true"/>
+					<WTSTATIC col="22" label="Country" bold="true"/>
+				</WTROW>
+				<WTREPEAT entity="Lead">
+					<WTROW>
+						<WTSTATIC col="1" value="DATA(Lead.LeadID)"/>
+						<WTSTATIC col="2" value="DATA(Lead.NameFirst)"/>
+						<WTSTATIC col="3" value="DATA(Lead.NameLast)"/>
+						<WTSTATIC col="4" value="DATA(Lead.SalesCampaignName)"/>
+						<WTSTATIC col="5" value="DATA(Lead.ProspectTypeName)"/>
+						<WTSTATIC col="6" value="DATA(Lead.Status)"/>
+						<WTSTATIC col="7" value="DATA(Lead.Priority)"/>
+						<WTSTATIC col="8" value="DATA(Lead.LeadDate)"/>
+						<WTSTATIC col="9" value="DATA(Lead.Source)"/>
+						<WTSTATIC col="10" value="DATA(Lead.CallBackDate)"/>
+						<WTSTATIC col="11" value="DATA(Lead.CallBackTime)"/>
+						<WTSTATIC col="12" value="DATA(Lead.TimeZone)"/>
+						<WTSTATIC col="13" value="DATA(Lead.BestTime)"/>
+						<WTSTATIC col="14" value="DATA(Lead.Email)"/>
+						<WTSTATIC col="15" value="DATA(Lead.Phone1)"/>
+						<WTSTATIC col="16" value="DATA(Lead.Phone2)"/>
+						<WTSTATIC col="17" value="DATA(Lead.Street)"/>
+						<WTSTATIC col="18" value="DATA(Lead.Unit)"/>
+						<WTSTATIC col="19" value="DATA(Lead.City)"/>
+						<WTSTATIC col="20" value="DATA(Lead.State)"/>
+						<WTSTATIC col="21" value="DATA(Lead.Zip)"/>
+						<WTSTATIC col="22" value="DATA(Lead.Country)"/>
+					</WTROW>
+				</WTREPEAT>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1" tag="Total" bold="true"/>
+					<WTSTATIC col="2" value="PARAM(Count)" bold="true"/>
+				</WTROW>
+				</WTTABLE>
+			</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="2227" caption="Distribute Leads" navbar="false" secured="61"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+			<WTPARAM name="NewMemberID" datatype="number" />
+			<WTPARAM name="Count" datatype="number"/>
+
+			<WTINCLUDE name="Comm.asp"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotSuspect" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="CompanyID" value="SYS(CompanyID)"/>
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadMember">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(NewMemberID)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(NewMemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="LoadLeads">
+				<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+					<WTMETHOD name="ExpMember">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpStatus">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-1)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Status" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpActive">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-2)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpLive">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-3)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpStatus">
+						<WTCONDITION expr="PARAM(Status)" oper="greater" value="CONST(0)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="XMLExport">
+						<WTPARAM name="xmlLeads" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(15)" />
+					</WTMETHOD>
+<WTCUSTOM>
+				reqCount = 0
+				For Each oLead in oLeads
+					reqCount = reqCount + 1
+				Next
+				reqCount = FormatNumber(reqCount,0)
+</WTCUSTOM>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="DistributeContacts">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(NewMemberID)" oper="not-equal" value="CONST(0)" />
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSubject)" value="ATTR(CompanyName)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(NewMemberID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpTo)" value="ATTR(Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMsgTo)" value="ATTR(MemberID)">
+						<WTCONDITION expr="ATTR(IsMsg)" oper="not-equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="Business" project="ptsBusinessUser" class="CBusiness">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BusinessID" direction="input" value="CONST(1)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Business.SystemEmail)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+					<WTMETHOD name="ExpMember">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpStatus">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-1)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Status" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpActive">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-2)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpLive">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(-3)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTMETHOD name="ExpStatus">
+						<WTCONDITION expr="PARAM(Status)" oper="greater" value="CONST(0)"/>
+						<WTPARAM name="reqCount" direction="return" datatype="number" />
+						<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+						<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="Status" direction="input" value="PARAM(Status)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+<WTCUSTOM>
+				tmpCount = 0
+				tmpBody = "&lt;B&gt;You can access these new contacts with your Contact Manager." + "&lt;/B&gt;&lt;BR&gt;"
+				For Each oLead in oLeads
+					With oLead
+						If Request.Form.Item(.LeadID) = "on" Then
+							.Load .LeadID, 1
+							.MemberID = reqNewMemberID
+							.DistributorID = reqMemberID
+							.DistributeDate = Now()
+							.Save 1
+							tmpCount = tmpCount + 1
+							tmpBody = tmpBody + .NameFirst + " " + .NameLast + " (#" + .LeadID + ") " + .Phone1 + " " + .Email + " " + .City + " " + .State + " " + .Zip + " " + .Country + "&lt;BR&gt;"
+
+						End If
+					End With
+				Next
+				DoError reqUploadError, "Distribute", tmpCount &amp; " Contacts Distributed!"
+				tmpBody = tmpBody + "&lt;B&gt;" &amp; tmpCount &amp; " Total Contacts&lt;/B&gt;"
+				tmpSubject = "CONTACTS: " &amp; tmpCount &amp; " from " + tmpSubject 
+
+				Set oMail = server.CreateObject("CDO.Message")
+				If oMail Is Nothing Then
+					DoError Err.Number, Err.Source, "Unable to Create Object - CDO.Message"
+				Else
+					With oMail
+						.Sender = tmpSender
+						.From = tmpFrom
+						.To = tmpTo
+						.CC = tmpFrom
+						.Subject = tmpSubject
+						.HTMLBody = tmpBody
+						.Send
+					End With
+				End If
+				Set oMail = Nothing
+
+				If tmpMsgTo &lt;&gt; "" Then
+					SendMsg 1, tmpMsgTo, tmpSubject, tmpBody 
+				End If
+</WTCUSTOM>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Leads" project="ptsLeadUser" class="CLeads">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeads" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Member" type="Update">
+				<WTCALLSUB name="LoadLeads"/>
+				<WTCALLSUB name="LoadMember"/>
+			</WTACTION>
+			
+			<WTACTION id="5" name="Report" type="Update">
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(NewMemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTCALLSUB name="DistributeContacts"/>
+					<WTCALLSUB name="LoadLeads"/>
+					<WTCALLSUB name="LoadMember"/>
+				</WTCODEGROUP>
+			</WTACTION>
+			
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="right" />
+
+				<WTFUNCTION name="Checkboxes(total,chk)">
+				var cnt = 0, checked = 0;	
+				for (i = 0; i &lt; Lead.elements.length; i++) {
+					if (getElementById(i).type == "checkbox") { 
+						if (cnt &lt; total) { 
+							if (getElementById(i).checked != chk ) { 
+								getElementById(i).checked = chk; 
+								cnt++;
+							}	
+						}	
+						if (getElementById(i).checked )  
+							checked++;
+					}	
+				}             
+				document.getElementById('Checked').value = checked;
+			    </WTFUNCTION>  
+
+				<WTFUNCTION name="CountChecked()">
+				var checked = 0;	
+				for (i = 0; i &lt; Lead.elements.length; i++) {
+					if (getElementById(i).type == "checkbox") { 
+						if (getElementById(i).checked )  
+							checked++;
+					}	
+				}             
+				document.getElementById('Checked').value = checked;
+			    </WTFUNCTION>  
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="DistributedContactsText" align="left" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" align="center" label="DistributeTo" value="ATTR(Member.CompanyName)" class="PageHeading"/>
+					<WTTEXT col="1" value="PARAM(NewMemberID)" name="NewMemberID" size="3" focus="true"/>
+					<WTBUTTON col="1" action="1" value="CONST(NewMember)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(NewMemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+						<WTCOMBO col="1" value="ATTR(Leads.FindTypeID)" translate="true" prespace="false"/>
+						<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+						<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="15" focus="true" prespace="false"/>
+						<WTSTATIC col="1" tag="Status" class="ColumnHeader" />
+						<WTCOMBO col="1" value="PARAM(Status)" prespace="false">
+							<WTOPTION id="0" label="All"/>
+							<WTOPTION id="-1" label="StatusNew"/>
+							<WTOPTION id="-2" label="StatusActive"/>
+							<WTOPTION id="-3" label="StatusLive"/>
+							<WTOPTION id="-4" value="CONST(----------)"/>
+							<WTOPTION id="1" label="StatusContact1" />
+							<WTOPTION id="2" label="StatusContact2" />
+							<WTOPTION id="3" label="StatusContact3" />
+							<WTOPTION id="4" label="StatusNoContact" />
+							<WTOPTION id="5" label="StatusCallBack" />
+							<WTOPTION id="6" label="StatusDead" />
+						</WTCOMBO>
+						<WTSTATIC col="1" prespace="false" space="1" />
+						<WTBUTTON col="1" action="5" value="CONST(Go)" default="true" prespace="false"/>
+						<WTSTATIC col="1" prespace="false" space="1" />
+						<WTBUTTON col="1" action="3" value="CONST(Close)" prespace="false" btnclass="smbutton">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+					</WTROW>
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="Lead">
+							<WTCOLUMN width="3"  align="left" valign="top"/>
+							<WTCOLUMN width="22" align="left" valign="top" label="ContactName" />
+							<WTCOLUMN width="10" align="left" valign="top" label="LeadDate" />
+							<WTCOLUMN width="10" align="left" valign="top" label="Status" />
+							<WTCOLUMN width="10" align="left" valign="top" label="Priority" />
+							<WTCOLUMN width="15" align="left" valign="top" label="SalesCampaignName" />
+							<WTCOLUMN width="15" align="left" valign="top" label="ProspectTypeName" />
+							<WTCOLUMN width="15" align="left" valign="top" label="Source" />
+							<WTROW>
+								<WTCHECK col="1" name="&lt;xsl:value-of select=&quot;@leadid&quot;/&gt;">
+									<WTCLICK>CountChecked()</WTCLICK>
+								</WTCHECK>
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(Prospect.NameFirst)" space="1"/>
+									<WTSTATIC value="DATA(Prospect.NameLast)"/>
+								</WTSTATIC>
+								<WTSTATIC col="3" value="DATA(Lead.LeadDate)"/>
+								<WTSTATIC col="4">
+									<WTSTATIC value="DATA(Lead.Status)">
+										<WTCONDITION expr="DATA(Lead.Status)" oper="not-equal" value="CONST(0)"/>
+									</WTSTATIC>
+									<WTSTATIC label="New">
+										<WTCONDITION expr="DATA(Lead.Status)" oper="equal" value="CONST(0)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="5" value="DATA(Lead.Priority)"/>
+								<WTSTATIC col="6" value="DATA(Lead.SalesCampaignName)"/>
+								<WTSTATIC col="7" value="DATA(Lead.ProspectTypeName)"/>
+								<WTSTATIC col="8" value="DATA(Lead.Source)"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" merge="7">
+									<WTSTATIC value="DATA(Lead.Phone1)" space="1"/>
+									<WTSTATIC value="DATA(Lead.Email)" space="1"/>
+									<WTSTATIC value="DATA(Lead.City)" space="1"/>
+									<WTSTATIC value="DATA(Lead.State)" space="1"/>
+									<WTSTATIC value="DATA(Lead.Zip)" space="1"/>
+									<WTSTATIC value="DATA(Lead.Country)"/>
+								</WTSTATIC>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Items" align="left"/>
+						<WTSTATIC col="1" value="PARAM(Count)" align="left" prespace="false"/>
+						<WTSTATIC col="1" space="3"/>
+						<WTSTATIC col="1" tag="Checked" align="left"/>
+						<WTTEXT col="1" name="Checked" value="CONST(0)" align="right" prespace="false" 
+						style="BORDER:none; COLOR:black; BACKGROUND:white; TEXT-ALIGN:left;"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTBUTTON col="1" value="CONST(CheckAll)" align="center">
+							<WTCLICK>Checkboxes(100,1)</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" value="CONST(Check10)" align="center">
+							<WTCLICK>Checkboxes(10,1)</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" value="CONST(UncheckAll)" align="center">
+							<WTCLICK>Checkboxes(100,0)</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" value="CONST(Uncheck10)" align="center">
+							<WTCLICK>Checkboxes(10,0)</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="12">
+						<WTBUTTON col="1" action="5" value="CONST(Distribute)" align="center"/>
+						<WTBUTTON col="1" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+			</WTCONTENT>
+			
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2228" caption="Update Lead Status" navbar="false" worker="true" aspstyle="GenerateWebASP.xsl"> 
+		<!--============================================================================================-->
+			<WTPARAM name="C" datatype="number"/>  <!-- lead ID -->
+			<WTPARAM name="P" datatype="number"/>  <!-- prospect ID -->
+			<WTPARAM name="S" datatype="number"/>  <!-- status -->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Lead" project="ptsLeadUser" class="CLead">
+					<WTCONDITION expr="PARAM(C)" oper="greater" value="CONST(0)"/>
+					<WTMETHOD name="UpdateCode">
+						<WTPARAM name="LeadID" direction="input" value="PARAM(C)"/>
+						<WTPARAM name="Code" direction="input" value="PARAM(S)"/>
+					</WTMETHOD>
+				</WTOBJECT>	
+				<WTOBJECT name="Prospect" project="ptsProspectUser" class="CProspect">
+					<WTCONDITION expr="PARAM(P)" oper="greater" value="CONST(0)"/>
+					<WTMETHOD name="UpdateCode">
+						<WTPARAM name="ProspectID" direction="input" value="PARAM(P)"/>
+						<WTPARAM name="Code" direction="input" value="PARAM(S)"/>
+					</WTMETHOD>
+				</WTOBJECT>	
+<WTCUSTOM>
+			response.write Err.Number
+			response.end
+</WTCUSTOM>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT/>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

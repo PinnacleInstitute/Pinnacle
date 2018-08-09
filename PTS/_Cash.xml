@@ -1,0 +1,333 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="112" name="Cash" alias="cas" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="11201" name="CashID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="11202" name="MemberID" type="number" source="entity" required="true"/>
+		<WTATTRIBUTE id="11203" name="RefID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="11205" name="CashDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="11206" name="CashType" type="number" source="entity" blankrow="false">
+			<WTENUM id="1" name="CAB"/>
+			<WTENUM id="2" name="Bonus"/>
+			<WTENUM id="3" name="Prepaid"/>
+			<WTENUM id="4" name="Payout"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11207" name="Amount" type="currency" source="entity"/>
+		<WTATTRIBUTE id="11208" name="Note" type="text" length="100" min="1" max="100" required="true" source="entity" language="false"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="11290" name="FromDate" type="date" source="entity" xml="false" persist="false"/>
+		<WTATTRIBUTE id="11291" name="ToDate" type="date" source="entity" xml="false" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="CashDate"/>
+			<WTATTRIBUTE name="CashType"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Cash" entity="Cash" alias="cas"/>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="CashDate" default="true"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Cash.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Cash.CashDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Cash.CashDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Find" name="FindType" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(CashType)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(Cash.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+			<WTCONDITION expr="ATTR(Cash.CashDate)" oper="greater-equal" value="PARAM(FromDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Cash.CashDate)" oper="less-equal" value="PARAM(ToDate)" connector="and"/>
+			<WTCONDITION expr="ATTR(Cash.CashType)" oper="equal" value="PARAM(CashType)" connector="and"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="11201" caption="Find" action="5" navbar="false" header="false" footer="false"
+				aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="Type" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CashDate)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FromDate)" value="ATTR(EnrollDate)"/>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(Date)"/>
+				<WTSETATTRIBUTE name="PARAM(Type)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Cashs" project="ptsCashUser" class="CCashs">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCashs" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Cashs" project="ptsCashUser" class="CCashs">
+				<WTMETHOD name="Find">
+					<WTCONDITION expr="PARAM(Type)" oper="equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindType">
+					<WTCONDITION expr="PARAM(Type)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+					<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					<WTPARAM name="CashType" direction="input" value="PARAM(Type)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlCashs" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW margin-top="12" margin-bottom="6">
+					<WTSTATIC col="1" tag="ViewFrom" class="ColumnHeader" align="center"/>
+					<WTTEXT col="1" value="PARAM(FromDate)" size="8" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="To" class="ColumnHeader"/>
+					<WTTEXT col="1" value="PARAM(ToDate)" size="8" type="date" prespace="false"/>
+					<WTSTATIC col="1" tag="Type" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="PARAM(Type)" prespace="false">
+						<WTOPTION id="0" label="All"/>
+						<WTOPTION id="1" label="CAB"/>
+						<WTOPTION id="2" label="Bonus"/>
+						<WTOPTION id="3" label="Prepaid"/>
+						<WTOPTION id="3" label="Payout"/>
+					</WTCOMBO>
+					<WTBUTTON col="1" action="5" value="CONST(Go)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSCASHS/PTSCASH))" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="true" entity="Cash">
+						<WTCOLUMN width="10" align="center" valign="top" label="CashDate"/>
+						<WTCOLUMN width="14" align="center" valign="top" label="CashType"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Amount"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="RefID"/>
+						<WTCOLUMN width="40" align="left" valign="top" label="Note"/>
+						<WTCOLUMN width="12" align="right" valign="top"/>
+
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Cash.CashDate)">
+									<WTCONDITION expr="IsManager"/>
+									<WTLINK name="11203">
+										<WTPARAM name="CashID" value="DATA(Cash.CashID)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Cash.CashDate)">
+									<WTCONDITION expr="NotManager"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Cash.CashType)"/>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Cash.Amount)">
+									<WTCONDITION expr="DATA(CashType)" oper="less-equal" value="CONST(2)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Cash.Amount)" fontcolor="red">
+									<WTCONDITION expr="DATA(CashType)" oper="greater-equal" value="CONST(3)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Cash.RefID)"/>
+							<WTSTATIC col="5" value="DATA(Cash.Description)"/>
+							<WTSTATIC col="6"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11203" caption="Cash" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+			<!--============================================================================================-->
+			<WTPARAM name="CashID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Cash" project="ptsCashUser" class="CCash">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CashID" direction="input" value="PARAM(CashID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCash" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Cash" project="ptsCashUser" class="CCash">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CashID" direction="input" value="PARAM(CashID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCash" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Cash" project="ptsCashUser" class="CCash">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="CashID" direction="input" value="PARAM(CashID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Cash" project="ptsCashUser" class="CCash">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CashID" direction="input" value="PARAM(CashID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCash" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="300" align="left"/>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1" tag="CashDate"/>
+					<WTTEXT col="2" value="ATTR(Cash.CashDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CashType"/>
+					<WTCOMBO col="2" value="ATTR(Cash.CashType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(Cash.Amount)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="RefID"/>
+					<WTTEXT col="2" value="ATTR(Cash.RefID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Note"/>
+					<WTTEXT col="2" value="ATTR(Cash.Note)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

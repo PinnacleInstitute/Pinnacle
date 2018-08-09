@@ -1,0 +1,72 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="16" name="LeadLog" alias="ll" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="1601" name="LeadLogID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="1602" name="LeadPageID" type="number" source="entity"/>
+		<WTATTRIBUTE id="1603" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="1604" name="AffiliateID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="1605" name="LogDate" type="date" title="true" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="1690" name="LeadCampaignID" type="number" source="entity" persist="false" />
+		<WTATTRIBUTE id="1691" name="FromDate" type="date" source="entity" persist="false" />
+		<WTATTRIBUTE id="1692" name="ToDate" type="date" source="entity" persist="false" />
+
+		<WTINDEX name="LeadLogID">
+			<WTATTRIBUTE name="LeadPageID"/>
+			<WTATTRIBUTE name="LogDate"/>
+		</WTINDEX>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="LeadPageID"/>
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="LogDate"/>
+		</WTINDEX>
+
+		<WTINDEX name="AffiliateID">
+			<WTATTRIBUTE name="LeadPageID"/>
+			<WTATTRIBUTE name="AffiliateID"/>
+			<WTATTRIBUTE name="LogDate"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="LeadLog" entity="LeadLog" alias="ll"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE name="ClearAll"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE name="ClearMember"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE name="ClearAffiliate"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(AffiliateID)" direction="input"/>
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+
+	</WTWEBPAGES>
+</WTROOT>

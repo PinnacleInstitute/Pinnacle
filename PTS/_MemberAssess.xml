@@ -1,0 +1,4051 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="34" name="MemberAssess" alias="ma" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="3401" name="MemberAssessID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="3402" name="MemberID" type="number" source="entity" required="true"/>
+		<WTATTRIBUTE id="3403" name="AssessmentID" type="number" source="entity" required="true"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="3404" name="AssessmentName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Assessment" name="AssessmentName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3405" name="IsCertify" type="yesno" source="join">
+			<WTJOIN entity="Assessment" name="IsCertify"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3406" name="NoCertificate" type="yesno" source="join">
+			<WTJOIN entity="Assessment" name="NoCertificate"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3407" name="IsCustomCertificate" type="yesno" source="join">
+			<WTJOIN entity="Assessment" name="IsCustomCertificate"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3408" name="CompanyID" type="number" source="join">
+			<WTJOIN entity="Member" name="CompanyID"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3409" name="MemberName" type="text" length="60" min="1" max="60"  source="join">
+			<WTJOIN entity="Member" name="CompanyName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="3410" name="StartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="3411" name="CompleteDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="3412" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pass"/>
+			<WTENUM id="2" name="Fail"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3413" name="ExternalID" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="3414" name="Result" type="text" length="1000" min="1" max="1000" source="entity"/>
+		<WTATTRIBUTE id="3415" name="Score" type="decimal" precision="6" length="10" source="entity"/>
+		<WTATTRIBUTE id="3416" name="TrainerScore" type="number" source="entity"/>
+		<WTATTRIBUTE id="3417" name="CommStatus" type="number" source="entity">
+			<WTENUM id="1" name="No"/>
+			<WTENUM id="2" name="Yes"/>
+			<WTENUM id="3" name="None"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3418" name="IsPrivate" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="3419" name="IsRemoved" type="yesno" source="entity"/>
+		
+		<!-- Non-Persist Attributes -->
+		<WTATTRIBUTE id="3490" name="NewResult" type="text" length="1000" min="1" max="1000" source="entity" persist="false"/>
+		<WTATTRIBUTE id="3491" name="Num1" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="3492" name="Num2" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="3493" name="Num3" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="3494" name="Num4" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="MemberAssess">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="AssessmentID"/>
+		</WTINDEX>
+		<WTINDEX name="TrainerScore">
+			<WTATTRIBUTE name="TrainerScore"/>
+			<WTATTRIBUTE name="CompleteDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="MemberAssess" entity="MemberAssess" alias="ma"/>
+			<WTRELATIONSHIP name="Common" entity="MemberAssess" alias="ma">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="ma" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+				<WTENTITY name="Assessment" entity="Assessment" alias="asm">
+					<WTATTRIBUTE alias="ma" name="AssessmentID" relalias="asm" relname="AssessmentID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="ASSESS-NONE" value="0"/>
+			<WTSYSCON name="ASSESS-PASS" value="1"/>
+			<WTSYSCON name="ASSESS-FAIL" value="2"/>
+			<WTSYSCON name="ASSESS-INTERNAL" value="1"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Shortcut_DeleteItem">
+					<WTPARAM name="EntityID" direction="input" value="ENTITY(MemberAssess)"/>
+					<WTPARAM name="ItemID" direction="input" value="PARAM(MemberAssessID)"/>
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="MemberAssess" lock="true"/>
+					<WTCONDITION expr="ATTR(MemberAssessID)" oper="equal" value="PARAM(MemberAssessID)"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="CalcResult" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(MemberAssessID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(NewResult)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="text" length="1000"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE name="SetPrivate" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(MemberAssessID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(IsPrivate)" direction="input" passthru="true"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListAssessmentAll" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.CompleteDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Status)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.ExternalID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Result)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Score)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentID)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.AssessmentName)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.IsCertify)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.NoCertificate)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.IsCustomCertificate)"/>
+					<WTATTRIBUTE value="ATTR(Member.CompanyID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.IsPrivate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.IsRemoved)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(MemberAssess.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListAssessment" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.CompleteDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Status)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.ExternalID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Result)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Score)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentID)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.AssessmentName)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.IsCertify)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.NoCertificate)"/>
+					<WTATTRIBUTE value="ATTR(Assessment.IsCustomCertificate)"/>
+					<WTATTRIBUTE value="ATTR(Member.CompanyID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.IsPrivate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.IsRemoved)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(MemberAssess.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTCONDITION expr="ATTR(MemberAssess.IsRemoved)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListCompany" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(AssessmentID)" direction="input"/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.CompleteDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Result)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)"/>
+					<WTATTRIBUTE value="ATTR(Member.CompanyID)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(MemberAssess.AssessmentID)" oper="equal" value="PARAM(AssessmentID)"/>
+					<WTCONDITION expr="ATTR(Member.CompanyID)" oper="equal" value="PARAM(CompanyID)" connector="and"/>
+					<WTCONDITION expr="ATTR(MemberAssess.IsPrivate)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="ATTR(MemberAssess.CompleteDate)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(MemberAssess.CompleteDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Check" name="GetCourses" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(MemberAssessID)" direction="input" required="false"/>
+			<WTPARAM name="Courses" direction="output" datatype="text" length="100"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Check" name="CalcMaster" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(MemberAssessID)" direction="input"/>
+			<WTPARAM name="Status" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="CertifyLookup" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberName)" direction="input"/>  <!-- Optional Member Reference -->
+			<WTPARAM name="ATTR(AssessmentID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentName)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.CompleteDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Result)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num1)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Status)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="CertifyMember" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(StartDate)" direction="input"/>
+			<WTPARAM name="ATTR(CompleteDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentName)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.CompleteDate)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Result)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num1)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Status)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="CertifyBusiness" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>  <!-- MasterID -->
+			<WTPARAM name="ATTR(StartDate)" direction="input"/>
+			<WTPARAM name="ATTR(CompleteDate)" direction="input"/>
+			<WTPARAM name="ATTR(AssessmentID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentName)"/>  <!-- Group -->
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberName)"/>  <!-- Role -->
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num1)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num2)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num3)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="CertifyCompany" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>  <!-- CompanyID -->
+			<WTPARAM name="ATTR(StartDate)" direction="input"/>
+			<WTPARAM name="ATTR(CompleteDate)" direction="input"/>
+			<WTPARAM name="ATTR(AssessmentID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentName)"/>  <!-- Business -->
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberName)"/>  <!-- Role -->
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num1)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num2)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num3)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="List" name="CertifyCompanyGrp" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>  <!-- CompanyID -->
+			<WTPARAM name="ATTR(StartDate)" direction="input"/>
+			<WTPARAM name="ATTR(CompleteDate)" direction="input"/>
+			<WTPARAM name="ATTR(AssessmentID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.AssessmentName)"/>  <!-- Group -->
+					<WTATTRIBUTE value="ATTR(MemberAssess.MemberName)"/>  <!-- Role -->
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num1)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num2)"/>
+					<WTATTRIBUTE value="ATTR(MemberAssess.Num3)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="CheckAssessment" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(AssessmentID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="MemberAssessID" direction="output" datatype="number"/>
+			
+			<WTDECLARE name="MemberAssessID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="MemberAssessID" value="ATTR(MemberAssess.MemberAssessID)"/>
+					<WTJOIN name="MemberAssess"/>
+					<WTCONDITION expr="ATTR(MemberAssess.AssessmentID)" oper="equal" value="PARAM(AssessmentID)"/>
+					<WTCONDITION expr="ATTR(MemberAssess.MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(MemberAssess.IsRemoved)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(MemberAssessID)" value="MemberAssessID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+    <!--============================================================================================-->
+    <WTPROCEDURE type="Check" name="Reset" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+      <WTPARAM name="ATTR(MemberAssessID)" direction="input"/>
+      <WTPARAM name="Status" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+
+  </WTPROCEDURES>
+    
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3402" caption="MemberAssess" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(AssessmentID)" value="PARAM(AssessmentID)"/>
+					<WTSETATTRIBUTE name="ATTR(StartDate)" value="SYS(Now)"/>
+					<WTSETATTRIBUTE name="ATTR(CommStatus)" value="CONST(1)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="MemberAssessID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMemberAssesss" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="MemberAssess" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="MemberAssessText" align="left" class="Prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(MemberAssess.StartDate)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="CompleteDate"/>
+					<WTTEXT col="2" value="ATTR(MemberAssess.CompleteDate)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="ExternalID"/>
+					<WTTEXT col="2" value="ATTR(MemberAssess.ExternalID)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="TrainerScore"/>
+					<WTSTATIC col="2" value="ATTR(MemberAssess.TrainerScore)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" tag="Result" valign="top"/>
+				</WTROW>	
+					<WTROW margin-bottom="12">
+					<WTMEMO col="1" merge="2" value="ATTR(MemberAssess.Result)" rows="2" cols="72"/>
+				</WTROW>
+			
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3403" caption="MemberAssess" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+      <WTSUB name="LoadMemberAssess">
+        <WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+          <WTCONDITION expr="IsEmployee"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+          <WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+          <WTMETHOD name="Load">
+            <WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+            <WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+          </WTMETHOD>
+          <WTMETHOD name="XML">
+            <WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+            <WTPARAM name="Option" direction="input" value="CONST(2)"/>
+          </WTMETHOD>
+        </WTOBJECT>
+      </WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTCALLSUB name="LoadMemberAssess"/>
+      </WTACTION>
+
+      <WTACTION name="Update" type="Update" id="1">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3411" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTLINK name="3411" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="3411" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION name="Calc" type="Calc" id="5">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="CalcResult">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="Result" direction="input" value="CONST(&quot;&quot;)"/>
+						<WTPARAM name="Result" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+      <WTACTION name="Reset" type="Update" id="6">
+        <WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+          <WTMETHOD name="Reset">
+            <WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+            <WTPARAM name="Result" direction="return" datatype="number"/>
+          </WTMETHOD>
+        </WTOBJECT>
+        <WTCALLSUB name="LoadMemberAssess"/>
+      </WTACTION>
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="MemberAssess" class="PageHeading" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="MemberAssessEditText" align="left" class="Prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(MemberAssess.StartDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CompleteDate"/>
+					<WTTEXT col="2" value="ATTR(MemberAssess.CompleteDate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(MemberAssess.Status)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ExternalID"/>
+					<WTTEXT col="2" value="ATTR(MemberAssess.ExternalID)"/>
+				</WTROW>
+				<WTROW>
+						<WTSTATIC col="1" merge="2" align="left" tag="Result" valign="top"/>
+				</WTROW>	
+				<WTROW margin-bottom="6">
+						<WTMEMO col="1" merge="2" value="ATTR(MemberAssess.Result)" rows="2" cols="72"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(MemberAssess.IsPrivate)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(MemberAssess.IsRemoved)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TrainerScore"/>
+					<WTTEXT col="2" value="ATTR(MemberAssess.TrainerScore)" size="6"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="CommStatus"/>
+					<WTCOMBO col="2" value="ATTR(MemberAssess.CommStatus)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+          <WTBUTTON col="1" merge="2" action="5" value="CONST(CalcResults)" align="center">
+            <WTCONDITION expr="IsActive"/>
+          </WTBUTTON>
+          <WTBUTTON col="1" merge="2" action="6" value="CONST(Reset)" msg="ConfirmReset" align="center"/>
+        </WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3404" worker="true" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="PinnacleID" datatype="number"/>
+			<WTPARAM name="ClientID" datatype="text"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="PARAM(PinnacleID)" oper="not-equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(ClientID)" oper="not-equal" value="CONST(&quot;&quot;)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(PinnacleID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(ExternalID)" value="PARAM(ClientID)"/>
+					<WTSETATTRIBUTE name="ATTR(CompleteDate)" value="SYS(Now)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+	 		<!--************************************************************************************-->
+			<WTCONTENT/>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3411" caption="My Assessments" contentpage="true" header="false" footer="false" navbar="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="IsPrivate" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+			<WTPARAM name="RemoveID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotAssessments" connector="and"/>
+				<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<!-- SAVE MEMBERID BEING MENTORED -->
+				<WTSETCACHE name="MentoringID" value="PARAM(MemberID)">
+					<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+				</WTSETCACHE>
+				<WTGETCACHE name="CONST(tmpMentoringID)" value="MentoringID"/>
+				<WTSETATTRIBUTE name="CONST(tmpMentoringID)" value="CONST(-1)">
+					<WTCONDITION expr="CONST(tmpMentoringID)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTSETATTRIBUTE>
+
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" paren="start"/>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(CLng(tmpMentoringID))" connector="and" paren="end"/>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="SYS(CompanyID)" connector="or"/>
+						<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="PARAM(MemberAssessID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="SetPrivate">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="IsPrivate" direction="input" value="CONST(reqIsPrivate)"/>
+					</WTMETHOD>
+				</WTOBJECT>		
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(RemoveID)" oper="not-equal" value="CONST(0)"/>
+					<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+						<WTMETHOD name="Load">
+							<WTPARAM name="MemberAssessID" direction="input" value="PARAM(RemoveID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(IsRemoved)" value="CONST(1)"/>
+						<WTMETHOD name="Save">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>	
+					<WTRETURN>
+						<WTCONDITION expr="NoErrors"/>
+						<WTLINK name="3411">
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+							<WTPARAM name="Popup" value="PARAM(Popup)"/>
+							<WTPARAM name="RemoveID" value="CONST(0)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+
+				<WTOBJECT name="MemberAssesss" project="ptsMemberAssessUser" class="CMemberAssesss">
+					<WTMETHOD name="ListAssessmentAll">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+						<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListAssessment">
+						<WTCONDITION expr="NotEmployee"/>
+						<WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+						<WTCONDITION expr="NotOrgManagerOnly" connector="and"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssesss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>		
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="NewAssess" type="New">
+				<WTRETURN>
+					<WTLINK name="3112" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+						<WTPARAM name="Popup" value="PARAM(Popup)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTSTATIC label="Report"/>
+				<WTSTATIC label="Edit"/>
+				<WTSTATIC label="Preview"/>
+				<WTSTATIC label="Remove"/>
+				<WTSTATIC label="Certificate"/>
+				<WTSTATIC label="Certification"/>
+				<WTSTATIC label="CertificationPass"/>
+				<WTSTATIC label="CertificationFail"/>
+
+				<WTLOAD>parent.scrollTo(0,0);</WTLOAD>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTSTATIC tag="Mentoring" fontcolor="red"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTCODEGROUP><WTIMAGE value="CONST(Assessment32.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC label="MyAssessments"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="_IsPinnacleTutorial"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+										<WTLINK name="Tutorial" target="Tutorial">
+											<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-ASSESSMENTS)"/>
+											<WTPARAM name="contentpage" value="CONST(3)"/>
+											<WTPARAM name="popup" value="CONST(1)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" align="right" class="PageHeader">
+								<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+								<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)" connector="and"/>
+								<WTCONDITION expr="_IsNewAssessment" connector="and"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(AddNew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTSTATIC label="TakeNewAssessment">
+									<WTLINK name="3112">
+										<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+										<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										<WTPARAM name="Popup" value="PARAM(Popup)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="_IsNewAssessment" connector="and"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTSTATIC col="1" label="NoAssessmentsText" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="36">
+						<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)"/>
+						<WTBUTTON col="1" action="4" value="CONST(ClickTakeNewAssessment)" align="center"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" align="left" label="MyAssessmentsText" class="prompt"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="MemberAssess">
+							<WTCOLUMN width="64" align="left" valign="top" label="Assessment"/>
+							<WTCOLUMN width="12" align="center" valign="top" label="Start"/>
+							<WTCOLUMN width="12" align="center" valign="top" label="Complete"/>
+							<WTCOLUMN width="12" align="right" valign="top" />
+							
+							<WTROW>
+								<WTSTATIC col="1">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="not-equal" value="CONST(0)" />
+										<WTIMAGE value="CONST(redx.gif)" imgalign="absmiddle"/>
+										<WTSTATIC space="1"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsCertify)" oper="not-equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(certify.gif)" alt="Certification" imgalign="absmiddle">
+											<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-NONE)"/>
+										</WTIMAGE>
+										<WTIMAGE value="CONST(certify1.gif)" alt="CertificationPass" imgalign="absmiddle">
+											<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-PASS)"/>
+										</WTIMAGE>
+										<WTIMAGE value="CONST(certify0.gif)" alt="CertificationFail" imgalign="absmiddle">
+											<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-FAIL)"/>
+										</WTIMAGE>
+										<WTSTATIC space="1"/>
+									</WTCODEGROUP>
+									
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="not-equal" value="CONST(0)" />
+										<WTSTATIC value="DATA(Assessment.AssessmentName)" fontcolor="red"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="equal" value="CONST(0)" />
+										<WTSTATIC value="DATA(Assessment.AssessmentName)"/>
+										<WTCODEGROUP>
+											<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)"/>
+											<WTCODEGROUP>
+												<WTCONDITION expr="DATA(MemberAssess.IsCertify)" oper="equal" value="CONST(0)"/>
+												<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="CONST(0)" connector="or"/>
+												<WTSTATIC space="1"/>
+												<WTIMAGE value="CONST(Preview24.gif)" alt="Preview" imgalign="absmiddle">
+													<WTLINK name="3413">
+														<WTPARAM name="AssessmentID" value="DATA(AssessmentID)"/>
+														<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTCODEGROUP>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="IsEmployee"/>
+										<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+										<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+										<WTSTATIC space="1"/>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="3403" nolocaldata="true">
+												<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+												<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									
+								</WTSTATIC>
+								<WTSTATIC col="2" value="DATA(StartDate)"/>
+								<WTSTATIC col="3" value="DATA(CompleteDate)"/>
+<!--
+								<WTSTATIC col="4" bold="true">
+									<WTSTATIC>
+										<WTCONDITION expr="DATA(MemberAssess.IsPrivate)" oper="equal" value="CONST(0)"/>
+										<WTLINK label="Public" name="3411" skipreturn="true">	
+											<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+											<WTPARAM name="IsPrivate" value="CONST(1)"/>
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC>
+										<WTCONDITION expr="DATA(MemberAssess.IsPrivate)" oper="not-equal" value="CONST(0)"/>
+										<WTLINK label="Private" name="3411" skipreturn="true">	
+											<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+											<WTPARAM name="IsPrivate" value="CONST(0)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTSTATIC>
+-->								
+								<WTSTATIC col="4" bold="true" >
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.CompleteDate)" oper="not-equal" value="CONST('')" />
+										<WTIMAGE value="CONST(Report.gif)" alt="Report" imgalign="absmiddle">
+											<WTLINK name="3460" target="Report">
+												<WTPARAM name="AssessmentID" value="DATA(AssessmentID)"/>
+												<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+<!--
+                  <WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="equal" value="CONST(0)" />
+										<WTSTATIC space="1"/>
+										<WTIMAGE value="CONST(Trash.gif)" alt="Remove" imgalign="absmiddle">
+											<WTLINK name="3411">
+												<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+												<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+												<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+												<WTPARAM name="Popup" value="PARAM(Popup)"/>
+												<WTPARAM name="RemoveID" value="DATA(MemberAssessID)"/>
+					 						</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+-->                  
+								</WTSTATIC>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1" merge="2" value="DATA(Result)" fontcolor="gray"/>
+								<WTSTATIC col="3">
+								</WTSTATIC>
+								<WTSTATIC col="4" bold="true" >
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-PASS)"/>
+										<WTCONDITION expr="DATA(MemberAssess.NoCertificate)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+										<WTCONDITION expr="NotMemberOnly" connector="or" paren="end"/>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(MemberAssess.IsCustomCertificate)" oper="equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(Certificate.gif)" alt="Certificate" imgalign="absmiddle">
+												<WTLINK name="3438" target="Certificate">
+													<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+													<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(MemberAssess.IsCustomCertificate)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(Certificate.gif)" alt="Certificate" imgalign="absmiddle">
+												<WTLINK name="3107" target="Certificate">
+													<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+													<WTPARAM name="I" value="CONST(1)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW margin-bottom="12">
+<!--
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+-->					
+				</WTROW>
+					
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_3411" caption="My Assessments" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" focus="false" viewport="width=device-width"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="61" track="0">
+			<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="IsPrivate" datatype="number"/>
+			<WTPARAM name="M" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+			<WTPARAM name="RemoveID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotAssessments" connector="and"/>
+				<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<!-- SAVE MEMBERID BEING MENTORED -->
+				<WTSETCACHE name="MentoringID" value="PARAM(MemberID)">
+					<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+				</WTSETCACHE>
+				<WTGETCACHE name="CONST(tmpMentoringID)" value="MentoringID"/>
+				<WTSETATTRIBUTE name="CONST(tmpMentoringID)" value="CONST(-1)">
+					<WTCONDITION expr="CONST(tmpMentoringID)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(MemberID)" value="SYS(MemberID)">
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTSETATTRIBUTE>
+
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" paren="start"/>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(CLng(tmpMentoringID))" connector="and" paren="end"/>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="SYS(CompanyID)" connector="or"/>
+						<WTRETURN>
+							<WTLINK name="0101" return="false">
+								<WTPARAM name="ActionCode" value="CONST(9)"/>
+							</WTLINK>
+						</WTRETURN>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="PARAM(MemberAssessID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="SetPrivate">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="IsPrivate" direction="input" value="CONST(reqIsPrivate)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(RemoveID)" oper="not-equal" value="CONST(0)"/>
+					<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+						<WTMETHOD name="Load">
+							<WTPARAM name="MemberAssessID" direction="input" value="PARAM(RemoveID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="ATTR(IsRemoved)" value="CONST(1)"/>
+						<WTMETHOD name="Save">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>
+					<WTRETURN>
+						<WTCONDITION expr="NoErrors"/>
+						<WTLINK name="m_3411">
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+							<WTPARAM name="Popup" value="PARAM(Popup)"/>
+							<WTPARAM name="RemoveID" value="CONST(0)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+
+				<WTOBJECT name="MemberAssesss" project="ptsMemberAssessUser" class="CMemberAssesss">
+					<WTMETHOD name="ListAssessmentAll">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+						<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListAssessment">
+						<WTCONDITION expr="NotEmployee"/>
+						<WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+						<WTCONDITION expr="NotOrgManagerOnly" connector="and"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssesss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="NewAssess" type="New">
+				<WTRETURN>
+					<WTLINK name="m_3112" nolocaldata="true">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+						<WTPARAM name="Popup" value="PARAM(Popup)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<WTSTATIC label="Report"/>
+				<WTSTATIC label="Edit"/>
+				<WTSTATIC label="Preview"/>
+				<WTSTATIC label="Remove"/>
+				<WTSTATIC label="Certificate"/>
+				<WTSTATIC label="Certification"/>
+				<WTSTATIC label="CertificationPass"/>
+				<WTSTATIC label="CertificationFail"/>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTSTATIC tag="Mentoring" fontcolor="red"/>
+						<WTSTATIC value="ATTR(Member.NameFirst)" space="1"/>
+						<WTSTATIC value="ATTR(Member.NameLast)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="50" align="left"/>
+						<WTCOLUMN width="50" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="MyAssessments" class="PageHeading"/>
+							<WTSTATIC col="2" align="right" class="PageHeader">
+								<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+								<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)" connector="and"/>
+								<WTCONDITION expr="_IsNewAssessment" connector="and"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(AddNew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTSTATIC label="TakeNewAssessment">
+									<WTLINK name="m_3112">
+										<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+										<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										<WTPARAM name="Popup" value="PARAM(Popup)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="_IsNewAssessment" connector="and"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTSTATIC col="1" label="NoAssessmentsText" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="36">
+						<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)"/>
+						<WTBUTTON col="1" action="4" value="CONST(ClickTakeNewAssessment)" align="center"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" align="left" label="MyAssessmentsText" class="prompt"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="MemberAssess">
+							<WTCOLUMN width="100" align="left" valign="top" label="Assessment"/>
+							<WTROW>
+								<WTSTATIC col="1">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="not-equal" value="CONST(0)" />
+										<WTIMAGE value="CONST(redx.gif)" imgalign="absmiddle"/>
+										<WTSTATIC space="1"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsCertify)" oper="not-equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(certify.gif)" alt="Certification" imgalign="absmiddle">
+											<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-NONE)"/>
+										</WTIMAGE>
+										<WTIMAGE value="CONST(certify1.gif)" alt="CertificationPass" imgalign="absmiddle">
+											<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-PASS)"/>
+										</WTIMAGE>
+										<WTIMAGE value="CONST(certify0.gif)" alt="CertificationFail" imgalign="absmiddle">
+											<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-FAIL)"/>
+										</WTIMAGE>
+										<WTSTATIC space="1"/>
+									</WTCODEGROUP>
+
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="not-equal" value="CONST(0)" />
+										<WTSTATIC value="DATA(Assessment.AssessmentName)" fontcolor="red"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="equal" value="CONST(0)" />
+										<WTSTATIC value="DATA(Assessment.AssessmentName)"/>
+										<WTCODEGROUP>
+											<WTCONDITION expr="PARAM(M)" oper="equal" value="CONST(0)"/>
+											<WTCODEGROUP>
+												<WTCONDITION expr="DATA(MemberAssess.IsCertify)" oper="equal" value="CONST(0)"/>
+												<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="CONST(0)" connector="or"/>
+												<WTSTATIC space="1"/>
+												<WTIMAGE value="CONST(Preview24.gif)" alt="Preview" imgalign="absmiddle">
+													<WTLINK name="m_3413">
+														<WTPARAM name="AssessmentID" value="DATA(AssessmentID)"/>
+														<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTCODEGROUP>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTSTATIC fontcolor="blue">
+										<WTSTATIC value="DATA(StartDate)" space="1"/>
+										<WTSTATIC value="DATA(CompleteDate)" space="1"/>
+									</WTSTATIC>
+									<WTSTATIC bold="true" >
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(MemberAssess.CompleteDate)" oper="not-equal" value="CONST('')" />
+											<WTIMAGE value="CONST(Report.gif)" alt="Report" imgalign="absmiddle">
+												<WTLINK name="m_3460" target="Report">
+													<WTPARAM name="AssessmentID" value="DATA(AssessmentID)"/>
+													<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+<!--                    
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(MemberAssess.IsRemoved)" oper="equal" value="CONST(0)" />
+											<WTSTATIC space="1"/>
+											<WTIMAGE value="CONST(Trash.gif)" alt="Remove" imgalign="absmiddle">
+												<WTLINK name="m_3411">
+													<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+													<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+													<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+													<WTPARAM name="Popup" value="PARAM(Popup)"/>
+													<WTPARAM name="RemoveID" value="DATA(MemberAssessID)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+-->                    
+									</WTSTATIC>
+								</WTSTATIC>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1" fontcolor="gray">
+									<WTSTATIC value="DATA(Result)"/>
+<!--
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-PASS)"/>
+										<WTCONDITION expr="DATA(MemberAssess.NoCertificate)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+										<WTCONDITION expr="NotMemberOnly" connector="or" paren="end"/>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(MemberAssess.IsCustomCertificate)" oper="equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(Certificate.gif)" alt="Certificate" imgalign="absmiddle">
+												<WTLINK name="3438" target="Certificate">
+													<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+													<WTPARAM name="MemberID" value="DATA(MemberID)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(MemberAssess.IsCustomCertificate)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(Certificate.gif)" alt="Certificate" imgalign="absmiddle">
+												<WTLINK name="3107" target="Certificate">
+													<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+													<WTPARAM name="I" value="CONST(1)"/>
+												</WTLINK>
+											</WTIMAGE>
+										</WTCODEGROUP>
+									</WTCODEGROUP>
+-->									
+								</WTSTATIC>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3412" caption="New Assessment" header="false" footer="false" navbar="false"
+			   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberAssesss" project="ptsMemberAssessUser" class="CMemberAssesss">
+					<WTMETHOD name="ListCompany">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssesss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>		
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Assessment" value="ATTR(Assessment.AssessmentName)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTSTATIC col="1" label="NoCompanyAssessmentText" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Total" value="PARAM(Count)" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="MemberAssess">
+							<WTCOLUMN width="12" align="left" valign="top" label="Date"/>
+							<WTCOLUMN width="30" align="left" valign="top" label="MemberName"/>
+							<WTCOLUMN width="58" align="left" valign="top" label="Result"/>
+							
+							<WTROW>
+								<WTSTATIC col="1" value="DATA(CompleteDate)" valign="top"/>
+								<WTSTATIC col="2" value="DATA(MemberName)" valign="top"/>
+								<WTSTATIC col="3" value="DATA(Result)" valign="top"/>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Total" value="PARAM(Count)" bold="true"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+					
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_3412" caption="New Assessment" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" focus="false" viewport="width=device-width"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="98" track="0">
+			<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberAssesss" project="ptsMemberAssessUser" class="CMemberAssesss">
+					<WTMETHOD name="ListCompany">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssesss" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Assessment" value="ATTR(Assessment.AssessmentName)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTSTATIC col="1" label="NoCompanyAssessmentText" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="Total" value="PARAM(Count)" bold="true"/>
+					</WTROW>
+					<WTROW>
+						<WTRECORDSET col="1" graybar="true" entity="MemberAssess">
+							<WTCOLUMN width="100" align="left" valign="top"/>
+
+							<WTROW>
+								<WTSTATIC col="1" valign="top">
+									<WTSTATIC value="DATA(CompleteDate)" space="1"/>
+									<WTSTATIC value="DATA(MemberName)" space="1"/>
+									<WTSTATIC value="DATA(Result)" space="1"/>
+								</WTSTATIC>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Total" value="PARAM(Count)" bold="true"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3413" caption="My Assessment" contentpage="true" header="false" footer="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="ExternalURL" datatype="text"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpAssessmentType)" value="ATTR(AssessmentType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpNewURL)" value="ATTR(NewURL)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEditURL)" value="ATTR(EditURL)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTRETURN>
+						<WTLINK name="3105">
+							<WTPARAM name="AssessmentID" value="PARAM(AssessmentID)"/>
+							<WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Instruction.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Assessment\&quot; + CStr(reqAssessmentID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpExternalID)" value="ATTR(ExternalID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+<WTCUSTOM>
+			If tmpExternalID &lt;&gt; &quot;&quot; Then 
+				reqExternalURL = tmpEditURL
+				reqExternalURL = Replace(reqExternalURL, "{memberassessid}", reqMemberAssessID )
+				reqExternalURL = Replace(reqExternalURL, "{externalid}", tmpExternalID )
+			End If	
+</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="CONST(tmpExternalID)" oper="equal" value="CONST(&quot;&quot;)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(CompanyID)"/>
+<WTCUSTOM>
+				reqExternalURL = tmpNewURL
+				reqExternalURL = Replace(reqExternalURL, "{firstname}", .NameFirst )
+				reqExternalURL = Replace(reqExternalURL, "{lastname}", .NameLast )
+				reqExternalURL = Replace(reqExternalURL, "{email}", .Email )
+				reqExternalURL = Replace(reqExternalURL, "{memberassessid}", reqMemberAssessID )
+</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="CONST(tmpExternalID)" oper="equal" value="CONST(&quot;&quot;)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="CONST(tmpCompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				reqExternalURL = Replace(reqExternalURL, "{company}", .CompanyName )
+</WTCUSTOM>
+				</WTOBJECT>
+<WTCUSTOM>
+		reqExternalURL = "redirect.asp?url=" + Replace(reqExternalURL, "&amp;", "%26" )
+</WTCUSTOM>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+<!--
+				<WTFUNCTION name="ReviewAssessment()">
+					var aid = document.getElementById('AssessmentID').value;
+					var maid = document.getElementById('MemberAssessID').value;
+					var mid = document.getElementById('MemberID').value;
+					var cp = document.getElementById('ContentPage').value;
+					var url = "3105.asp?assessmentid=" + aid + "&amp;memberassessid=" + maid + "&amp;memberid=" + mid + "&amp;contentpage=" + cp;
+					window.location = url;
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(AssessmentID)"/>
+					<WTHIDDEN value="PARAM(MemberAssessID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+					<WTHIDDEN value="PARAM(ContentPage)"/>
+				</WTROW>
+-->
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" class="PageHeading">
+						<WTCODEGROUP><WTIMAGE value="CONST(Assessment32.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC value="ATTR(Assessment.AssessmentName)"/>
+					</WTSTATIC>
+					<WTIMAGE col="1" merge="2" value="CONST(Shortcut.gif)">
+						<WTCONDITION expr="NotMemberOnly"/>
+						<WTCONDITION expr="_IsShortcuts" connector="or"/>
+						<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+							<WTPARAM name="EntityID" value="ENTITY(MemberAssess)"/>
+							<WTPARAM name="ItemID" value="ATTR(MemberAssess.MemberAssessID)"/>
+							<WTPARAM name="Name" value="ATTR(Assessment.AssessmentName)" clean="true"/>
+							<WTPARAM name="URL" value="SYS(PageURL)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="5" value="ATTR(Assessment.Description)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+<!--				
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTBUTTON col="1" value="CONST(ReviewAssessment)" align="center">
+						<WTCLICK>ReviewAssessment()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+-->
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTROW margin-bottom="12" margin-top="12">
+						<WTCONDITION expr="ATTR(MemberAssess.ExternalID)" oper="not-equal" value="CONST('')"/>
+						<WTSTATIC col="1" label="ReviewAssessment" class="PageHeading" align="center">
+							<WTLINK name="PARAM(ExternalURL)" type="anchor" target="ExternalAssessment"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-bottom="12" margin-top="12">
+						<WTCONDITION expr="ATTR(MemberAssess.ExternalID)" oper="not-exist"/>
+						<WTSTATIC col="1" label="CompleteAssessment" class="PageHeading" align="center">
+							<WTLINK name="PARAM(ExternalURL)" type="anchor" target="ExternalAssessment"/>
+						</WTSTATIC>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="greater-equal" value="CONST(3)"/>
+					<WTSTATIC col="1" label="ReviewMasterAssessment" class="PageHeading" align="center">
+						<WTLINK name="3414">
+							<WTPARAM name="AssessmentID" value="PARAM(AssessmentID)"/>
+							<WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="greater-equal" value="CONST(4)"/>
+					<WTSTATIC col="1" label="ReviewProgramAssessment" class="PageHeading" align="center">
+						<WTLINK name="3414">
+							<WTPARAM name="AssessmentID" value="PARAM(AssessmentID)"/>
+							<WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="24">
+					<WTSTATIC col="1" align="left" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_3413" caption="My Assessment" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" focus="false" viewport="width=device-width"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="61" track="0">
+			<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="ExternalURL" datatype="text"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpAssessmentType)" value="ATTR(AssessmentType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpNewURL)" value="ATTR(NewURL)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEditURL)" value="ATTR(EditURL)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTRETURN>
+						<WTLINK name="m_3105">
+							<WTPARAM name="AssessmentID" value="PARAM(AssessmentID)"/>
+							<WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Instruction.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Assessment\&quot; + CStr(reqAssessmentID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpExternalID)" value="ATTR(ExternalID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						If tmpExternalID &lt;&gt; &quot;&quot; Then
+						reqExternalURL = tmpEditURL
+						reqExternalURL = Replace(reqExternalURL, "{memberassessid}", reqMemberAssessID )
+						reqExternalURL = Replace(reqExternalURL, "{externalid}", tmpExternalID )
+						End If
+					</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="CONST(tmpExternalID)" oper="equal" value="CONST(&quot;&quot;)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(CompanyID)"/>
+					<WTCUSTOM>
+						reqExternalURL = tmpNewURL
+						reqExternalURL = Replace(reqExternalURL, "{firstname}", .NameFirst )
+						reqExternalURL = Replace(reqExternalURL, "{lastname}", .NameLast )
+						reqExternalURL = Replace(reqExternalURL, "{email}", .Email )
+						reqExternalURL = Replace(reqExternalURL, "{memberassessid}", reqMemberAssessID )
+					</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="CONST(tmpExternalID)" oper="equal" value="CONST(&quot;&quot;)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="CONST(tmpCompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCUSTOM>
+						reqExternalURL = Replace(reqExternalURL, "{company}", .CompanyName )
+					</WTCUSTOM>
+				</WTOBJECT>
+				<WTCUSTOM>
+					reqExternalURL = "redirect.asp?url=" + Replace(reqExternalURL, "&amp;", "%26" )
+				</WTCUSTOM>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+<!--
+				<WTFUNCTION name="ReviewAssessment()">
+					var aid = document.getElementById('AssessmentID').value;
+					var maid = document.getElementById('MemberAssessID').value;
+					var mid = document.getElementById('MemberID').value;
+					var url = "m_3105.asp?assessmentid=" + aid + "&amp;memberassessid=" + maid + "&amp;memberid=" + mid;
+					window.location = url;
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(AssessmentID)"/>
+					<WTHIDDEN value="PARAM(MemberAssessID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+-->
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" value="ATTR(Assessment.AssessmentName)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="5" value="ATTR(Assessment.Description)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+<!--
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTBUTTON col="1" value="CONST(ReviewAssessment)" align="center">
+						<WTCLICK>ReviewAssessment()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+-->
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTROW margin-bottom="12" margin-top="12">
+						<WTCONDITION expr="ATTR(MemberAssess.ExternalID)" oper="not-equal" value="CONST('')"/>
+						<WTSTATIC col="1" label="ReviewAssessment" class="PageHeading" align="center">
+							<WTLINK name="PARAM(ExternalURL)" type="anchor" target="ExternalAssessment"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-bottom="12" margin-top="12">
+						<WTCONDITION expr="ATTR(MemberAssess.ExternalID)" oper="not-exist"/>
+						<WTSTATIC col="1" label="CompleteAssessment" class="PageHeading" align="center">
+							<WTLINK name="PARAM(ExternalURL)" type="anchor" target="ExternalAssessment"/>
+						</WTSTATIC>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="greater-equal" value="CONST(3)"/>
+					<WTSTATIC col="1" label="ReviewMasterAssessment" class="PageHeading" align="center">
+						<WTLINK name="m_3414">
+							<WTPARAM name="AssessmentID" value="PARAM(AssessmentID)"/>
+							<WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="greater-equal" value="CONST(4)"/>
+					<WTSTATIC col="1" label="ReviewProgramAssessment" class="PageHeading" align="center">
+						<WTLINK name="m_3414">
+							<WTPARAM name="AssessmentID" value="PARAM(AssessmentID)"/>
+							<WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="24">
+					<WTSTATIC col="1" align="left" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3414" caption="Master Assessment" header="false" footer="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61">
+			<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="CalcMaster">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="tmpStatus" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="4" name="Return" type="Return">
+				<WTRETURN>
+					<WTLINK name="3411">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Assessment" value="ATTR(Assessment.AssessmentName)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="5" value="ATTR(Assessment.Description)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="24">
+					<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(1)"/>
+					<WTSTATIC col="1" merge="3" tag="PassCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-top="24" margin-bottom="24">
+					<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(2)"/>
+					<WTSTATIC col="1" merge="3" tag="FailCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading" fontcolor="red"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_3414" caption="Master Assessment" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" focus="false" viewport="width=device-width"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="61" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="CalcMaster">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="tmpStatus" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="4" name="Return" type="Return">
+				<WTRETURN>
+					<WTLINK name="m_3411">
+						<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Assessment" value="ATTR(Assessment.AssessmentName)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" value="ATTR(Assessment.Description)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="24">
+					<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(1)"/>
+					<WTSTATIC col="1" merge="3" tag="PassCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-top="24" margin-bottom="24">
+					<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(2)"/>
+					<WTSTATIC col="1" merge="3" tag="FailCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading" fontcolor="red"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="3420" caption="Assessment Reports" form="Report" header="false" footer="false" navbar="false" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" langfile="3420" language="false">
+		<!--==================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="MasterID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Term" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="MemberName" datatype="text"/>
+			<WTPARAM name="BusinessName" datatype="text"/>
+<!--			<WTPARAM name="M" datatype="number"/>-->
+
+			<WTACTION id="0" name="New" type="New">
+				<!-- SAVE MEMBERID BEING MENTORED -->
+<!--
+				<WTSETCACHE name="MentoringID" value="PARAM(MemberID)">
+					<WTCONDITION expr="PARAM(M)" oper="not-equal" value="CONST(0)"/>
+				</WTSETCACHE>
+				<WTGETCACHE name="CONST(tmpMentoringID)" value="MentoringID"/>
+				<WTSETATTRIBUTE name="CONST(tmpMentoringID)" value="CONST(-1)">
+					<WTCONDITION expr="CONST(tmpMentoringID)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+-->				
+				<WTSETATTRIBUTE name="PARAM(FromDate)" value="&quot;1/1/2010&quot;"/>
+				<WTSETATTRIBUTE name="PARAM(ToDate)" value="SYS(date)"/>
+				<WTSETATTRIBUTE name="PARAM(Term)" value="CONST(3)"/>
+
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(MasterID)" oper="not-equal" value="CONST(0)" connector="or"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(MemberName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+						<WTSETATTRIBUTE name="PARAM(MasterID)" value="ATTR(MasterID)">
+							<WTCONDITION expr="PARAM(MasterID)" oper="equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+						<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)">
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(MasterID)" oper="not-equal" value="CONST(0)"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MasterID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(BusinessName)" value="ATTR(CompanyName)"/>
+						<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)">
+							<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+						</WTSETATTRIBUTE>
+					</WTCODEGROUP>
+				</WTOBJECT>
+<!--				
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCompany" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Assessments" project="ptsAssessmentUser" class="CAssessments">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="EnumXMLCompany">
+						<WTPARAM name="xmlAssessments" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Item" direction="input" value="CONST()"/>
+						<WTPARAM name="Entity" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+-->
+			</WTACTION>
+			
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+			
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="225" align="right"/>
+				<WTCOLUMN width="525" align="left"/>
+			
+				<WTFUNCTION name="CreateReport( page, target, options )">
+					var url;
+					var win;
+					url = page + ".asp?CompanyID=" + Report.CompanyID.value + "&amp;MasterID=" + Report.MasterID.value + "&amp;MemberID=" + Report.MemberID.value + "&amp;FromDate=" + Report.FromDate.value + "&amp;ToDate=" + Report.ToDate.value;
+					if ( options ) url += "&amp;" + options;
+					win = window.open(url,target);
+					win.focus();
+				</WTFUNCTION>
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MasterID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="AssessmentReports" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="ReportText" align="left" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="18">
+					<WTSTATIC col="1" tag="ReportOn"/>
+					<WTCOMBO col="2" name="Term" value="PARAM(Term)" prespace="false">
+						<WTOPTION id="1" label="Yesterday"/>
+						<WTOPTION id="2" label="Today"/>
+						<WTOPTION id="3" label="UptoToday"/>
+						<WTOPTION id="4" label="PrevWeek"/>
+						<WTOPTION id="5" label="PrevMonth"/>
+						<WTOPTION id="6" label="PrevYear"/>
+						<WTOPTION id="7" label="WeekToDate"/>
+						<WTOPTION id="8" label="MonthToDate"/>
+						<WTOPTION id="9" label="YearToDate"/>
+<!--						
+						<WTOPTION id="10" label="Tomorrow"/>
+						<WTOPTION id="11" label="Next7Days"/>
+						<WTOPTION id="12" label="Next14Days"/>
+						<WTOPTION id="13" label="Next30Days"/>
+-->
+						<WTCHANGE>
+							var ONE_DAY = 1000 * 60 * 60 * 24;
+							var fromdate = new Date();
+							var todate = new Date();
+							var term = document.getElementById('Term').value;
+							switch(term) {
+							case "0":
+							document.getElementById('FromDate').value = document.getElementById('EnrollDate').value
+							break;
+							case "1":
+							fromdate.setTime(fromdate.getTime() - ONE_DAY );
+							todate = fromdate;
+							break;
+							case "2":
+							break;
+							case "3":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							fromdate.setYear(2000);
+							break;
+							case "4":
+							todate.setTime(todate.getTime() - ( todate.getDay() * ONE_DAY ) );
+							fromdate.setTime(todate.getTime() - ( 6 * ONE_DAY ) );
+							break;
+							case "5":
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setDate(1);
+							break;
+							case "6":
+							todate.setMonth(0);
+							todate.setDate(1);
+							todate.setTime(todate.getTime() - ONE_DAY );
+							fromdate.setTime(todate.getTime());
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+							case "7":
+							fromdate.setTime(fromdate.getTime() - ( (fromdate.getDay()-1) * ONE_DAY ) );
+							break;
+							case "8":
+							fromdate.setDate(1);
+							break;
+							case "9":
+							fromdate.setMonth(0);
+							fromdate.setDate(1);
+							break;
+							case "10":
+							fromdate.setTime(fromdate.getTime() + ONE_DAY );
+							todate = fromdate;
+							break;
+							case "11":
+							todate.setTime(todate.getTime() + 6 * ONE_DAY );
+							break;
+							case "12":
+							todate.setTime(todate.getTime() + 13 * ONE_DAY );
+							break;
+							case "13":
+							todate.setTime(todate.getTime() + 29 * ONE_DAY );
+							break;
+							}
+							if(term!="0"){document.getElementById('FromDate').value = fromdate.getMonth()+1 + "/" + fromdate.getDate() + "/" + fromdate.getFullYear();}
+							document.getElementById('ToDate').value = todate.getMonth()+1 + "/" + todate.getDate() + "/" + todate.getFullYear();
+						</WTCHANGE>
+					</WTCOMBO>
+					<WTSTATIC col="2" tag="From"/>
+					<WTTEXT col="2" value="PARAM(FromDate)" name="FromDate" type="date" size="8" focus="true" prespace="false"/>
+					<WTSTATIC col="2" tag="To"/>
+					<WTTEXT col="2" value="PARAM(ToDate)" name="ToDate" type="date" size="8" prespace="false"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCONDITION expr="IsEmployee" connector="or"/>
+					<WTROW margin-bottom="12">
+						<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="CONST(0)"/>
+						<WTBUTTON col="1" merge="2" align="center">
+							<WTSTATIC value="PARAM(MemberName)" spacex="1"/>
+							<WTSTATIC label="DetailReport"/>
+							<WTCLICK>CreateReport("3421","Report", "report=1&amp;assessmentid="+Report.AssessmentID.value);</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsMemberBusiness"/>
+						<WTCONDITION expr="IsEmployee" connector="or"/>
+						<WTROW margin-bottom="6">
+							<WTCONDITION expr="PARAM(MasterID)" oper="not-equal" value="CONST(0)"/>
+							<WTBUTTON col="1" merge="2" align="center">
+								<WTSTATIC value="PARAM(BusinessName)" spacex="1"/>
+								<WTSTATIC label="SummaryReport"/>
+								<WTCLICK>CreateReport("3421","Report", "report=2&amp;assessmentid="+Report.AssessmentID.value);</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+						<WTROW margin-bottom="12">
+							<WTSTATIC col="1" merge="2" label="Assessment" align="center"/>
+							<WTTEXT col="1" value="PARAM(AssessmentID)" name="AssessmentID" size="5"/>
+						</WTROW>
+
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+<!--
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+						<WTROW margin-bottom="12">
+							<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+							<WTBUTTON col="1" merge="2" align="center">
+								<WTSTATIC value="ATTR(Company.CompanyName)" spacex="1"/>
+								<WTSTATIC label="SummaryReport" spacex="1"/>
+								<WTSTATIC label="ByGroup"/>
+								<WTCLICK>CreateReport("3421","Report", "report=4&amp;assessmentid="+Report.AssessmentID.value);</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+						<WTROW margin-bottom="12">
+							<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+							<WTBUTTON col="1" merge="2" align="center">
+								<WTSTATIC value="ATTR(Company.CompanyName)" spacex="1"/>
+								<WTSTATIC label="SummaryReport" spacex="1"/>
+								<WTSTATIC label="ByBusiness"/>
+								<WTCLICK>CreateReport("3421","Report", "report=3&amp;assessmentid="+Report.AssessmentID.value);</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+				</WTCODEGROUP>
+-->
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="3421" caption="Assessment Report" header="false" footer="false" navbar="false"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" langfile="3421" language="false">
+		<!--==================================================================-->
+			<WTPARAM name="Report" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="MasterID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="FromDate" datatype="date"/>
+			<WTPARAM name="ToDate" datatype="date"/>
+			<WTPARAM name="AssessmentID" datatype="Number"/>
+			<WTPARAM name="Title" datatype="text"/>
+			<WTPARAM name="Count" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+<WTCUSTOM>
+				'validate all parameters
+				If reqReport &lt; 1 OR reqReport &gt; 4 Then reqReport = 1
+				If NOT IsDate(reqFromDate) OR NOT IsDate(reqToDate) Then
+					reqFromDate = CDate( DateAdd("d", -1, Date()) )
+					reqToDate = CDate( Date() )
+				End If
+</WTCUSTOM>
+				<WTOBJECT name="MemberAssesss" project="ptsMemberAssessUser" class="CMemberAssesss">
+					<WTMETHOD name="CertifyMember">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+					</WTMETHOD>
+					<WTMETHOD name="CertifyBusiness">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+						<WTPARAM name="MasterID" direction="input" value="PARAM(MasterID)"/>
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="CertifyCompany">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="CertifyCompanyGrp">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="FromDate" direction="input" value="PARAM(FromDate)"/>
+						<WTPARAM name="ToDate" direction="input" value="PARAM(ToDate)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Report)" oper="greater" value="CONST(1)"/>
+<WTCUSTOM>
+				For Each oMemberAssess in oMemberAssesss
+					With oMemberAssess
+						If .Num3 = 0 Then
+							.Num4 = "0%"
+						Else
+							.Num4 = FormatPercent(CLng(.Num3) / CLng(.Num1),0)
+						End If
+					End With	
+					reqCount = reqCount + 1
+				Next
+				reqCount = FormatNumber(reqCount,0)
+</WTCUSTOM>
+
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssesss" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Load">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+						<WTPARAM name="MasterID" direction="input" value="PARAM(MasterID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="ATTR(CompanyName)">
+						<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Title)" value="ATTR(CompanyName)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)" connector="or"/>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW margin-top="6"/>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+					<WTSTATIC col="1" merge="2" label="CertifyMemberReport" class="PageHeading" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+					<WTSTATIC col="1" merge="2" label="CertifyBusinessReport" class="PageHeading" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+					<WTSTATIC col="1" merge="2" label="CertifyCompanyReport" class="PageHeading" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" value="PARAM(Title)" class="PageHeading" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)" connector="or"/>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)" connector="or"/>
+					<WTSTATIC col="1" merge="2" value="ATTR(Assessment.AssessmentName)" class="PageHeading" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="center" class="BoldText">
+						<WTSTATIC value="PARAM(FromDate)"/>
+						<WTSTATIC value="CONST( - )"/>
+						<WTSTATIC value="PARAM(ToDate)"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(1)"/>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="MemberAssess">
+						<WTCOLUMN width="40" align="left" valign="top" label="AssessmentName"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="CompleteDate"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="Result"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="Passing"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="Status"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(MemberAssess.AssessmentName)">
+								<WTLINK name="3460" target="Report">
+									<WTPARAM name="AssessmentID" value="DATA(AssessmentID)"/>
+									<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(MemberAssess.CompleteDate)"/>
+							<WTSTATIC col="3" value="DATA(MemberAssess.Result)"/>
+							<WTSTATIC col="4" value="DATA(MemberAssess.Num1)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC label="Pass">
+									<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Fail">
+									<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(2)"/>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="MemberAssess">
+<!--						<WTCOLUMN width="40" align="left" valign="top" label="Group"/>-->
+						<WTCOLUMN width="20" align="left" valign="top" label="Role"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Total"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Taken"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Passed"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Percent"/>
+						<WTROW>
+<!--							<WTSTATIC col="1" value="DATA(MemberAssess.AssessmentName)"/>-->
+							<WTSTATIC col="1" value="DATA(MemberAssess.MemberName)"/>
+							<WTSTATIC col="2" value="DATA(MemberAssess.Num1)"/>
+							<WTSTATIC col="3" value="DATA(MemberAssess.Num2)"/>
+							<WTSTATIC col="4" value="DATA(MemberAssess.Num3)"/>
+							<WTSTATIC col="5" value="DATA(MemberAssess.Num4)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(3)"/>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="MemberAssess">
+						<WTCOLUMN width="40" align="left" valign="top" label="Business"/>
+						<WTCOLUMN width="12" align="left" valign="top" label="Role"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Total"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Taken"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Passed"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Percent"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(MemberAssess.AssessmentName)"/>
+							<WTSTATIC col="2" value="DATA(MemberAssess.MemberName)"/>
+							<WTSTATIC col="3" value="DATA(MemberAssess.Num1)"/>
+							<WTSTATIC col="4" value="DATA(MemberAssess.Num2)"/>
+							<WTSTATIC col="5" value="DATA(MemberAssess.Num3)"/>
+							<WTSTATIC col="6" value="DATA(MemberAssess.Num4)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(Report)" oper="equal" value="CONST(4)"/>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="MemberAssess">
+						<WTCOLUMN width="40" align="left" valign="top" label="Group"/>
+						<WTCOLUMN width="12" align="left" valign="top" label="Role"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Total"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Taken"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Passed"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Percent"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(MemberAssess.AssessmentName)"/>
+							<WTSTATIC col="2" value="DATA(MemberAssess.MemberName)"/>
+							<WTSTATIC col="3" value="DATA(MemberAssess.Num1)"/>
+							<WTSTATIC col="4" value="DATA(MemberAssess.Num2)"/>
+							<WTSTATIC col="5" value="DATA(MemberAssess.Num3)"/>
+							<WTSTATIC col="6" value="DATA(MemberAssess.Num4)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="3422" caption="Certification Lookup" navbar="false" language="false"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" langfile="3422">
+		<!--==================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Reference" datatype="text"/>
+			<WTPARAM name="AssessmentID" datatype="Number"/>
+			<WTPARAM name="Count" datatype="number"/>
+
+			<WTSUB name="Lookup">
+				<WTOBJECT name="MemberAssesss" project="ptsMemberAssessUser" class="CMemberAssesss">
+					<WTMETHOD name="CertifyLookup">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="MemberName" direction="input" value="PARAM(Reference)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssesss" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="Lookup">
+					<WTCONDITION expr="PARAM(AssessmentID)" oper="greater" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(MemberID)" oper="greater" value="CONST(0)" connector="and" paren="start"/>
+					<WTCONDITION expr="PARAM(Reference)" oper="not-equal" value="CONST(&quot;&quot;)" connector="or" paren="end"/>
+				</WTCALLSUB>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="CertifyLookup" class="PageHeading" align="center"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="AssessmentID" align="center"/>
+					<WTTEXT col="1" value="PARAM(AssessmentID)" size="5" prespace="false"/>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTTEXT col="1" value="PARAM(MemberID)" size="5" prespace="false"/>
+					<WTSTATIC col="1" tag="Reference"/>
+					<WTTEXT col="1" value="PARAM(Reference)" size="10" prespace="false"/>
+					<WTBUTTON col="1" action="0" value="CONST(Lookup)" align="center"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="MemberAssess">
+						<WTCOLUMN width="40" align="left" valign="top" label="AssessmentName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="CompleteDate"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Result"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Passing"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="Status"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(MemberAssess.AssessmentName)">
+								<WTLINK name="3460" target="Report">
+									<WTPARAM name="AssessmentID" value="DATA(AssessmentID)"/>
+									<WTPARAM name="MemberAssessID" value="DATA(MemberAssessID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(MemberAssess.CompleteDate)"/>
+							<WTSTATIC col="3" value="DATA(MemberAssess.Result)"/>
+							<WTSTATIC col="4" value="DATA(MemberAssess.Num1)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC label="Pass">
+									<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Fail">
+									<WTCONDITION expr="DATA(MemberAssess.Status)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="3438" caption="Print Certificate" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" >
+		<!--=============================================================================================-->
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+			</WTACTION>
+
+      <WTACTION name="Print" type="Print" id="1">
+        <WTRETURN>
+          <WTLINK name="3439" return="false">
+            <WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+            <WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+            <WTPARAM name="SysLanguage" value="CONST(&quot;en&quot;)"/>
+          </WTLINK>
+        </WTRETURN>
+      </WTACTION>
+
+      <WTACTION name="PrintES" type="Print" id="2">
+        <WTRETURN>
+          <WTLINK name="3439" return="false">
+            <WTPARAM name="MemberAssessID" value="PARAM(MemberAssessID)"/>
+            <WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+            <WTPARAM name="SysLanguage" value="CONST(&quot;es&quot;)"/>
+          </WTLINK>
+        </WTRETURN>
+      </WTACTION>
+
+      <!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" label="PrintCertification" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" label="PrintingInstructions" class="Prompt" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+          <WTBUTTON col="1" align="center" action="1" value="CONST(PrintCertificate)"/>
+          <WTBUTTON col="1" align="center" action="2" value="CONST(PrintCertificateES)"/>
+        </WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="3439" caption="Print Certificate" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" 
+			print="PARAM(PrintURL)" focus="false" >
+		<!--=============================================================================================-->
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="PrintURL" datatype="text"/>
+
+			<WTACTION name="New" type="New" id="0">
+<WTCUSTOM>
+			reqPrintURL = "3440.asp?MemberAssessID=" + CStr(reqMemberAssessID)
+</WTCUSTOM>				
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="center"/>
+
+				<WTLOAD>
+						document.factory.printing.header = "";
+						document.factory.printing.footer = "";
+						document.factory.printing.portrait = false;
+						document.factory.printing.leftMargin = 0.5;
+						document.factory.printing.topMargin = 0.5;
+						document.factory.printing.rightMargin = 0.5;
+						document.factory.printing.bottomMargin = 0.5;
+						document.factory.printing.Print();
+				</WTLOAD>
+        <WTFUNCTION name="ViewCertificate(lang)">
+          var url = "3440.asp?MemberAssessID=" + document.getElementById('MemberAssessID').value;
+          var win = window.open(url,"Certificate");
+          if( lang != 'en' ) { url = url + "&amp;syslanguage=" + lang; }
+          var win = window.open(url,"Certificate");
+          win.focus();
+        </WTFUNCTION>
+        <WTROW>
+					<WTHIDDEN value="PARAM(MemberAssessID)"/>
+				</WTROW>
+
+				<WTROW margin-top="48" margin-bottom="48">
+					<WTSTATIC col="1" label="PrintingCert" class="PageHeading"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTBUTTON col="1" align="center" value="CONST(Close)" >
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="PrintingInstructions3" align="left" fontcolor="red"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+          <WTBUTTON col="1" align="center" action="1" value="CONST(PreviewCertificate)">
+            <WTCLICK>ViewCertificate('en')</WTCLICK>
+          </WTBUTTON>
+          <WTBUTTON col="1" align="center" action="1" value="CONST(PreviewCertificateES)">
+            <WTCLICK>ViewCertificate('es')</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+				<WTROW>
+<!--					<WTAPPLET col="1" style="display:none" classid="clsid:1663ed61-23eb-11d2-b92f-008048fdd814" codebase="CONST(http://www.meadroid.com/scriptx/ScriptX.cab#Version=6,1,431,2)" id="factory"/>-->
+<!--					<WTAPPLET col="1" style="display:none" classid="clsid:1663ed61-23eb-11d2-b92f-008048fdd814" codebase="CONST(http://www.meadroid.com/scriptx/smsx.cab#Version=6,3,435,20)" id="factory"/>-->
+					<WTAPPLET col="1" style="display:none" classid="clsid:1663ed61-23eb-11d2-b92f-008048fdd814" codebase="CONST(http://www.meadroid.com/scriptx/smsx.cab#Version=6,3,435,20)" id="factory" viewastext="1"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="3440" caption="Certificate" header="false" footer="false" navbar="false" 
+		aspstyle="GenerateWebASP.xsl" focus="false" langfile="3440">
+		<!--=============================================================================================-->
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="StudentName" datatype="text"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Day" datatype="text"/>
+			<WTPARAM name="Month" datatype="number"/>
+			<WTPARAM name="Year" datatype="number"/>
+			<WTPARAM name="Header" datatype="text"/>
+			<WTPARAM name="Signature" datatype="text"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpAssessmentID)" value="ATTR(AssessmentID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(MemberID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="CONST(tmpAssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpTrainerID)" value="ATTR(TrainerID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="CONST(tmpMemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(IsCompany)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="PARAM(StudentName)" value="ATTR(CompanyName)"/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(IsCompany)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="PARAM(StudentName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Trainer" project="ptsTrainerUser" class="CTrainer">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TrainerID" direction="input" value="CONST(tmpTrainerID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTrainer" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			<WTCODEGROUP>
+<WTCUSTOM>
+	today = Date()
+	Select Case Day(today)
+	Case 1: reqDay = CStr(Day(today)) + "st"
+	Case 2: reqDay = CStr(Day(today)) + "nd"
+	Case 3: reqDay = CStr(Day(today)) + "rd"
+	Case Else: reqDay = CStr(Day(today)) + "th"
+	End Select
+	reqMonth = CStr(Month(today))
+	reqYear = CStr(Year(today))
+
+	reqHeader = ""
+	reqSignature = ""
+	GroupID = Numeric(GetCache("GROUPID"))
+
+	Set oFileSys = CreateObject("Scripting.FileSystemObject")
+	If GroupID &gt; 0 Then
+		FileName = "Images\Company\" + CStr(reqCompanyID) + "\CertificateHeader" + CStr(GroupID) + ".gif"
+		FilePath = Request.ServerVariables("APPL_PHYSICAL_PATH") + FileName
+		Exists = oFileSys.FileExists(FilePath)
+		If Exists Then reqHeader = FileName
+	End If
+	If reqHeader = "" Then
+		FileName = "Images\Company\" + CStr(reqCompanyID) + "\CertificateHeader.gif"
+		FilePath = Request.ServerVariables("APPL_PHYSICAL_PATH") + FileName
+		Exists = oFileSys.FileExists(FilePath)
+		If Exists Then reqHeader = FileName
+	End If
+	If reqHeader = "" Then reqHeader = "Images/CertificateHeader.gif"
+
+	If GroupID &gt; 0 Then
+		FileName = "Images\Company\" + CStr(reqCompanyID) + "\Signature" + CStr(GroupID) + ".gif"
+		FilePath = Request.ServerVariables("APPL_PHYSICAL_PATH") + FileName
+		Exists = oFileSys.FileExists(FilePath)
+		If Exists Then reqSignature = FileName
+	End If
+	If reqSignature = "" Then
+		FileName = "Images\Company\" + CStr(reqCompanyID) + "\Signature.gif"
+		FilePath = Request.ServerVariables("APPL_PHYSICAL_PATH") + FileName
+		Exists = oFileSys.FileExists(FilePath)
+		If Exists Then reqSignature = FileName
+	End If
+	If reqSignature = "" Then reqSignature = "Images/Signature.gif"
+	Set oFileSys = Nothing
+</WTCUSTOM>
+			</WTCODEGROUP>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT/>
+				<WTSTATIC label="Certification"/>
+				<WTSTATIC label="Completion"/>
+				<WTSTATIC label="Certify"/>
+				<WTSTATIC label="Completed"/>
+				<WTSTATIC label="Presented"/>
+				<WTSTATIC label="DayOf"/>
+				<WTSTATIC label="1"/>
+				<WTSTATIC label="2"/>
+				<WTSTATIC label="3"/>
+				<WTSTATIC label="4"/>
+				<WTSTATIC label="5"/>
+				<WTSTATIC label="6"/>
+				<WTSTATIC label="7"/>
+				<WTSTATIC label="8"/>
+				<WTSTATIC label="9"/>
+				<WTSTATIC label="10"/>
+				<WTSTATIC label="11"/>
+				<WTSTATIC label="12"/>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="3460" caption="Assessment Report" focus="false" navbar="false" header="ReportHeader" wrapper="wrapper650"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61" footer="false" track="0">
+		<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="ExternalURL" datatype="text"/>
+			<WTPARAM name="DisplayQuestions" datatype="number"/>
+
+			<WTSUB name="LoadAssessment">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="PARAM(AssessmentID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(AssessmentID)" value="ATTR(AssessmentID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpAssessmentType)" value="ATTR(AssessmentType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpResultType)" value="ATTR(ResultType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEditURL)" value="ATTR(EditURL)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(AssessmentType)" oper="equal" value="SYSCON(ASSESS-INTERNAL)"/>
+						<WTSETATTRIBUTE name="PARAM(DisplayQuestions)" value="SYSCON(YES)">
+							<WTCONDITION expr="ATTR(IsCertify)" oper="equal" value="SYSCON(NO)"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+							<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+							<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+							<WTCONDITION expr="IsMemberBusiness" connector="or"/>
+						</WTSETATTRIBUTE>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)" connector="and"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Result.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Assessment\&quot; + CStr(reqAssessmentID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(MemberID)" value="ATTR(MemberID)"/>
+<WTCUSTOM>
+			If tmpAssessmentType = 2 Then 
+				reqExternalURL = tmpEditURL
+				reqExternalURL = Replace(reqExternalURL, "{memberassessid}", .MemberAssessID )
+				reqExternalURL = Replace(reqExternalURL, "{externalid}", .ExternalID )
+				reqExternalURL = "redirect.asp?url=" + Replace(reqExternalURL, "&amp;", "%26" )
+			End If	
+</WTCUSTOM>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)" connector="and"/>
+						<WTSETATTRIBUTE name="CONST(tmpQuestions)" value="ATTR(Result)"/>
+<WTCUSTOM>
+					x = InStr(tmpQuestions, ";")
+					If x &gt; 0 Then tmpQuestions = Left(tmpQuestions, x-1)
+					x = InStrRev(tmpQuestions, ",")
+					If x &gt; 0 Then tmpQuestionID = Right(tmpQuestions, Len(tmpQuestions) - x)
+</WTCUSTOM>
+					</WTCODEGROUP>
+					<WTMETHOD name="GetCourses">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="tmpCourses" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="AssessQuestion" project="ptsAssessQuestionUser" class="CAssessQuestion">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessQuestionID" direction="input" value="CONST(tmpQuestionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessQuestion" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Courses" project="ptsCourseUser" class="CCourses">
+					<WTCONDITION expr="CONST(tmpCourses)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+					<WTCODEGROUP>
+						<WTMETHOD name="ListTextCourses">
+							<WTPARAM name="Description" direction="input" value="CONST(tmpCourses)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+<WTCUSTOM>
+				For Each oCourse in oCourses
+				   With oCourse
+						If IsDate(.CourseDate) Then
+							If DateDiff("d", CDate(.CourseDate), Now) &lt;= 30 Then
+								.CourseDate = reqSysDate
+							End If
+						End If
+				   End With
+				Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourses" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AssessQuestions" project="ptsAssessQuestionUser" class="CAssessQuestions">
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTMETHOD name="ListAssessment">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListQuestionText">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="Questions" direction="input" value="CONST(tmpQuestions)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessQuestions" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AssessChoices" project="ptsAssessChoiceUser" class="CAssessChoices">
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTMETHOD name="ListAssessment">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListQuestionText">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="Questions" direction="input" value="CONST(tmpQuestions)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessChoices" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AssessAnswers" project="ptsAssessAnswerUser" class="CAssessAnswers">
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTMETHOD name="ListAnswers">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)"/>
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListQuestionText">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="Questions" direction="input" value="CONST(tmpQuestions)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessAnswers" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT> 
+			</WTSUB>
+
+      <WTACTION name="New" type="New" id="0">
+        <WTCALLSUB name="LoadAssessment"/>
+      </WTACTION>
+
+      <WTACTION name="Print" type="New" id="1">
+        <WTCALLSUB name="LoadAssessment"/>
+      </WTACTION>
+
+
+      <!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="5" align="left"/>
+				<WTCOLUMN width="20" align="left"/>
+				<WTCOLUMN width="630" align="left"/>
+
+				<WTSTATIC label="ClassesRated"/>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" merge="2" align="center" class="PageHeading">
+						<WTCODEGROUP><WTIMAGE value="CONST(Report.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC value="ATTR(Assessment.AssessmentName)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" merge="2" align="center" class="PageHeading">
+						<WTSTATIC value="ATTR(Member.MemberName)" newline="1"/>
+						<WTSTATIC value="ATTR(MemberAssess.CompleteDate)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTSTATIC col="1" merge="3" label="ReviewAssessment" class="PageHeading" align="center">
+						<WTLINK name="PARAM(ExternalURL)" type="anchor" target="ExternalAssessment"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTROW margin-top="24" margin-bottom="24">
+						<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(1)"/>
+						<WTSTATIC col="1" merge="3" tag="PassCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-top="24" margin-bottom="24">
+						<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(2)"/>
+						<WTSTATIC col="1" merge="3" tag="FailCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="ATTR(Assessment.ResultType)" oper="not-equal" value="CONST(3)" connector="and"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2"/>
+						<WTSTATIC col="3" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2"/>
+						<WTSTATIC col="3" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading"/>
+					</WTROW>
+				</WTCODEGROUP>
+				
+<!-- Display Answer for Result Question                                              -->						
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="ATTR(AssessQuestion.QuestionType)" oper="equal" value="CONST(4)" connector="and"/>
+						<WTROW>
+							<WTCONDITION expr="ATTR(AssessQuestion.MediaType)" oper="equal" value="CONST(1)"/>
+							<WTIMAGE col="1" merge="3" align="center" value="ATTR(AssessQuestion.MediaFile)" imgpath="Sections\Assessment\&lt;xsl:value-of select=&quot;/DATA/PARAM/@assessmentid&quot;/&gt;\"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" merge="3" value="ATTR(AssessQuestion.Question)" >
+								<WTSTATIC space="2"/>
+								<WTSTATIC>
+									<WTCONDITION expr="ATTR(AssessQuestion.MediaType)" oper="greater" value="CONST(1)"/>
+									<WTCODEGROUP>
+										<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSASSESSQUESTION/@mediafile,':'))"/>
+										<WTSTATIC label="PlayClip" bold="true" >
+											<WTLINK name="2431" target="Video" >
+												<WTPARAM name="Video" value="ATTR(AssessQuestion.MediaFile)"/>
+											</WTLINK>
+										</WTSTATIC>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="CONST(not)" value="CONST((contains(/DATA/TXN/PTSASSESSQUESTION/@mediafile,':')))"/>
+										<WTSTATIC label="PlayClip" bold="true" >
+											<WTLINK name="2431" target="Video" >
+												<WTPARAM name="Video" value="Sections\Assessment\&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@assessmentid,'\',/DATA/TXN/PTSASSESSQUESTION/@mediafile)&quot;/&gt;"/>
+											</WTLINK>
+										</WTSTATIC>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1"/>
+							<WTDIVIDER col="2"  merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="2" value="ATTR(AssessQuestion.Description)" embedhtml="true"/>
+						</WTROW>
+				</WTCODEGROUP>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSCOURSES/PTSCOURSE))" oper="greater" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" merge="2" label="RecommendedCourses" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1"/>
+							<WTDIVIDER col="2" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTTABLE col="1" merge="3">
+							<WTCOLUMN width="65"/>
+							<WTCOLUMN width="460"/>
+							<WTCOLUMN width="55"/>
+							<WTCOLUMN width="70"/>
+							<WTREPEAT entity="Course">
+								<WTROW margin-top="3">
+									<WTIMAGE col="1" value="CONST(star&lt;xsl:value-of select=&quot;@rating&quot;/&gt;.gif)" align="left" valign="top"
+									 altx="&lt;xsl:value-of select=&quot;concat(@ratingcnt, ' ', /DATA/LANGUAGE/LABEL[@name='ClassesRated'])&quot;/&gt;">
+										<WTLINK name="1313" target="Ratings">
+											<WTPARAM name="CourseID" value="DATA(Course.CourseID)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC col="2" prespace="false">
+										<WTCODEGROUP>
+											<WTIMAGE value="CONST(new.gif)" align="left" valign="center">
+												<WTCONDITION expr="DATA(Course.CourseDate)" oper="equal" value="SYS(date)"/>
+											</WTIMAGE>
+										</WTCODEGROUP>
+										<WTSTATIC value="DATA(Course.CourseName)" bold="true">
+											<WTLINK name="1120">
+												<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+												<WTPARAM name="CourseID" value="DATA(Course.CourseID)"/>
+												<WTPARAM name="OrgCourseID" value="DATA(Course.OrgCourseID)"/>
+											</WTLINK>
+										</WTSTATIC>
+										<WTSTATIC>
+											<WTCONDITION expr="PARAM(MemberID)" oper="greater" value="CONST(0)"/>
+											<WTSTATIC space="1"/>
+											<WTCODEGROUP>
+												<WTIMAGE value="CONST(Register.gif)" alt="Register" imgalign="absmiddle">
+													<WTLINK name="1120">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="CourseID" value="DATA(Course.CourseID)"/>
+														<WTPARAM name="OrgCourseID" value="DATA(Course.OrgCourseID)"/>
+														<WTPARAM name="Register" value="CONST(1)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+										<WTSTATIC value="CONST( (#&lt;xsl:value-of select=&quot;@courseid&quot;/&gt;))"/>
+										<WTSTATIC value="CONST( - )" bold="true"/>
+										<WTSTATIC value="DATA(Course.TrainerName)">
+											<WTLINK name="0308" target="trainer">
+												<WTPARAM name="TrainerID" value="DATA(Course.TrainerID)"/>
+											</WTLINK>
+										</WTSTATIC>
+									</WTSTATIC>
+									<WTSTATIC col="3" align="right">
+										<WTSTATIC value="DATA(Course.CourseLength)"/>
+										<WTSTATIC value="CONST( min.)"/>
+									</WTSTATIC>
+									<WTSTATIC col="4" value="DATA(Course.Language)" align="right"/>
+								</WTROW>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(Course.Video)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(video.gif)"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(Course.Audio)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(audio.gif)"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(Course.Quiz)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(quiz.gif)"/>
+										</WTCODEGROUP>
+									</WTSTATIC>
+									<WTSTATIC col="2" merge="3" value="DATA(Course.Description)"/>
+								</WTROW>
+							</WTREPEAT>
+						</WTTABLE>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1"/>
+						<WTDIVIDER col="2" merge="2" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTROW margin-bottom="6">
+						<WTCONDITION expr="CONST(count(/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION))" oper="equal" value="CONST(0)"/>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2"/>
+						<WTSTATIC col="3" label="NoQuestionAvail" class="Prompt"/>
+					</WTROW>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(count(/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION))" oper="greater" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(Assessment.ResultType)" oper="not-equal" value="CONST(3)" connector="and"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="2"  value="ATTR(Assessment.AssessmentName)" class="PageHeading"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1"/>
+								<WTDIVIDER col="2" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTCONDITION expr="CONST(count(/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION))" oper="greater" value="CONST(0)"/>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2"/>
+							<WTSTATIC col="3" value="ATTR(Assessment.Description)"/>
+						</WTROW>
+					</WTCODEGROUP>
+
+					<!-- Loop to display each question -->				
+					<WTROW margin-bottom="6">
+						<WTREPEAT xpath="/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION">
+							<WTCODEGROUP>
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)"
+									oper="not-equal" value="CONST('')"/>
+								<WTCONDITION expr="DATA(Description)" oper="not-equal" value="CONST('')" connector="and"/>
+								<WTCONDITION expr="DATA(QuestionType)" oper="not-equal" value="CONST(4)" connector="and"/>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1"/>
+										<WTDIVIDER col="2" merge="2" height="1" color="SYS(divider)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2"/>
+									<WTSTATIC col="3" value="DATA(AssessQuestion.Description)" class="prompt"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1"/>
+									<WTSTATIC col="2"/>
+									<WTDIVIDER col="3" height="1" color="SYS(divider)"/>
+								</WTROW>
+							</WTCODEGROUP>
+								
+							<WTROW>
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)"
+								oper="not-equal" value="CONST('')" />
+								<WTCONDITION expr="DATA(QuestionType)" oper="not-equal" value="CONST(4)" connector="and"/>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" value="CONST(&lt;xsl:value-of select=&quot;position()&quot;/&gt;.)"/>
+								<WTSTATIC col="3">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(AssessQuestion.QuestionType)" oper="equal" value="CONST(1)"/>
+										<WTTEXT name="&lt;xsl:value-of select=&quot;@assessquestionid&quot;/&gt;" size="2"
+											value="CONST(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer&quot;/&gt;)"
+											disabled="true">
+										</WTTEXT>
+										<WTSTATIC space="2"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(AssessQuestion.QuestionType)" oper="equal" value="CONST(2)"/>
+											<WTTEXT name="&lt;xsl:value-of select=&quot;@assessquestionid&quot;/&gt;" size="2"
+												value="CONST(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer&quot;/&gt;)"
+												disabled="true" >
+											</WTTEXT>
+											<WTSTATIC space="2"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+											<WTSTATIC value="DATA(AssessQuestion.Question)"/>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+								
+							<WTROW>
+								<WTCONDITION expr="DATA(QuestionType)" oper="equal" value="CONST(5)"/>
+								<WTSTATIC col="1" merge="2"/>
+								<WTSTATIC col="3" fontcolor="blue" value="CONST(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answertext&quot;/&gt;)"/>
+							</WTROW>
+
+							<!-- Loop to display the choices for each question-->
+							<WTVARIABLE name="tmpMultiSelect" value="DATA(MultiSelect)"/>
+							<WTROW>
+								<WTCONDITION expr="DATA(QuestionType)" oper="equal" value="CONST(3)"/>
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)"
+										oper="not-equal" value="CONST('')" connector="and"/>
+								<WTREPEAT xpath="/DATA/TXN/PTSASSESSCHOICES/PTSASSESSCHOICE[(@assessquestionid = current()/@assessquestionid)]">
+									<WTROW>
+										<WTSTATIC col="1"/>
+										<WTSTATIC col="2"/>
+										<WTSTATIC col="3">
+											<WTCODEGROUP>
+												<WTCONDITION expr="CONST($tmpMultiSelect)" oper="equal" value="CONST(0)"/>
+												<WTRADIO group="&lt;xsl:value-of select=&quot;@assessquestionid&quot;/&gt;" name="&lt;xsl:value-of select=&quot;@assesschoiceid&quot;/&gt;" 
+													datapathx="/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assesschoiceid=current()/@assesschoiceid]"
+													disabled="true"/>
+											</WTCODEGROUP>
+											<WTCODEGROUP>
+												<WTCONDITION expr="CONST($tmpMultiSelect)" oper="not-equal" value="CONST(0)"/>
+													<WTCHECK name="C&lt;xsl:value-of select=&quot;@assesschoiceid&quot;/&gt;" 
+													datapathx="/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assesschoiceid=current()/@assesschoiceid]"
+													disabled="true"/>
+											</WTCODEGROUP>
+										</WTSTATIC>
+										<WTSTATIC col="3" value="DATA(Choice)"/>
+									</WTROW>
+								</WTREPEAT>
+							</WTROW>
+							<WTROW margin-bottom="6">
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)"
+										oper="not-equal" value="CONST('')" />
+							</WTROW>				
+						</WTREPEAT>
+					</WTROW>
+				</WTCODEGROUP>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTSTATIC col="1" merge="3" align="center" class="PageHeading" >
+            <WTCODEGROUP>
+              <WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="SYSCON(ASSESS-PASS)"/>
+              <WTCONDITION expr="ATTR(MemberAssess.NoCertificate)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+              <WTCONDITION expr="NotMemberOnly" connector="or" paren="end"/>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(MemberAssess.IsCustomCertificate)" oper="equal" value="CONST(0)"/>
+                <WTIMAGE value="CONST(Certificate48.gif)" alt="Certificate" imgalign="absmiddle">
+                  <WTLINK name="3438" target="Certificate">
+                    <WTPARAM name="MemberAssessID" value="ATTR(MemberAssess.MemberAssessID)"/>
+                    <WTPARAM name="MemberID" value="ATTR(MemberAssess.MemberID)"/>
+                  </WTLINK>
+                </WTIMAGE>
+                <WTSTATIC space="2"/>
+                <WTSTATIC label="PrintCertification">
+                  <WTLINK name="3438" target="Certificate">
+                    <WTPARAM name="MemberAssessID" value="ATTR(MemberAssess.MemberAssessID)"/>
+                    <WTPARAM name="MemberID" value="ATTR(MemberAssess.MemberID)"/>
+                  </WTLINK>
+                </WTSTATIC>
+              </WTCODEGROUP>
+              <WTCODEGROUP>
+                <WTCONDITION expr="ATTR(MemberAssess.IsCustomCertificate)" oper="not-equal" value="CONST(0)"/>
+                <WTIMAGE value="CONST(Certificate48.gif)" alt="Certificate" imgalign="absmiddle">
+                  <WTLINK name="3107" target="Certificate">
+                    <WTPARAM name="MemberAssessID" value="ATTR(MemberAssess.MemberAssessID)"/>
+                    <WTPARAM name="I" value="CONST(1)"/>
+                  </WTLINK>
+                </WTIMAGE>
+                <WTSTATIC space="2"/>
+                <WTSTATIC label="PrintCertification">
+                  <WTLINK name="3107" target="Certificate">
+                    <WTPARAM name="MemberAssessID" value="ATTR(MemberAssess.MemberAssessID)"/>
+                    <WTPARAM name="I" value="CONST(1)"/>
+                  </WTLINK>
+                </WTSTATIC>
+              </WTCODEGROUP>
+            </WTCODEGROUP>
+          </WTSTATIC>
+        </WTROW>
+
+        <WTROW margin-top="12" margin-bottom="12">
+          <WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+            <WTCLICK>window.close()</WTCLICK>
+          </WTBUTTON>
+        </WTROW>
+
+      </WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="m_3460" caption="Assessment Report" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" focus="false" viewport="width=device-width"
+		   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="61" track="0">
+			<!--===============================================================================-->
+			<WTPARAM name="AssessmentID" datatype="number"/>
+			<WTPARAM name="MemberAssessID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="ExternalURL" datatype="text"/>
+			<WTPARAM name="DisplayQuestions" datatype="number"/>
+
+			<WTSUB name="LoadAssessment">
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTCONDITION expr="PARAM(AssessmentID)" oper="equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(AssessmentID)" value="ATTR(AssessmentID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Assessment" project="ptsAssessmentUser" class="CAssessment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpAssessmentType)" value="ATTR(AssessmentType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpResultType)" value="ATTR(ResultType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpEditURL)" value="ATTR(EditURL)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(AssessmentType)" oper="equal" value="SYSCON(ASSESS-INTERNAL)"/>
+						<WTSETATTRIBUTE name="PARAM(DisplayQuestions)" value="SYSCON(YES)">
+							<WTCONDITION expr="ATTR(IsCertify)" oper="equal" value="SYSCON(NO)"/>
+							<WTCONDITION expr="IsEmployee" connector="or"/>
+							<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+							<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+							<WTCONDITION expr="IsMemberBusiness" connector="or"/>
+						</WTSETATTRIBUTE>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)" connector="and"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Result.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Assessment\&quot; + CStr(reqAssessmentID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="MemberAssess" project="ptsMemberAssessUser" class="CMemberAssess">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(MemberID)" value="ATTR(MemberID)"/>
+					<WTCUSTOM>
+						If tmpAssessmentType = 2 Then
+						reqExternalURL = tmpEditURL
+						reqExternalURL = Replace(reqExternalURL, "{memberassessid}", .MemberAssessID )
+						reqExternalURL = Replace(reqExternalURL, "{externalid}", .ExternalID )
+						reqExternalURL = "redirect.asp?url=" + Replace(reqExternalURL, "&amp;", "%26" )
+						End If
+					</WTCUSTOM>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)" connector="and"/>
+						<WTSETATTRIBUTE name="CONST(tmpQuestions)" value="ATTR(Result)"/>
+						<WTCUSTOM>
+							x = InStr(tmpQuestions, ";")
+							If x &gt; 0 Then tmpQuestions = Left(tmpQuestions, x-1)
+							x = InStrRev(tmpQuestions, ",")
+							If x &gt; 0 Then tmpQuestionID = Right(tmpQuestions, Len(tmpQuestions) - x)
+						</WTCUSTOM>
+					</WTCODEGROUP>
+					<WTMETHOD name="GetCourses">
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="tmpCourses" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberAssess" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="AssessQuestion" project="ptsAssessQuestionUser" class="CAssessQuestion">
+					<WTCONDITION expr="CONST(tmpAssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)" connector="and"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="AssessQuestionID" direction="input" value="CONST(tmpQuestionID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessQuestion" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Courses" project="ptsCourseUser" class="CCourses">
+					<WTCONDITION expr="CONST(tmpCourses)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+					<WTCODEGROUP>
+						<WTMETHOD name="ListTextCourses">
+							<WTPARAM name="Description" direction="input" value="CONST(tmpCourses)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+					<WTCUSTOM>
+						For Each oCourse in oCourses
+						With oCourse
+						If IsDate(.CourseDate) Then
+						If DateDiff("d", CDate(.CourseDate), Now) &lt;= 30 Then
+						.CourseDate = reqSysDate
+						End If
+						End If
+						End With
+						Next
+					</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourses" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMember" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AssessQuestions" project="ptsAssessQuestionUser" class="CAssessQuestions">
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTMETHOD name="ListAssessment">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListQuestionText">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="Questions" direction="input" value="CONST(tmpQuestions)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessQuestions" direction="return" datatype="text"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AssessChoices" project="ptsAssessChoiceUser" class="CAssessChoices">
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTMETHOD name="ListAssessment">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)"/>
+						<WTPARAM name="AssessmentID" direction="input" value="PARAM(AssessmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListQuestionText">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="Questions" direction="input" value="CONST(tmpQuestions)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessChoices" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AssessAnswers" project="ptsAssessAnswerUser" class="CAssessAnswers">
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTMETHOD name="ListAnswers">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="not-equal" value="CONST(3)"/>
+						<WTPARAM name="MemberAssessID" direction="input" value="PARAM(MemberAssessID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListQuestionText">
+						<WTCONDITION expr="CONST(tmpResultType)" oper="equal" value="CONST(3)"/>
+						<WTPARAM name="Questions" direction="input" value="CONST(tmpQuestions)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAssessAnswers" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTCALLSUB name="LoadAssessment"/>
+			</WTACTION>
+
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<WTSTATIC label="ClassesRated"/>
+
+				<WTROW>
+					<WTSTATIC col="1" value="ATTR(Assessment.AssessmentName)" align="center" class="PageHeading"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" align="center" class="PageHeading">
+						<WTSTATIC value="ATTR(Member.MemberName)" newline="1"/>
+						<WTSTATIC value="ATTR(MemberAssess.CompleteDate)"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(2)"/>
+					<WTSTATIC col="1" label="ReviewAssessment" class="PageHeading" align="center">
+						<WTLINK name="PARAM(ExternalURL)" type="anchor" target="ExternalAssessment"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTROW margin-top="24" margin-bottom="24">
+						<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(1)"/>
+						<WTSTATIC col="1" tag="PassCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-top="24" margin-bottom="24">
+						<WTCONDITION expr="ATTR(MemberAssess.Status)" oper="equal" value="CONST(2)"/>
+						<WTSTATIC col="1" tag="FailCert" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="ATTR(Assessment.ResultType)" oper="not-equal" value="CONST(3)" connector="and"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" value="ATTR(MemberAssess.Result)" align="center" class="PageHeading"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<!-- Display Answer for Result Question                                              -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(Assessment.AssessmentType)" oper="equal" value="CONST(1)"/>
+					<WTCONDITION expr="ATTR(AssessQuestion.QuestionType)" oper="equal" value="CONST(4)" connector="and"/>
+					<WTROW>
+						<WTCONDITION expr="ATTR(AssessQuestion.MediaType)" oper="equal" value="CONST(1)"/>
+						<WTIMAGE col="1" merge="3" align="center" value="ATTR(AssessQuestion.MediaFile)" imgpath="Sections\Assessment\&lt;xsl:value-of select=&quot;/DATA/PARAM/@assessmentid&quot;/&gt;\"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" value="ATTR(AssessQuestion.Question)" >
+							<WTSTATIC space="2"/>
+							<WTSTATIC>
+								<WTCONDITION expr="ATTR(AssessQuestion.MediaType)" oper="greater" value="CONST(1)"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="CONST(contains)" value="CONST((/DATA/TXN/PTSASSESSQUESTION/@mediafile,':'))"/>
+									<WTSTATIC label="PlayClip" bold="true" >
+										<WTLINK name="m_2431" target="Video" >
+											<WTPARAM name="Video" value="ATTR(AssessQuestion.MediaFile)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="CONST(not)" value="CONST((contains(/DATA/TXN/PTSASSESSQUESTION/@mediafile,':')))"/>
+									<WTSTATIC label="PlayClip" bold="true" >
+										<WTLINK name="m_2431" target="Video" >
+											<WTPARAM name="Video" value="Sections\Assessment\&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@assessmentid,'\',/DATA/TXN/PTSASSESSQUESTION/@mediafile)&quot;/&gt;"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" value="ATTR(AssessQuestion.Description)" embedhtml="true"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSCOURSES/PTSCOURSE))" oper="greater" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="RecommendedCourses" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTTABLE col="1">
+							<WTCOLUMN width="22"/>
+							<WTCOLUMN width="78"/>
+							<WTREPEAT entity="Course">
+								<WTROW margin-top="3">
+									<WTIMAGE col="1" value="CONST(star&lt;xsl:value-of select=&quot;@rating&quot;/&gt;.gif)" align="left" valign="top"
+									 altx="&lt;xsl:value-of select=&quot;concat(@ratingcnt, ' ', /DATA/LANGUAGE/LABEL[@name='ClassesRated'])&quot;/&gt;">
+										<WTLINK name="m_1313" target="Ratings">
+											<WTPARAM name="CourseID" value="DATA(Course.CourseID)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC col="2" prespace="false">
+										<WTCODEGROUP>
+											<WTIMAGE value="CONST(new.gif)" align="left" valign="center">
+												<WTCONDITION expr="DATA(Course.CourseDate)" oper="equal" value="SYS(date)"/>
+											</WTIMAGE>
+										</WTCODEGROUP>
+										<WTSTATIC value="DATA(Course.CourseName)" bold="true">
+											<WTLINK name="m_1120">
+												<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+												<WTPARAM name="CourseID" value="DATA(Course.CourseID)"/>
+												<WTPARAM name="OrgCourseID" value="DATA(Course.OrgCourseID)"/>
+											</WTLINK>
+										</WTSTATIC>
+										<WTSTATIC>
+											<WTCONDITION expr="PARAM(MemberID)" oper="greater" value="CONST(0)"/>
+											<WTSTATIC space="1"/>
+											<WTCODEGROUP>
+												<WTIMAGE value="CONST(Register.gif)" alt="Register" imgalign="absmiddle">
+													<WTLINK name="m_1120">
+														<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+														<WTPARAM name="CourseID" value="DATA(Course.CourseID)"/>
+														<WTPARAM name="OrgCourseID" value="DATA(Course.OrgCourseID)"/>
+														<WTPARAM name="Register" value="CONST(1)"/>
+													</WTLINK>
+												</WTIMAGE>
+											</WTCODEGROUP>
+										</WTSTATIC>
+										<WTSTATIC value="CONST( (#&lt;xsl:value-of select=&quot;@courseid&quot;/&gt;))" space="1"/>
+										<WTSTATIC fontcolor="purple">
+											<WTSTATIC value="DATA(Course.CourseLength)"/>
+											<WTSTATIC value="CONST( min.)"/>
+										</WTSTATIC>
+									</WTSTATIC>
+								</WTROW>
+								<WTROW>
+									<WTSTATIC col="1" align="left" valign="top">
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(Course.Video)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(video.gif)"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(Course.Audio)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(audio.gif)"/>
+										</WTCODEGROUP>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(Course.Quiz)" oper="not-equal" value="CONST(0)"/>
+											<WTIMAGE value="CONST(quiz.gif)"/>
+										</WTCODEGROUP>
+										<WTSTATIC space="1)"/>
+										<WTSTATIC value="DATA(Course.Description)"/>
+									</WTSTATIC>
+								</WTROW>
+							</WTREPEAT>
+						</WTTABLE>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(DisplayQuestions)" oper="equal" value="SYSCON(YES)"/>
+					<WTROW margin-bottom="6">
+						<WTCONDITION expr="CONST(count(/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION))" oper="equal" value="CONST(0)"/>
+						<WTSTATIC col="1" label="NoQuestionAvail" class="Prompt"/>
+					</WTROW>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(count(/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION))" oper="greater" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(Assessment.ResultType)" oper="not-equal" value="CONST(3)" connector="and"/>
+						<WTROW>
+							<WTSTATIC col="1" value="ATTR(Assessment.AssessmentName)" class="PageHeading"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTCONDITION expr="CONST(count(/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION))" oper="greater" value="CONST(0)"/>
+							<WTSTATIC col="1" value="ATTR(Assessment.Description)"/>
+						</WTROW>
+					</WTCODEGROUP>
+
+					<!-- Loop to display each question -->
+					<WTROW margin-bottom="6">
+						<WTREPEAT xpath="/DATA/TXN/PTSASSESSQUESTIONS/PTSASSESSQUESTION">
+							<WTCODEGROUP>
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)"
+									oper="not-equal" value="CONST('')"/>
+								<WTCONDITION expr="DATA(Description)" oper="not-equal" value="CONST('')" connector="and"/>
+								<WTCONDITION expr="DATA(QuestionType)" oper="not-equal" value="CONST(4)" connector="and"/>
+								<WTROW margin-bottom="6">
+									<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" value="DATA(AssessQuestion.Description)" class="prompt"/>
+								</WTROW>
+								<WTROW margin-bottom="6">
+									<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+								</WTROW>
+							</WTCODEGROUP>
+
+							<WTROW>
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)" oper="not-equal" value="CONST('')" />
+								<WTCONDITION expr="DATA(QuestionType)" oper="not-equal" value="CONST(4)" connector="and"/>
+								<WTSTATIC col="1" valign="top">
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;position()&quot;/&gt;.)" fontcolor="blue" bold="true" space="1"/>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(AssessQuestion.QuestionType)" oper="equal" value="CONST(1)"/>
+										<WTTEXT name="&lt;xsl:value-of select=&quot;@assessquestionid&quot;/&gt;" size="2"
+											value="CONST(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer&quot;/&gt;)"
+											disabled="true">
+										</WTTEXT>
+										<WTSTATIC space="2"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(AssessQuestion.QuestionType)" oper="equal" value="CONST(2)"/>
+										<WTTEXT name="&lt;xsl:value-of select=&quot;@assessquestionid&quot;/&gt;" size="2"
+											value="CONST(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer&quot;/&gt;)"
+											disabled="true" >
+										</WTTEXT>
+										<WTSTATIC space="2"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTSTATIC value="DATA(AssessQuestion.Question)"/>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+
+							<WTROW>
+								<WTCONDITION expr="DATA(QuestionType)" oper="equal" value="CONST(5)"/>
+								<WTSTATIC col="1" fontcolor="blue" value="CONST(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answertext&quot;/&gt;)"/>
+							</WTROW>
+
+							<!-- Loop to display the choices for each question-->
+							<WTVARIABLE name="tmpMultiSelect" value="DATA(MultiSelect)"/>
+							<WTROW>
+								<WTCONDITION expr="DATA(QuestionType)" oper="equal" value="CONST(3)"/>
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)"
+										oper="not-equal" value="CONST('')" connector="and"/>
+								<WTREPEAT xpath="/DATA/TXN/PTSASSESSCHOICES/PTSASSESSCHOICE[(@assessquestionid = current()/@assessquestionid)]">
+									<WTROW>
+										<WTSTATIC col="1">
+											<WTCODEGROUP>
+												<WTCONDITION expr="CONST($tmpMultiSelect)" oper="equal" value="CONST(0)"/>
+												<WTRADIO group="&lt;xsl:value-of select=&quot;@assessquestionid&quot;/&gt;" name="&lt;xsl:value-of select=&quot;@assesschoiceid&quot;/&gt;"
+													datapathx="/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assesschoiceid=current()/@assesschoiceid]"
+													disabled="true"/>
+											</WTCODEGROUP>
+											<WTCODEGROUP>
+												<WTCONDITION expr="CONST($tmpMultiSelect)" oper="not-equal" value="CONST(0)"/>
+												<WTCHECK name="C&lt;xsl:value-of select=&quot;@assesschoiceid&quot;/&gt;"
+												datapathx="/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assesschoiceid=current()/@assesschoiceid]"
+												disabled="true"/>
+											</WTCODEGROUP>
+											<WTSTATIC space="1"/>
+											<WTSTATIC value="DATA(Choice)"/>
+										</WTSTATIC>
+									</WTROW>
+								</WTREPEAT>
+							</WTROW>
+							<WTROW margin-bottom="6">
+								<WTCONDITION expr="CONST(/DATA/TXN/PTSASSESSANSWERS/PTSASSESSANSWER[@assessquestionid=current()/@assessquestionid]/@answer)" oper="not-equal" value="CONST('')" />
+							</WTROW>
+						</WTREPEAT>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" align="center" value="CONST(Close)" >
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

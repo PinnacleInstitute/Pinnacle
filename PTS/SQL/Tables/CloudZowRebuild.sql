@@ -1,0 +1,12 @@
+EXEC [dbo].pts_CheckTableRebuild 'CloudZow'
+ GO
+
+ALTER TABLE [dbo].[CloudZow] WITH NOCHECK ADD
+
+GO
+
+ALTER TABLE [dbo].[CloudZow] WITH NOCHECK ADD
+   CONSTRAINT [PK_CloudZow] PRIMARY KEY NONCLUSTERED
+   ([CloudZowID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

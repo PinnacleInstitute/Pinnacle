@@ -1,0 +1,35 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+<s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<GetReportResponse xmlns="http://schema.microbilt.com/messages/">
+<GetReportResult>
+
+<MsgRsHdr xmlns="http://schema.microbilt.com/globals">
+<RqUID>{8048D01E-A6EC-4DA0-A843-EA008A0BDF7E}</RqUID>
+<Status>
+<StatusCode>0</StatusCode>
+<Severity>Info</Severity>
+<StatusDesc>OK</StatusDesc>
+<AdditionalStatus><StatusCode>0</StatusCode>
+<ServerStatusCode>U19</ServerStatusCode>
+<Severity>Info</Severity>
+<StatusDesc>INVALID TRN</StatusDesc>
+</AdditionalStatus>
+</Status>
+</MsgRsHdr>
+
+<RefNum xmlns="http://schema.microbilt.com/globals">7-5</RefNum>
+<MerchantId xmlns="http://schema.microbilt.com/globals">128710</MerchantId>
+<SalesAmt xmlns="http://schema.microbilt.com/globals"><Amt>1.0</Amt></SalesAmt>
+<PersonInfo Source="AT" EffDt="2011-06-27" xmlns="http://schema.microbilt.com/globals"><PersonName Source="AT" EffDt="2011-06-27"><LastName/><FirstName/></PersonName></PersonInfo>
+<TraceNum xmlns="http://schema.microbilt.com/globals">182EE6D2-31A9-4638-A67C-841863EFFB98</TraceNum>
+<AuthorizationCd xmlns="http://schema.microbilt.com/globals"/>
+
+<Message Source="AT" EffDt="2011-06-27" xmlns="http://schema.microbilt.com/globals">
+<MsgClass>STATUS</MsgClass>
+<MsgCode>D</MsgCode><Text>DECLINED</Text>
+</Message>
+
+</GetReportResult>
+</GetReportResponse>
+</s:Body>
+</s:Envelope>

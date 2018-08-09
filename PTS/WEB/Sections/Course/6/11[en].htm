@@ -1,0 +1,79 @@
+<FONT face="MS Sans Serif">Our first Web page had a slight problem... the spaces and line breaks I typed were not recognized by the Browser. Now what? Well there are tags I can use to create a soft return and hard return. Here they are. </FONT>
+<P><B>Line Break</B> (soft return) - <B>&lt;br /&gt;</B>
+<BR>This starts a new line. NO closing tag is needed, just include the ending slash to conform to XML standards. 
+<P><B>Paragraph</B> (hard return) - <B>&lt;p&gt;</B>
+<BR>This skips one line and starts a new line. A closing tag is needed. &lt;/p&gt; 
+<P><B>Horizontal Lines</B>
+<BR><B>&lt;hr /&gt;</B>
+<BR>This tag makes a very fine shaded horizontal line such as the one shown below. NO closing tag is needed. <HR>You can also control the thickness, length and alignment of the line, by combining the following attributes:
+<BR><B>Width</B> is expressed as a % of the width of the page.
+<BR>For example, <B>&lt;hr width=50% /&gt;</B>
+<BR><HR width="50%">
+<BR>or a fixed size such as: <B>&lt;hr width=100 /&gt;</B> where 100 is pixels
+<BR><HR width=100>
+<BR><B>Size</B> is (thickness) expressed as a number (of pixels).
+<BR>For example, <B>&lt;hr width=50% size=10 /&gt;</B>
+<BR><HR width="50%" SIZE=10>
+<BR><B>Align</B> can be left or right. If not specified, it will default to the center.
+<BR>For example,<B> &lt;hr width=50% size=10 align=right /&gt;</B>
+<BR><HR align=right width="50%" SIZE=10>
+<BR><B>Noshade</B> You can make the line dark by specifying noshade.
+<BR>For example,<B>&lt;hr width=50% size=10 align=right noshade /&gt;</B>
+<BR><HR align=right width="50%" noShade SIZE=10>
+<P><B>Blank Space</B><B>&amp;nbsp;</B>
+<BR>This is a non-breaking space tag. If you use five of these in a row, <B>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</B> Then you will get a space &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this wide. 
+<P>Now lets use the line break and spaces tags to adjust our text. 
+<P><B>Step 1 - Adding the Paragraph Tag</B>
+<BR>In HTML, you MUST identify the beginning and end of each paragraph you type. To do so, place the &lt;P&gt; tag at the beginning of the paragraph and the &lt;/P&gt; tag at the end of the paragraph. 
+<P>The &lt;P&gt; and &lt;/P&gt; tags mark the beginning and end of a paragraph. If the text between these two tags is longer than one line, it will wrap around to the next line automatically. The text between these tags will default to left aligned. 
+<P>To create a paragraph, move below the line:
+<BR>FunnyFakeFish.com 
+<P>Type <B>&lt;P&gt;</B> 
+<P>Then below the paragraph 
+<BR>"This is a fictitious website created as a learning tool for my students. The subject of the web project was chosen because I enjoy creating websites and my husband enjoys fish. I buy computers and software, he buys live rock, filters, pumps, and corals. Our mission is to raise money thru online courses and educational materials so that he can have a 500 gallon tank and I can have a flat panel display." 
+<P>type <B>&lt;/P&gt; &lt;P&gt;</B> 
+<P>Great, now my code will display a blank line between FunnyFakeFish.com and the descriptive paragraph and another blank line between the end of the corporate paragraph and the addess. 
+<P><B>Step 2 - Adding a Line Break</B>
+<BR>At the end of each line of the Corporate Headquarters Address insert a &lt;br /&gt; tag to create a new line. These tags are stand alone tags and do not need ending tags. 
+<P><B>Step 3 - Blank Spaces</B>
+<BR>Under the name of the company I want to add the company slogan
+<BR>move over Pet Rock...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;there's a new Pet in town 
+<P>type
+<BR>move over Pet Rock...<B>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</B>there's a new Pet in town. 
+<P><B>Step 4 - Adding Horizontal Rules</B>
+<BR>Between the descriptive paragraph and the corporate address add the code for a horizontal rule. 
+<BR><B>&lt;hr width=60% /&gt;</B> 
+<P>Now let's get wild and crazy and add 2 more. type <B>&lt;hr width=40% /&gt;</B>and <B>&lt;hr width=20% /&gt;</B> 
+<P><B>Step 6 - Inserting Multiple Blank Lines</B>
+<BR>Between the descriptive paragraph and the 3 horizontal rules I would like to add 3 blank lines. Sounds simple doesn't it? Well.... 
+<P>Typing &lt;P&gt; &lt;P&gt; &lt;P&gt; will only produce one blank line, because the 
+<P>tag only works in conjunctin with text. The first &lt;P&gt; tag is implementsed and the second and third are ignored.... bummer! 
+<P>Instead try this &lt;br /&gt; &lt;br /&gt; &lt;br /&gt; Press ENTER. 
+<P>Much Better!! Your web page should look like this. 
+<P>&lt;HTML&gt;
+<BR>&lt;HEAD&gt;
+<BR>&lt;TITLE&gt;Funny Fake Fish for Home or Office &lt;/TITLE&gt; 
+<BR>&lt;META name="description" content=" FunnyFakeFish.com has the perfect gag gift for your family and co-workers. Humorous, witty, fake fish produces a joke of the day. Provides fun, laughter, and surprises/"&gt;
+<BR>&lt;/HEAD&gt;
+<BR>&lt;BODY&gt;
+<BR>FunnyFakeFish.com 
+<BR>move over Pet Rock...<B>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</B>there's a new Pet in town <B>&lt;P&gt;</B>
+<BR>This is a fictitious website created as a learning tool for my students. The subject of the web project was chosen because I enjoy creating websites and my husband enjoys fish. I buy computers and software, he buys live rock, filters, pumps, and corals. Our mission is to raise money thru online courses and educational materials so that he can have a 500 gallon tank and I can have a flat panel display.
+<BR><B>&lt;/P&gt; 
+<BR>&lt;br /&gt; &lt;br /&gt; &lt;br /&gt;
+<BR>&lt;hr width=60% /&gt;
+<BR>&lt;hr width=40% /&gt;
+<BR>&lt;hr width=20% /&gt;
+<BR></B>Corporate Headquarters:
+<BR><B>&lt;br /&gt;</B>
+<BR>Burnt Pan Productions
+<BR><B>&lt;br /&gt;</B>
+<BR>01010 Digital Drive
+<BR>&lt;br /&gt;
+<BR>Etherware, CA 10101
+<BR><B>&lt;br /&gt;</B>
+<BR>(800) 123-4567
+<BR>&lt;/BODY&gt;
+<BR>&lt;/HTML&gt; 
+<P><B><CENTER></CENTER></B>
+<P> 

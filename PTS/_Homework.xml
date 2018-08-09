@@ -1,0 +1,387 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="68" name="Homework" alias="hw" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="6801" name="HomeworkID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="6802" name="LessonID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="6803" name="LessonName" type="text" length="60" source="join">
+			<WTJOIN entity="Lesson" name="LessonName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="6805" name="Name" type="text" length="60" title="true" source="entity"/>
+		<WTATTRIBUTE id="6806" name="Description" type="text" length="2000" min="1" max="2000" source="entity" embedhtml="true"/>
+		<WTATTRIBUTE id="6807" name="Seq" type="number" source="entity"/>
+		<WTATTRIBUTE id="6808" name="Weight" type="number" source="entity"/>
+		<WTATTRIBUTE id="6809" name="IsGrade" type="yesno" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="6890" name="SessionLessonID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="6891" name="AttachmentID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="6892" name="Score" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="6893" name="CourseID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="6894" name="SessionID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="LessonID">
+			<WTATTRIBUTE name="LessonID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Homework" entity="Homework" alias="hw"/>
+			<WTRELATIONSHIP name="Common" entity="Homework" alias="hw">
+				<WTENTITY name="Lesson" entity="Lesson" alias="le">
+					<WTATTRIBUTE alias="hw" name="LessonID" relalias="le" relname="LessonID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(LessonID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Homework.HomeworkID)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Name)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Description)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Seq)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Weight)"/>
+					<WTATTRIBUTE value="ATTR(Homework.IsGrade)"/>
+					<WTJOIN name="Homework"/>
+					<WTCONDITION expr="ATTR(LessonID)" oper="equal" value="PARAM(LessonID)"/>
+					<WTORDER name="ATTR(Homework.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListAttachment" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(SessionLessonID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Homework.HomeworkID)"/>
+					<WTATTRIBUTE value="ATTR(Homework.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Name)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Description)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Seq)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Weight)"/>
+					<WTATTRIBUTE value="ATTR(Homework.IsGrade)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Score)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListSession" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(SessionID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Homework.HomeworkID)"/>
+					<WTATTRIBUTE value="ATTR(Homework.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Name)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Description)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Seq)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Weight)"/>
+					<WTATTRIBUTE value="ATTR(Homework.IsGrade)"/>
+					<WTATTRIBUTE value="ATTR(Homework.Score)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListGrade" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CourseID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Homework.HomeworkID)"/>  <!-- AttachmentID -->
+					<WTATTRIBUTE value="ATTR(Homework.Name)"/>        <!-- Lesson Name -->
+					<WTATTRIBUTE value="ATTR(Homework.Description)"/> <!-- Homework Name -->
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6802" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+		<WTPARAM name="LessonID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Homework" project="ptsHomeworkUser" class="CHomework">
+					<WTMETHOD name="Load">
+						<WTPARAM name="HomeworkID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomework" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Homework" project="ptsHomeworkUser" class="CHomework">
+					<WTMETHOD name="Load">
+						<WTPARAM name="HomeworkID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(LessonID)" value="PARAM(LessonID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="HomeworkID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHomework" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewHomework" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Name"/>
+					<WTTEXT col="2" value="ATTR(Homework.Name)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(Homework.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Weight"/>
+					<WTTEXT col="2" value="ATTR(Homework.Weight)" prespace="false" size="2"/>
+					<WTSTATIC col="2" value="CONST(%)" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Homework.IsGrade)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Homework.Description)" cols="72" rows="10" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6803" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="HomeworkID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Homework" project="ptsHomeworkUser" class="CHomework">
+					<WTMETHOD name="Load">
+						<WTPARAM name="HomeworkID" direction="input" value="PARAM(HomeworkID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomework" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Homework" project="ptsHomeworkUser" class="CHomework">
+					<WTMETHOD name="Load">
+						<WTPARAM name="HomeworkID" direction="input" value="PARAM(HomeworkID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHomework" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Homework" project="ptsHomeworkUser" class="CHomework">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="HomeworkID" direction="input" value="PARAM(HomeworkID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Homework" project="ptsHomeworkUser" class="CHomework">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="HomeworkID" direction="input" value="PARAM(HomeworkID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomework" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Homework" value="ATTR(Homework.Name)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Name"/>
+					<WTTEXT col="2" value="ATTR(Homework.Name)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(Homework.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Weight"/>
+					<WTTEXT col="2" value="ATTR(Homework.Weight)" prespace="false" size="2"/>
+					<WTSTATIC col="2" value="CONST(%)" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Homework.IsGrade)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Homework.Description)" cols="72" rows="10" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6811" caption="Grade Homework" navbar="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CourseID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Course" project="ptsCourseUser" class="CCourse">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourse" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Homeworks" project="ptsHomeworkUser" class="CHomeworks">
+					<WTMETHOD name="ListGrade">
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHomeworks" direction="return" concat="true" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="GradeHomework" value="ATTR(Course.CourseName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Homework">
+						<WTCOLUMN width="10" align="center" valign="top" label="Grade"/>
+						<WTCOLUMN width="45" align="left" valign="top" label="Lesson"/>
+						<WTCOLUMN width="45" align="left" valign="top" label="Homework"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="8003">
+											<WTPARAM name="AttachmentID" value="DATA(Homework.HomeworkID)"/>
+											<WTPARAM name="ContentPage" value="CONST(3)"/>
+											<WTPARAM name="Mini" value="CONST(2)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Homework.Name)"/>
+							<WTSTATIC col="3" value="DATA(Homework.Description)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

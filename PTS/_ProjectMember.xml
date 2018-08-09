@@ -1,0 +1,586 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="76" name="ProjectMember" alias="pjm" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="7601" name="ProjectMemberID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="7602" name="ProjectID" type="number" source="entity"/>
+		<WTATTRIBUTE id="7603" name="MemberID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="7605" name="ProjectName" type="text" length="60" source="join">
+			<WTJOIN entity="Project" name="ProjectName"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7606" name="NameLast" type="text" length="30" source="join">
+			<WTJOIN entity="Member" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7607" name="NameFirst" type="text" length="30" source="join">
+			<WTJOIN entity="Member" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7608" name="MemberName" type="text" length="61" source="entity">
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=" "/>
+			<WTCOMPUTE name="NameLast"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="7610" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="ReadOnly"/>
+		</WTATTRIBUTE>
+		
+		<!-- Non-Persist Attributes -->
+		
+		<!--Indexes-->
+		<WTINDEX name="ProjectMember">
+			<WTATTRIBUTE name="ProjectID"/>
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="ProjectID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="ProjectMember" entity="ProjectMember" alias="pjm"/>
+			<WTRELATIONSHIP name="Common" entity="ProjectMember" alias="pjm">
+				<WTENTITY name="Project" entity="Project" alias="pr">
+					<WTATTRIBUTE alias="pjm" name="ProjectID" relalias="pr" relname="ProjectID"/>
+				</WTENTITY>
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="pjm" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Member" entity="ProjectMember" alias="pjm">
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="pjm" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Project" entity="ProjectMember" alias="pjm">
+				<WTENTITY name="Project" entity="Project" alias="pr">
+					<WTATTRIBUTE alias="pjm" name="ProjectID" relalias="pr" relname="ProjectID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--=============================================================================================-->
+		<WTPROCEDURE type="List" name="ListProject" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(ProjectMember.ProjectMemberID)"/>
+					<WTATTRIBUTE value="ATTR(Project.ProjectName)" alias="ProjectName"/>
+					<WTATTRIBUTE value="ATTR(ProjectMember.Status)"/>
+					<WTJOIN name="Project" lock="false"/>
+					<WTCONDITION expr="ATTR(ProjectMember.MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(Project.ProjectName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--=============================================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(ProjectMember.ProjectMemberID)"/>
+					<WTATTRIBUTE value="ATTR(ProjectMember.MemberID)"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberName)" alias="MemberName"/>
+					<WTATTRIBUTE value="ATTR(ProjectMember.Status)"/>
+					<WTJOIN name="Member" lock="false"/>
+					<WTCONDITION expr="ATTR(ProjectMember.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTORDER name="ATTR(ProjectMember.MemberName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumMember" enumname="EnumUserMember" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(ProjectMember.ProjectID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserMember" style="GenerateDataProc.xsl" column="MemberName" template="new" passthru="true">
+			<WTPARAM name="ATTR(ProjectMember.ProjectID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(ProjectMember.MemberID)"/>
+					<WTATTRIBUTE alias="Name" value="ATTR(Member.MemberName)"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(ProjectMember.ProjectID)" oper="equal" value="PARAM(ProjectID)"/>
+					<WTORDER name="ATTR(ProjectMember.MemberName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="Copy"  type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(ProjectID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>   <!-- Project to copy from -->
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7603" caption="Project Member" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="ProjectMemberID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTSUB name="LoadProjectMember">
+				<WTOBJECT name="ProjectMember" project="ptsProjectMemberUser" class="CProjectMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProjectMemberID" direction="input" value="PARAM(ProjectMemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>			
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProjectMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadProjectMember"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="ProjectMember" project="ptsProjectMemberUser" class="CProjectMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ProjectMemberID" direction="input" value="PARAM(ProjectMemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>	
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProjectMember" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadProjectMember">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="ProjectMember" project="ptsProjectMemberUser" class="CProjectMember">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ProjectMemberID" direction="input" value="PARAM(ProjectMemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadProjectMember">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>		
+					<WTSTATIC col="1" merge="2" tag="ProjectMember" value="ATTR(ProjectMember.MemberName)" align="left" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+	
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTTEXT col="2" value="ATTR(ProjectMember.MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(ProjectMember.MemberID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(ProjectMember.Status)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" align="center" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7611" caption="Project Members" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ProjectID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="ParentID" datatype="number"/>
+			<WTPARAM name="RemoveID" datatype="number"/>
+
+			<WTSUB name="LoadProjectMembers">
+				<WTOBJECT name="ProjectMembers" project="ptsProjectMemberUser" class="CProjectMembers">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlProjectMembers" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="ProjectMember" project="ptsProjectMemberUser" class="CProjectMember">
+					<WTCONDITION expr="PARAM(RemoveID)" oper="greater" value="CONST(0)"/>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ProjectMemberID" direction="input" value="PARAM(RemoveID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadProjectMembers"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Copy" type="Update">
+				<WTOBJECT name="ProjectMember" project="ptsProjectMemberUser" class="CProjectMember">
+					<WTMETHOD name="Copy">
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+						<WTPARAM name="ProjectID" direction="input" value="PARAM(ProjectID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(ParentID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadProjectMembers"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="75" align="left"/>
+				<WTCOLUMN width="600" align="right"/>
+				<WTCOLUMN width="75" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" label="ProjectMembers" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTLINKGROUP col="2" align="right">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="SYS(MemberID)" connector="or"/>
+						<WTLINK name="7612" label="NewProjectMember">
+							<WTPARAM name="ProjectID" value="PARAM(ProjectID)"/>
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTLINKGROUP>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="SYS(MemberID)" connector="or"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" align="left" label="ProjectMembersText" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="true" entity="ProjectMember">
+						<WTCOLUMN width="50" align="left" label="MemberName"/>
+						<WTCOLUMN width="40" align="left" label="Status"/>
+						<WTCOLUMN width="10" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(ProjectMember.MemberName)">
+									<WTCONDITION expr="NotEmployee"/>
+									<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="SYS(MemberID)" connector="and"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(ProjectMember.MemberName)">
+									<WTLINK name="7603">
+										<WTCONDITION expr="IsEmployee"/>
+										<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="SYS(MemberID)" connector="or"/>
+										<WTPARAM name="ProjectMemberID" value="DATA(ProjectMemberID)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(ProjectMember.Status)"/>
+							<WTSTATIC col="3" label="Remove" bold="true">
+								<WTLINK name="7611" skipreturn="true">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="SYS(MemberID)" connector="or"/>
+									<WTPARAM name="ProjectID" value="PARAM(ProjectID)"/>
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									<WTPARAM name="ParentID" value="PARAM(ParentID)"/>
+									<WTPARAM name="RemoveID" value="DATA(ProjectMemberID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="3" action="1" value="CONST(CopyParentMembers)" align="center">
+						<WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7612" caption="Find" action="5" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="ProjectID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="CONST(0424)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="New">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="8" name="Include" type="Add">
+				<!--	Refresh current list -->
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(0)"/>
+				<WTSETATTRIBUTE name="CONST(tmpInclude)" value="CONST(1)"/>
+			</WTACTION>
+
+<!-- Load the Member object for searching -->
+			<WTOBJECT name="Members" project="ptsMemberUser" class="CMembers">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="FindOwner">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlMembers" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+<!-- detect and add any selected members included in a project -->				
+<WTCUSTOM>
+					If tmpInclude = 1 Then 
+						tmpCnt = 0
+						Set oProjectMember = server.CreateObject("ptsProjectMemberUser.CProjectMember")
+						If oProjectMember Is Nothing Then
+						   DoError Err.Number, Err.Source, "Unable to Create Object - ptsProjectMemberUser.CProjectMember"
+						Else
+							oProjectMember.ProjectID = reqProjectID
+							oProjectMember.Status = 1
+							For Each oMem in oMembers
+								tmpID = oMem.MemberID
+								If Request.Form.Item(tmpID) = "on" Then
+									oProjectMember.MemberID = tmpID
+									oProjectMemberID = oProjectMember.Add (CLng(reqSysUserID))
+									tmpCnt = tmpCnt + 1
+									If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+								End If
+							Next
+						End If
+						Set oProjectMember = Nothing
+						DoError reqUploadError, "Include", tmpCnt &amp; " Members Included!"
+					End If
+</WTCUSTOM>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+			<WTSTATIC label="MemberName"/>
+			<WTSTATIC label="CompanyName"/>
+			<WTSTATIC label="MemberID"/>
+			<WTSTATIC label="Reference"/>
+			<WTSTATIC label="Phone1"/>
+			<WTSTATIC label="Status"/>
+			<WTSTATIC label="Email"/>
+			<WTSTATIC label="EnrollDate"/>
+			<WTSTATIC label="MasterID"/>
+			<WTSTATIC label="Grp"/>
+			<WTSTATIC label="Role"/>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="IncludeMembers" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="IncludeMembersText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader" align="center"/>
+					<WTCOMBO col="1" value="ATTR(Members.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" action="8" align="center" value="CONST(IncludeMembers)"/>
+					<WTBUTTON col="1" action="3" value="CONST(Return)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Member">
+						<WTCOLUMN width="7" align="left" valign="top" label="#"/>
+						<WTCOLUMN width="4" align="left" valign="top"/>
+						<WTCOLUMN width="30" align="left" valign="top" label="MemberName"/>
+						<WTCOLUMN width="30" align="left" valign="top" label="Email"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="Status"/>
+						<WTCOLUMN width="14" align="left" valign="top" label="Reference"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Member.MemberID)"/>
+							<WTCHECK col="2" name="&lt;xsl:value-of select=&quot;@memberid&quot;/&gt;"/>
+							<WTSTATIC col="3" value="DATA(Member.MemberName)"/>
+							<WTSTATIC col="4" value="DATA(Member.Email)"/>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Member.Status)" oper="less" value="SYSCON(MEMBER-TRIAL)"/>
+								<WTSTATIC col="5" value="DATA(Member.Status)"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Member.Status)" oper="equal" value="SYSCON(MEMBER-TRIAL)"/>
+								<WTSTATIC col="5" value="DATA(Member.Status)" fontcolor="green"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Member.Status)" oper="equal" value="SYSCON(MEMBER-FREE)"/>
+								<WTSTATIC col="5" value="DATA(Member.Status)" fontcolor="purple"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Member.Status)" oper="greater" value="SYSCON(MEMBER-FREE)"/>
+								<WTSTATIC col="5" value="DATA(Member.Status)" fontcolor="red"/>
+							</WTCODEGROUP>
+							<WTSTATIC col="6" value="DATA(Member.Reference)"/>
+						</WTROW>
+						<WTROW>
+							<WTCODEGROUP>
+								<WTSTATIC col="1" merge="2"/>
+							</WTCODEGROUP>
+							<WTSTATIC col="3" valign="top">
+								<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;@enrolldate&quot;/&gt;)" space="1" fontcolor="gray"/>
+								<WTSTATIC value="DATA(Member.Billing)" fontcolor="gray"/>
+							</WTSTATIC>
+							<WTSTATIC col="4" merge="3" fontcolor="gray">
+								<WTSTATIC value="DATA(Member.Street)" space="1"/>
+								<WTSTATIC value="DATA(Member.Unit)" space="1"/>
+								<WTSTATIC value="DATA(Member.City)" space="1"/>
+								<WTSTATIC value="DATA(Member.State)" space="1"/>
+								<WTSTATIC value="DATA(Member.Zip)" space="1"/>
+								<WTSTATIC value="DATA(Member.Country)" space="1"/>
+								<WTSTATIC value="CONST((&lt;xsl:value-of select=&quot;@visitdate&quot;/&gt;))" fontcolor="purple">
+									<WTCONDITION expr="DATA(VisitDate)" oper="not-equal" value="CONST('')"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="DATA(Member.MasterID)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="DATA(Member.GroupID)" oper="not-equal" value="CONST(0)" connector="or"/>
+							<WTCONDITION expr="DATA(Member.Role)" oper="not-equal" value="CONST('')" connector="or"/>
+							<WTSTATIC col="1" merge="2" value="DATA(Member.MasterID)" fontcolor="blue"/>
+							<WTSTATIC col="3" value="DATA(Member.GroupID)" fontcolor="blue"/>
+							<WTSTATIC col="4" merge="3" value="DATA(Member.Role)" fontcolor="blue"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTBUTTON col="1" action="8" align="center" value="CONST(IncludeMembers)"/>
+					<WTBUTTON col="1" action="3" value="CONST(Return)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+	
+</WTROOT>

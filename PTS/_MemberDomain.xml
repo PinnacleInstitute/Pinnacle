@@ -1,0 +1,620 @@
+<WTROOT prefix="pts" system="Pinnacle">
+	<WTENTITY id="129" name="MemberDomain" alias="med">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="12901" name="MemberDomainID" type="number" identity="true" min="1" title="true" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="12902" name="MemberID" type="number" source="entity"/>
+		<WTATTRIBUTE id="12903" name="DomainID" type="number" source="entity"/>
+		<WTATTRIBUTE id="12904" name="LeadCampaignID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="12905" name="DomainName" type="text" length="40" min="1" max="40" source="join">
+			<WTJOIN entity="Domain" name="DomainName" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="12906" name="LeadCampaignName" type="text" length="40" min="1" max="40" source="join">
+			<WTJOIN entity="LeadCampaign" name="LeadCampaignName" />
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="12910" name="PageType" type="number" source="entity"/>
+
+		<WTINDEX name="MemberID">
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="MemberDomain" entity="MemberDomain" alias="med"/>
+			<WTRELATIONSHIP name="Common" entity="MemberDomain" alias="med">
+				<WTENTITY name="Domain" entity="Domain" alias="dom">
+					<WTATTRIBUTE alias="med" name="DomainID" relalias="dom" relname="DomainID"/>
+				</WTENTITY>
+				<WTENTITY name="LeadCampaign" entity="LeadCampaign" alias="lc">
+					<WTATTRIBUTE alias="med" name="LeadCampaignID" relalias="lc" relname="LeadCampaignID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="Website" entity="MemberDomain" alias="med">
+				<WTENTITY name="Domain" entity="Domain" alias="dom">
+					<WTATTRIBUTE alias="med" name="DomainID" relalias="dom" relname="DomainID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="PAGETYPE-LEADPAGE" value="1"/>
+			<WTSYSCON name="PAGETYPE-PRESENTATION" value="2"/>
+		</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="Website" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(DomainName)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ATTR(PageType)" direction="output"/>
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="output"/>
+			<WTDECLARE name="PageType" datatype="number"/>
+			<WTDECLARE name="LeadCampaignID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PageType" value="ATTR(MemberDomain.PageType)"/>
+					<WTATTRIBUTE name="LeadCampaignID" value="ATTR(MemberDomain.LeadCampaignID)"/>
+					<WTJOIN name="Website" lock="false"/>
+					<WTCONDITION expr="ATTR(Domain.DomainName)" oper="equal" value="PARAM(DomainName)"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(PageType)" value="PageType" null="0"/>
+				<WTSETVALUE name="PARAM(LeadCampaignID)" value="LeadCampaignID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MemberDomain.MemberDomainID)"/>
+					<WTATTRIBUTE value="ATTR(MemberDomain.DomainID)"/>
+					<WTATTRIBUTE value="ATTR(MemberDomain.LeadCampaignID)"/>
+					<WTATTRIBUTE value="ATTR(Domain.DomainName)"/>
+					<WTATTRIBUTE value="ATTR(LeadCampaign.LeadCampaignName)"/>
+					<WTATTRIBUTE value="ATTR(MemberDomain.PageType)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)"/>
+					<WTORDER name="ATTR(Domain.DomainName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12902" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+			<WTPARAM name="LeadID" datatype="number"/>
+			<WTPARAM name="PresentID" datatype="number"/>
+
+			<WTINCLUDE name="Resources.asp"/>
+			<WTDATATXN name="LeadCampaigns"/>
+			<WTDATATXN name="PresentCampaigns"/>
+
+			<WTSUB name="LoadList">
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)"/>
+					<WTGETCACHE name="PARAM(GroupID)" value="GROUPID" datatype="number"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotMemberOnly"/>
+					<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+						<WTMETHOD name="Load">
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+						<WTSETATTRIBUTE name="PARAM(GroupID)" value="ATTR(GroupID)"/>
+					</WTOBJECT>
+					<WTCALLSUB name="GetResources reqGroupID"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsLeadPrograms"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID1)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID2)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID3)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-LEADPAGE)"/>
+					<WTCALLSUB name="GetResource tmpResource, tmpGroupID1, tmpGroupID2, tmpGroupID3">
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+					</WTCALLSUB>
+					<WTOBJECT name="LeadCampaigns" project="ptsLeadCampaignUser" class="CLeadCampaigns">
+						<WTMETHOD name="EnumMember">
+							<WTPARAM name="xmlLeadCampaigns" direction="return" datatype="text"/>
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="Grp" direction="input" value="PARAM(GroupID)" />
+							<WTPARAM name="GroupID1" direction="input" value="CONST(tmpGroupID1)" />
+							<WTPARAM name="GroupID2" direction="input" value="CONST(tmpGroupID2)" />
+							<WTPARAM name="GroupID3" direction="input" value="CONST(tmpGroupID3)" />
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+							<WTPARAM name="ItemID" direction="input" value="PARAM(LeadID)"/>
+							<WTPARAM name="Element" direction="input" value="CONST()"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsPresentations"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID1)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID2)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID3)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-PRESENTATION)"/>
+					<WTCALLSUB name="GetResource tmpResource, tmpGroupID1, tmpGroupID2, tmpGroupID3">
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+					</WTCALLSUB>
+					<WTOBJECT name="LeadCampaigns" project="ptsLeadCampaignUser" class="CLeadCampaigns">
+						<WTMETHOD name="EnumPresent">
+							<WTPARAM name="xmlPresentCampaigns" direction="return" datatype="text"/>
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="Grp" direction="input" value="PARAM(GroupID)" />
+							<WTPARAM name="GroupID1" direction="input" value="CONST(tmpGroupID1)" />
+							<WTPARAM name="GroupID2" direction="input" value="CONST(tmpGroupID2)" />
+							<WTPARAM name="GroupID3" direction="input" value="CONST(tmpGroupID3)" />
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+							<WTPARAM name="ItemID" direction="input" value="PARAM(LeadID)"/>
+							<WTPARAM name="Element" direction="input" value="CONST(&quot;PresentCampaign&quot;)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>
+				</WTCODEGROUP>
+
+				<WTOBJECT name="Domains" project="ptsDomainUser" class="CDomains">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlDomains" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(GroupID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="MemberDomain" project="ptsMemberDomainUser" class="CMemberDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberDomainID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTE name="ATTR(PageType)" value="SYSCON(PAGETYPE-LEADPAGE)">
+						<WTCONDITION expr="IsLeadPrograms"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="ATTR(PageType)" value="SYSCON(PAGETYPE-PRESENTATION)">
+						<WTCONDITION expr="IsPresentations"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="MemberDomain" project="ptsMemberDomainUser" class="CMemberDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberDomainID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(LeadCampaignID)" value="PARAM(LeadID)">
+						<WTCONDITION expr="ATTR(PageType)" oper="equal" value="SYSCON(PAGETYPE-LEADPAGE)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="ATTR(LeadCampaignID)" value="PARAM(PresentID)">
+						<WTCONDITION expr="ATTR(PageType)" oper="equal" value="SYSCON(PAGETYPE-PRESENTATION)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Add">
+						<WTPARAM name="MemberDomainID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMemberDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="TogglePage()">
+					var pagetype = document.getElementById('PageType').value
+					document.getElementById('LeadRow').style.display = 'none';
+					document.getElementById('PresentRow').style.display = 'none';
+					if (pagetype == 1) { document.getElementById('LeadRow').style.display = ''; }
+					if (pagetype == 2) { document.getElementById('PresentRow').style.display = ''; }
+				</WTFUNCTION>
+				<WTLOAD>TogglePage()</WTLOAD>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewMemberDomain" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-top="3">
+					<WTSTATIC col="1" tag="DomainID"/>
+					<WTCOMBO col="2" value="ATTR(MemberDomain.DomainID)" datapath="/DATA/TXN/PTSDOMAINS/ENUM" setselected="true"/>
+				</WTROW>
+
+				<WTROW margin-top="3">
+					<WTSTATIC col="1" tag="PageType"/>
+					<WTCOMBO col="2" value="ATTR(MemberDomain.PageType)">
+						<WTOPTION id="1" label="LeadPage">
+							<WTCONDITION expr="_IsLeadPrograms"/>
+						</WTOPTION>
+						<WTOPTION id="2" label="Presentation">
+							<WTCONDITION expr="_IsPresentations"/>
+						</WTOPTION>
+						<WTCHANGE>TogglePage();</WTCHANGE>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW id="LeadRow" margin-top="3">
+					<WTSTATIC col="1" tag="LeadID"/>
+					<WTCOMBO col="2" value="PARAM(LeadID)" datapath="/DATA/TXN/PTSLEADCAMPAIGNS/ENUM" setselected="true"/>
+				</WTROW>
+				<WTROW id="PresentRow" margin-top="3">
+					<WTSTATIC col="1" tag="PresentID"/>
+					<WTCOMBO col="2" value="PARAM(PresentID)" datapath="/DATA/TXN/PTSPRESENTCAMPAIGNS/ENUM" setselected="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12903" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="MemberDomainID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+			<WTPARAM name="LeadID" datatype="number"/>
+			<WTPARAM name="PresentID" datatype="number"/>
+
+			<WTINCLUDE name="Resources.asp"/>
+			<WTDATATXN name="LeadCampaigns"/>
+			<WTDATATXN name="PresentCampaigns"/>
+
+			<WTSUB name="LoadList">
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)"/>
+					<WTGETCACHE name="PARAM(GroupID)" value="GROUPID" datatype="number"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotMemberOnly"/>
+					<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+						<WTMETHOD name="Load">
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+						<WTSETATTRIBUTE name="PARAM(GroupID)" value="ATTR(GroupID)"/>
+					</WTOBJECT>
+					<WTCALLSUB name="GetResources reqGroupID"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsLeadPrograms"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID1)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID2)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID3)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-LEADPAGE)"/>
+					<WTCALLSUB name="GetResource tmpResource, tmpGroupID1, tmpGroupID2, tmpGroupID3">
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+					</WTCALLSUB>
+					<WTOBJECT name="LeadCampaigns" project="ptsLeadCampaignUser" class="CLeadCampaigns">
+						<WTMETHOD name="EnumMember">
+							<WTPARAM name="xmlLeadCampaigns" direction="return" datatype="text"/>
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="Grp" direction="input" value="PARAM(GroupID)" />
+							<WTPARAM name="GroupID1" direction="input" value="CONST(tmpGroupID1)" />
+							<WTPARAM name="GroupID2" direction="input" value="CONST(tmpGroupID2)" />
+							<WTPARAM name="GroupID3" direction="input" value="CONST(tmpGroupID3)" />
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+							<WTPARAM name="ItemID" direction="input" value="PARAM(LeadID)"/>
+							<WTPARAM name="Element" direction="input" value="CONST()"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsPresentations"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID1)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID2)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpGroupID3)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpResource)" value="SYSCON(RESOURCE-PRESENTATION)"/>
+					<WTCALLSUB name="GetResource tmpResource, tmpGroupID1, tmpGroupID2, tmpGroupID3">
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+					</WTCALLSUB>
+					<WTOBJECT name="LeadCampaigns" project="ptsLeadCampaignUser" class="CLeadCampaigns">
+						<WTMETHOD name="EnumPresent">
+							<WTPARAM name="xmlPresentCampaigns" direction="return" datatype="text"/>
+							<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							<WTPARAM name="Grp" direction="input" value="PARAM(GroupID)" />
+							<WTPARAM name="GroupID1" direction="input" value="CONST(tmpGroupID1)" />
+							<WTPARAM name="GroupID2" direction="input" value="CONST(tmpGroupID2)" />
+							<WTPARAM name="GroupID3" direction="input" value="CONST(tmpGroupID3)" />
+							<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)" />
+							<WTPARAM name="ItemID" direction="input" value="PARAM(LeadID)"/>
+							<WTPARAM name="Element" direction="input" value="CONST(&quot;PresentCampaign&quot;)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+					</WTOBJECT>
+				</WTCODEGROUP>
+
+				<WTOBJECT name="Domains" project="ptsDomainUser" class="CDomains">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlDomains" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="MemberID" direction="input" value="PARAM(GroupID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="MemberDomain" project="ptsMemberDomainUser" class="CMemberDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberDomainID" direction="input" value="PARAM(MemberDomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(MemberID)" value="ATTR(MemberID)"/>
+					<WTSETATTRIBUTE name="PARAM(LeadID)" value="ATTR(LeadCampaignID)">
+						<WTCONDITION expr="ATTR(PageType)" oper="equal" value="SYSCON(PAGETYPE-LEADPAGE)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="PARAM(PresentID)" value="ATTR(LeadCampaignID)">
+						<WTCONDITION expr="ATTR(PageType)" oper="equal" value="SYSCON(PAGETYPE-PRESENTATION)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="MemberDomain" project="ptsMemberDomainUser" class="CMemberDomain">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberDomainID" direction="input" value="PARAM(MemberDomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(LeadCampaignID)" value="PARAM(LeadID)">
+						<WTCONDITION expr="ATTR(PageType)" oper="equal" value="SYSCON(PAGETYPE-LEADPAGE)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="ATTR(LeadCampaignID)" value="PARAM(PresentID)">
+						<WTCONDITION expr="ATTR(PageType)" oper="equal" value="SYSCON(PAGETYPE-PRESENTATION)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMemberDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="MemberDomain" project="ptsMemberDomainUser" class="CMemberDomain">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MemberDomainID" direction="input" value="PARAM(MemberDomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MemberDomain" project="ptsMemberDomainUser" class="CMemberDomain">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberDomainID" direction="input" value="PARAM(MemberDomainID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberDomain" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="TogglePage()">
+					var pagetype = document.getElementById('PageType').value
+					document.getElementById('LeadRow').style.display = 'none';
+					document.getElementById('PresentRow').style.display = 'none';
+					if (pagetype == 1) { document.getElementById('LeadRow').style.display = ''; }
+					if (pagetype == 2) { document.getElementById('PresentRow').style.display = ''; }
+				</WTFUNCTION>
+				<WTLOAD>TogglePage()</WTLOAD>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="MemberDomain" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-top="3">
+					<WTSTATIC col="1" tag="DomainID"/>
+					<WTCOMBO col="2" value="ATTR(MemberDomain.DomainID)" datapath="/DATA/TXN/PTSDOMAINS/ENUM" setselected="true"/>
+				</WTROW>
+
+				<WTROW margin-top="3">
+					<WTSTATIC col="1" tag="PageType"/>
+					<WTCOMBO col="2" value="ATTR(MemberDomain.PageType)">
+						<WTOPTION id="1" label="LeadPage">
+							<WTCONDITION expr="_IsLeadPrograms"/>
+						</WTOPTION>
+						<WTOPTION id="2" label="Presentation">
+							<WTCONDITION expr="_IsPresentations"/>
+						</WTOPTION>
+						<WTCHANGE>TogglePage();</WTCHANGE>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW id="LeadRow" margin-top="3">
+					<WTSTATIC col="1" tag="LeadID"/>
+					<WTCOMBO col="2" value="PARAM(LeadID)" datapath="/DATA/TXN/PTSLEADCAMPAIGNS/ENUM" setselected="true"/>
+				</WTROW>
+				<WTROW id="PresentRow" margin-top="3">
+					<WTSTATIC col="1" tag="PresentID"/>
+					<WTCOMBO col="2" value="PARAM(PresentID)" datapath="/DATA/TXN/PTSPRESENTCAMPAIGNS/ENUM" setselected="true"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="12911" caption="List" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+			<!--============================================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="MemberDomains" project="ptsMemberDomainUser" class="CMemberDomains">
+					<WTMETHOD name="List">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMemberDomains" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="MemberDomains" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewMemberDomain" space="1">
+							<WTLINK name="12902">
+								<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="MemberDomain">
+						<WTCOLUMN width="35" align="left" valign="top" label="DomainName"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="PageType"/>
+						<WTCOLUMN width="50" align="left" valign="top" label="LeadCampaignName"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(DomainName)"/>
+							<WTSTATIC col="2">
+								<WTSTATIC label="LeadPage">
+									<WTCONDITION expr="DATA(PageType)" oper="equal" value="CONST(1)"/>
+								</WTSTATIC>
+								<WTSTATIC label="Presentation">
+									<WTCONDITION expr="DATA(PageType)" oper="equal" value="CONST(2)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(LeadCampaignName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="12903">
+											<WTPARAM name="MemberDomainID" value="DATA(MemberDomain.MemberDomainID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

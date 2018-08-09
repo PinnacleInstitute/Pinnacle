@@ -1,0 +1,2953 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="80" name="Attachment" alias="att" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="8001" name="AttachmentID" type="number" identity="true" min="1" required="true" source="entity"/>
+ 		<!--============================================================================================-->
+ 		<!-- The CompanyID must be set for each ParentType by the GetCompanyID proc -->
+ 		<!--============================================================================================-->
+		<WTATTRIBUTE id="8002" name="CompanyID" type="number" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="8003" name="ParentID" type="number" source="entity" parent="true"/>
+		<WTATTRIBUTE id="8004" name="AuthUserID" type="number" source="entity"/>
+		<WTATTRIBUTE id="8005" name="RefID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="8010" name="AttachName" type="text" length="60" min="1" max="60" required="true" source="entity" title="true" />
+		<WTATTRIBUTE id="8011" name="FileName" type="text" length="100" min="1" max="100" source="entity"/>
+		<WTATTRIBUTE id="8012" name="Description" type="text" length="3000" min="1" max="3000" source="entity" />
+		<WTATTRIBUTE id="8013" name="ParentType" type="number" source="entity"/>
+				<!-- Attachment size in Kilobytes (KB) -->
+		<WTATTRIBUTE id="8014" name="AttachSize" type="number" source="entity">
+			<WTFORMAT value="###,##0"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="8015" name="AttachDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="8016" name="ExpireDate" type="date" source="entity"/>
+
+		<WTATTRIBUTE id="8020" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="InActive"/>
+			<WTENUM id="3" name="Private"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="8021" name="IsLink" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="8022" name="Secure" type="number" source="entity"/>
+		<WTATTRIBUTE id="8023" name="Score" type="number" source="entity"/>
+
+		<!--Indexes-->
+		<WTINDEX name="ParentID">
+			<WTATTRIBUTE name="ParentID"/>
+			<WTATTRIBUTE name="ParentType"/>
+		</WTINDEX>
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Attachment" entity="Attachment" alias="att"/>
+			<WTRELATIONSHIP name="Common" entity="Attachment" alias="att"/>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="AttachName" default="true" contains="true"/>
+			<WTATTRIBUTE name="Description" contains="true"/>
+			<WTATTRIBUTE name="FileName" contains="true"/>
+			<WTATTRIBUTE name="AttachDate"/>
+		</WTENUM>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="ATTACHMENT-ACTIVE" value="1"/>
+			<WTSYSCON name="ATTACHMENT-INACTIVE" value="2"/>
+			<WTSYSCON name="ATTACHMENT-PRIVATE" value="3"/>
+		</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Shortcut_DeleteItem">
+					<WTPARAM name="EntityID" direction="input" value="ENTITY(Attachment)"/>
+					<WTPARAM name="ItemID" direction="input" value="PARAM(AttachmentID)"/>
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="Attachment" lock="true"/>
+					<WTCONDITION expr="ATTR(AttachmentID)" oper="equal" value="PARAM(AttachmentID)"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="DeleteParent" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(ParentType)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTDELETE>
+					<WTJOIN name="Attachment" lock="true"/>
+					<WTCONDITION expr="ATTR(Attachment.ParentType)" oper="equal" value="PARAM(ParentType)"/>
+					<WTCONDITION expr="ATTR(Attachment.ParentID)" oper="equal" value="PARAM(ParentID)" connector="and"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindCompany" style="GenerateDataProc.xsl" nodata="true">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(ParentID)" oper="equal" value="PARAM(ParentID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindTrainer" style="GenerateDataProc.xsl" nodata="true">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(ParentID)" oper="equal" value="PARAM(ParentID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Find" name="FindCourse" style="GenerateDataProc.xsl" nodata="true">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTJOIN name="Common"/>
+			<WTCONDITION expr="ATTR(ParentID)" oper="equal" value="PARAM(ParentID)" connector="and"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListOrg" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(ParentID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Secure)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AuthUserID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.FileName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Description)" length="200"/>
+					<WTATTRIBUTE value="ATTR(Attachment.ParentType)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachSize)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachDate)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Status)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.IsLink)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Secure)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="ENTITY(Org)"/>
+					<WTCONDITION expr="ATTR(ParentID)" oper="equal" value="PARAM(ParentID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Secure)" oper="less-equal" value="PARAM(Secure)" connector="and"/>
+					<WTCONDITION expr="ATTR(Status)" oper="less-equal" value="SYSCON(ATTACHMENT-ACTIVE)" connector="and"/>
+					<WTCONDITION expr="ATTR(ExpireDate)" oper="equal" value="CONST(0)" connector="and" paren="start"/>
+					<WTCONDITION expr="ATTR(ExpireDate)" oper="greater" value="SYS(DATE)" connector="or" paren="end"/>
+					<WTORDER name="ATTR(Attachment.AttachName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListAttachments" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(ParentID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ParentType)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AuthUserID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.FileName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Description)" length="200"/>
+					<WTATTRIBUTE value="ATTR(Attachment.ParentType)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachSize)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachDate)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Status)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.IsLink)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Secure)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(ParentID)" oper="equal" value="PARAM(ParentID)"/>
+					<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="PARAM(ParentType)" connector="and"/>
+					<WTORDER name="ATTR(Attachment.AttachName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListActiveAttachments" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(ParentID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ParentType)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(Secure)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AuthUserID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.FileName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Description)" length="200"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachSize)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachDate)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.IsLink)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Secure)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(ParentID)" oper="equal" value="PARAM(ParentID)"/>
+					<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="PARAM(ParentType)" connector="and"/>
+					<WTCONDITION expr="ATTR(Secure)" oper="less-equal" value="PARAM(Secure)" connector="and"/>
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(Attachment.AttachName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListCompanyAttachments" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.FileName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachDate)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Status)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(IsLink)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(Attachment.AttachName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+ 		<!--============================================================================================-->
+		<WTPROCEDURE name="Search" type="Find" style="GenerateDataProc.xsl" template="new" searchlength="200" bookmarklength="14" nodata="true">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Secure)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.ParentType)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.FileName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Description)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachSize)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachDate)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.IsLink)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Secure)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+ 		<!--============================================================================================-->
+		<WTPROCEDURE name="SearchDate" type="Find" style="GenerateDataProc.xsl" template="new" searchlength="20" bookmarklength="20" nodata="true">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Secure)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachmentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.ParentType)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.FileName)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Description)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachSize)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.AttachDate)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.IsLink)"/>
+					<WTATTRIBUTE value="ATTR(Attachment.Secure)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+ 		<!--============================================================================================-->
+ 		<!-- This must be updated for every Parent Type -->
+ 		<!--============================================================================================-->
+		<WTPROCEDURE name="GetCompanyID" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(ParentType)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="Result" datatype="number" direction="output"/>
+		</WTPROCEDURE>
+
+ 		<!--============================================================================================-->
+		<WTPROCEDURE name="UpdateCompanyID" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(ParentType)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>  <!-- CourseID -->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="Result" datatype="number" direction="output"/>
+		</WTPROCEDURE>
+
+ 		<!--============================================================================================-->
+		<WTPROCEDURE name="CountParent" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(ParentType)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="Result" datatype="number" direction="output"/>
+		</WTPROCEDURE>
+
+ 		<!--============================================================================================-->
+		<WTPROCEDURE name="CheckFile" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(ParentType)" direction="input"/>
+			<WTPARAM name="ATTR(ParentID)" direction="input"/>
+			<WTPARAM name="ATTR(FileName)" direction="input"/>
+			<WTPARAM name="Result" datatype="number" direction="output"/>
+		</WTPROCEDURE>
+
+ 		<!--============================================================================================-->
+		<WTPROCEDURE name="UpdateFT" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(AttachmentID)" direction="input"/>
+			<WTPARAM name="ATTR(AttachName)" direction="input"/>
+			<WTPARAM name="ATTR(Description)" direction="input"/>
+			<WTPARAM name="Result" datatype="number" direction="output"/>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8001" caption="Find" action="5" navbar="false" aspstyle="GenerateWebASP.xsl" 
+		xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="TrainerID" datatype="number"/>
+			<WTPARAM name="CourseID" datatype="number"/>
+
+
+			<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(AttachName)">
+				<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="PARAM(FindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+				<WTMETHOD name="FindCompany">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindTrainer">
+					<WTCONDITION expr="PARAM(TrainerID)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="TrainerID" direction="input" value="PARAM(TrainerID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="FindCourse">
+					<WTCONDITION expr="PARAM(CourseID)" oper="not-equal" value="CONST(0)"/>
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="FindAttachment" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="AttachmentFindText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(Attachments.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="20" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Go)" default="true"/>
+					<WTBUTTON col="1" value="CONST(Close)">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Attachment">
+						<WTCOLUMN width="64" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="Status"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="AttachSize"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="AttachDate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Attachment.AttachName)" bold="true">
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(edit.gif)" alt="Preview">
+										<WTLINK name="8003">
+											<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+						 				<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+										<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(@parenttype,'/',@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC label="Active">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)" />
+								</WTSTATIC>
+								<WTSTATIC label="Inactive" fontcolor="red">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)" />
+								</WTSTATIC>
+								<WTSTATIC label="Private" fontcolor="purple">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(3)" />
+								</WTSTATIC>
+								<WTSTATIC space="1" />
+								<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="blue"/>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Attachment.AttachSize)" fontcolor="purple"/>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Attachment.AttachDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="3" value="DATA(Attachment.Description)" fontcolor="gray"/>
+							<WTSTATIC col="4" value="DATA(Attachment.ExpireDate)" fontcolor="red"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8002" caption="Attachment" contentpage="true" focus="false" header="false" footer="false" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="ParentID" datatype="number"/>
+			<WTPARAM name="ParentType" datatype="number"/>
+			<WTPARAM name="AttachmentID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/> 
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Mini" datatype="number"/>
+			<WTPARAM name="RefID" datatype="number"/>
+			<WTPARAM name="Score" datatype="number"/>
+			<WTPARAM name="Name" datatype="text"/>
+			
+			<WTSUB name="AddAttachment">
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="GetCompanyID">
+						<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="ParentType" direction="input" value="PARAM(ParentType)"/>
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="reqCompanyID" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(ParentID)" value="PARAM(ParentID)"/>
+					<WTSETATTRIBUTE name="ATTR(ParentType)" value="PARAM(ParentType)"/>
+					<WTSETATTRIBUTE name="ATTR(RefID)" value="PARAM(RefID)"/>
+					<WTSETATTRIBUTE name="ATTR(Score)" value="PARAM(Score)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+					<!-- set all docs to Private to not be in the search engine -->
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(ATTACHMENT-PRIVATE)"/>
+					<!-- except, set these docs to Active to be in the search engine -->
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(ATTACHMENT-ACTIVE)">
+						<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(Org)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpLinkName)" value="FORM(LinkName)"/>
+<WTCUSTOM>
+				If tmpLinkName &lt;&gt; "" Then
+					.FileName = tmpLinkName
+					.IsLink = "1"
+				End If	
+</WTCUSTOM>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+		 				<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="tmpAttachmentID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(AttachmentID)" value="CONST(tmpAttachmentID)"/>
+					<WTMETHOD name="UpdateFT">
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(1)" connector="and"/>
+						<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="ENTITY(Org)" connector="and"/>
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(AttachmentID)"/>
+						<WTPARAM name="AttachName" direction="input" value="CONST(.AttachName)"/>
+						<WTPARAM name="Description" direction="input" value="CONST(.Description)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+		 				<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlAttachment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="CalcGrade">
+				<WTOBJECT name="SessionLesson" project="ptsSessionLessonUser" class="CSessionLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SessionLessonID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSessionID)" value="ATTR(SessionID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Session" project="ptsSessionUser" class="CSession">
+					<WTMETHOD name="SetStatus">
+						<WTPARAM name="SessionID" direction="input" value="CONST(tmpSessionID)"/>
+						<WTPARAM name="Lessons" direction="input" value="CONST(&quot;&quot;)"/>
+						<WTPARAM name="result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(AttachDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(UserID)"/>
+					<WTSETATTRIBUTE name="ATTR(AttachName)" value="PARAM(Name)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION id="2" name="Add" type="Add">
+				<WTCALLSUB name="AddAttachment"/>
+				<WTCALLSUB name="CalcGrade">
+					<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Upload" type="Upload">
+				<WTCALLSUB name="AddAttachment"/>
+				<WTSETCACHE name="RETURNURL" value="CONST(reqReturnURL)"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+						<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+							<WTMETHOD name="FetchCompany">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							</WTMETHOD>			
+							<WTMETHOD name="Load">
+								<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+								<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+							</WTMETHOD>
+<!--							<WTSETATTRIBUTE name="CONST(tmpUploadURL)" value="ATTR(UploadURL)"/>-->
+							<WTSETATTRIBUTE name="CONST(tmpUploadURL)" value="CONST(&quot;&quot;)"/>
+							<WTSETCACHE name="SIZELIMIT" value="ATTR(DocSizeLimit)"/>
+						</WTOBJECT>
+						<WTRETURN>
+							<WTCONDITION expr="CONST(tmpUploadURL)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+							<WTLINK name="8021" skipreturn="true">
+								<WTPARAM name="AttachmentID" value="PARAM(AttachmentID)"/>
+								<WTPARAM name="UploadURL" value="CONST(tmpUploadURL)"/>
+								<WTPARAM name="AttachmentID" value="PARAM(AttachmentID)"/>
+								<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								<WTPARAM name="Mini" value="PARAM(Mini)"/>
+							</WTLINK>
+						</WTRETURN>
+					</WTCODEGROUP>
+
+					<WTRETURN>
+						<WTLINK name="8020" return="false">
+							<WTPARAM name="AttachmentID" value="PARAM(AttachmentID)"/>
+							<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+							<WTPARAM name="Mini" value="PARAM(Mini)"/>
+						</WTLINK>
+					</WTRETURN>
+
+				</WTCODEGROUP>
+
+			</WTACTION>
+			
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTSTATIC label="NewAttachment">
+							<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+						</WTSTATIC>
+						<WTSTATIC label="NewHomework">
+							<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" class="Prompt">
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+							<WTSTATIC label="AddText">
+								<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(0)"/>
+							</WTSTATIC>
+							<WTSTATIC label="AddMiniText">
+								<WTCONDITION expr="PARAM(Mini)" oper="not-equal" value="CONST(0)"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+						<WTSTATIC label="AddHomeworkText">
+							<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="IsManager"/>
+					<WTSTATIC col="1" tag="AuthUserID"/>
+					<WTTEXT col="2" value="ATTR(Attachment.AuthUserID)" size="4" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="NotManager"/>
+					<WTHIDDEN value="ATTR(Attachment.AuthUserID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+					<WTSTATIC col="1" tag="AttachName"/>
+					<WTTEXT col="2" value="ATTR(Attachment.AttachName)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+					<WTHIDDEN value="ATTR(Attachment.AttachName)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(2)" connector="or"/>
+					<WTROW>
+						<WTSTATIC col="1" merge="2" align="left">
+							<WTSTATIC tag="DescriptionText">
+								<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="HomeworkDescriptionText">
+								<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+							</WTSTATIC>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW>
+						<WTMEMO col="1" merge="2" align="left" value="ATTR(Attachment.Description)" rows="8" cols="65"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(0)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(Member)"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="AttachDate"/>
+							<WTTEXT col="2" value="ATTR(Attachment.AttachDate)" prespace="false"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="ExpireDate"/>
+							<WTTEXT col="2" value="ATTR(Attachment.ExpireDate)" prespace="false"/>
+						</WTROW>
+
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" label="SecurityLevelText" align="left" class="prompt"/>
+						</WTROW>
+						<WTROW margin-top="6">
+							<WTSTATIC col="1" tag="Secure"/>
+							<WTTEXT col="2" value="ATTR(Attachment.Secure)" size="2"/>
+						</WTROW>
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTROW>
+						<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(Member)"/>
+						<WTHIDDEN value="ATTR(Attachment.AttachDate)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" merge="2" label="LinkText" class="Prompt" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LinkName"/>
+					<WTTEXT col="2" name="LinkName" size="60" required="false"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(UploadFile)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8003" caption="Attachment" contentpage="true" focus="false" header="false" footer="false" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="AttachmentID" datatype="number"/>
+			<WTPARAM name="UploadID" datatype="number"/> <!-- Unique ID for the upload -->
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+			<WTPARAM name="Txn" datatype="number"/>
+			<WTPARAM name="Mini" datatype="number"/>
+			<WTPARAM name="ParentType" datatype="number"/>
+			<WTPARAM name="ParentID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+
+			<WTSUB name="ReturnAttachment">
+<WTCUSTOM>
+				reqReturnURL = GetCache("8003URL")
+				reqReturnData = GetCache("8003DATA")
+				If Len(reqReturnURL) = 0 Then reqReturnURL = reqSysReturnURL
+				SetCache "8003URL", ""
+				SetCache "8003DATA", ""
+				If (Len(reqReturnURL) &gt; 0) Then
+					SetCache "RETURNURL", reqReturnURL
+					SetCache "RETURNDATA", reqReturnData
+					Response.Redirect Replace(reqReturnURL, "%26", "&amp;")
+				End If
+</WTCUSTOM>
+			</WTSUB>
+
+			<WTSUB name="UpdateAttachment">
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(AttachmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(ParentType)" value="ATTR(ParentType)"/>
+					<WTSETATTRIBUTE name="PARAM(ParentID)" value="ATTR(ParentID)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)">
+						<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="CONST(tmpLinkName)" value="FORM(LinkName)"/>
+<WTCUSTOM>
+				If tmpLinkName &lt;&gt; "" Then
+					.FileName = tmpLinkName
+					.IsLink = "1"
+				End If	
+</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="UpdateFT">
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="ATTR(Status)" oper="equal" value="CONST(1)" connector="and"/>
+						<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="ENTITY(Org)" connector="and"/>
+						<WTPARAM name="AttachmentID" direction="input" value="ATTR(AttachmentID)"/>
+						<WTPARAM name="AttachName" direction="input" value="CONST(.AttachName)"/>
+						<WTPARAM name="Description" direction="input" value="CONST(.Description)"/>
+						<WTPARAM name="Result" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTSETATTRIBUTE name="PARAM(Txn)" value="CONST(1)"/>
+						<WTCALLSUB name="CalcGrade">
+							<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" connector="or"/>
+						<WTPARAM name="xmlAttachment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="CalcGrade">
+				<WTOBJECT name="SessionLesson" project="ptsSessionLessonUser" class="CSessionLesson">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SessionLessonID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSessionID)" value="ATTR(SessionID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Session" project="ptsSessionUser" class="CSession">
+					<WTMETHOD name="SetStatus">
+						<WTPARAM name="SessionID" direction="input" value="CONST(tmpSessionID)"/>
+						<WTPARAM name="Lessons" direction="input" value="CONST(&quot;&quot;)"/>
+						<WTPARAM name="result" direction="return" datatype="number"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(AttachmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(ParentType)" value="ATTR(ParentType)"/>
+					<WTSETATTRIBUTE name="PARAM(ParentID)" value="ATTR(ParentID)"/>
+<WTCUSTOM>
+		If IsLink &lt;&gt; "0" Then
+			reqURL = Request.ServerVariables("APPL_PHYSICAL_PATH") &amp; "Attachments\" &amp; tmpParentType &amp; "\" &amp; tmpParentID &amp; "\"
+			tmpFileName = tmpFilePath + tmpFileName
+			Set Obj = Server.CreateObject("Scripting.FileSystemObject")
+			If Obj.FileExists(tmpFileName) Then
+				Obj.DeleteFile(tmpFileName)
+			End If
+			Set Obj = Nothing 
+		End If
+</WTCUSTOM>	
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Update" type="Update" id="1">
+				<WTCALLSUB name="UpdateAttachment"/>
+				<WTCALLSUB name="ReturnAttachment">
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" connector="and"/>
+				</WTCALLSUB>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(AttachmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpFileName)" value="ATTR(FileName)"/>
+					<WTSETATTRIBUTE name="PARAM(ParentType)" value="ATTR(ParentType)"/>
+					<WTSETATTRIBUTE name="PARAM(ParentID)" value="ATTR(ParentID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParentID)" value="ATTR(ParentID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpIsLink)" value="ATTR(IsLink)"/>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(AttachmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTSETATTRIBUTE name="PARAM(Txn)" value="CONST(2)"/>
+						<WTCALLSUB name="CalcGrade">
+							<WTCONDITION expr="ATTR(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+						</WTCALLSUB>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlAttachment" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+<WTCUSTOM>
+		If IsLink &lt;&gt; "0" Then
+			tmpFilePath = Request.ServerVariables("APPL_PHYSICAL_PATH") &amp; "Attachments\" &amp; reqParentType &amp; "\" &amp; tmpParentID &amp; "\"
+			tmpFileName = tmpFilePath + tmpFileName
+			Set Obj = Server.CreateObject("Scripting.FileSystemObject")
+			If Obj.FileExists(tmpFileName) Then
+				Obj.DeleteFile(tmpFileName)
+			End If
+			Set Obj = Nothing 
+		End If
+</WTCUSTOM>	
+				</WTCODEGROUP>
+				<WTCALLSUB name="ReturnAttachment">
+					<WTCONDITION expr="NoErrors"/>
+				</WTCALLSUB>
+			</WTACTION>
+
+			<WTACTION id="5" name="Upload" type="Upload">
+				<WTCALLSUB name="UpdateAttachment"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="CONST(0)"/>
+						<WTOBJECT name="Coption" project="ptsCoptionUser" class="CCoption">
+							<WTMETHOD name="FetchCompany">
+								<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+							</WTMETHOD>			
+							<WTMETHOD name="Load">
+								<WTPARAM name="CoptionID" direction="input" value="ATTR(CoptionID)"/>
+								<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+							</WTMETHOD>
+							<!--<WTSETATTRIBUTE name="CONST(tmpUploadURL)" value="ATTR(UploadURL)"/>-->
+							<WTSETATTRIBUTE name="CONST(tmpUploadURL)" value="CONST(&quot;&quot;)"/>
+							<WTSETCACHE name="SIZELIMIT" value="ATTR(DocSizeLimit)"/>
+						</WTOBJECT>
+						<WTRETURN>
+							<WTCONDITION expr="CONST(tmpUploadURL)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+							<WTLINK name="8021" skipreturn="true">
+								<WTPARAM name="AttachmentID" value="PARAM(AttachmentID)"/>
+								<WTPARAM name="UploadURL" value="CONST(tmpUploadURL)"/>
+								<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+								<WTPARAM name="Mini" value="PARAM(Mini)"/>
+							</WTLINK>
+						</WTRETURN>
+					</WTCODEGROUP>
+
+					<WTRETURN>
+						<WTLINK name="8020" return="false">
+							<WTPARAM name="AttachmentID" value="PARAM(AttachmentID)"/>
+							<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+							<WTPARAM name="Mini" value="PARAM(Mini)"/>
+						</WTLINK>
+					</WTRETURN>
+
+				</WTCODEGROUP>
+
+			</WTACTION>
+			
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTCALLSUB name="ReturnAttachment"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(Txn)" oper="equal" value="CONST(2)"/>
+					<WTSTATIC col="1" merge="2" label="AttachmentDeleted" align="center" class="PageHeading" fontcolor="red"/>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Txn)" oper="not-equal" value="CONST(2)"/>
+					<WTROW>
+						<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+							<WTSTATIC tag="Attachment">
+								<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+							</WTSTATIC>
+							<WTSTATIC tag="Homework">
+								<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+							</WTSTATIC>
+							<WTSTATIC value="ATTR(Attachment.AttachName)" space="1"/>
+							<WTCODEGROUP>
+								<WTIMAGE value="CONST(Shortcut.gif)">
+									<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+										<WTPARAM name="EntityID" value="ENTITY(Attachment)"/>
+										<WTPARAM name="ItemID" value="ATTR(Attachment.AttachmentID)"/>
+										<WTPARAM name="Name" value="ATTR(Attachment.AttachName)" clean="true"/>
+										<WTPARAM name="URL" value="SYS(PageURL)"/>
+										<WTPARAM name="IsPopup" value="SYSCON(YES)"/>
+									</WTLINK>
+								</WTIMAGE>
+							</WTCODEGROUP>
+						</WTSTATIC>
+						<WTSTATIC col="1" merge="2" label="Updated" fontcolor="red">
+							<WTCONDITION expr="PARAM(Txn)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+						<WTSTATIC col="1" merge="2" label="Deleted" fontcolor="red">
+							<WTCONDITION expr="PARAM(Txn)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+						<WTBUTTON col="1" merge="2" value="CONST(Close)" btnclass="smbutton">
+							<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" align="left" class="Prompt">
+							<WTSTATIC label="EditHomeworkText">
+								<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+							</WTSTATIC>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(0)"/>
+									<WTSTATIC label="EditText"/>
+									<WTSTATIC label="SearchEngineText">
+										<WTCONDITION expr="ATTR(Attachment.ParentType)" oper="equal" value="ENTITY(Org)"/>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTSTATIC label="EditMiniText">
+									<WTCONDITION expr="PARAM(Mini)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+
+					<WTROW>
+						<WTCONDITION expr="IsEmployee"/>
+						<WTSTATIC col="1" tag="ParentID"/>
+						<WTTEXT col="2" value="ATTR(Attachment.ParentID)" size="3"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="NotEmployee"/>
+						<WTHIDDEN value="ATTR(Attachment.ParentID)"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="ATTR(Attachment.ParentType)" oper="equal" value="ENTITY(Lesson)"/>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" label="ClickLesson" bold="true">
+							<WTLINK name="2303" target="lesson"><WTPARAM name="LessonID" value="ATTR(Attachment.ParentID)"/></WTLINK>
+						</WTSTATIC>
+					</WTROW>
+
+					<WTROW>
+						<WTCONDITION expr="IsManager"/>
+						<WTSTATIC col="1" tag="AuthUserID"/>
+						<WTTEXT col="2" value="ATTR(Attachment.AuthUserID)" size="4" prespace="false"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="NotManager"/>
+						<WTHIDDEN value="ATTR(Attachment.AuthUserID)"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+						<WTSTATIC col="1" tag="AttachName"/>
+						<WTTEXT col="2" value="ATTR(Attachment.AttachName)" size="60"/>
+					</WTROW>
+					<WTROW>
+						<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+						<WTHIDDEN value="ATTR(Attachment.AttachName)"/>
+					</WTROW>
+					
+					<WTROW>
+						<WTCONDITION expr="PARAM(Mini)" oper="not-equal" value="CONST(0)"/>
+						<WTHIDDEN value="ATTR(Attachment.Status)"/>
+					</WTROW>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(2)" connector="or"/>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" align="left">
+								<WTSTATIC tag="DescriptionText">
+									<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(SessionLesson)"/>
+								</WTSTATIC>
+								<WTSTATIC tag="HomeworkDescriptionText">
+									<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="ENTITY(SessionLesson)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTMEMO col="1" merge="2" align="left" value="ATTR(Attachment.Description)" rows="8" cols="72"/>
+						</WTROW>
+
+					</WTCODEGROUP>
+					
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Mini)" oper="equal" value="CONST(0)"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="Status"/>
+							<WTCOMBO col="2" value="ATTR(Attachment.Status)"/>
+							<WTSTATIC col="2" tag="AttachDate"/>
+							<WTTEXT col="2" value="ATTR(Attachment.AttachDate)" prespace="false"/>
+							<WTSTATIC col="2" tag="ExpireDate"/>
+							<WTTEXT col="2" value="ATTR(Attachment.ExpireDate)" prespace="false"/>
+						</WTROW>
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="2" label="SecurityLevelText" align="left" class="prompt"/>
+						</WTROW>
+						<WTROW margin-top="6">
+							<WTSTATIC col="1" tag="Secure"/>
+							<WTTEXT col="2" value="ATTR(Attachment.Secure)" size="2"/>
+						</WTROW>
+
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+					</WTCODEGROUP>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+						<WTCONDITION expr="ATTR(Attachment.FileName)" oper="not-equal" value="CONST('')" connector="and"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="FileName"/>
+							<WTSTATIC col="2" height="18">
+								<WTSTATIC value="ATTR(Attachment.FileName)" space="1">
+									<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/TXN/PTSATTACHMENT/@parenttype,'/',/DATA/TXN/PTSATTACHMENT/@parentid,'/',/DATA/TXN/PTSATTACHMENT/@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+								<WTSTATIC value="CONST(()"/>
+								<WTSTATIC value="ATTR(Attachment.AttachSize)"/>
+								<WTSTATIC value="CONST(KB))"/>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" height="18" fontcolor="purple">
+								<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('http://',/DATA/SYSTEM/@servername,/DATA/SYSTEM/@serverpath,'Attachments/',/DATA/TXN/PTSATTACHMENT/@parenttype,'/',/DATA/TXN/PTSATTACHMENT/@parentid,'/',/DATA/TXN/PTSATTACHMENT/@filename)&quot;/&gt;)"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTROW>
+						<WTCONDITION expr="ATTR(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+						<WTSTATIC col="1" tag="LinkName"/>
+						<WTSTATIC col="2" height="18">
+							<WTSTATIC value="ATTR(Attachment.FileName)" space="1">
+					 				<WTLINK name="CONST(&lt;xsl:value-of select=&quot;/DATA/TXN/PTSATTACHMENT/@filename&quot;/&gt;)" type="Anchor" target="blank"/>
+							</WTSTATIC>
+						</WTSTATIC>
+					</WTROW>
+
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1" merge="2" label="LinkText" class="Prompt" align="left"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="UpdateLink"/>
+						<WTTEXT col="2" name="LinkName" size="60" required="false"/>
+					</WTROW>
+
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(Attachment.ParentType)" oper="equal" value="ENTITY(SessionLesson)" />
+						<WTCODEGROUP>
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+							<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+							<WTROW>
+								<WTSTATIC col="1" tag="Score"/>
+								<WTTEXT col="2" value="ATTR(Attachment.Score)" size="2"/>
+							</WTROW>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="NotEmployee"/>
+							<WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+							<WTCONDITION expr="NotOrgManagerOnly" connector="and"/>
+							<WTROW>
+								<WTHIDDEN value="ATTR(Attachment.Score)"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1" tag="Score"/>
+								<WTSTATIC col="2" value="ATTR(Attachment.Score)" bold="true"/>
+							</WTROW>
+						</WTCODEGROUP>
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+					</WTCODEGROUP>
+
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center">
+							<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)" />
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" value="CONST(Close)">
+							<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)" />
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" action="5" value="CONST(UploadFile)" align="center">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete" align="center">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8010" caption="Attachments" header="false" footer="false" navbar="false"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ParentID" datatype="number"/> 
+			<WTPARAM name="ParentType" datatype="number"/> 
+			<WTPARAM name="Title" datatype="text"/> 
+			<WTPARAM name="CompanyID" datatype="number"/> 
+			<WTPARAM name="Count" datatype="number"/>  
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="ParentType" direction="input" value="PARAM(ParentType)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="375" align="left"/>
+						<WTCOLUMN width="375" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTSTATIC value="PARAM(Title)" space="1"/>
+								<WTSTATIC label="Attachments"/>
+							</WTSTATIC>
+							<WTLINKGROUP  col="2" align="right" >
+								<WTLINK name="8002" label="NewAttachment" class="PageHeadingLink">
+									<WTPARAM name="ParentID" value="PARAM(ParentID)"/>
+									<WTPARAM name="ParentType" value="PARAM(ParentType)"/>
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								</WTLINK>
+							</WTLINKGROUP>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="MyAttachmentsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="NoAttachments" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Attachment">
+						<WTCOLUMN width="60" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="AttachSize"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="AttachDate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Attachment.AttachName)" bold="true">
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(edit.gif)" alt="Preview">
+										<WTLINK name="8003">
+											<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+						 				<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+										<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@parenttype,'/',/DATA/PARAM/@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC label="Active">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)" />
+								</WTSTATIC>
+								<WTSTATIC label="Inactive" fontcolor="red">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)" />
+								</WTSTATIC>
+								<WTSTATIC label="Private" fontcolor="purple">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(3)" />
+								</WTSTATIC>
+								<WTSTATIC space="1" />
+								<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="blue"/>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Attachment.AttachSize)" fontcolor="purple"/>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Attachment.AttachDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="4" value="DATA(Attachment.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" class="prompt">
+						<WTSTATIC value="PARAM(Count)" space="1"/>
+						<WTSTATIC label="Attachments"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8011" caption="Attachments" contentpage="true" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/> 
+			<WTPARAM name="ParentID" datatype="number"/> 
+			<WTPARAM name="ParentType" datatype="number"/> 
+			<WTPARAM name="Count" datatype="number"/>  
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+			<WTPARAM name="Mini" datatype="number"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" connector="and"/>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)"/>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="ParentType" direction="input" value="PARAM(ParentType)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="Attachments" class="PageHeading"/>
+							<WTSTATIC col="2">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="NewAttachment">
+										<WTLINK name="8002">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="ParentID" value="PARAM(ParentID)"/>
+											<WTPARAM name="ParentType" value="PARAM(ParentType)"/>
+											<WTPARAM name="ContentPage" value="PARAM(ContentPage)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="MyAttachmentsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="NoAttachments" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Attachment">
+						<WTCOLUMN width="60" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="AttachSize"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="AttachDate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Attachment.AttachName)" bold="true">
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(edit.gif)" alt="Preview">
+										<WTLINK name="8003">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+											<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+						 				<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+										<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@parenttype,'/',/DATA/PARAM/@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC label="Active">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)" />
+								</WTSTATIC>
+								<WTSTATIC label="Inactive" fontcolor="red">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)" />
+								</WTSTATIC>
+								<WTSTATIC label="Private" fontcolor="purple">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(3)" />
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(Member)"/>
+									<WTSTATIC space="1" />
+									<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="blue"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Attachment.AttachSize)" fontcolor="purple"/>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Attachment.AttachDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="4" value="DATA(Attachment.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" class="prompt">
+						<WTSTATIC value="PARAM(Count)" space="1"/>
+						<WTSTATIC label="Attachments"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8012" caption="Documents" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ParentID" datatype="number"/> 
+			<WTPARAM name="ParentType" datatype="number"/> 
+			<WTPARAM name="Count" datatype="number"/>  
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="ParentType" direction="input" value="PARAM(ParentType)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="Attachments" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTRECORDSET col="1" graybar="true" entity="Attachment">
+						<WTCOLUMN width="44" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="22" align="left" valign="top" label="FileName"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="Status"/>
+						<WTCOLUMN width="10" align="right" valign="top" label="AttachSize"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="AttachDate"/>
+						<WTROW>
+							<WTSTATIC col="1" bold="true">
+								<WTSTATIC value="DATA(Attachment.AttachName)"/>
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(Shortcut.gif)">
+										<WTCONDITION expr="NotMemberOnly"/>
+										<WTCONDITION expr="_IsShortcuts" connector="or"/>
+										<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+											<WTPARAM name="EntityID" value="ENTITY(Attachment)"/>
+											<WTPARAM name="ItemID" value="DATA(Attachment.AttachmentID)"/>
+											<WTPARAM name="Name" value="DATA(AttachName)" clean="true"/>
+											<WTPARAM name="URL" value="DATA(Attachment.FileName)"/>
+											<WTPARAM name="IsPopup" value="SYSCON(YES)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(Shortcut.gif)">
+										<WTCONDITION expr="NotMemberOnly"/>
+										<WTCONDITION expr="_IsShortcuts" connector="or"/>
+										<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+											<WTPARAM name="EntityID" value="ENTITY(Attachment)"/>
+											<WTPARAM name="ItemID" value="DATA(Attachment.AttachmentID)"/>
+											<WTPARAM name="Name" value="DATA(AttachName)" clean="true"/>
+											<WTPARAM name="URL" value="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@parenttype,'/',/DATA/PARAM/@parentid,'/',@filename)&quot;/&gt;)"/>
+											<WTPARAM name="IsPopup" value="SYSCON(YES)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Attachment.FileName)">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+					 					<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Attachment.FileName)">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@parenttype,'/',/DATA/PARAM/@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC label="Active">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)" />
+								</WTSTATIC>
+								<WTSTATIC label="Inactive" fontcolor="red">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)" />
+								</WTSTATIC>
+								<WTSTATIC label="Private" fontcolor="purple">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(3)" />
+								</WTSTATIC>
+								<WTSTATIC space="1" />
+								<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="blue"/>
+							</WTSTATIC>
+							<WTSTATIC col="4">
+								<WTSTATIC value="DATA(Attachment.AttachSize)" fontcolor="purple"/>
+							</WTSTATIC>
+							<WTSTATIC col="5" value="DATA(Attachment.AttachDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="5" value="DATA(Attachment.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" align="left" class="prompt">
+						<WTSTATIC value="PARAM(Count)" space="1"/>
+						<WTSTATIC label="Attachments"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.parent.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="8013" caption="Support Documents" contentpage="true" action="5" navbar="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" focus="false" track="0">
+		<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="SearchDate" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="IsSearch" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTINCLUDE name="Search.asp" />
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotSupportDocs" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+				<WTGETCACHE name="tmpSecurityLevel" value="SECURITYLEVEL"/>
+				<WTSETATTRIBUTE name="CONST(tmpSecurityLevel)" value="CONST(0)">
+					<WTCONDITION expr="CONST(tmpSecurityLevel)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="EnumCompanyDoc">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Secure" direction="input" value="CONST(tmpSecurityLevel)"/>
+						<WTPARAM name="ItemID" direction="input" value="CONST()"/>
+						<WTPARAM name="Element" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<!-- CHECK FOR ILLEGAL ACCESS -->
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsMemberOnly"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="SYS(CompanyID)"/>
+						<WTRETURN><WTLINK name="0101" return="false"><WTPARAM name="ActionCode" value="CONST(9)"/></WTLINK></WTRETURN>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments"/>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="List" type="New">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTCONDITION expr="PARAM(OrgID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="ListOrg">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="Secure" direction="input" value="CONST(tmpSecurityLevel)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(SearchText)" oper="equal" value="CONST(&quot;&quot;)"/>
+					<WTERROR number="10004" message="Oops, Please enter text to search for."/>
+					<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(0)"/>
+				</WTCODEGROUP>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="8" name="Date" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+				<WTCONDITION expr="PARAM(IsSearch)" oper="equal" value="CONST(1)"/>
+<WTCUSTOM>
+	If reqActionCode = 8 Then
+		reqBookmark = .SearchDate(reqBookmark, reqSearchDate, reqDirection, CLng(reqCompanyID), tmpSecurityLevel)
+	Else
+		tmpSearchText = Trim(reqSearchText)
+		If InStr(tmpSearchText, " " ) &gt; 0 Then
+			If InStr(tmpSearchText, chr(34) ) = 0 Then tmpSearchText = chr(34) + tmpSearchText + chr(34)
+		End If
+		
+		reqBookmark = .Search(reqBookmark, tmpSearchText, reqDirection, CLng(reqCompanyID), tmpSecurityLevel)
+		
+		'Check for error for Noise Words only
+		If Err.Number = -2147217900 Then
+			Err.Number = 0
+			reqSearchText = ""
+		End If
+	End If
+	If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+</WTCUSTOM>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW margin-bottom="6">
+					<WTTABLE col="1">
+						<WTCOLUMN width="150" align="left"/>
+						<WTCOLUMN width="600" align="left"/>
+						<WTROW>
+							<WTIMAGE col="1" value="CONST(faq.gif)" align="center"/>
+							<WTTABLE col="2">
+								<WTCOLUMN width="600" align="left"/>
+								<WTROW margin-bottom="6">
+									<WTSTATIC col="1" label="SupportDocuments" align="center" class="PageHeading"/>
+								</WTROW>
+								<WTROW>
+									<WTSTATIC col="1" label="SupportDocumentText" class="Prompt"/>
+								</WTROW>
+							</WTTABLE>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="3">
+					<WTTEXT col="1" value="PARAM(SearchText)" align="center" size="20" focus="true" class="ColumnHeader">
+						<WTCONDITION expr="_IsSearch"/>
+					</WTTEXT>
+					<WTBUTTON col="1" action="5" value="CONST(Search)" default="true">
+						<WTCONDITION expr="_IsSearch"/>
+					</WTBUTTON>
+					<WTSTATIC  col="1">
+						<WTCONDITION expr="_IsSearch"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="pagex" target="Help">
+									<WTPARAM name="Page" value="CONST(SearchHelp)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+					</WTSTATIC>
+					<WTSTATIC col="1" label="SearchDate"/>
+					<WTTEXT col="1" value="PARAM(SearchDate)" align="center" type="date" size="8" focus="true"/>
+					<WTBUTTON col="1" action="8" value="CONST(Go)" default="true"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="SearchTypeText" align="center" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="PARAM(OrgID)" datapath="/DATA/TXN/PTSORGS/ENUM" setselected="true">
+						<WTCHANGE>doSubmit(1,"")</WTCHANGE>
+					</WTCOMBO>
+					<WTBUTTON col="1" value="CONST(Close)" btnclass="smbutton">
+						<WTCONDITION expr="PARAM(ContentPage)" oper="equal" value="CONST(0)" />
+						<WTCLICK>window.parent.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(OrgID)" oper="not-equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(SearchText)" oper="not-equal" value="CONST('')" connector="or"/>
+					<WTCONDITION expr="PARAM(SearchDate)" oper="not-equal" value="CONST('')" connector="or"/>
+					 <WTRECORDSET col="1" graybar="true" prevnext="top" entity="Attachment">
+						  <WTCOLUMN width="100" align="left" label="Documents"/>
+							<WTROW>
+								<WTSTATIC col="1">
+									<WTSTATIC value="DATA(AttachName)" bold="true">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+						 				<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(AttachName)" bold="true">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(@parenttype,'/',@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTSTATIC>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(Shortcut.gif)">
+											<WTCONDITION expr="NotMemberOnly"/>
+											<WTCONDITION expr="_IsShortcuts" connector="or"/>
+											<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+												<WTPARAM name="EntityID" value="ENTITY(Attachment)"/>
+												<WTPARAM name="ItemID" value="DATA(Attachment.AttachmentID)"/>
+												<WTPARAM name="Name" value="DATA(AttachName)" clean="true"/>
+												<WTPARAM name="URL" value="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)"/>
+												<WTPARAM name="IsPopup" value="SYSCON(YES)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(Shortcut.gif)">
+											<WTCONDITION expr="NotMemberOnly"/>
+											<WTCONDITION expr="_IsShortcuts" connector="or"/>
+											<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+												<WTPARAM name="EntityID" value="ENTITY(Attachment)"/>
+												<WTPARAM name="ItemID" value="DATA(Attachment.AttachmentID)"/>
+												<WTPARAM name="Name" value="DATA(AttachName)" clean="true"/>
+												<WTPARAM name="URL" value="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(@parenttype,'/',@parentid,'/',@filename)&quot;/&gt;)"/>
+												<WTPARAM name="IsPopup" value="SYSCON(YES)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+
+									<WTSTATIC space="2"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(preview.gif)">
+											<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+						 					<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+										</WTIMAGE>
+										<WTIMAGE value="CONST(preview.gif)">
+											<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+											<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(@parenttype,'/',@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTSTATIC fontcolor="blue">
+										<WTSTATIC value="("/>
+										<WTSTATIC value="DATA(AttachDate)"/>
+										<WTSTATIC value=")"/>
+									</WTSTATIC>
+									<WTSTATIC>
+										<WTSTATIC value="DATA(Description)" space="1" fontcolor="gray"/>
+										<WTCODEGROUP>
+											<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+											<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" space="1" fontcolor="purple"/>
+											<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@attachsize,'KB ',@attachdate,')')&quot;/&gt;)" fontcolor="purple"/>
+										</WTCODEGROUP>
+									</WTSTATIC>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.Secure)" oper="greater" value="CONST(0)"/>
+										<WTSTATIC space="1"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@secure,')')&quot;/&gt;)" fontcolor="red"/>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTROW>
+					 </WTRECORDSET>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(SearchText)" oper="not-equal" value="CONST('')" />
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(ContentPage)" oper="equal" value="CONST(0)" />
+						<WTCLICK>window.parent.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="m_8013" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" action="5" focus="false" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="98" track="0">
+			<!--==================================================================-->
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="SearchDate" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="IsSearch" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+
+			<WTINCLUDE name="Search.asp" />
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)" />
+				</WTSETATTRIBUTE>
+				<WTGETCACHE name="tmpSecurityLevel" value="SECURITYLEVEL"/>
+				<WTSETATTRIBUTE name="CONST(tmpSecurityLevel)" value="CONST(0)">
+					<WTCONDITION expr="CONST(tmpSecurityLevel)" oper="equal" value="CONST(&quot;&quot;)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="EnumCompanyDoc">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="Secure" direction="input" value="CONST(tmpSecurityLevel)"/>
+						<WTPARAM name="ItemID" direction="input" value="CONST()"/>
+						<WTPARAM name="Element" direction="input" value="CONST()"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments"/>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="List" type="New">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTCONDITION expr="PARAM(OrgID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="ListOrg">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="Secure" direction="input" value="CONST(tmpSecurityLevel)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(SearchText)" oper="equal" value="CONST(&quot;&quot;)"/>
+					<WTERROR number="10004" message="Oops, Please enter text to search for."/>
+					<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(0)"/>
+				</WTCODEGROUP>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="8" name="Date" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTSETATTRIBUTE name="PARAM(IsSearch)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+				<WTCONDITION expr="PARAM(IsSearch)" oper="equal" value="CONST(1)"/>
+				<WTCUSTOM>
+					If reqActionCode = 8 Then
+					reqBookmark = .SearchDate(reqBookmark, reqSearchDate, reqDirection, CLng(reqCompanyID), tmpSecurityLevel)
+					Else
+					tmpSearchText = SearchText(Trim(reqSearchText))
+					reqBookmark = .Search(reqBookmark, tmpSearchText, reqDirection, CLng(reqCompanyID), tmpSecurityLevel)
+					'Check for error for Noise Words only
+					If Err.Number = -2147217900 Then
+					Err.Number = 0
+					reqSearchText = ""
+					End If
+					End If
+					If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+				</WTCUSTOM>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="SupportDocuments" align="center" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTTEXT col="1" value="PARAM(SearchText)" align="center" size="20" focus="true" class="ColumnHeader">
+						<WTCONDITION expr="_IsSearch"/>
+					</WTTEXT>
+					<WTBUTTON col="1" action="5" value="CONST(Search)" default="true">
+						<WTCONDITION expr="_IsSearch"/>
+					</WTBUTTON>
+					<WTSTATIC  col="1">
+						<WTCONDITION expr="_IsSearch"/>
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+								<WTLINK name="pagex" target="Help">
+									<WTPARAM name="Page" value="CONST(SearchHelp)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="SearchDate"/>
+					<WTTEXT col="1" value="PARAM(SearchDate)" align="center" type="date" size="8" focus="true"/>
+					<WTBUTTON col="1" action="8" value="CONST(Go)" default="true"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSORGS/ENUM))" oper="greater" value="CONST(1)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="SearchTypeText" align="center" class="ColumnHeader"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTCOMBO col="1" value="PARAM(OrgID)" datapath="/DATA/TXN/PTSORGS/ENUM" setselected="true" align="center">
+							<WTCHANGE>doSubmit(1,"")</WTCHANGE>
+						</WTCOMBO>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(OrgID)" oper="not-equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(SearchText)" oper="not-equal" value="CONST('')" connector="or"/>
+					<WTCONDITION expr="PARAM(SearchDate)" oper="not-equal" value="CONST('')" connector="or"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="Attachment">
+						<WTCOLUMN width="100" align="left" label="Documents"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(AttachName)" bold="true">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+									<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(AttachName)" bold="true">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(@parenttype,'/',@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(Shortcut.gif)">
+										<WTCONDITION expr="NotMemberOnly"/>
+										<WTCONDITION expr="_IsShortcuts" connector="or"/>
+										<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+											<WTPARAM name="EntityID" value="ENTITY(Attachment)"/>
+											<WTPARAM name="ItemID" value="DATA(Attachment.AttachmentID)"/>
+											<WTPARAM name="Name" value="DATA(AttachName)" clean="true"/>
+											<WTPARAM name="URL" value="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)"/>
+											<WTPARAM name="IsPopup" value="SYSCON(YES)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(Shortcut.gif)">
+										<WTCONDITION expr="NotMemberOnly"/>
+										<WTCONDITION expr="_IsShortcuts" connector="or"/>
+										<WTLINK name="9202" target="shortcut" targetstyle="width=400, height=150">
+											<WTPARAM name="EntityID" value="ENTITY(Attachment)"/>
+											<WTPARAM name="ItemID" value="DATA(Attachment.AttachmentID)"/>
+											<WTPARAM name="Name" value="DATA(AttachName)" clean="true"/>
+											<WTPARAM name="URL" value="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(@parenttype,'/',@parentid,'/',@filename)&quot;/&gt;)"/>
+											<WTPARAM name="IsPopup" value="SYSCON(YES)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+
+								<WTSTATIC space="2"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(preview.gif)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+										<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+									<WTIMAGE value="CONST(preview.gif)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(@parenttype,'/',@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTSTATIC space="1"/>
+								<WTSTATIC fontcolor="blue">
+									<WTSTATIC value="("/>
+									<WTSTATIC value="DATA(AttachDate)"/>
+									<WTSTATIC value=")"/>
+								</WTSTATIC>
+								<WTSTATIC>
+									<WTSTATIC value="DATA(Description)" space="1" fontcolor="gray"/>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" space="1" fontcolor="purple"/>
+										<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@attachsize,'KB ',@attachdate,')')&quot;/&gt;)" fontcolor="purple"/>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Attachment.Secure)" oper="greater" value="CONST(0)"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat('(',@secure,')')&quot;/&gt;)" fontcolor="red"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8014" caption="Prospect Documents" page-width="580" page-left="0" margin-width="0"
+		 navbar="false" header="false" footer="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="ParentType" datatype="number"/>
+			<WTPARAM name="ProspectID" datatype="number"/>
+			<WTPARAM name="MoveParent" datatype="number"/>
+			<WTPARAM name="MoveID" datatype="number"/>
+			<WTPARAM name="AttachmentCount" datatype="number" />
+
+			<WTSUB name="LoadDocuments">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ProspectID)" />
+						<WTPARAM name="ParentType" direction="input" value="PARAM(ParentType)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqAttachmentCount" direction="return" datatype="number" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(MoveParent)" oper="not-equal" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(MoveID)" oper="not-equal" value="CONST(0)" connector="and"/>
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(MoveID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(ParentType)" value="PARAM(MoveParent)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+			If (xmlError = "") Then
+				Set oFileSys = server.CreateObject("Scripting.FileSystemObject")
+				MoveFrom = reqSysWebDirectory + "Attachments\" + CStr(reqParentType) + "/"  + CStr(reqProspectID) + "/"
+				MoveTo = reqSysWebDirectory + "Attachments\" + CStr(reqMoveParent) + "/"  + CStr(reqProspectID) + "/"
+				If NOT filesys.FolderExists(MoveTo) Then oFileSys.CreateFolder MoveTo
+				oFileSys.MoveFile MoveFrom + .Filename, MoveTo
+				Set oFileSys = Nothing
+			End If
+</WTCUSTOM>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadDocuments"/>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTCALLSUB name="LoadDocuments"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+			
+			<WTACTION id="6" name="Attachment" type="Update">
+				<WTRETURN>
+					<WTLINK name="8002" nolocaldata="true">
+						<WTPARAM name="ParentType" value="PARAM(ParentType)" />
+						<WTPARAM name="ParentID" value="PARAM(ProspectID)" />
+						<WTPARAM name="ContentPage" value="CONST(1)"/>
+						<WTPARAM name="Mini" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="580" align="left"/>
+
+				<WTSTATIC label="DocMove"/>
+
+				<WTROW>
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="MyAttachText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="NoAttach" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTBUTTON col="1" action="6" value="CONST(NewAttachment)" align="right" btnclass="smbutton"/>
+					<WTBUTTON col="1" action="0" value="CONST(Refresh)" btnclass="smbutton"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Attachment">
+						<WTCOLUMN width="60" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="10" align="center" valign="top" label="AttachSize"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="AttachDate"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Attachment.AttachName)" bold="true">
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(edit.gif)" alt="Preview">
+											<WTLINK name="8003" target="Document">
+												<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="PopUp" value="CONST(1)"/>
+												<WTPARAM name="Mini" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+						 					<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(preview.gif)" alt="Preview">
+											<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@parenttype,'/',/DATA/PARAM/@prospectid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTSTATIC>
+<!--								
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(MoveParent)" oper="not-equal" value="CONST(0)" />
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(DocMove.gif)" alt="DocMove">
+										<WTLINK name="8014" return="false">
+											<WTPARAM name="ParentType" value="PARAM(ParentType)" />
+											<WTPARAM name="ProspectID" value="PARAM(ProspectID)" />
+											<WTPARAM name="MoveParent" value="PARAM(MoveParent)" />
+											<WTPARAM name="MoveID" value="DATA(Attachment.AttachmentID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+-->								
+							</WTSTATIC>
+
+							<WTSTATIC col="2">
+								<WTSTATIC label="Active">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)" />
+								</WTSTATIC>
+								<WTSTATIC label="Inactive" fontcolor="red">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)" />
+								</WTSTATIC>
+								<WTSTATIC label="Private" fontcolor="purple">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(3)" />
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="blue"/>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Attachment.AttachSize)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="4" value="DATA(Attachment.AttachDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="4" value="DATA(Attachment.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>		
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" class="prompt">
+						<WTSTATIC value="PARAM(AttachmentCount)" space="1"/>
+						<WTSTATIC label="Attachments"/>
+					</WTSTATIC>
+				</WTROW>
+
+			</WTCONTENT>
+
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8015" caption="Attachments" navbar="false" header="false" footer="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" langfile="8015" language="false">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/> 
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListCompanyAttachments">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTRECORDSET col="1" entity="Attachment">
+						<WTCOLUMN width="12"/>
+						<WTCOLUMN width="30"/>
+						<WTCOLUMN width="58"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Attachment.AttachDate)"/>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Attachment.AttachName)">
+					 				<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Attachment.FileName)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8016" caption="Attachments" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="125">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/> 
+			<WTPARAM name="ParentID" datatype="number"/> 
+			<WTPARAM name="ParentType" datatype="number"/> 
+			<WTPARAM name="Page" datatype="text"/>  
+			<WTPARAM name="Count" datatype="number"/>  
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(ParentID)" value="SYS(MemberID)">
+					<WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(ParentType)" value="ENTITY(Member)">
+					<WTCONDITION expr="PARAM(ParentType)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="ParentType" direction="input" value="PARAM(ParentType)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqCount" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(reqPage + &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; + CStr(reqCompanyID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewAttachment" align="right">
+						<WTLINK name="8002">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="ParentID" value="PARAM(ParentID)"/>
+							<WTPARAM name="ParentType" value="PARAM(ParentType)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="5" value="ATTR(HTMLFile.Data)" align="left" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Attachment">
+						<WTCOLUMN width="44" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="22" align="left" valign="top" label="FileName"/>
+						<WTCOLUMN width="12" align="center" valign="top" label="Status"/>
+						<WTCOLUMN width="10" align="right" valign="top" label="AttachSize"/>
+						<WTCOLUMN width="12" align="right" valign="top" label="AttachDate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Attachment.AttachName)" bold="true">
+								<WTLINK name="8003">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+								</WTLINK>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Attachment.FileName)">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+					 					<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Attachment.FileName)">
+									<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+									<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@parenttype,'/',/DATA/PARAM/@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC label="Active">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="less-equal" value="CONST(1)" />
+								</WTSTATIC>
+								<WTSTATIC label="Inactive" fontcolor="red">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(2)" />
+								</WTSTATIC>
+								<WTSTATIC label="Private" fontcolor="purple">
+									<WTCONDITION expr="DATA(Attachment.Status)" oper="equal" value="CONST(3)" />
+								</WTSTATIC>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(ParentType)" oper="not-equal" value="ENTITY(Member)"/>
+									<WTSTATIC space="1" />
+									<WTSTATIC value="DATA(Attachment.Secure)" fontcolor="blue"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="4">
+								<WTSTATIC value="DATA(Attachment.AttachSize)" fontcolor="purple"/>
+							</WTSTATIC>
+							<WTSTATIC col="5" value="DATA(Attachment.AttachDate)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" merge="5" value="DATA(Attachment.Description)" fontcolor="gray"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Count)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" class="prompt">
+						<WTSTATIC value="PARAM(Count)" space="1"/>
+						<WTSTATIC label="Attachments"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="8017" caption="Mini Documents" navbar="false" header="false" footer="false" wrapper="wrapper600"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="ParentType" datatype="number"/>
+			<WTPARAM name="ParentID" datatype="number"/>
+			<WTPARAM name="AttachmentCount" datatype="number" />
+
+			<WTSUB name="LoadDocuments">
+				<WTOBJECT name="Attachments" project="ptsAttachmentUser" class="CAttachments">
+					<WTMETHOD name="ListAttachments">
+						<WTPARAM name="ParentID" direction="input" value="PARAM(ParentID)" />
+						<WTPARAM name="ParentType" direction="input" value="PARAM(ParentType)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="Count">
+						<WTPARAM name="reqAttachmentCount" direction="return" datatype="number" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachments" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTCALLSUB name="LoadDocuments"/>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+			
+			<WTACTION id="6" name="Attachment" type="Update">
+				<WTRETURN>
+					<WTLINK name="8002" nolocaldata="true">
+						<WTPARAM name="ParentType" value="PARAM(ParentType)" />
+						<WTPARAM name="ParentID" value="PARAM(ParentID)" />
+						<WTPARAM name="ContentPage" value="CONST(1)"/>
+						<WTPARAM name="Mini" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--*******************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW margin-top="10">
+					<WTTABLE col="1">
+						<WTCOLUMN width="200" align="left"/>
+						<WTCOLUMN width="400" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTSTATIC label="Documents"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="_IsPinnacleTutorial"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+										<WTLINK name="Tutorial" target="Tutorial">
+											<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-CUSTOMDOCUMENTS)"/>
+											<WTPARAM name="contentpage" value="CONST(3)"/>
+											<WTPARAM name="popup" value="CONST(1)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTBUTTON col="2" action="6" value="CONST(NewAttachment)" align="right" btnclass="smbutton"/>
+							<WTBUTTON col="2" action="0" value="CONST(Refresh)" btnclass="smbutton"/>
+							<WTBUTTON col="2" value="CONST(Close)" btnclass="smbutton">
+								<WTCLICK>window.close()</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="MyAttachText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" label="NoAttach" class="prompt"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" entity="Attachment">
+						<WTCOLUMN width="80" align="left" valign="top" label="AttachName"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="AttachSize"/>
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Attachment.AttachName)" bold="true">
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(edit.gif)" alt="Preview" imgalign="absmiddle">
+											<WTLINK name="8003">
+												<WTPARAM name="AttachmentID" value="DATA(Attachment.AttachmentID)"/>
+												<WTPARAM name="ContentPage" value="CONST(3)"/>
+												<WTPARAM name="Mini" value="CONST(1)"/>
+											</WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="not-equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(preview.gif)" alt="Preview" imgalign="absmiddle">
+						 					<WTLINK name="CONST(&lt;xsl:value-of select=&quot;@filename&quot;/&gt;)" type="anchor" target="blank"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+										<WTIMAGE value="CONST(preview.gif)" alt="Preview" imgalign="absmiddle">
+											<WTLINK name="CONST(Attachments/&lt;xsl:value-of select=&quot;concat(/DATA/PARAM/@parenttype,'/',/DATA/PARAM/@parentid,'/',@filename)&quot;/&gt;)" type="anchor" target="blank"/>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Attachment.AttachSize)">
+										<WTCONDITION expr="DATA(Attachment.IsLink)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>		
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(AttachmentCount)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" align="left" class="prompt">
+						<WTSTATIC value="PARAM(AttachmentCount)" space="1"/>
+						<WTSTATIC label="Attachments"/>
+					</WTSTATIC>
+				</WTROW>
+
+			</WTCONTENT>
+
+		</WTWEBPAGE>
+		
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="8020" caption="Upload File" action="false" submit="8020Upload.asp" type="multi" 
+			navbar="false" header="false" footer="false" page-left="0" margin="false" 
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="AttachmentID" datatype="number"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Mini" datatype="number"/>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="NotEmployee"/>
+        <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+					DoError reqUploadError, "Upload", reqUploadErrorDesc
+</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="ATTACHMENTID" value="PARAM(AttachmentID)"/>
+				<WTSETCACHE name="CONTENTPAGE" value="PARAM(ContentPage)"/>
+				<WTSETCACHE name="MINI" value="PARAM(Mini)"/>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="UploadFileHeader" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" label="UploadFileText" class="prompt"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="18">
+					<WTFILE col="1" align="center" value="upload" size="40"/>
+					<WTBUTTON col="1" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>	
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8021" caption="Upload File" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="AttachmentID" datatype="number"/>
+			<WTPARAM name="UploadURL" datatype="text"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(AttachmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+If Right(reqUploadURL,1) &lt;&gt; "/" Then reqUploadURL = reqUploadURL + "/"
+reqUploadURL = reqUploadURL + "UploadFile.asp?ID=" &amp; reqAttachmentID 
+reqUploadURL = reqUploadURL + "&amp;Path=Attachments\" &amp; .ParentType &amp; "\" &amp; .ParentID
+reqUploadURL = reqUploadURL + "&amp;RetURL=" + "http://" + reqSysServerName + reqSysServerPath + "UploadResult.asp"
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+<!--
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(AttachmentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpParentType)" value="ATTR(ParentType)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParentID)" value="ATTR(ParentID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(CompanyID)"/>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTLINK name="8010" return="false">
+						<WTPARAM name="ParentType" value="CONST(tmpParentType)"/>
+						<WTPARAM name="ParentID" value="CONST(tmpParentID)"/>
+						<WTPARAM name="CompanyID" value="CONST(tmpCompanyID)"/>
+					</WTLINK>
+				</WTRETURN>
+-->
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="center"/>
+				<WTCOLUMN width="550" align="center"/>
+				<WTCOLUMN width="100" align="center"/>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1" merge="3" label="UploadAttachment" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" label="UploadInstruction" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(UploadURL)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="24">
+					<WTBUTTON col="1" merge="3" value="CONST(ClickUpload)" >
+						<WTCLICK>
+					var url, win;
+					url = Attachment.UploadURL.value;
+					win = window.open(url,'upload');
+					win.focus();
+						</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-bottom="24">
+					<WTBUTTON col="1" merge="3" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="UploadFile" caption="Upload File" action="false" submit="FileUpload.asp" type="multi" 
+			navbar="false" header="false" footer="false" page-left="0" margin="false" 
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="ID" datatype="number"/>
+			<WTPARAM name="Path" datatype="text"/>
+			<WTPARAM name="RetURL" datatype="text" url="true"/>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTSETCACHE name="ID" value="PARAM(ID)"/>
+				<WTSETCACHE name="PATH" value="PARAM(Path)"/>
+				<WTSETCACHE name="RETURL" value="PARAM(RetURL)"/>
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="UploadFileHeader" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" label="UploadFile2Text" class="prompt"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="18">
+					<WTFILE col="1" align="center" value="upload" size="40"/>
+					<WTBUTTON col="1" align="center" default="true" action="1" value="CONST(Submit)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>	
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="UploadResult" caption="Upload Result" navbar="false" 
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ID" datatype="number"/>
+			<WTPARAM name="FileName" datatype="text"/>
+			<WTPARAM name="FileSize" datatype="number"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Attachment" project="ptsAttachmentUser" class="CAttachment">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AttachmentID" direction="input" value="PARAM(ID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(CompanyID)"/>
+<WTCUSTOM>
+			.FileName = reqFileName
+			.IsLink = 1
+			IF CLng(reqFileSize) > 1024 Then 
+				.AttachSize = round( CLng(reqFileSize) / 1024 )
+			Else
+				.AttachSize = 1
+			End If
+</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAttachment" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="center"/>
+
+				<WTROW margin-top="24">
+					<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" value="PARAM(UploadErrorDesc)" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-top="24">
+					<WTCONDITION expr="PARAM(UploadError)" oper="equal" value="CONST(0)"/>
+					<WTSTATIC col="1" class="PageHeading">
+					<WTSTATIC value="ATTR(Attachment.FileName)" newline="2"/>
+					<WTSTATIC label="UploadSuccess"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

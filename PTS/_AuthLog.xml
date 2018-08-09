@@ -1,0 +1,392 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="71" name="AuthLog" alias="aul" log="false" audit="false" translate="false">
+	
+		<!--Identity-->
+		<WTATTRIBUTE id="7101" name="AuthLogID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="7102" name="AuthUserID" type="number" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="7103" name="IP" type="text" length="15" min="1" max="15" required="true" title="true" source="entity" language="false"/>
+		<WTATTRIBUTE id="7104" name="LogDate" type="date" required="true" source="entity">
+			<WTFORMAT value="m-d-yy h:mm am/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7105" name="LastDate" type="date" required="true" source="entity">
+			<WTFORMAT value="m-d-yy h:mm am/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="7106" name="Total" type="number" source="entity"/>
+		<WTATTRIBUTE id="7107" name="Status" type="number" required="true" source="entity">
+			<WTENUM id="1" name="Allow"/>
+			<WTENUM id="2" name="Disallow"/>
+			<WTENUM id="3" name="Override"/>
+		</WTATTRIBUTE>
+
+		<WTINDEX name="AuthUserID">
+			<WTATTRIBUTE name="AuthUserID"/>
+			<WTATTRIBUTE name="IP"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="AuthLog" entity="AuthLog" alias="aul"/>
+		</WTRELATIONSHIPS>
+		
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="AUTHLOG-ALLOW" value="1"/>
+			<WTSYSCON name="AUTHLOG-DISALLOW" value="2"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListAuthUser" style="GenerateDataProc.xsl" template="new" passthru="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(AuthUserID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(AuthLog.AuthLogID)"/>
+					<WTATTRIBUTE value="ATTR(AuthLog.IP)"/>
+					<WTATTRIBUTE value="ATTR(AuthLog.LogDate)"/>
+					<WTATTRIBUTE value="ATTR(AuthLog.LastDate)"/>
+					<WTATTRIBUTE value="ATTR(AuthLog.Total)"/>
+					<WTATTRIBUTE value="ATTR(AuthLog.Status)"/>
+					<WTJOIN name="AuthLog"/>
+					<WTCONDITION expr="ATTR(AuthLog.AuthUserID)" oper="equal" value="PARAM(AuthUserID)"/>
+					<WTORDER name="ATTR(AuthLog.LogDate)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE name="LogAuthUser" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(AuthUserID)" direction="input"/>
+			<WTPARAM name="ATTR(IP)" direction="input"/>
+			<WTPARAM name="ATTR(Total)" direction="input"/>
+			<WTPARAM name="result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+    <!--==================================================================-->
+    <WTPROCEDURE name="LogIP" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+      <!--==================================================================-->
+      <WTPARAM name="ATTR(IP)" direction="input"/>
+      <WTPARAM name="result" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+    <!--==================================================================-->
+    <WTPROCEDURE name="LogLead" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+      <!--==================================================================-->
+      <WTPARAM name="ATTR(IP)" direction="input"/>
+      <WTPARAM name="ATTR(AuthUserID)" direction="input"/>
+      <WTPARAM name="result" direction="output" datatype="number"/>
+    </WTPROCEDURE>
+
+  </WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="7102" caption="AuthLog" contentpage="true" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl"  secured="52">
+		<!--===============================================================================-->
+			<WTPARAM name="AuthUserID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="AuthLog" project="ptsAuthLogUser" class="CAuthLog">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AuthLogID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(AuthLog.AuthUserID)" value="PARAM(AuthUserID)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthLog.Status)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthLog.LogDate)" value="CONST(Now)"/>
+					<WTSETATTRIBUTE name="ATTR(AuthLog.LastDate)" value="CONST(Now)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAuthLog" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="AuthLog" project="ptsAuthLogUser" class="CAuthLog">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AuthLogID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(AuthLog.AuthUserID)" value="PARAM(AuthUserID)"/>
+					<WTSETATTRIBUTES/>
+					
+					<WTMETHOD name="Add">
+						<WTPARAM name="AuthLogID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlAuthLog" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewAuthLog" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="AuthUserID"/>
+					<WTSTATIC col="2" value="ATTR(AuthLog.AuthUserID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="IP"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.IP)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LogDate"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.LogDate)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LastDate"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.LastDate)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Total"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.Total)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(AuthLog.Status)"/>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7103" contentpage="true" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="AuthLogID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="AuthLog" project="ptsAuthLogUser" class="CAuthLog">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AuthLogID" direction="input" value="PARAM(AuthLogID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAuthLog" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="AuthLog" project="ptsAuthLogUser" class="CAuthLog">
+					<WTMETHOD name="Load">
+						<WTPARAM name="AuthLogID" direction="input" value="PARAM(AuthLogID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlAuthLog" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="AuthLog" project="ptsAuthLogUser" class="CAuthLog">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="AuthLogID" direction="input" value="PARAM(AuthLogID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AuthLog" project="ptsAuthLogUser" class="CAuthLog">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="AuthLogID" direction="input" value="PARAM(AuthLogID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAuthLog" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="AuthLog" value="ATTR(AuthLog.AuthLogID)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="AuthUserID"/>
+					<WTSTATIC col="2" value="ATTR(AuthLog.AuthUserID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="IP"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.IP)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LogDate"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.LogDate)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="LastDate"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.LastDate)" size="15"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Total"/>
+					<WTTEXT col="2" value="ATTR(AuthLog.Total)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(AuthLog.Status)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="7111" caption="List" contentpage="true" wrapper="wrapper600"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="AuthUserID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="AuthLogs" project="ptsAuthLogUser" class="CAuthLogs">
+					<WTMETHOD name="ListAuthUser">
+						<WTPARAM name="AuthUserID" direction="input" value="PARAM(AuthUserID)" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAuthLogs" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="300" align="left"/>
+						<WTCOLUMN width="300" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" tag="AuthLogs" value="PARAM(AuthUserID)" class="PageHeading" align="left"/>
+							<WTSTATIC col="2" align="right">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTSTATIC label="NewAuthLog" bold="true">
+									<WTLINK name="7102" nodata="true">
+										<WTPARAM name="AuthUserID" value="PARAM(AuthUserID)"/>
+										<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+									</WTLINK>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="AuthLog">
+						<WTCOLUMN width="20" align="left" valign="top" label="IP"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="Status"/>
+						<WTCOLUMN width="25" align="left" valign="top" label="LogDate"/>
+						<WTCOLUMN width="25" align="left" valign="top" label="LastDate"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Total"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(AuthLog.IP)">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="7103">
+											<WTPARAM name="AuthLogID" value="DATA(AuthLog.AuthLogID)"/>
+											<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(AuthLog.Status)"/>
+							<WTSTATIC col="2" value="DATA(AuthLog.LogDate)"/>
+							<WTSTATIC col="2" value="DATA(AuthLog.LastDate)"/>
+							<WTSTATIC col="2" value="DATA(AuthLog.Total)" align="center"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" align="center" value="CONST(Return)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

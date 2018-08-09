@@ -1,0 +1,274 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="42" name="SurveyChoice" alias="sc" language="false" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="4201" name="SurveyChoiceID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="4202" name="SurveyQuestionID" type="number" source="entity" parent="true"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="4210" name="Choice" type="text" length="500" min="1" max="500" source="entity" />
+		<WTATTRIBUTE id="4211" name="Seq" type="number" source="entity" seq="10"/>
+		<WTATTRIBUTE id="4212" name="Total" type="number" source="entity"/>
+		
+		<!-- Non-Persist Attributes -->
+		<WTATTRIBUTE id="4215" name="SurveyID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="SurveyQuestionID">
+			<WTATTRIBUTE name="SurveyQuestionID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="SurveyChoice" entity="SurveyChoice" alias="sc"/>
+			<WTRELATIONSHIP name="Common" entity="SurveyChoice" alias="sc"/>
+			<WTRELATIONSHIP name="SurveyQuestion" entity="SurveyChoice" alias="sc">
+				<WTENTITY name="SurveyQuestion" entity="SurveyQuestion" alias="sq">
+					<WTATTRIBUTE alias="sc" name="SurveyQuestionID" relalias="sq" relname="SurveyQuestionID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListSurveyAll" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(SurveyID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.SurveyChoiceID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.SurveyQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.Choice)"/>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.Total)"/>
+					<WTJOIN name="SurveyQuestion"/>
+					<WTCONDITION expr="ATTR(SurveyQuestion.SurveyID)" oper="equal" value="PARAM(SurveyID)"/>
+					<WTORDER name="ATTR(SurveyChoice.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListSurvey" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(SurveyID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.SurveyChoiceID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.SurveyQuestionID)"/>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.Choice)"/>
+					<WTATTRIBUTE value="ATTR(SurveyChoice.Total)"/>
+					<WTJOIN name="SurveyQuestion"/>
+					<WTCONDITION expr="ATTR(SurveyQuestion.SurveyID)" oper="equal" value="PARAM(SurveyID)"/>
+					<WTCONDITION expr="ATTR(SurveyQuestion.Status)" oper="less-equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(SurveyChoice.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4202" caption="SurveyChoice" contentpage="true" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="SurveyQuestionID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="SurveyChoice" project="ptsSurveyChoiceUser" class="CSurveyChoice">
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyChoiceID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(SurveyQuestionID)" value="PARAM(SurveyQuestionID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurveyChoice" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="SurveyChoice" project="ptsSurveyChoiceUser" class="CSurveyChoice">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyChoiceID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(SurveyQuestionID)" value="PARAM(SurveyQuestionID)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="SurveyChoiceID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSurveyChoices" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="SurveyChoice" class="PageHeading" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" tag="Choice" valign="top"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTMEMO col="1" merge="2" value="ATTR(SurveyChoice.Choice)" rows="2" cols="72"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(SurveyChoice.Seq)" size="2"/>
+				</WTROW>
+			
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4203" caption="SurveyChoice" contentpage="true" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="SurveyChoiceID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="SurveyChoice" project="ptsSurveyChoiceUser" class="CSurveyChoice">
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyChoiceID" direction="input" value="PARAM(SurveyChoiceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurveyChoice" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTOBJECT name="SurveyChoice" project="ptsSurveyChoiceUser" class="CSurveyChoice">
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyChoiceID" direction="input" value="PARAM(SurveyChoiceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlSurveyChoices" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="SurveyChoice" project="ptsSurveyChoiceUser" class="CSurveyChoice">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="SurveyChoiceID" direction="input" value="PARAM(SurveyChoiceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="SurveyChoice" project="ptsSurveyChoiceUser" class="CSurveyChoice">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SurveyChoiceID" direction="input" value="PARAM(SurveyChoiceID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlSurveyChoice" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="SurveyChoice" class="PageHeading" align="left"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" tag="Choice" valign="top"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTMEMO col="1" merge="2" value="ATTR(SurveyChoice.Choice)" rows="2" cols="72"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(SurveyChoice.Seq)" size="2"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Total"/>
+					<WTSTATIC col="2" value="ATTR(SurveyChoice.Total)"/>
+				</WTROW>
+			
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+
+</WTROOT>

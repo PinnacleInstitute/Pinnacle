@@ -1,0 +1,517 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="110" name="Credit" alias="cr" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="11001" name="CreditID" type="number" identity="true" min="1" required="true" source="entity" title="true"/>
+		<WTATTRIBUTE id="11002" name="CompanyID" type="number" min="1" source="entity"/>
+	
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="11003" name="MemberID" type="number" min="1" source="entity"/>
+		
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="11005" name="CreditDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="11006" name="CreditType" type="number" source="entity">
+			<WTENUM id="1" name="CreditType1"/>
+			<WTENUM id="2" name="CreditType2"/>
+			<WTENUM id="3" name="CreditType3"/>
+			<WTENUM id="4" name="CreditType4"/>
+			<WTENUM id="5" name="CreditType5"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11007" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="Inactive"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11008" name="Total" type="currency" min="0" max="9999999.99" source="entity">
+			<WTFORMAT value="###,###,##0.00" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11009" name="Used" type="currency" min="0" max="9999999.99" source="entity">
+			<WTFORMAT value="###,###,##0.00" />
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11010" name="Balance" type="currency" min="0" max="9999999.99" source="entity">
+			<WTFORMAT value="###,###,##0.00" />
+		</WTATTRIBUTE>
+
+
+		<!-- Non Persist Fields -->
+
+		<!--Indexes-->
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="MemberID"/>
+			<WTATTRIBUTE name="CreditDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Credit" entity="Credit" alias="cr"/>
+			<WTRELATIONSHIP name="Common" entity="Credit" alias="cr"/>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="CREDIT-TYPE-POINTS" value="1"/>
+			<WTSYSCON name="CREDIT-TYPE-DOLLARS" value="2"/>
+			<WTSYSCON name="CREDIT-TYPE-MESSAGES" value="3"/>
+			<WTSYSCON name="CREDIT-STATUS-PENDING" value="1"/>
+			<WTSYSCON name="CREDIT-STATUS-ACTIVE" value="2"/>
+			<WTSYSCON name="CREDIT-STATUS-INACTIVE" value="3"/>
+		</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Credit.CreditID)"/>
+					<WTATTRIBUTE value="ATTR(Credit.CreditDate)"/>
+					<WTATTRIBUTE value="ATTR(Credit.CreditType)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Status)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Total)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Used)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Balance)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(CREDIT-STATUS-ACTIVE)" connector="and"/>
+					<WTORDER name="ATTR(Credit.CreditDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListMemberAll" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Credit.CreditID)"/>
+					<WTATTRIBUTE value="ATTR(Credit.CreditDate)"/>
+					<WTATTRIBUTE value="ATTR(Credit.CreditType)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Status)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Total)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Used)"/>
+					<WTATTRIBUTE value="ATTR(Credit.Balance)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(MemberID)" oper="equal" value="PARAM(MemberID)" connector="and"/>
+					<WTORDER name="ATTR(Credit.CreditDate)" descend="true"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="UseCredits" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(CreditType)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="ATTR(Used)" direction="input" required="false" passthru="true"/>
+			<WTPARAM name="Count" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================-->
+		<WTWEBPAGE name="11002" navbar="false" header="false" footer="false" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Credit" project="ptsCreditUser" class="CCredit">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CreditID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CreditDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(CreditType)" value="SYSCON(CREDIT-TYPE-POINTS)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(CREDIT-STATUS-ACTIVE)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCredit" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Credit" project="ptsCreditUser" class="CCredit">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CreditID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="PARAM(MemberID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="CreditID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCredit" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2"  align="left" label="NewCredit" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="CreditDate"/>
+					<WTTEXT col="2" value="ATTR(Credit.CreditDate)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="CreditType"/>
+					<WTCOMBO col="2" value="ATTR(Credit.CreditType)"/>
+					<WTSTATIC col="2" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Credit.Status)" prespace="false"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Total"/>
+					<WTTEXT col="2" value="ATTR(Credit.Total)" size="10"/>
+					<WTSTATIC col="2" tag="Used"/>
+					<WTTEXT col="2" value="ATTR(Credit.Used)" size="10" prespace="false"/>
+					<WTSTATIC col="2" tag="Balance"/>
+					<WTTEXT col="2" value="ATTR(Credit.Balance)" size="10" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="11003" navbar="false" header="false" footer="false" wrapper="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="CreditID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Credit" project="ptsCreditUser" class="CCredit">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CreditID" direction="input" value="PARAM(CreditID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCredit" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Credit" project="ptsCreditUser" class="CCredit">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CreditID" direction="input" value="PARAM(CreditID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlCredit" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Credit" project="ptsCreditUser" class="CCredit">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="CreditID" direction="input" value="PARAM(CreditID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Credit" project="ptsCreditUser" class="CCredit">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="CreditID" direction="input" value="PARAM(CreditID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCredit" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="CreditDate" value="ATTR(Credit.CreditDate)" align="left" class="PageHeading"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="CreditDate"/>
+					<WTTEXT col="2" value="ATTR(Credit.CreditDate)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="CreditType"/>
+					<WTCOMBO col="2" value="ATTR(Credit.CreditType)"/>
+					<WTSTATIC col="2" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Credit.Status)" prespace="false"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="Total"/>
+					<WTTEXT col="2" value="ATTR(Credit.Total)" size="10"/>
+					<WTSTATIC col="2" tag="Used"/>
+					<WTTEXT col="2" value="ATTR(Credit.Used)" size="10" prespace="false"/>
+					<WTSTATIC col="2" tag="Balance"/>
+					<WTTEXT col="2" value="ATTR(Credit.Balance)" size="10" prespace="false"/>
+				</WTROW>
+			
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+	
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="11021" page-width="580" page-left="0" margin-width="0" caption="List" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+			 		<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Credits" project="ptsCreditUser" class="CCredits">
+					<WTMETHOD name="ListMemberAll">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+						<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListMember">
+						<WTCONDITION expr="NotEmployee"/>
+						<WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+						<WTCONDITION expr="NotOrgManagerOnly" connector="and"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCredits" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW margin-bottom="3">
+					<WTSTATIC col="1" label="NewCredit" bold="true" align="right">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+						<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+						<WTLINK name="11002">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="MemberID" value="PARAM(MemberID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Credit">
+						<WTCOLUMN width="19" align="left" valign="top" label="CreditDate"/>
+						<WTCOLUMN width="18" align="left" valign="top" label="Status"/>
+						<WTCOLUMN width="18" align="left" valign="top" label="CreditType"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Total"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Used"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Balance"/>
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Credit.CreditDate)"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="IsEmployee"/>
+									<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+									<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="11003">
+											<WTPARAM name="CreditID" value="DATA(CreditID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Credit.Status)"/>
+							<WTSTATIC col="3" value="DATA(Credit.CreditType)"/>
+							<WTSTATIC col="4">
+								<WTSTATIC value="DATA(Credit.Total)">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Credit.Total)" fontcolor="red">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="5">
+								<WTSTATIC value="DATA(Credit.Used)">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Credit.Used)" fontcolor="red">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="6">
+								<WTSTATIC value="DATA(Credit.Balance)">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Credit.Balance)" fontcolor="red">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="m_11021" caption="Member Payments" page-left="0" page-top="0" navbar="false" header="false" footer="false" wrapper="false"
+			page-width="100%" margin-width="0" navbar-width="0" content-width="100%" action="5" viewport="width=device-width"
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" mobile="MobileHome.asp" secured="98" track="0">
+			<!--==================================================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Credits" project="ptsCreditUser" class="CCredits">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCredits" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Credit">
+						<WTCOLUMN width="34" align="center" valign="top" label="Total"/>
+						<WTCOLUMN width="33" align="center" valign="top" label="Used"/>
+						<WTCOLUMN width="33" align="center" valign="top" label="Balance"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Credit.Total)">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Credit.Total)" fontcolor="red">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(Credit.Used)">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Credit.Used)" fontcolor="red">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="3">
+								<WTSTATIC value="DATA(Credit.Balance)">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Credit.Balance)" fontcolor="red">
+									<WTCONDITION expr="DATA(Credit.Balance)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Credit.CreditDate)" fontcolor="gray"/>
+							<WTSTATIC col="2" value="DATA(Credit.Status)" fontcolor="gray"/>
+							<WTSTATIC col="3" value="DATA(Credit.CreditType)" fontcolor="gray"/>
+						</WTROW>
+						<WTROW height="6">
+							<WTSTATIC col="1" merge="4"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

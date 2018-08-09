@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=unicode">
+<META content="MSHTML 6.00.2900.2604" name=GENERATOR></HEAD>
+<BODY>
+<H2 align=center><FONT color=blue><FONT face=Arial color=navy>Email Campaign 
+Help</FONT> </FONT></H2><SPAN style="FONT-FAMILY: Arial">
+<H3 style="MARGIN: 0in 0in 6pt; tab-stops: .5in"><SPAN 
+style="FONT-SIZE: 14pt; FONT-FAMILY: Arial; mso-bidi-font-size: 12.0pt">
+<H3 style="MARGIN: 0in 0in 6pt; tab-stops: .5in"></SPAN></SPAN><SPAN 
+style="FONT-SIZE: 14pt; FONT-FAMILY: Arial; mso-bidi-font-size: 12.0pt"><FONT 
+color=navy>Email Messages<?xml:namespace prefix = o ns = 
+"urn:schemas-microsoft-com:office:office" /><o:p></o:p></FONT></SPAN></H3></H3>
+<P class=MsoNormal style="MARGIN: 0in 0in 6pt"><SPAN 
+style="FONT-FAMILY: Arial">Email Messages are defined, scheduled and tracked for 
+each email marketing activity.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>Each 
+email message specifies a name, target audience, subject, message, send date, 
+status, and recurrence schedule.<SPAN style="mso-spacerun: yes">&nbsp; 
+</SPAN>The email scheduler reviews all defined email messages nightly to 
+determine which ones need to be sent.<SPAN style="mso-spacerun: yes">&nbsp; 
+</SPAN>Nonrecurring email messages are marked complete after being sent.<SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN>Recurring email messages are marked 
+complete after their end date is past.<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 6pt"><SPAN 
+style="FONT-FAMILY: Arial">An email message can be formatted with a WYSIWYG HTML 
+Editor and can include images, tables, links, etc.<SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN>The message can also include field 
+references for the specific member information.<SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN>The reference fields are identified with 
+curly brackets and include {firstname}, {lastname}, {email}, {data1}, {data2}, 
+{data3}, {data4}, and {data5}.<SPAN style="mso-spacerun: yes">&nbsp; 
+</SPAN>Sections of text can also be included or excluded based on the values of 
+data1, data2,&nbsp; data3, data4 and data5.<SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN>See "Included / Excluded Text" below for 
+more details.<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 6pt"><SPAN 
+style="FONT-FAMILY: Arial">An email message can be sent multiple times by 
+entering a recurring schedule.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>The 
+email scheduler will send all messages nightly that have a status of ready and a 
+blank send date or a send date earlier or equal to the current date. The email 
+message can be repeated by entering a number followed by a single letter (d,w,m) 
+for a (day,week,month).<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>For 
+example, 7d will send the message once every seven days, and is the same as 
+1w.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>An end date can be specified to 
+stop sending the email message.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>If 
+no end date is specified the email message will be sent indefinitely according 
+to the recurring schedule.<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 6pt"><SPAN 
+style="FONT-FAMILY: Arial">The Email message can be sent to a test email address 
+to confirm the composition of the email message.<SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN>The email test can also include a test 
+firstname, lastname, data1, data2, data3, data4, data5.<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 0pt"><SPAN 
+style="FONT-FAMILY: Arial">Each email message tracks the total number of sent 
+emails and the total number of mailings according to the recurring 
+schedule.<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 0pt"><SPAN 
+style="FONT-FAMILY: Arial">&nbsp;<o:p></o:p></SPAN></P>
+<H3><FONT face=Arial><FONT color=navy>Included / Excluded 
+Text</FONT></FONT></H3>
+<P class=MsoNormal style="MARGIN: 0in 0in 6pt"><SPAN 
+style="FONT-FAMILY: Arial">Sections of text in the body of the email message can 
+be included or excluded based on the values of data1, data2,&nbsp;data3, data4 
+or data5.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>The section of text is 
+encompassed within two matching tags that define the criteria for inclusion or 
+exclusion.<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>The following options 
+are supported.<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:+}<SPAN 
+style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</SPAN>include if there is any value<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:-}<SPAN 
+style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</SPAN>include if there is no value<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:&lt;xxx}<SPAN 
+style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</SPAN>include if the value is less than xxx<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:&gt;xxx}<SPAN 
+style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</SPAN>include if the value is greater than xxx<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:xxx}<SPAN 
+style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</SPAN>include if the value is equal to xxx<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:else}<SPAN 
+style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</SPAN>include if no other previous condition was 
+satisfied<o:p></o:p></SPAN></P>
+<H3 style="MARGIN: 0in 0in 6pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial"><FONT size=3></FONT></SPAN>&nbsp;</H3>
+<H3 style="MARGIN: 0in 0in 6pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial"><FONT size=3><FONT 
+color=purple>Examples<o:p></o:p></FONT></FONT></SPAN></H3>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:+} this text will be displayed if data1 has 
+any value {data1:+}<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data2:-} this text will be displayed if data2 has no 
+value {data2:-}<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data3:&lt;5} this text will be displayed if data3 is 
+less than 5 {data3:&lt;5}<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0in 0in 3pt; tab-stops: 1.25in"><SPAN 
+style="FONT-FAMILY: Arial">{data1:bob} this text will be displayed if data1 
+equals bob {data1:bob}<o:p></o:p></SPAN></P>
+<H3 style="MARGIN: 0in 0in 6pt; tab-stops: .5in"><SPAN 
+style="FONT-SIZE: 14pt; FONT-FAMILY: Arial; mso-bidi-font-size: 12.0pt"></SPAN>&nbsp;</H3></BODY></HTML>

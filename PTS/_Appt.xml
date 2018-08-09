@@ -1,0 +1,1226 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="48" name="Appt" alias="app" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="4801" name="ApptID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="4802" name="CalendarID" type="number" source="entity" parent="true"/>
+		
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="4805" name="ApptName" type="text" length="60" min="1" max="60" source="entity" title="true" required="true"/>
+		<WTATTRIBUTE id="4806" name="Location" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="4807" name="Note" type="text" length="500" min="1" max="500" source="entity"/>
+		<WTATTRIBUTE id="4808" name="StartDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="4809" name="StartTime" type="text" length="8" min="1" max="8" source="entity" language="false" />
+		<WTATTRIBUTE id="4810" name="EndDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="4811" name="EndTime" type="text" length="8" min="1" max="8" source="entity" language="false" />
+		<WTATTRIBUTE id="4812" name="IsAllDay" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4813" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="Inactive"/>
+			<WTENUM id="3" name="Pending"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4814" name="ApptType" type="number" source="entity">
+			<WTENUM id="1" name="Appt"/>
+			<WTENUM id="2" name="Phone"/>
+			<WTENUM id="3" name="Meeting"/>
+			<WTENUM id="4" name="Seminar"/>
+			<WTENUM id="5" name="TradeShow"/>
+			<WTENUM id="6" name="Meal"/>
+			<WTENUM id="7" name="Party"/>
+			<WTENUM id="8" name="Birthday"/>
+			<WTENUM id="9" name="Anniversary"/>
+			<WTENUM id="10" name="Personal"/>
+			<WTENUM id="11" name="Family"/>
+			<WTENUM id="12" name="Sports"/>
+			<WTENUM id="13" name="Education"/>
+			<WTENUM id="14" name="Entertainment"/>
+			<WTENUM id="15" name="Vacation"/>
+			<WTENUM id="16" name="Medical"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4815" name="Importance" type="number" source="entity">
+			<WTENUM id="1" name="Low"/>
+			<WTENUM id="2" name="Normal"/>
+			<WTENUM id="3" name="High"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4816" name="Show" type="number" source="entity">
+			<WTENUM id="1" name="Normal"/>
+			<WTENUM id="2" name="Private"/>
+			<WTENUM id="3" name="Busy"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4817" name="Reminder" type="number" source="entity">
+			<WTENUM id="5" name="30m"/>
+			<WTENUM id="6" name="1h"/>
+			<WTENUM id="7" name="2h"/>
+			<WTENUM id="8" name="3h"/>
+			<WTENUM id="9" name="4h"/>
+			<WTENUM id="10" name="5h"/>
+			<WTENUM id="11" name="6h"/>
+			<WTENUM id="12" name="7h"/>
+			<WTENUM id="13" name="8h"/>
+			<WTENUM id="14" name="9h"/>
+			<WTENUM id="15" name="10h"/>
+			<WTENUM id="16" name="11h"/>
+			<WTENUM id="17" name="12h"/>
+			<WTENUM id="18" name="18h"/>
+			<WTENUM id="19" name="1d"/>
+			<WTENUM id="20" name="2d"/>
+			<WTENUM id="21" name="3d"/>
+			<WTENUM id="22" name="4d"/>
+			<WTENUM id="23" name="1w"/>
+			<WTENUM id="24" name="2w"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4818" name="RemindDate" type="date" source="entity">
+			<WTFORMAT value="m-d-yy h:mmam/pm"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4819" name="Recur" type="number" source="entity">
+			<WTENUM id="1" name="Week"/>
+			<WTENUM id="2" name="Month"/>
+			<WTENUM id="3" name="Year"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="4820" name="RecurDate" type="date" source="entity"/>
+		<WTATTRIBUTE id="4821" name="IsEdit" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="4822" name="IsPlan" type="yesno" source="entity"/>
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="4890" name="FromDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="4891" name="ToDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="4892" name="Opt" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="4893" name="Email" type="text" length="80" source="entity" persist="false"/>
+		<WTATTRIBUTE id="4894" name="MemberID" type="number" source="entity" persist="false"/>
+		<WTATTRIBUTE id="4895" name="IsMsg" type="yesno" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="CalendarID">
+			<WTATTRIBUTE name="CalendarID"/>
+			<WTATTRIBUTE name="StartDate"/>
+			<WTATTRIBUTE name="EndDate"/>
+		</WTINDEX>
+		<WTINDEX name="RemindDate">
+			<WTATTRIBUTE name="RemindDate"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Appt" entity="Appt" alias="app"/>
+			<WTRELATIONSHIP name="Common" entity="Appt" alias="app"/>
+			<WTRELATIONSHIP name="Member" entity="Appt" alias="app">
+				<WTENTITY name="Calendar" entity="Calendar" alias="cal">
+					<WTATTRIBUTE alias="app" name="CalendarID" relalias="cal" relname="CalendarID"/>
+				</WTENTITY>
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="cal" name="MemberID" relalias="me" relname="MemberID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="SHOW-NORMAL" value="1"/>
+			<WTSYSCON name="SHOW-PRIVATE" value="2"/>
+			<WTSYSCON name="SHOW-BUSY" value="3"/>
+			<WTSYSCON name="IMPORTANCE-LOW" value="1"/>
+			<WTSYSCON name="IMPORTANCE-NORMAL" value="2"/>
+			<WTSYSCON name="IMPORTANCE-HIGH" value="3"/>
+		</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListCalendar" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CalendarID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Appt.ApptID)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptName)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Location)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Note)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsAllDay)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Status)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptType)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Importance)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Show)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Recur)"/>
+					<WTATTRIBUTE value="ATTR(Appt.RecurDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsEdit)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsPlan)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListCalendarAll" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CalendarID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Appt.ApptID)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptName)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Location)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Note)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsAllDay)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Status)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptType)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Importance)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Show)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Recur)"/>
+					<WTATTRIBUTE value="ATTR(Appt.RecurDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsEdit)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsPlan)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListCalendarOptions" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CalendarID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ToDate)" direction="input"/>
+			<WTPARAM name="ATTR(ApptName)" direction="input"/>  <!--Options-->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Appt.ApptID)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptName)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Location)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Note)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsAllDay)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Status)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptType)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Importance)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Show)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Recur)"/>
+					<WTATTRIBUTE value="ATTR(Appt.RecurDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsEdit)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsPlan)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListDayOptions" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CalendarID)" direction="input"/>
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ApptName)" direction="input"/>  <!--Options-->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Appt.ApptID)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptName)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Location)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Note)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsAllDay)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Status)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptType)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Importance)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Show)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Recur)"/>
+					<WTATTRIBUTE value="ATTR(Appt.RecurDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsEdit)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsPlan)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListToday" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CalendarID)" direction="input"/>  <!--MemberID-->
+			<WTPARAM name="ATTR(FromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ApptName)" direction="input"/>  <!--Options-->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Appt.ApptID)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptName)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Location)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Note)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsAllDay)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Status)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptType)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Importance)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Show)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Recur)"/>
+					<WTATTRIBUTE value="ATTR(Appt.RecurDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsEdit)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsPlan)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListReminder" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Appt.ApptID)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptName)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Location)"/>
+					<WTATTRIBUTE value="ATTR(Appt.Note)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.StartTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndDate)"/>
+					<WTATTRIBUTE value="ATTR(Appt.EndTime)"/>
+					<WTATTRIBUTE value="ATTR(Appt.IsAllDay)"/>
+					<WTATTRIBUTE value="ATTR(Appt.ApptType)"/>
+					<WTATTRIBUTE value="ATTR(Member.Email)" alias="Email"/>
+					<WTATTRIBUTE value="ATTR(Member.MemberID)" alias="MemberID"/>
+					<WTATTRIBUTE value="ATTR(Member.IsMsg)" alias="IsMsg"/>
+					<WTJOIN name="Member"/>
+					<WTCONDITION expr="ATTR(Appt.RemindDate)" oper="less" value="SYS(Date)"/>
+					<WTCONDITION expr="ATTR(Appt.RemindDate)" oper="not-equal" value="CONST(0)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="ClearReminder" type="Command" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(ApptID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="CalendarEmail" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(CalendarID)" direction="input"/>
+			<WTPARAM name="Email" direction="output" datatype="text" length="80"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="XML" name="XMLDashboard" element="Appt" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true">
+			<WTATTRIBUTE value="ApptID" alias="id"/>
+			<WTATTRIBUTE value="ApptName" alias="name"/>
+			<WTATTRIBUTE value="ApptType" alias="type"/>
+			<WTATTRIBUTE value="Status" alias="status"/>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4802" caption="Appt" navbar="false" header="false" footer="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CalendarID" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CalendarID)" value="PARAM(CalendarID)"/>
+					<WTSETATTRIBUTE name="ATTR(Startdate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(EndDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="ATTR(IsAllDay)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(ApptType)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Show)" value="SYSCON(SHOW-NORMAL)"/>
+					<WTSETATTRIBUTE name="ATTR(Importance)" value="SYSCON(IMPORTANCE-NORMAL)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+			days = DateDiff( "d", .StartDate, .EndDate )
+</WTCUSTOM>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(CalendarID)" value="PARAM(CalendarID)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(IsEdit)" oper="equal" value="CONST(&quot;1&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Recur)" value="CONST(&quot;0&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(RecurDate)" value="CONST(&quot;&quot;)"/>
+					</WTCODEGROUP>
+<WTCUSTOM>
+			If .StartDate = "" Then .StartDate = Date()
+			If .EndDate = "" Then .EndDate = .StartDate
+			If CDate(.EndDate) &lt; CDate(.StartDate) Then .EndDate = DateAdd( "d", days, .StartDate )
+
+			If InStr(.StartTime, ":") = 0 AND IsNumeric(.StartTime) Then .StartTime = .StartTime + ":00"
+			If InStr(.EndTime, ":") = 0 AND IsNumeric(.EndTime)  Then .EndTime = .EndTime + ":00"
+			If .StartTime = "" Then .EndTime = ""
+			If .StartTime = "" AND .EndTime = "" Then .IsAllDay = 1 Else .IsAllDay = 0
+
+			If .Reminder &gt; 0 And .StartDate &lt;&gt; "" Then
+				tmpDate = .StartDate + " " + .StartTime			
+				If Not IsDate(tmpDate) Then tmpDate = .StartDate
+				If IsDate(tmpDate) Then
+					Select Case .Reminder
+					Case "5" .RemindDate = DateAdd("n", -30, tmpDate)	'30m
+					Case "6" .RemindDate = DateAdd("h", -1, tmpDate)	'1h
+					Case "7" .RemindDate = DateAdd("h", -2, tmpDate)	'2h
+					Case "8" .RemindDate = DateAdd("h", -3, tmpDate)	'3h
+					Case "9" .RemindDate = DateAdd("h", -4, tmpDate)	'4h
+					Case "10" .RemindDate = DateAdd("h", -5, tmpDate)	'5h
+					Case "11" .RemindDate = DateAdd("h", -6, tmpDate)	'6h
+					Case "12" .RemindDate = DateAdd("h", -7, tmpDate)	'7h
+					Case "13" .RemindDate = DateAdd("h", -8, tmpDate)	'8h
+					Case "14" .RemindDate = DateAdd("h", -9, tmpDate)	'9h
+					Case "15" .RemindDate = DateAdd("h", -10, tmpDate)	'10h
+					Case "16" .RemindDate = DateAdd("h", -11, tmpDate)	'11h
+					Case "17" .RemindDate = DateAdd("h", -12, tmpDate)	'12h
+					Case "18" .RemindDate = DateAdd("h", -18, tmpDate)	'18h
+					Case "19" .RemindDate = DateAdd("d", -1, tmpDate)	'1d
+					Case "20" .RemindDate = DateAdd("d", -2, tmpDate)	'2d
+					Case "21" .RemindDate = DateAdd("d", -3, tmpDate)	'3d
+					Case "22" .RemindDate = DateAdd("d", -4, tmpDate)	'4d
+					Case "23" .RemindDate = DateAdd("ww", -1, tmpDate)	'1w
+					Case "24" .RemindDate = DateAdd("ww", -2, tmpDate)	'2w
+					End Select
+				End If
+			End If
+</WTCUSTOM>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ApptID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="4803" return="false">
+						<WTPARAM name="ApptID" value="CONST(ApptID)"/>
+						<WTPARAM name="Updated" value="CONST(3)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="80" align="right"/>
+				<WTCOLUMN width="420" align="left"/>
+
+				<WTFUNCTION name="SetEndDate()">
+				var val = document.getElementById('StartDate').value;
+				document.getElementById('EndDate').value = val;
+			    </WTFUNCTION>  
+				<WTFUNCTION name="SetEndTime()">
+				var val = document.getElementById('StartTime').value;
+				var x = val.indexOf(':');
+				if ( x &gt; 0 ) {
+					v = val.substring(0, x ) 
+					v = Number(v) + 1;
+					if (v == 13) {
+						v = 1;
+						if ( val.indexOf('am') &gt; 0 ) {
+							val = val.replace("am", "pm");
+						}
+						else {
+							if ( val.indexOf('pm') &gt; 0 ) {
+								val = val.replace("pm", "am");
+							}
+						}
+					}	  	
+					val = v + val.substring(x,val.length);
+					document.getElementById('EndTime').value = val;
+				}
+				else {
+					document.getElementById('EndTime').value = val;
+				}	
+			    </WTFUNCTION>  
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTCODEGROUP><WTIMAGE value="CONST(calendarsm.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewAppt"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-CALENDAR)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ApptName"/>
+					<WTTEXT col="2" value="ATTR(Appt.ApptName)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Location"/>
+					<WTTEXT col="2" value="ATTR(Appt.Location)" size="60"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="StartDate"/>
+					<WTTEXT col="2" value="ATTR(Appt.StartDate)">
+						<WTCHANGE>SetEndDate()</WTCHANGE>
+					</WTTEXT>
+					<WTSTATIC col="2" tag="StartTime"/>
+					<WTTEXT col="2" value="ATTR(Appt.StartTime)" size="6" prespace="false">
+						<WTCHANGE>SetEndTime()</WTCHANGE>
+					</WTTEXT>
+					<WTCHECK col="2" value="ATTR(Appt.IsAllDay)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="EndDate"/>
+					<WTTEXT col="2" value="ATTR(Appt.EndDate)"/>
+					<WTSTATIC col="2" tag="EndTime"/>
+					<WTTEXT col="2" value="ATTR(Appt.EndTime)" size="6" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Appt.IsEdit)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="ApptType"/>
+					<WTCOMBO col="2" value="ATTR(Appt.ApptType)"/>
+					<WTSTATIC col="2" tag="Importance"/>
+					<WTCOMBO col="2" value="ATTR(Appt.Importance)" prespace="false"/>
+					<WTSTATIC col="2" tag="Show"/>
+					<WTCOMBO col="2" value="ATTR(Appt.Show)" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Appt.Note)" rows="6" cols="60" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Reminder"/>
+					<WTCOMBO col="2" value="ATTR(Appt.Reminder)"/>
+					<WTSTATIC col="2" tag="RemindDate"/>
+					<WTTEXT col="2" value="ATTR(Appt.RemindDate)" size="14" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Recur"/>
+					<WTCOMBO col="2" value="ATTR(Appt.Recur)"/>
+					<WTSTATIC col="2" tag="RecurDate"/>
+					<WTTEXT col="2" value="ATTR(Appt.RecurDate)" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(Appt.IsPlan)">
+						<WTCONDITION expr="IsEmployee"/>
+						<WTCONDITION expr="_IsPartyPlan" connector="or"/>
+					</WTCHECK>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4803" caption="Appt" navbar="false" header="false" footer="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ApptID" datatype="number"/>
+			<WTPARAM name="Updated" datatype="number"/>
+			<WTPARAM name="PartyID" datatype="number"/>
+			
+			<WTSUB function="GetPartyID">
+				<WTOBJECT name="Party" project="ptsPartyUser" class="CParty">
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsPartyPlan" connector="or"/>
+					<WTMETHOD name="FetchPartyID">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(PartyID)" value="ATTR(PartyID)"/>
+					<WTSETATTRIBUTE name="PARAM(PartyID)" value="CONST(-1)">
+						<WTCONDITION expr="ATTR(PartyID)" oper="equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB function="UpdateAppt(dup)">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+			days = DateDiff( "d", .StartDate, .EndDate )
+</WTCUSTOM>
+					<WTSETATTRIBUTES/>
+					<WTCALLSUB name="GetPartyID">
+						<WTCONDITION expr="ATTR(IsPlan)" oper="not-equal" value="CONST(0)"/>
+					</WTCALLSUB>
+					<WTCODEGROUP>
+						<WTCONDITION expr="ATTR(IsEdit)" oper="equal" value="CONST(&quot;1&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(Recur)" value="CONST(&quot;0&quot;)"/>
+						<WTSETATTRIBUTE name="ATTR(RecurDate)" value="CONST(&quot;&quot;)"/>
+					</WTCODEGROUP>
+<WTCUSTOM>
+			If .StartDate = "" Then .StartDate = Date()
+			If .EndDate = "" Then .EndDate = .StartDate
+			If CDate(.EndDate) &lt; CDate(.StartDate) Then .EndDate = DateAdd( "d", days, .StartDate )
+
+			If InStr(.StartTime, ":") = 0 AND IsNumeric(.StartTime) Then .StartTime = .StartTime + ":00"
+			If InStr(.EndTime, ":") = 0 AND IsNumeric(.EndTime)  Then .EndTime = .EndTime + ":00"
+			If .StartTime = "" Then .EndTime = ""
+			If .StartTime = "" AND .EndTime = "" Then .IsAllDay = 1 Else .IsAllDay = 0
+			
+			If .Reminder &gt; 0 And .StartDate &lt;&gt; "" Then
+				tmpDate = .StartDate + " " + .StartTime			
+				If Not IsDate(tmpDate) Then tmpDate = .StartDate
+				If IsDate(tmpDate) Then
+					Select Case .Reminder
+					Case "5" .RemindDate = DateAdd("n", -30, tmpDate)	'30m
+					Case "6" .RemindDate = DateAdd("h", -1, tmpDate)	'1h
+					Case "7" .RemindDate = DateAdd("h", -2, tmpDate)	'2h
+					Case "8" .RemindDate = DateAdd("h", -3, tmpDate)	'3h
+					Case "9" .RemindDate = DateAdd("h", -4, tmpDate)	'4h
+					Case "10" .RemindDate = DateAdd("h", -5, tmpDate)	'5h
+					Case "11" .RemindDate = DateAdd("h", -6, tmpDate)	'6h
+					Case "12" .RemindDate = DateAdd("h", -7, tmpDate)	'7h
+					Case "13" .RemindDate = DateAdd("h", -8, tmpDate)	'8h
+					Case "14" .RemindDate = DateAdd("h", -9, tmpDate)	'9h
+					Case "15" .RemindDate = DateAdd("h", -10, tmpDate)	'10h
+					Case "16" .RemindDate = DateAdd("h", -11, tmpDate)	'11h
+					Case "17" .RemindDate = DateAdd("h", -12, tmpDate)	'12h
+					Case "18" .RemindDate = DateAdd("h", -18, tmpDate)	'18h
+					Case "19" .RemindDate = DateAdd("d", -1, tmpDate)	'1d
+					Case "20" .RemindDate = DateAdd("d", -2, tmpDate)	'2d
+					Case "21" .RemindDate = DateAdd("d", -3, tmpDate)	'3d
+					Case "22" .RemindDate = DateAdd("d", -4, tmpDate)	'4d
+					Case "23" .RemindDate = DateAdd("ww", -1, tmpDate)	'1w
+					Case "24" .RemindDate = DateAdd("ww", -2, tmpDate)	'2w
+					End Select
+				End If
+			End If
+</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="CONST(dup)" oper="equal" value="CONST(1)" connector="and"/>
+						<WTMETHOD name="Add">
+							<WTPARAM name="ApptID" direction="return" datatype="number"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTRETURN>
+							<WTCONDITION expr="NoErrors"/>
+							<WTLINK name="4803" return="false">
+								<WTPARAM name="ApptID" value="CONST(ApptID)"/>
+								<WTPARAM name="Updated" value="CONST(4)"/>
+							</WTLINK>
+						</WTRETURN>
+					</WTCODEGROUP>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(Updated)" value="CONST(1)">
+					<WTCONDITION expr="NoErrors"/>
+				</WTSETATTRIBUTE>
+			</WTSUB>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCALLSUB name="GetPartyID()">
+						<WTCONDITION expr="ATTR(IsPlan)" oper="not-equal" value="CONST(0)"/>
+					</WTCALLSUB>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTCALLSUB name="UpdateAppt(0)"/>
+			</WTACTION>
+
+			<WTACTION name="Duplicate" type="Add" id="2">
+				<WTCALLSUB name="UpdateAppt(1)"/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(Updated)" value="CONST(2)">
+					<WTCONDITION expr="NoErrors"/>
+				</WTSETATTRIBUTE>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="80" align="right"/>
+				<WTCOLUMN width="420" align="left"/>
+
+				<WTFUNCTION name="SetEndDate()">
+				var val = document.getElementById('StartDate').value;
+				document.getElementById('EndDate').value = val;
+			    </WTFUNCTION>  
+				<WTFUNCTION name="SetEndTime()">
+				var val = document.getElementById('StartTime').value;
+				var x = val.indexOf(':');
+				if ( x &gt; 0 ) {
+					v = val.substring(0, x ) 
+					v = Number(v) + 1;
+					if (v == 13) {
+						v = 1;
+						if ( val.indexOf('am') &gt; 0 ) {
+							val = val.replace("am", "pm");
+						}
+						else {
+							if ( val.indexOf('pm') &gt; 0 ) {
+								val = val.replace("pm", "am");
+							}
+						}
+					}	  	
+					val = v + val.substring(x,val.length);
+					document.getElementById('EndTime').value = val;
+				}
+				else {
+					document.getElementById('EndTime').value = val;
+				}	
+			    </WTFUNCTION>  
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(ApptID)"/>
+					<WTHIDDEN value="PARAM(PartyID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" class="PageHeading" align="left">
+						<WTCODEGROUP><WTIMAGE value="CONST(calendarsm.gif)" imgalign="absmiddle"/></WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="Appt" space="1"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-CALENDAR)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+							<WTSTATIC space="1"/>
+						</WTCODEGROUP>
+						<WTSTATIC fontcolor="red">
+							<WTSTATIC label="Updated">
+								<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(1)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Deleted">
+								<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(2)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Added">
+								<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(3)"/>
+							</WTSTATIC>
+							<WTSTATIC label="Duplicated">
+								<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(4)"/>
+							</WTSTATIC>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Updated)" oper="not-equal" value="CONST(2)"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="ApptName"/>
+						<WTTEXT col="2" value="ATTR(Appt.ApptName)" size="60"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Location"/>
+						<WTTEXT col="2" value="ATTR(Appt.Location)" size="60"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1"/>
+						<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="StartDate"/>
+						<WTTEXT col="2" value="ATTR(Appt.StartDate)">
+							<WTCHANGE>SetEndDate()</WTCHANGE>
+						</WTTEXT>
+						<WTSTATIC col="2" tag="StartTime"/>
+						<WTTEXT col="2" value="ATTR(Appt.StartTime)" size="6" prespace="false">
+							<WTCHANGE>SetEndTime()</WTCHANGE>
+						</WTTEXT>
+						<WTCHECK col="2" value="ATTR(Appt.IsAllDay)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="EndDate"/>
+						<WTTEXT col="2" value="ATTR(Appt.EndDate)"/>
+						<WTSTATIC col="2" tag="EndTime"/>
+						<WTTEXT col="2" value="ATTR(Appt.EndTime)" size="6" prespace="false"/>
+						<WTCHECK col="2" value="ATTR(Appt.IsEdit)"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1"/>
+						<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="ApptType"/>
+						<WTCOMBO col="2" value="ATTR(Appt.ApptType)"/>
+						<WTSTATIC col="2" tag="Importance"/>
+						<WTCOMBO col="2" value="ATTR(Appt.Importance)" prespace="false"/>
+						<WTSTATIC col="2" tag="Show"/>
+						<WTCOMBO col="2" value="ATTR(Appt.Show)" prespace="false"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTMEMO col="1" merge="2" align="left" value="ATTR(Appt.Note)" rows="6" cols="60" />
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Reminder"/>
+						<WTCOMBO col="2" value="ATTR(Appt.Reminder)"/>
+						<WTSTATIC col="2" tag="RemindDate"/>
+						<WTTEXT col="2" value="ATTR(Appt.RemindDate)" size="14" prespace="false"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Recur"/>
+						<WTCOMBO col="2" value="ATTR(Appt.Recur)"/>
+						<WTSTATIC col="2" tag="RecurDate"/>
+						<WTTEXT col="2" value="ATTR(Appt.RecurDate)" prespace="false"/>
+						<WTCHECK col="2" value="ATTR(Appt.IsPlan)">
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCONDITION expr="_IsPartyPlan" connector="or"/>
+						</WTCHECK>
+					</WTROW>
+
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" action="2" value="CONST(Duplicate)" align="center">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" value="CONST(PlanParty)" align="center">
+							<WTCONDITION expr="ATTR(IsPlan)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="PARAM(PartyID)" oper="less" value="CONST(0)" connector="and"/>
+							<WTCLICK>
+								url = "2502.asp?apptid=" + document.getElementById('ApptID').value;
+								win = window.open(url,"Party","top=100,left=100,height=350,width=450,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+								win.focus();
+							</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" value="CONST(PlanParty)" align="center">
+							<WTCONDITION expr="ATTR(IsPlan)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="PARAM(PartyID)" oper="greater" value="CONST(0)" connector="and"/>
+							<WTCLICK>
+								url = "2503.asp?partyid=" + document.getElementById('PartyID').value;
+								win = window.open(url,"Party","top=100,left=100,height=350,width=450,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no");
+								win.focus();
+							</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete" align="center">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(2)"/>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4804" caption="View Appointment" navbar="false" header="false" footer="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ApptID" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="left"/>
+				<WTROW margin-bottom="6">
+					<WTTABLE col="1">
+						<WTCOLUMN width="350" />
+						<WTCOLUMN width="50" />
+						<WTROW>
+							<WTIMAGE col="1" value="CONST(appt&lt;xsl:value-of select=&quot;/DATA/TXN/PTSAPPT/@appttype&quot;/&gt;.gif)" valign="top"/>
+							<WTSTATIC col="1" value="ATTR(Appt.ApptName)" bold="true" space="2"/>
+							<WTBUTTON col="2" value="CONST(Close)" btnclass="smbutton" align="right">
+								<WTCLICK>window.close()</WTCLICK>
+							</WTBUTTON>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1">
+						<WTSTATIC value="ATTR(Appt.StartDate)" space="1">
+							<WTCONDITION expr="ATTR(Appt.Recur)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTSTATIC value="ATTR(Appt.StartTime)" space="1">
+							<WTCONDITION expr="ATTR(Appt.IsAllDay)" oper="equal" value="CONST(0)"/>
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Appt.Recur)" oper="equal" value="CONST(0)"/>
+							<WTCONDITION expr="ATTR(Appt.StartDate)" oper="not-equal" value="ATTR(Appt.EndDate)" connector="and"/>
+							<WTSTATIC label="to" space="1" bold="true"/>
+							<WTSTATIC value="ATTR(Appt.EndDate)" space="1"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(Appt.IsAllDay)" oper="equal" value="CONST(0)"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC value="ATTR(Appt.EndTime)"/>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" value="ATTR(Appt.Location)"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" value="ATTR(Appt.Note)" />
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="4805" caption="Edit Appt" navbar="false" header="false" footer="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ApptID" datatype="number"/>
+			<WTPARAM name="Updated" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="Code" datatype="number"/>
+
+			<WTINCLUDE name="Comm.asp"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTCONDITION expr="PARAM(MemberID)" oper="not-equal" value="PARAM(Code)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Updated)" value="CONST(2)"/>
+				</WTOBJECT>
+<!--
+				<WTOBJECT name="Business" project="ptsBusinessUser" class="CBusiness">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="PARAM(Code)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="BusinessID" direction="input" value="CONST(1)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Business.SystemEmail)"/>
+				</WTOBJECT>
+-->				
+				<WTOBJECT name="Company" project="ptsCompanyUser" class="CCompany">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CompanyID" direction="input" value="SYS(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Company.Email)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="PARAM(Code)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpMsgTo)" value="ATTR(MemberID)">
+						<WTCONDITION expr="ATTR(IsMsg)" oper="not-equal" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="Appt" project="ptsApptUser" class="CAppt">
+					<WTCONDITION expr="PARAM(MemberID)" oper="equal" value="PARAM(Code)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ApptID" direction="input" value="PARAM(ApptID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(ApptName)" value="FORM(ApptName)"/>
+					<WTSETATTRIBUTE name="ATTR(IsEdit)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="CONST(tmpApptName)" value="CONST(.ApptName + &quot; : &quot; + .StartDate + &quot; : &quot; + .StartTime + &quot; - &quot; + .EndTime )"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAppt" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTMETHOD name="CalendarEmail">
+						<WTPARAM name="tmpEmail" direction="return" datatype="text"/>
+						<WTPARAM name="CalendarID" direction="input" value="ATTR(CalendarID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				'check for valid to email address
+				If InStr(tmpEmail, "@") &gt; 0 Then
+					tmpSubject = "APPT UPDATE: " + tmpApptName
+					If InStr(tmpFrom, "@") = 0 Then tmpFrom = tmpTo
+					SendEmail reqSysCompanyID, tmpSender, tmpEmail, tmpEmail, "", "", tmpSubject, tmpSubject
+				End If	
+				If tmpMsgTo &lt;&gt; "" Then
+					SendMsg 1, tmpMsgTo, tmpSubject, tmpSubject 
+				End If
+</WTCUSTOM>
+					<WTSETATTRIBUTE name="PARAM(Updated)" value="CONST(1)">
+						<WTCONDITION expr="NoErrors"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="80" align="right"/>
+				<WTCOLUMN width="425" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="PublicAppt" class="PageHeading" align="left"/>
+					<WTSTATIC col="1" merge="2" fontcolor="red">
+						<WTSTATIC label="Updated">
+							<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(1)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+					<WTSTATIC col="1" merge="2" fontcolor="red">
+						<WTSTATIC label="Invalid">
+							<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(2)"/>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" merge="2" label="PublicApptHelp" align="left" class="prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Code"/>
+						<WTTEXT col="2" value="PARAM(Code)" size="4"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="ApptName"/>
+						<WTTEXT col="2" value="ATTR(Appt.ApptName)" size="60"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Location"/>
+						<WTSTATIC col="2" value="ATTR(Appt.Location)"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1"/>
+						<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="StartDate"/>
+						<WTSTATIC col="2" value="ATTR(Appt.StartDate)"/>
+						<WTSTATIC col="2" tag="StartTime"/>
+						<WTSTATIC col="2" value="ATTR(Appt.StartTime)" prespace="false"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="EndDate"/>
+						<WTSTATIC col="2" value="ATTR(Appt.EndDate)"/>
+						<WTSTATIC col="2" tag="EndTime"/>
+						<WTSTATIC col="2" value="ATTR(Appt.EndTime)" prespace="false"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1"/>
+						<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTSTATIC col="1" merge="2" align="left" value="ATTR(Appt.Note)"/>
+					</WTROW>
+
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="ApptReminder" worker="true" navbar="false" header="false" footer="false"
+			aspstyle="GenerateWebASP.xsl">
+		<!--==================================================================-->
+
+			<WTINCLUDE name="Comm.asp"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Business" project="ptsBusinessUser" class="CBusiness">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BusinessID" direction="input" value="CONST(1)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Business.SystemEmail)"/>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(Business.CustomerEmail)"/>
+<WTCUSTOM>
+				'check for valid from email address
+				If InStr(tmpFrom, "@") = 0 Then
+					Response.write "ERROR: Missing Business.CustomerEmail"
+					Response.end
+				End If
+</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="Appts" project="ptsApptUser" class="CAppts">
+					<WTMETHOD name="ListReminder">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				Set oAppt = server.CreateObject("ptsApptUser.CAppt")
+				Set oMail = server.CreateObject("CDO.Message")
+				If oMail Is Nothing Then
+					DoError Err.Number, Err.Source, "Unable to Create Object - CDO.Message"
+				Else
+					oMail.Sender = tmpSender
+					oMail.From = tmpFrom
+					For Each oItem in oAppts
+						tmpMsgTo = ""
+						With oItem
+							tmpTo = .Email
+							If .IsMsg &lt;&gt; "0" Then tmpMsgTo = .MemberID
+							tmpSubject = "APPT REMINDER: " + .ApptName
+							tmpBody = "&lt;IMG src=&quot;&quot;http://" + reqSysServerName + reqSysServerPath + "Images\appt" + .ApptType + ".gif&quot;&quot; border=&quot;&quot;0&quot;&quot;/&gt; &lt;B&gt;"
+							If .IsAllDay = 0 Then 
+								If .StartDate = .EndDate Then
+									tmpBody = tmpBody + .StartDate + " " + .StartTime
+								Else
+									tmpBody = tmpBody + .StartDate + " " + .StartTime + " to " + .EndDate + " " + .EndTime
+								End If
+							Else
+								If .StartDate = .EndDate Then
+									tmpBody = tmpBody + .StartDate 
+								Else
+									tmpBody = tmpBody + .StartDate + " to " + .EndDate
+								End If
+							End If
+							tmpBody = tmpBody +  " - " + .ApptName + "&lt;/B&gt;"
+							If .Location &lt;&gt; "" Then tmpBody = tmpBody + "&lt;BR&gt;" + .Location
+							If .Note &lt;&gt; "" Then tmpBody = tmpBody + "&lt;BR&gt;" + .Note
+						End With
+						'check for valid to email address
+						If InStr(tmpTo, "@") &gt; 0 Then
+							With oMail
+								.To = tmpTo
+								.Subject = tmpSubject 
+								.HTMLBody = tmpBody
+								.Send
+							End With
+						End If
+						oAppt.ClearReminder oItem.ApptID
+						If tmpMsgTo &lt;&gt; "" Then
+							SendMsg 1, tmpMsgTo, tmpSubject, tmpBody 
+						End If
+					Next
+				End If
+				Set oMail = Nothing
+				Set oAppt = Nothing
+</WTCUSTOM>
+				</WTOBJECT>
+<WTCUSTOM>
+		Response.end
+</WTCUSTOM>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT/>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+
+</WTROOT>

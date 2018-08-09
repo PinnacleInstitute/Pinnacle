@@ -1,0 +1,635 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="118" name="MetricType" alias="mtt" audit="false" translate="false">
+ 
+		<!--Identity-->
+		<WTATTRIBUTE id="11801" name="MetricTypeID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="11802" name="CompanyID" type="number" required="true" source="entity"/>
+		<WTATTRIBUTE id="11803" name="GroupID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="11805" name="MetricTypeName" type="text" length="40" min="1" max="40" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="11806" name="Seq" type="number" min="1" source="entity" seq="10"/>
+		<WTATTRIBUTE id="11807" name="Pts" type="number" source="entity"/>
+		<WTATTRIBUTE id="11808" name="IsActive" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="11809" name="IsResult" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="11810" name="IsLeader" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="11811" name="IsQty" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="11812" name="Description" type="text" length="200" source="entity"/>
+		<WTATTRIBUTE id="11813" name="Required" type="text" length="200" source="entity"/>
+		<WTATTRIBUTE id="11814" name="InputOptions" type="text" length="1000" min="1" max="1000" source="entity"/>
+		<WTATTRIBUTE id="11815" name="AutoEvent" type="number" source="entity"/>
+
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="Seq"/>
+		</WTINDEX>
+
+		<WTINDEX name="GroupID">
+			<WTATTRIBUTE name="GroupID"/>
+			<WTATTRIBUTE name="Seq"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="MetricType" entity="MetricType" alias="mtt"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompany" enumname="EnumUserCompany" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(MetricType.CompanyID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserCompany" style="GenerateDataProc.xsl" column="MetricTypeName" template="new" passthru="true">
+			<WTPARAM name="ATTR(MetricType.CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(MetricType.MetricTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="CONST(mtt.MetricTypeName + CASE WHEN mtt.Pts != 0 THEN + ' (' + CAST(mtt.Pts AS VARCHAR(5)) + ')' ELSE '' END)"/>
+					<WTJOIN name="MetricType"/>
+					<WTCONDITION expr="ATTR(MetricType.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(MetricType.GroupID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="ATTR(MetricType.IsActive)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(MetricType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumGroup" enumname="EnumUserGroup" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(MetricType.GroupID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumUserGroup" style="GenerateDataProc.xsl" column="MetricTypeName" template="new" passthru="true">
+			<WTPARAM name="ATTR(MetricType.GroupID)" direction="input"/>
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE alias="ID" value="ATTR(MetricType.MetricTypeID)"/>
+					<WTATTRIBUTE alias="Name" value="CONST(mtt.MetricTypeName + CASE WHEN mtt.Pts != 0 THEN + ' (' + CAST(mtt.Pts AS VARCHAR(5)) + ')' ELSE '' END)"/>
+					<WTJOIN name="MetricType"/>
+					<WTCONDITION expr="ATTR(MetricType.GroupID)" oper="equal" value="PARAM(GroupID)"/>
+					<WTCONDITION expr="ATTR(MetricType.IsActive)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(MetricType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MetricType.MetricTypeID)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.MetricTypeName)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Seq)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Pts)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsResult)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsLeader)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsQty)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Description)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Required)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.AutoEvent)"/>
+					<WTJOIN name="MetricType"/>
+					<WTCONDITION expr="ATTR(CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(MetricType.GroupID)" oper="equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(MetricType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListGroup" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(GroupID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(MetricType.MetricTypeID)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.MetricTypeName)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Seq)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Pts)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsResult)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsLeader)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsQty)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.IsActive)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Description)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.Required)"/>
+					<WTATTRIBUTE value="ATTR(MetricType.AutoEvent)"/>
+					<WTJOIN name="MetricType"/>
+					<WTCONDITION expr="ATTR(GroupID)" oper="equal" value="PARAM(GroupID)"/>
+					<WTORDER name="ATTR(MetricType.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11802" header="false" footer="false" navbar="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="MetricType" project="ptsMetricTypeUser" class="CMetricType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(IsActive)" value="CONST(1)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMetricType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="MetricType" project="ptsMetricTypeUser" class="CMetricType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricTypeID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(GroupID)" value="PARAM(GroupID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="MetricTypeID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMetricType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewMetricType" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="MetricTypeText" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="MetricTypeName"/>
+					<WTTEXT col="2" value="ATTR(MetricType.MetricTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(MetricType.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Pts"/>
+					<WTTEXT col="2" value="ATTR(MetricType.Pts)" size="2" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsResult)"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsLeader)"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsQty)"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsActive)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Description"/>
+					<WTMEMO col="2" value="ATTR(MetricType.Description)" rows="3" cols="50" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Required"/>
+					<WTMEMO col="2" value="ATTR(MetricType.Required)" rows="3" cols="50" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AutoEvent"/>
+					<WTCOMBO col="2" value="ATTR(MetricType.AutoEvent)">
+						<WTOPTION id="0" label="AutoNone"/>
+						<WTOPTION id="1" label="AutoInvite"/>
+						<WTOPTION id="2" label="AutoPresent"/>
+						<WTOPTION id="3" label="AutoClose"/>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11803" header="false" footer="false" navbar="false"  wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="MetricTypeID" datatype="number"/>
+
+			<WTSUB name="UpdateMetricType">
+				<WTOBJECT name="MetricType" project="ptsMetricTypeUser" class="CMetricType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricTypeID" direction="input" value="PARAM(MetricTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlMetricType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadMetricType">
+				<WTOBJECT name="MetricType" project="ptsMetricTypeUser" class="CMetricType">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricTypeID" direction="input" value="PARAM(MetricTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMetricType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadMetricType"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Update" type="Update">
+				<WTCALLSUB name="UpdateMetricType"/>
+				<WTCALLSUB name="LoadMetricType"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="UpdateExit" type="Update">
+				<WTCALLSUB name="UpdateMetricType"/>
+				<WTCALLSUB name="LoadMetricType">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="MetricType" project="ptsMetricTypeUser" class="CMetricType">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="MetricTypeID" direction="input" value="PARAM(MetricTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="MetricType" project="ptsMetricTypeUser" class="CMetricType">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricTypeID" direction="input" value="PARAM(MetricTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMetricType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTFUNCTION name="TestOptions()">
+					var url, win;
+					url = "11805.asp?metrictypeid=" + document.getElementById('MetricTypeID').value
+					win = window.open(url,"TestOptions","top=100,left=100,height=300,width=600,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=yes");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(MetricTypeID)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="MetricType" value="ATTR(MetricType.MetricTypeName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="MetricTypeText" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="MetricTypeName"/>
+					<WTTEXT col="2" value="ATTR(MetricType.MetricTypeName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(MetricType.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Pts"/>
+					<WTTEXT col="2" value="ATTR(MetricType.Pts)" size="2" prespace="false"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsResult)"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsLeader)"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsQty)"/>
+					<WTCHECK col="2" value="ATTR(MetricType.IsActive)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Description"/>
+					<WTMEMO col="2" value="ATTR(MetricType.Description)" rows="3" cols="50" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Required"/>
+					<WTMEMO col="2" value="ATTR(MetricType.Required)" rows="3" cols="50" />
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="CustomFields" align="left"/>
+					<WTBUTTON col="1" value="CONST(Test)" btnclass="smbutton" align="right">
+						<WTCLICK>TestOptions()</WTCLICK>
+					</WTBUTTON>
+					<WTSTATIC col="1" label="SaveFirst" class="prompt" space="2"/>
+					<WTIMAGE col="1" value="CONST(LearnMore.gif)">
+						<WTLINK name="Page" target="Help">
+							<WTPARAM name="Page" value="CONST(CustomField)"/>
+						</WTLINK>
+					</WTIMAGE>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(MetricType.InputOptions)" cols="72" rows="10"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="AutoEvent"/>
+					<WTCOMBO col="2" value="ATTR(MetricType.AutoEvent)">
+						<WTOPTION id="0" label="AutoNone"/>
+						<WTOPTION id="1" label="AutoInvite"/>
+						<WTOPTION id="2" label="AutoPresent"/>
+						<WTOPTION id="3" label="AutoClose"/>
+					</WTCOMBO>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(UpdateExit)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11811" caption="Metric Types" header="false" footer="false" navbar="false" wrapper="wrapper800" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+			</WTSETATTRIBUTE>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="MetricTypes" project="ptsMetricTypeUser" class="CMetricTypes">
+					<WTMETHOD name="List">
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="ListGroup">
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)" />
+						<WTPARAM name="GroupID" direction="input" value="PARAM(GroupID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMetricTypes" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="left"/>
+				<WTCOLUMN width="400" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="MetricTypes" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" align="right" class="PageHeader">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewMetricType">
+								<WTLINK name="11802">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									<WTPARAM name="GroupID" value="PARAM(GroupID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="MetricType">
+						<WTCOLUMN width="10" align="center" valign="top" label="Seq"/>
+						<WTCOLUMN width="50" align="left" valign="top" label="MetricTypeName"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Pts"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Result"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Leader"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="Qty"/>
+						<WTCOLUMN width="8" align="center" valign="top" label="IsActive"/>
+            <WTROW height="30">
+              <WTSTATIC col="1" value="DATA(Seq)"/>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(MetricTypeName)">
+									<WTCONDITION expr="DATA(IsActive)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(MetricTypeName)" fontcolor="red">
+									<WTCONDITION expr="DATA(IsActive)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="11803"><WTPARAM name="MetricTypeID" value="DATA(MetricType.MetricTypeID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(AutoEvent)" oper="equal" value="SYSCON(ACTIVITY-AUTOADD-INVITE)"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(AutoEvent1.gif)" alt="Edit" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(AutoEvent)" oper="equal" value="SYSCON(ACTIVITY-AUTOADD-PRESENT)"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(AutoEvent2.gif)" alt="Edit" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(AutoEvent)" oper="equal" value="SYSCON(ACTIVITY-AUTOADD-CLOSE)"/>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(AutoEvent3.gif)" alt="Edit" imgalign="absmiddle"/>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(Pts)"/>
+							<WTSTATIC col="4" value="DATA(IsResult)"/>
+							<WTSTATIC col="5" value="DATA(IsLeader)"/>
+							<WTSTATIC col="6" value="DATA(IsQty)"/>
+							<WTSTATIC col="7" value="DATA(IsActive)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" merge="6" fontcolor="gray">
+								<WTSTATIC value="DATA(Description)" fontcolor="gray" space="1"/>
+								<WTSTATIC value="DATA(Required)" fontcolor="blue" space="1"/>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" value="CONST(Close)"  align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="11805" navbar="false" header="false" footer="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+			<!--==================================================================-->
+			<WTPARAM name="MetricTypeID" datatype="number"/>
+			<WTPARAM name="InputOptions" datatype="text"/>
+			<WTPARAM name="Test" datatype="number"/>
+
+			<WTSUB name="LoadInputOptions">
+				<WTOBJECT name="MetricType" project="ptsMetricTypeUser" class="CMetricType">
+					<WTCONDITION expr="PARAM(MetricTypeID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricTypeID" direction="input" value="PARAM(MetricTypeID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(InputOptions)" value="ATTR(InputOptions)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMetricType" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Metric" project="ptsMetricUser" class="CMetric">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(InputOptions)" value="PARAM(InputOptions)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMetric" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadInputOptions"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Test" type="Update">
+				<WTCALLSUB name="LoadInputOptions"/>
+				<WTOBJECT name="Metric" project="ptsMetricUser" class="CMetric">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MetricID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(InputOptions)" value="PARAM(InputOptions)"/>
+					<WTINPUTOPTIONS name="ATTR(InputOptions)" values="ATTR(InputValues)" price="CONST(tmpPrice)" secure="0"/>
+					<WTSETATTRIBUTE name="PARAM(Test)" value="CONST(1)">
+						<WTCONDITION expr="NoErrors"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="PARAM(Test)" value="CONST(2)">
+						<WTCONDITION expr="IsErrors"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMetric" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="400" align="left"/>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="center" class="PageHeading">
+						<WTSTATIC label="TestOptions"/>
+						<WTSTATIC fontcolor="red">
+							<WTCONDITION expr="PARAM(Test)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC space="2"/>
+							<WTSTATIC label="TestSuccess">
+								<WTCONDITION expr="PARAM(Test)" oper="equal" value="CONST(1)"/>
+							</WTSTATIC>
+							<WTSTATIC label="TestFail">
+								<WTCONDITION expr="PARAM(Test)" oper="equal" value="CONST(2)"/>
+							</WTSTATIC>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTINPUTOPTIONS name="InputOptions" values="InputValues" entity="Metric"/>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Test)" align="center"/>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+
+	</WTWEBPAGES>
+</WTROOT>

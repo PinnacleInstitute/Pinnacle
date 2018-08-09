@@ -1,0 +1,2358 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="28" name="Org" alias="org" log="false" translate="false">
+		<!--Identity-->
+		<WTATTRIBUTE id="2801" name="OrgID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="2802" name="AuthUserID" type="number" source="entity"><WTINIT/></WTATTRIBUTE>
+		<WTATTRIBUTE id="2803" name="ParentID" type="number" source="entity"/>
+		<WTATTRIBUTE id="2804" name="CompanyID" type="number" source="entity"/>
+		<WTATTRIBUTE id="2805" name="ForumID" type="number" source="entity"/>
+		<WTATTRIBUTE id="2806" name="MemberID" type="number" source="entity"/>
+		<!--PrivateID=Upline Private Org: =OrgID if Private, =0 if no upline private org, Else =Parent.PrivateID if Public -->
+		<WTATTRIBUTE id="2807" name="PrivateID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="2810" name="UserGroup" type="number" source="join" passthru="true">
+			<WTJOIN entity="AuthUser" name="UserGroup"/>
+			<WTENUM id="51" name="OrgAdmin"/>
+			<WTENUM id="52" name="OrgManager"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2811" name="UserStatus" type="number" source="join" passthru="true">
+			<WTJOIN entity="AuthUser" name="UserStatus"/>
+			<WTENUM id="1" name="Active"/>
+			<WTENUM id="2" name="InActive"/>
+			<WTENUM id="3" name="ReadOnly"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2812" name="Logon" type="text" length="80" source="join">
+			<WTJOIN entity="AuthUser" name="Logon"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="2815" name="OrgName" type="text" length="60" min="1" max="60" source="entity" title="true"/>
+		<WTATTRIBUTE id="2816" name="Description" type="text" length="1000" min="1" max="1000" embedhtml="true" source="entity"/>
+		<WTATTRIBUTE id="2817" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Setup"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="Demo"/>
+			<WTENUM id="4" name="Inactive"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2818" name="NameLast" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="2819" name="NameFirst" type="text" length="30" min="1" max="30" source="entity"/>
+		<WTATTRIBUTE id="2820" name="ContactName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameLast"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2821" name="Email" type="text" length="80" min="1" max="80" source="entity"/>
+		<WTATTRIBUTE id="2822" name="IsCatalog" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2823" name="Level" type="number" source="entity"/>
+		<WTATTRIBUTE id="2824" name="Hierarchy" type="text" length="100" min="1" max="100" source="entity" language="false"/>
+		<WTATTRIBUTE id="2825" name="CourseCount" type="number" source="entity"/>
+		<WTATTRIBUTE id="2826" name="MemberCount" type="number" source="entity"/>
+		<WTATTRIBUTE id="2827" name="IsPublic" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2828" name="IsChat" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2829" name="IsForum" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2830" name="IsSuggestion" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2831" name="IsFavorite" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2832" name="IsProgram" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2833" name="NoCertificate" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2834" name="IsCustomCertificate" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2835" name="Secure" type="number" source="entity"/>
+    <WTATTRIBUTE id="2836" name="Credits" type="number" source="entity"/>
+
+    <!-- Non Persist Fields -->
+		
+		<WTATTRIBUTE id="2890" name="NewLogon" type="text" length="80" min="1" max="80" source="entity" persist="false" passthru="true"/>
+		<WTATTRIBUTE id="2891" name="NewPassword" type="password" length="30" min="6" max="30" source="entity" persist="false" passthru="true"/>	
+		<WTATTRIBUTE id="2892" name="CourseDate" type="date" source="entity" persist="false" />
+		
+		<!--Indexes-->
+		<WTINDEX name="AuthUserID">
+			<WTATTRIBUTE name="AuthUserID"/>
+		</WTINDEX>
+		<WTINDEX name="OrgName">
+			<WTATTRIBUTE name="OrgName"/>
+		</WTINDEX>
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Org" entity="Org" alias="org"/>
+			<WTRELATIONSHIP name="Common" entity="Org" alias="org">
+				<WTENTITY name="AuthUser" entity="AuthUser" alias="au">
+					<WTATTRIBUTE alias="org" name="AuthUserID" relalias="au" relname="AuthUserID"/>
+				</WTENTITY>
+				<WTENTITY name="Parent" entity="Org" alias="parent">
+					<WTATTRIBUTE alias="org" name="ParentID" relalias="parent" relname="OrgID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+			<WTRELATIONSHIP name="AuthUser" entity="Org" alias="org">
+				<WTENTITY name="AuthUser" entity="AuthUser" alias="au">
+					<WTATTRIBUTE alias="org" name="AuthUserID" relalias="au" relname="AuthUserID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="ORG-SETUP" value="1"/>
+			<WTSYSCON name="ORG-ACTIVE" value="2"/>
+			<WTSYSCON name="ORG-DEMO" value="3"/>
+			<WTSYSCON name="ORG-INACTIVE" value="4"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<!--Procedures-->
+	<WTPROCEDURES>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTDECLARE name="ForumID" datatype="number"/>
+			<WTDECLARE name="BoardUserID" datatype="number"/>
+			<WTDECLARE name="ForumModeratorID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTSETVALUE name="AuthUserID" value="CONST(0)"/>
+			<WTSETVALUE name="ForumID" value="CONST(0)"/>
+<!--
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Forum_Add">
+					<WTPARAM name="ForumID" direction="output"/>
+					<WTPARAM name="ATTR(ParentID)" direction="input" value="CONST(0)"/>
+					<WTPARAM name="ATTR(ForumName)" direction="input" value="PARAM(OrgName)"/>
+					<WTPARAM name="ATTR(Seq)" direction="input" value="CONST(0)"/>
+					<WTPARAM name="ATTR(Description)" direction="input" value="CONST('')"/>					
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>   
+				</WTPROCEDURE>
+				<WTSETVALUE name="PARAM(ForumID)" value="ForumID" null="0"/>
+			</WTCODEGROUP>
+-->			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(0)"/>
+				<WTPROCEDURE name="AuthUser_Add">
+					<WTPARAM name="ATTR(Logon)" direction="input" value="PARAM(NewLogon)"/>
+					<WTPARAM name="ATTR(Password)" direction="input" value="PARAM(NewPassword)"/>
+					<WTPARAM name="ATTR(Email)" direction="input" value="PARAM(Email)"/>
+					<WTPARAM name="ATTR(NameLast)" direction="input" value="PARAM(NameLast)"/>
+					<WTPARAM name="ATTR(NameFirst)" direction="input" value="PARAM(NameFirst)"/>
+					<WTPARAM name="ATTR(UserGroup)" direction="input" value="PARAM(UserGroup)"/>
+					<WTPARAM name="ATTR(UserStatus)" direction="input" value="PARAM(UserStatus)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="AuthUserID" direction="output"/>
+				</WTPROCEDURE>			
+				<WTSETVALUE name="PARAM(AuthUserID)" value="AuthUserID" null="0"/>
+<!--
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(UserGroup)" oper="less-equal" value="CONST(23)"/>
+					<WTPROCEDURE name="BoardUser_Add">
+						<WTPARAM name="BoardUserID" direction="output"/>
+						<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+						<WTPARAM name="ATTR(BoardUserName)" direction="input" value="PARAM(NewLogon)"/>
+						<WTPARAM name="ATTR(BoardUserGroup)" direction="input" value="CONST(3)"/>
+						<WTPARAM name="ATTR(IsPublicName)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(IsPublicEmail)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(Signature)" direction="input" value="CONST('')"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>				
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(23)"/>
+					<WTPROCEDURE name="BoardUser_Add">
+						<WTPARAM name="BoardUserID" direction="output"/>
+						<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+						<WTPARAM name="ATTR(BoardUserName)" direction="input" value="PARAM(NewLogon)"/>
+						<WTPARAM name="ATTR(BoardUserGroup)" direction="input" value="CONST(2)"/>
+						<WTPARAM name="ATTR(IsPublicName)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(IsPublicEmail)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(Signature)" direction="input" value="CONST('')"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>				
+					</WTPROCEDURE>
+					<WTPROCEDURE name="ForumModerator_Add">
+						<WTPARAM name="ForumModeratorID" direction="output"/>
+						<WTPARAM name="ATTR(ForumID)" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="ATTR(BoardUserID)" direction="input" value="BoardUserID"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>						
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+-->				
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTINSERT/>
+			</WTCODEGROUP>
+			<WTSETVALUE name="NewID" value="CONST(@@IDENTITY)"/>
+			<WTSETVALUE name="PARAM(OrgID)" value="NewID"/>
+			<WTSETVALUE name="PARAM(AuthUserID)" value="AuthUserID"/>
+			<WTSETVALUE name="PARAM(ForumID)" value="ForumID"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new" nodata="true">
+			<WTPARAM name="ATTR(OrgID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTDECLARE name="BoardUserID" datatype="number"/>
+			<WTDECLARE name="ForumModeratorID" datatype="number"/>
+			<WTSETVALUE name="ForumModeratorID" value="CONST(0)"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Org_FetchAuthUserID">
+					<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="AuthUserID" direction="output"/>
+				</WTPROCEDURE>
+				<WTCODEGROUP>
+					<WTCONDITION expr="AuthUserID" oper="greater" value="CONST(0)"/>
+					<WTPROCEDURE name="AuthUser_Delete">
+						<WTPARAM name="ATTR(AuthUserID)" direction="input" value="AuthUserID"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+<!--				
+				<WTPROCEDURE name="BoardUser_GetBoardUser">
+					<WTPARAM name="SYS(userid)" direction="input" value="AuthUserID"/>
+					<WTPARAM name="BoardUserID" direction="output"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="ForumModerator_GetForumModerator">
+					<WTPARAM name="ATTR(ForumID)" direction="input" value="PARAM(ForumID)"/>
+					<WTPARAM name="ATTR(BoardUserID)" direction="input" value="BoardUserID"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="ForumModeratorID" direction="output"/>
+				</WTPROCEDURE>
+				<WTCODEGROUP>
+					<WTCONDITION expr="BoardUserID" oper="greater" value="CONST(0)"/>
+					<WTPROCEDURE name="BoardUser_Delete">
+						<WTPARAM name="ATTR(BoardUserID)" direction="input" value="BoardUserID"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="ForumModeratorID" oper="greater" value="CONST(0)"/>
+					<WTPROCEDURE name="ForumModerator_Delete">
+						<WTPARAM name="ATTR(ForumModeratorID)" direction="input" value="ForumModeratorID"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+-->				
+				<WTDELETE>
+					<WTJOIN name="Org" lock="true"/>
+					<WTCONDITION expr="ATTR(Org.OrgID)" oper="equal" value="PARAM(OrgID)"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="EnumXML" name="EnumCompanyDoc" enumname="EnumCompanyDocList" style="GenerateDataProc.xsl" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(Secure)" direction="input"/>	
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Enum" name="EnumCompanyDocList" style="GenerateDataProc.xsl" column="OrgName" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>	
+			<WTPARAM name="ATTR(Secure)" direction="input"/>	
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchAuthUserID" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(OrgID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ATTR(AuthUserID)" direction="output"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="AuthUserID" value="ATTR(Org.AuthUserID)"/>
+					<WTJOIN name="Org" lock="false"/>
+					<WTCONDITION expr="ATTR(Org.OrgID)" oper="equal" value="PARAM(OrgID)"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="AuthUserID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="LoadAuthUser" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(Org.AuthUserID)" direction="input"/>
+			<WTPARAM name="ATTR(Org.OrgID)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="CONST(@OrgID)" value="ATTR(Org.OrgID)"/>
+					<WTJOIN name="Org" lock="false"/>
+					<WTCONDITION expr="ATTR(Org.AuthUserID)" oper="equal" value="PARAM(AuthUserID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Fetch" name="LoadLogon" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(Org.Logon)" direction="input"/>
+			<WTPARAM name="ATTR(Org.CompanyID)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="CONST(@CompanyID)" value="ATTR(Org.CompanyID)"/>
+					<WTJOIN name="AuthUser" lock="false"/>
+					<WTCONDITION expr="ATTR(AuthUser.Logon)" oper="equal" value="PARAM(Logon)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListTree" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Org.CompanyID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTATTRIBUTE value="ATTR(Org.CourseCount)"/>
+					<WTATTRIBUTE value="ATTR(Org.MemberCount)"/>
+					<WTATTRIBUTE value="ATTR(Org.IsPublic)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListBranch" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(OrgID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Org.CompanyID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTATTRIBUTE value="ATTR(Org.CourseCount)"/>
+					<WTATTRIBUTE value="ATTR(Org.MemberCount)"/>
+					<WTATTRIBUTE value="ATTR(Org.IsPublic)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListMember" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListMemberHierarchy" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTATTRIBUTE value="ATTR(Org.ForumID)"/>
+					<WTATTRIBUTE value="ATTR(Org.IsChat)"/>
+					<WTATTRIBUTE value="ATTR(Org.IsForum)"/>
+					<WTATTRIBUTE value="ATTR(Org.IsSuggestion)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListProgram" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTJOIN name="Org" lock="false"/>
+					<WTCONDITION expr="ATTR(Org.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(Org.Status)" oper="equal" value="CONST(2)" connector="and"/>
+					<WTCONDITION expr="ATTR(Org.IsProgram)" oper="equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(Org.OrgName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListFavoritePrivate" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTJOIN name="Org" lock="false"/>
+					<WTCONDITION expr="ATTR(Org.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(Org.Status)" oper="equal" value="CONST(2)" connector="and"/>
+					<WTCONDITION expr="ATTR(Org.IsFavorite)" oper="equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(Org.OrgName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="List" name="ListFavorite" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="ATTR(CourseDate)" direction="input"/>
+			<WTPARAM name="ATTR(Status)" direction="input"/> <!-- List Type -->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.OrgName)"/>
+					<WTATTRIBUTE value="ATTR(Org.CourseCount)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTDECLARE name="BoardUserID" datatype="number"/>
+			<WTDECLARE name="ForumModeratorID" datatype="number"/>
+			<WTDECLARE name="OldParentID" datatype="number"/>
+			<WTDECLARE name="OldCompanyID" datatype="number"/>
+			<WTDECLARE name="OldIsPublic" datatype="yesno"/>
+			<WTDECLARE name="idx" datatype="number"/>
+			<WTDECLARE name="HReplace" datatype="text" length="100" />
+			<WTDECLARE name="NewParentLevel" datatype="number" />
+			<WTDECLARE name="ParentPrivateID" datatype="number" />
+			<WTDECLARE name="OldPrivateID" datatype="number" />
+
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTCODEGROUP>
+<WTCUSTOM>
+	SELECT @mOldParentID = ParentID, @mOldIsPublic = IsPublic FROM Org WHERE OrgID = @OrgID
+</WTCUSTOM>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(AuthUserID)" oper="greater" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="equal" value="CONST(0)" connector="and"/>
+<!--				
+				<WTPROCEDURE name="BoardUser_GetBoardUser">
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(AuthUserID)"/>
+					<WTPARAM name="BoardUserID" direction="output"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="ForumModerator_GetForumModerator">
+					<WTPARAM name="ATTR(ForumID)" direction="input" value="PARAM(ForumID)"/>
+					<WTPARAM name="ATTR(BoardUserID)" direction="input" value="BoardUserID"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="ForumModeratorID" direction="output"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="ForumModerator_Delete">
+					<WTPARAM name="ATTR(ForumModeratorID)" direction="input" value="ForumModeratorID"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="BoardUser_Delete">
+					<WTPARAM name="ATTR(BoardUserID)" direction="input" value="BoardUserID"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+				</WTPROCEDURE>
+-->				
+				<WTPROCEDURE name="AuthUser_Delete">
+					<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+				</WTPROCEDURE>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="CONST(0)"/>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(AuthUserID)" oper="greater" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(0)" connector="and"/>
+				<WTPROCEDURE name="AuthUser_Update">
+					<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+					<WTPARAM name="ATTR(Email)" direction="input" value="PARAM(Email)"/>
+					<WTPARAM name="ATTR(NameLast)" direction="input" value="PARAM(NameLast)"/>
+					<WTPARAM name="ATTR(NameFirst)" direction="input" value="PARAM(NameFirst)"/>
+					<WTPARAM name="ATTR(UserGroup)" direction="input" value="PARAM(UserGroup)"/>
+					<WTPARAM name="ATTR(UserStatus)" direction="input" value="PARAM(UserStatus)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(AuthUserID)" oper="equal" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(0)" connector="and"/>
+				<WTPROCEDURE name="AuthUser_Add">
+					<WTPARAM name="ATTR(Logon)" direction="input" value="PARAM(NewLogon)"/>
+					<WTPARAM name="ATTR(Password)" direction="input" value="PARAM(NewPassword)"/>
+					<WTPARAM name="ATTR(Email)" direction="input" value="PARAM(Email)"/>
+					<WTPARAM name="ATTR(NameLast)" direction="input" value="PARAM(NameLast)"/>
+					<WTPARAM name="ATTR(NameFirst)" direction="input" value="PARAM(NameFirst)"/>
+					<WTPARAM name="ATTR(UserGroup)" direction="input" value="PARAM(UserGroup)"/>
+					<WTPARAM name="ATTR(UserStatus)" direction="input" value="PARAM(UserStatus)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="NewID" direction="output"/>
+				</WTPROCEDURE>
+				<WTSETVALUE name="PARAM(AuthUserID)" value="NewID" null="0"/>
+<!--
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(UserGroup)" oper="less-equal" value="CONST(23)"/>
+					<WTPROCEDURE name="BoardUser_Add">
+						<WTPARAM name="BoardUserID" direction="output"/>
+						<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+						<WTPARAM name="ATTR(BoardUserName)" direction="input" value="PARAM(NewLogon)"/>
+						<WTPARAM name="ATTR(BoardUserGroup)" direction="input" value="CONST(3)"/>
+						<WTPARAM name="ATTR(IsPublicName)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(IsPublicEmail)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(Signature)" direction="input" value="CONST('')"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>				
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(UserGroup)" oper="greater" value="CONST(23)"/>
+					<WTPROCEDURE name="BoardUser_Add">
+						<WTPARAM name="BoardUserID" direction="output"/>
+						<WTPARAM name="ATTR(AuthUserID)" direction="input" value="PARAM(AuthUserID)"/>
+						<WTPARAM name="ATTR(BoardUserName)" direction="input" value="PARAM(NewLogon)"/>
+						<WTPARAM name="ATTR(BoardUserGroup)" direction="input" value="CONST(2)"/>
+						<WTPARAM name="ATTR(IsPublicName)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(IsPublicEmail)" direction="input" value="CONST(1)"/>
+						<WTPARAM name="ATTR(Signature)" direction="input" value="CONST('')"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>				
+					</WTPROCEDURE>
+					<WTPROCEDURE name="ForumModerator_Add">
+						<WTPARAM name="ForumModeratorID" direction="output"/>
+						<WTPARAM name="ATTR(ForumID)" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="ATTR(BoardUserID)" direction="input" value="BoardUserID"/>
+						<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>						
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+-->				
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<!--If IsPublic was changed -->
+				<WTCONDITION expr="PARAM(IsPublic)" oper="not-equal" value="OldIsPublic"/>
+				<WTCODEGROUP>
+					<!--If Public: Set PrivateID = Parent.PrivateID, Update Children matching Hierarchy from old PrivateID to Parent.PrivateID -->
+					<WTCONDITION expr="PARAM(IsPublic)" oper="not-equal" value="CONST(0)"/>
+<WTCUSTOM>
+			IF @ParentID &gt; 0 
+				SELECT @PrivateID = PrivateID FROM Org WHERE OrgID = @ParentID
+			ELSE	
+				SET @PrivateID = 0
+			UPDATE Org SET PrivateID = @PrivateID
+			WHERE CompanyID = @CompanyID AND Hierarchy LIKE @Hierarchy + '%' AND PrivateID = @OrgID
+</WTCUSTOM>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<!--If Private: Set PrivateID = OrgID, Update Children matching Hierarchy from old PrivateID to OrgID -->
+					<WTCONDITION expr="PARAM(IsPublic)" oper="equal" value="CONST(0)"/>
+<WTCUSTOM>
+			SET @mOldPrivateID = @PrivateID
+			SET @PrivateID = @OrgID
+			UPDATE Org SET PrivateID = @PrivateID
+			WHERE CompanyID = @CompanyID AND Hierarchy LIKE @Hierarchy + '%' AND PrivateID = @mOldPrivateID
+</WTCUSTOM>
+				</WTCODEGROUP>
+			</WTCODEGROUP>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="OldParentID" oper="not-equal" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="OldParentID" connector="and"/>
+<WTCUSTOM>
+	SELECT @mOldCompanyID = CompanyID, @mHReplace=Hierarchy, @mNewParentLevel=[Level] FROM Org WHERE OrgID = @ParentID
+   SET @mOldCompanyID = ISNULL(@mOldCompanyID,0)
+</WTCUSTOM>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="OldCompanyID" />
+					<WTSETVALUE name="PARAM(ParentID)" value="OldParentID"/>
+				</WTCODEGROUP>
+				<WTSETVALUE name="idx" value="CONST( PATINDEX('%/'+ CAST(@OrgID as varchar(10)) + '/%', @mHReplace) )"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="idx" oper="not-equal" value="CONST(0)" />
+					<WTCONDITION expr="PARAM(Level)" oper="less-equal" value="CONST(@mNewParentLevel)" connector="and" />
+					<WTSETVALUE name="PARAM(ParentID)" value="OldParentID"/>
+				</WTCODEGROUP>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTUPDATE>
+					<WTJOIN name="Org" lock="true"/>
+					<WTCONDITION expr="ATTR(Org.OrgID)" oper="equal" value="PARAM(OrgID)"/>
+				</WTUPDATE>
+			</WTCODEGROUP>
+			<WTCODEGROUP>
+				<WTCONDITION expr="OldParentID" oper="not-equal" value="CONST(0)"/>
+				<WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="OldParentID" connector="and"/>
+				<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="OldCompanyID" connector="and" />
+				<WTPROCEDURE name="Org_UpdateHierarchy">
+					<WTPARAM name="ATTR(CompanyID)" direction="input" value="PARAM(CompanyID)"/>
+					<WTPARAM name="ATTR(OrgID)" direction="input" value="PARAM(OrgID)"/>
+					<WTPARAM name="ATTR(ParentID)" direction="input" value="PARAM(ParentID)"/>
+					<WTPARAM name="ATTR(Level)" direction="input" value="PARAM(Level)"/>
+					<WTPARAM name="ATTR(Hierarchy)" direction="input" value="PARAM(Hierarchy)"/>
+				</WTPROCEDURE>
+				<WTPROCEDURE name="Company_Update_Counters">
+					<WTPARAM name="ATTR(CompanyID)" direction="input" value="PARAM(CompanyID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE name="IsPublicCatalog" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" novalidate="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input"/>
+			<WTPARAM name="Public" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListActiveUsers" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.ContactName)" alias="ContactName"/>
+					<WTATTRIBUTE value="ATTR(Org.NameFirst)"/>
+					<WTJOIN name="AuthUser"/>
+					<WTCONDITION expr="ATTR(Org.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(AuthUser.UserGroup)" oper="greater" value="CONST(0)" connector="and"/>
+					<WTCONDITION expr="ATTR(AuthUser.UserStatus)" oper="equal" value="CONST(1)" connector="and"/>
+					<WTORDER name="ATTR(Org.NameFirst)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--============================================================================================-->
+		<WTPROCEDURE type="List" name="ListUsers" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(CompanyID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+          <WTATTRIBUTE value="ATTR(Org.OrgID)"/>
+					<WTATTRIBUTE value="ATTR(Org.NameFirst)"/>
+					<WTATTRIBUTE value="ATTR(Org.NameLast)"/>
+					<WTATTRIBUTE value="ATTR(Org.Email)"/>
+					<WTATTRIBUTE value="ATTR(Org.Secure)"/>
+					<WTATTRIBUTE value="ATTR(AuthUser.UserGroup)"/>
+					<WTATTRIBUTE value="ATTR(AuthUser.UserStatus)"/>
+					<WTATTRIBUTE value="ATTR(Org.Description)"/>
+					<WTJOIN name="AuthUser"/>
+					<WTCONDITION expr="ATTR(Org.CompanyID)" oper="equal" value="PARAM(CompanyID)"/>
+					<WTCONDITION expr="ATTR(Org.AuthUserID)" oper="not-equal" value="CONST(0)" connector="and"/>
+					<WTORDER name="ATTR(Org.NameFirst)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Check" name="GetEmail" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(CompanyID)" direction="input"/>
+			<WTPARAM name="ATTR(NameFirst)" direction="input"/>
+			<WTPARAM name="Email" direction="output" datatype="text" length="80"/>
+		</WTPROCEDURE>
+</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2802" caption="New" contentpage="true" aspstyle="GenerateWebASP.xsl" wrapper="false"
+		xslstyle="GenerateWebXSLAdd.xsl" secured="125">
+		<!--============================================================================================-->
+			<WTPARAM name="ParentID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="AffiliateID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			
+			<WTPARAM name="Level" datatype="number"/>
+			<WTPARAM name="Hierarchy" datatype="text"/>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(UserGroup)" value="CONST(51)"/>
+						<WTSETATTRIBUTE name="ATTR(UserStatus)" value="CONST(1)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(ORG-SETUP)"/>
+						<WTSETATTRIBUTE name="ATTR(IsPublic)" value="SYSCON(YES)"/>
+<!--						<WTSETATTRIBUTE name="ATTR(IsChat)" value="SYSCON(YES)"/>-->
+						<WTSETATTRIBUTE name="ATTR(IsForum)" value="SYSCON(YES)"/>
+						<WTSETATTRIBUTE name="ATTR(IsSuggestion)" value="SYSCON(YES)"/>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="CONST(0)"/>
+						<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(ORG-ACTIVE)"/>
+<!--						<WTSETATTRIBUTE name="ATTR(IsChat)" value="SYSCON(NO)"/>-->
+						<WTSETATTRIBUTE name="ATTR(IsForum)" value="SYSCON(NO)"/>
+						<WTSETATTRIBUTE name="ATTR(IsSuggestion)" value="SYSCON(NO)"/>
+					</WTCODEGROUP>
+					<WTSETATTRIBUTE name="ATTR(ParentID)" value="PARAM(ParentID)"/>
+					<WTSETATTRIBUTE name="ATTR(IsCatalog)" value="SYSCON(YES)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">	
+					<WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="CONST(0)"/>			
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(ParentID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(Level)" value="CONST(.Level + 1)"/>
+					<WTSETATTRIBUTE name="PARAM(Hierarchy)" value="ATTR(Hierarchy)"/>
+					<WTSETATTRIBUTE name="CONST(tmpPrivateID)" value="ATTR(PrivateID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(ORG-SETUP)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(ParentID)" value="PARAM(ParentID)"/>
+					<WTSETATTRIBUTE name="ATTR(OrgID)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLogon)" value="ATTR(NewLogon)"/>
+					<WTMETHOD name="Validate"/>
+					
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(tmpLogon)" oper="not-equal" value="CONST(&quot;&quot;)"/>
+		 				<WTCONDITION expr="NoErrors" connector="and"/>
+									
+						<WTOBJECT name="AuthUser" project="ptsAuthUser" class="CAuthUser">
+							<WTMETHOD name="IsLogon">
+								<WTPARAM name="IsAvailable" direction="return" datatype="number"/>
+								<WTPARAM name="Logon" direction="input" value="CONST(tmpLogon)"/>
+							</WTMETHOD>
+						</WTOBJECT>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(IsAvailable)" oper="equal" value="CONST(0)"/>
+							<WTERROR number="-2147220513" message="Oops, The Logon is not available.  Please select another."/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+<WTCUSTOM>
+			If oOrg.MemberID &lt;&gt; "0" AND xmlError = "" Then
+				Set oMember = server.CreateObject("ptsMemberUser.CMember")
+				If oMember Is Nothing Then
+				   DoError Err.Number, Err.Source, "Unable to Create Object - ptsMemberUser.CMember"
+				Else
+				   With oMember
+				      .SysCurrentLanguage = reqSysLanguage
+				      .Load CLng(oOrg.MemberID), CLng(reqSysUserID)
+				      If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+				      oOrg.NameFirst = .NameFirst
+				      oOrg.NameLast = .NameLast
+				      oOrg.Email = .Email
+				   End With
+				End If
+				Set oMember = Nothing
+			End If
+</WTCUSTOM>
+					<WTMETHOD name="Add">
+		 				<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="reqOrgID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+		 				<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpAuthUser)" value="ATTR(Org.AuthUserID)"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTMETHOD name="Load">
+							<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>			
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>			
+							<WTSETATTRIBUTE name="ATTR(Level)" value="CONST(1)"/>
+							<WTSETATTRIBUTE name="ATTR(Hierarchy)" value="CONST(reqOrgID &amp; &quot;/&quot;)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="PARAM(ParentID)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="ATTR(Level)" value="PARAM(Level)"/>
+							<WTSETATTRIBUTE name="ATTR(Hierarchy)" value="CONST(reqHierarchy &amp; reqOrgID &amp; &quot;/&quot;)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(IsPublic)" oper="equal" value="CONST(0)"/>			
+							<!-- If Private, set PrivateID to own OrgID -->
+							<WTSETATTRIBUTE name="ATTR(PrivateID)" value="ATTR(OrgID)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(IsPublic)" oper="not-equal" value="CONST(0)"/>			
+							<!-- If Public, set PrivateID to parent's PrivateID -->
+							<WTSETATTRIBUTE name="ATTR(PrivateID)" value="CONST(tmpPrivateID)"/>
+						</WTCODEGROUP>
+						<WTMETHOD name="Save">
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+						<WTMETHOD name="XML">
+		 					<WTCONDITION expr="IsErrors"/>
+							<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+							<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+						</WTMETHOD>
+					</WTCODEGROUP>
+				</WTOBJECT>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(tmpAuthUser)" oper="greater" value="CONST(0)"/>
+						<WTRETURN>
+							<WTCONDITION expr="PARAM(ParentID)" oper="greater" value="CONST(0)"/>
+							<WTLINK name="0105" return="false">
+								<WTPARAM name="AuthUserID" value="CONST(tmpAuthUser)"/>
+								<WTPARAM name="MailReturnURL" value="CONST(&quot;2830.asp&quot;)"/>
+							</WTLINK>
+						</WTRETURN>
+						<WTRETURN>
+							<WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>
+							<WTLINK name="0105" return="false">
+								<WTPARAM name="AuthUserID" value="CONST(tmpAuthUser)"/>
+								<WTPARAM name="MailReturnURL" value="CONST(&quot;2809.asp?CompanyID=&quot; &amp; reqOrgID)"/>
+							</WTLINK>
+						</WTRETURN>
+					</WTCODEGROUP>
+					<WTCODEGROUP>
+						<WTCONDITION expr="CONST(tmpAuthUser)" oper="equal" value="CONST(0)"/>
+						<WTRETURN>
+							<WTCONDITION expr="PARAM(ParentID)" oper="greater" value="CONST(0)"/>
+							<WTLINK name="2830" return="false"/>
+						</WTRETURN>
+						<WTRETURN>
+							<WTCONDITION expr="PARAM(ParentID)" oper="equal" value="CONST(0)"/>
+							<WTLINK name="2809" return="false">
+								<WTPARAM name="CompanyID" value="PARAM(OrgID)"/>
+							</WTLINK>
+						</WTRETURN>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="NewFolder" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="left" label="NewFolderText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="FolderName"/>
+					<WTTEXT col="2" value="ATTR(Org.OrgName)" size="60"/>
+				</WTROW>
+					
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Submit)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+<!--
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Org.Description)" cols="72" rows="6" htmleditor="editor_simple"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="MemberIDText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="MemberID"/>
+					<WTTEXT col="2" value="ATTR(Org.MemberID)" size="6"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Manager"/>
+					<WTTEXT col="2" value="ATTR(Org.NameFirst)" width="200" label="NameFirst" size="25"/>
+					<WTTEXT col="2" value="ATTR(Org.NameLast)" width="240" label="NameLast" size="25"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Org.Email)" size="60"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Org.Status)"/>
+				</WTROW>
+				
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" align="left" label="LogonText" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="NewLogon"/>
+					<WTTEXT col="2" value="ATTR(Org.NewLogon)" size="20"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="NewPassword"/>
+					<WTTEXT col="2" value="ATTR(Org.NewPassword)" size="20"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+					
+				<WTCODEGROUP>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					 <WTROW>
+					 	<WTSTATIC col="1" tag="UserAccess"/>
+					 	<WTCOMBO col="2" value="ATTR(Org.UserGroup)"/>
+					 	<WTCOMBO col="2" value="ATTR(Org.UserStatus)"/>
+					 </WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Submit)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+-->				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2802a" caption="New" navbar="false" header="false" footer="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl" secured="125">
+			<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="NotEmployee"/>
+        <WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="SYS(CompanyID)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(UserGroup)" value="CONST(52)"/>
+					<WTSETATTRIBUTE name="ATTR(UserStatus)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(Secure)" value="CONST(1)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(OrgName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+					<WTSETATTRIBUTE name="ATTR(OrgID)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLogon)" value="ATTR(NewLogon)"/>
+					<WTMETHOD name="Validate"/>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="NoErrors"/>
+						<WTCONDITION expr="CONST(tmpLogon)" oper="not-equal" value="CONST(&quot;&quot;)" connector="and"/>
+						<WTOBJECT name="AuthUser" project="ptsAuthUser" class="CAuthUser">
+							<WTMETHOD name="IsLogon">
+								<WTPARAM name="IsAvailable" direction="return" datatype="number"/>
+								<WTPARAM name="Logon" direction="input" value="CONST(tmpLogon)"/>
+							</WTMETHOD>
+						</WTOBJECT>
+						<WTCODEGROUP>
+							<WTCONDITION expr="CONST(IsAvailable)" oper="equal" value="CONST(0)"/>
+							<WTERROR number="-2147220513" message="Oops, The Logon is not available.  Please select another."/>
+						</WTCODEGROUP>
+					</WTCODEGROUP>
+					<WTMETHOD name="Add">
+						<WTCONDITION expr="NoErrors"/>
+						<WTPARAM name="reqOrgID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewUser" align="left" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12" margin-top="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Manager"/>
+					<WTTEXT col="2" value="ATTR(Org.NameFirst)" width="200" label="NameFirst" size="25"/>
+					<WTTEXT col="2" value="ATTR(Org.NameLast)" width="240" label="NameLast" size="25"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Org.Email)" size="60"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="NewLogon"/>
+					<WTTEXT col="2" value="ATTR(Org.NewLogon)" size="20"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="NewPassword"/>
+					<WTTEXT col="2" value="ATTR(Org.NewPassword)" size="20"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="UserAccess"/>
+					<WTCOMBO col="2" value="ATTR(Org.UserGroup)"/>
+					<WTCOMBO col="2" value="ATTR(Org.UserStatus)"/>
+					<WTSTATIC col="2" tag="AccessLevel"/>
+					<WTTEXT col="2" value="ATTR(Org.Secure)" size="2" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)"/>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2803" contentpage="true" wrapper="false"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" secured="125">
+		<!--============================================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="Updated" datatype="yesno"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+			<WTPARAM name="OrgName" datatype="text"/>
+			<WTPARAM name="NewParent" datatype="number"/>
+<!--
+			<WTSETATTRIBUTE name="CONST(tmpAuthUserID)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpForumID)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpIsForum)" value="0" />
+			<WTSETATTRIBUTE name="CONST(tmpIsChat)" value="0" />
+-->			
+			<WTSUB name="UpdateOrg">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<!-- get memberid before data entry -->
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(Org.MemberID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpParentID)" value="ATTR(Org.ParentID)"/>
+					<!-- test if the org name changed -->
+					<WTSETATTRIBUTE name="PARAM(OrgName)" value="ATTR(Org.OrgName)"/>
+					<WTSETATTRIBUTE name="CONST(tmpIsPublic)" value="ATTR(Org.IsPublic)"/>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="PARAM(OrgName)" value="CONST(&quot;&quot;)">
+						<WTCONDITION expr="PARAM(OrgName)" oper="not-equal" value="ATTR(Org.OrgName)"/>
+						<WTCONDITION expr="CONST(tmpIsPublic)" oper="not-equal" value="ATTR(Org.IsPublic)" connector="or"/>
+					</WTSETATTRIBUTE>
+					<WTSETATTRIBUTE name="PARAM(NewParent)" value="CONST(1)">
+						<WTCONDITION expr="CONST(tmpParentID)" oper="not-equal" value="ATTR(Org.ParentID)"/>
+					</WTSETATTRIBUTE>
+<WTCUSTOM>
+			If oOrg.MemberID &gt; "0" AND oOrg.MemberID &lt;&gt; tmpMemberID AND xmlError = "" Then
+				Set oMember = server.CreateObject("ptsMemberUser.CMember")
+				If oMember Is Nothing Then
+				   DoError Err.Number, Err.Source, "Unable to Create Object - ptsMemberUser.CMember"
+				Else
+				   With oMember
+				      .SysCurrentLanguage = reqSysLanguage
+				      .Load CLng(oOrg.MemberID), CLng(reqSysUserID)
+				      If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+				      oOrg.NameFirst = .NameFirst
+				      oOrg.NameLast = .NameLast
+				      oOrg.Email = .Email
+				   End With
+				End If
+				Set oMember = Nothing
+			End If
+</WTCUSTOM>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>	
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadOrg">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>			
+<!--
+					<WTSETATTRIBUTE name="CONST(tmpAuthUserID)" value="ATTR(AuthUserID)" />
+					<WTSETATTRIBUTE name="CONST(tmpCompanyID)" value="ATTR(CompanyID)" />
+					<WTSETATTRIBUTE name="CONST(tmpForumID)" value="ATTR(ForumID)" />
+					<WTSETATTRIBUTE name="CONST(tmpIsForum)" value="ATTR(IsForum)" />
+					<WTSETATTRIBUTE name="CONST(tmpIsChat)" value="ATTR(IsChat)" />
+-->
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(Updated)" value="CONST(0)"/>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadOrg"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateOrg"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="PARAM(Updated)" value="CONST(1)"/>
+				</WTCODEGROUP>
+				<!-- If the name changed, refresh the parent page -->
+<!--
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTCONDITION expr="PARAM(OrgName)" oper="equal" value="CONST(&quot;&quot;)" connector="and" paren="start"/>		
+					<WTCONDITION expr="PARAM(NewParent)" oper="equal" value="CONST(1)" connector="or" paren="end" />		
+					<WTLINK name="2830" return="false"/>
+				</WTRETURN>
+-->
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadOrg">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="2830" return="false"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+<!--
+				<WTMENU name="OrgMenu" type="bar" top-align="center" menuwidth="125">
+					<WTITEM label="New">
+						<WTITEM label="NewFolder">
+							<WTLINK name="2802" nodata="true">
+								<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+								<WTPARAM name="ParentID" value="PARAM(OrgID)"/>
+								<WTPARAM name="CompanyID" value="VALUE(tmpCompanyID)"/>
+							</WTLINK>
+						</WTITEM>
+					</WTITEM>
+					<WTITEM label="Tools">
+						<WTITEM label="Attachments">
+							<WTLINK name="8010" target="blank" nodata="true">
+								<WTPARAM name="ParentType" value="ENTITY(Org)"/>
+								<WTPARAM name="ParentID" value="PARAM(OrgID)"/>
+								<WTPARAM name="CompanyID" value="VALUE(tmpCompanyID)"/>
+								<WTPARAM name="Title" value="PARAM(OrgName)"/>
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="Forum">
+							<WTCONDITION expr="CONST(tmpIsForum)" oper="not-equal" value="CONST(0)" />
+							<WTLINK name="8411" target="blank" nodata="true">
+								<WTPARAM name="ForumID" value="VALUE(tmpForumID)"/>
+								<WTPARAM name="IsChat" value="VALUE(tmpIsChat)"/>
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="ConferenceRoom">
+							<WTCONDITION expr="CONST(tmpIsChat)" oper="not-equal" value="CONST(0)" />
+							<WTLINK name="8420" target="blank" nodata="true">
+								<WTPARAM name="ForumID" value="VALUE(tmpForumID)" />
+								<WTPARAM name="IsForum" value="VALUE(tmpIsForum)" />
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="Suggestions">
+							<WTLINK name="4501" nodata="true">
+								<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+								<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="Surveys">
+							<WTLINK name="4001" nodata="true">
+								<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+								<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="Report">
+							<WTLINK name="1360" target="Report" nodata="true">
+								<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+							</WTLINK>
+						</WTITEM>
+						<WTITEM label="ResetLogon">
+							<WTCONDITION expr="ATTR(UserGroup)" oper="not-equal" value="CONST(0)"/>
+							<WTLINK name="0104" nodata="true">
+								<WTPARAM name="AuthUserID" value="VALUE(tmpAuthUserID)"/>
+								<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							</WTLINK>
+						</WTITEM>
+					</WTITEM>
+				</WTMENU>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="right">
+						<WTCODEGROUP><WTSTARTMENU name="OrgMenu" type="bar"/></WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+-->
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" class="PageHeading">
+						<WTSTATIC tag="Properties"/>
+						<WTSTATIC value="ATTR(Org.OrgName)" space="1"/>
+						<WTSTATIC label="Folder"/>
+					</WTSTATIC>
+				</WTROW>
+<!--
+				<WTROW>
+					<WTLINKGROUP col="1" merge="2" align="right">
+						<WTLINK name="8010" label="Attachments" class="PageHeadingLink" target="_blank">
+							<WTPARAM name="ParentType" value="ENTITY(Org)"/>
+							<WTPARAM name="ParentID" value="ATTR(OrgID)"/>
+							<WTPARAM name="CompanyID" value="ATTR(CompanyID)"/>
+							<WTPARAM name="Title" value="ATTR(OrgName)"/>
+						</WTLINK>
+						
+						<WTLINK name="8420" label="ConferenceRoom" class="PageHeadingLink" target="_blank">
+							<WTCONDITION expr="ATTR(Org.IsChat)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="ForumID" value="ATTR(ForumID)"/>
+							<WTPARAM name="IsForum" value="ATTR(IsForum)"/>
+						</WTLINK>
+						
+						
+						<WTLINK name="8311" label="Moderators" class="PageHeadingLink">
+							<WTCONDITION expr="ATTR(Org.IsForum)" oper="not-equal" value="CONST(0)"/>
+							<WTCONDITION expr="ATTR(Org.IsChat)" oper="not-equal" value="CONST(0)" connector="or"/>
+							<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							<WTPARAM name="ForumID" value="ATTR(ForumID)"/>
+						</WTLINK>
+	
+
+						<WTLINK name="8411" label="Forum" class="PageHeadingLink" target="_blank">
+							<WTCONDITION expr="ATTR(Org.IsForum)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="ForumID" value="ATTR(ForumID)"/>
+							<WTPARAM name="IsChat" value="ATTR(IsChat)"/>
+						</WTLINK>
+						
+					</WTLINKGROUP>
+				</WTROW>
+-->				
+				<WTROW>
+					<WTLINKGROUP col="1" merge="2" align="right">
+						<WTLINK name="8010" label="Attachments" class="PageHeadingLink" target="_blank">
+							<WTPARAM name="ParentType" value="ENTITY(Org)"/>
+							<WTPARAM name="ParentID" value="ATTR(OrgID)"/>
+							<WTPARAM name="CompanyID" value="ATTR(CompanyID)"/>
+							<WTPARAM name="Title" value="ATTR(OrgName)"/>
+						</WTLINK>
+						<WTLINK name="4501" label="Suggestions" class="PageHeadingLink">
+							<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+						</WTLINK>
+						<WTLINK name="4001" label="Surveys" class="PageHeadingLink">
+							<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+						</WTLINK>
+						<WTLINK name="1360" label="Report" class="PageHeadingLink" target="Report">
+							<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+						</WTLINK>
+						<WTLINK name="2802" label="NewFolder" class="PageHeadingLink">
+							<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							<WTPARAM name="ParentID" value="PARAM(OrgID)"/>
+							<WTPARAM name="CompanyID" value="ATTR(Org.CompanyID)"/>
+						</WTLINK>
+						<WTCODEGROUP>
+					   	<WTLINK name="0104" label="ResetLogon" class="PageHeadingLink" >
+								<WTCONDITION expr="ATTR(UserGroup)" oper="not-equal" value="CONST(0)"/>
+								<WTPARAM name="AuthUserID" value="ATTR(Org.AuthUserID)"/>
+								<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+							</WTLINK>
+						</WTCODEGROUP>
+					</WTLINKGROUP>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Org.IsPublic)"/>
+				</WTROW>
+<!--
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Org.IsChat)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Org.IsForum)"/>
+				</WTROW>
+-->
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Org.IsSuggestion)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Org.IsFavorite)"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTCHECK col="2" value="ATTR(Org.IsCatalog)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTCHECK col="2" value="ATTR(Org.IsProgram)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" space="5"/>
+						<WTSTATIC col="2" tag="Credits"/>
+						<WTTEXT col="2" value="ATTR(Org.Credits)" size="2" prespace="false"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" space="5"/>
+						<WTCHECK col="2" value="ATTR(Org.NoCertificate)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" space="5"/>
+						<WTCHECK col="2" value="ATTR(Org.IsCustomCertificate)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTROW>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTHIDDEN value="ATTR(Org.IsCatalog)"/>
+					<WTHIDDEN value="ATTR(Org.IsProgram)"/>
+					<WTHIDDEN value="ATTR(Org.Credits)"/>
+					<WTHIDDEN value="ATTR(Org.NoCertificate)"/>
+					<WTHIDDEN value="ATTR(Org.IsCustomCertificate)"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="6">
+					<WTCONDITION expr="PARAM(Updated)" oper="equal" value="CONST(1)"/>
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2" fontcolor="blue" label="UpdateSuccessMessage"/>
+				</WTROW >
+				<WTROW margin-top="6">
+					<WTCONDITION expr="IsOrgAdmin" paren="start"/>
+					<WTCONDITION expr="IsOrgManager" connector="or" paren="end"/>
+					<WTCONDITION expr="IsActive" connector="and"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" align="center" msg="ConfirmDelete">
+						<WTCONDITION expr="ATTR(Org.ParentID)" oper="not-equal" value="CONST(0)"/>
+						<WTCONDITION expr="IsManager" connector="and" paren="start"/>
+						<WTCONDITION expr="IsOrgAdmin" connector="or" paren="end"/>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="FolderID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(Org.OrgID)" bold="true"/>
+				</WTROW>
+				<WTROW>
+				   <WTSTATIC col="1" tag="CompanyID"/>
+				   <WTSTATIC col="2" value="ATTR(Org.CompanyID)" bold="true"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTROW>
+						<WTSTATIC col="1" tag="ParentID"/>
+						<WTTEXT col="2" value="ATTR(Org.ParentID)" size="6"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="PrivateID"/>
+						<WTTEXT col="2" value="ATTR(Org.PrivateID)" size="6"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTSTATIC col="1"/>
+						<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTROW>
+						<WTHIDDEN value="ATTR(Org.ParentID)"/>
+						<WTHIDDEN value="ATTR(Org.PrivateID)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="FolderName"/>
+					<WTTEXT col="2" value="ATTR(Org.OrgName)" size="60"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Org.Status)"/>
+				</WTROW>
+				
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Description" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(Org.Description)" cols="72" rows="6" htmleditor="editor_simple"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="IsOrgAdmin"/>		
+					<WTCONDITION expr="IsEmployee" connector="or"/>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" align="left" label="MemberIDText" class="prompt"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="MemberID"/>
+						<WTTEXT col="2" value="ATTR(Org.MemberID)" size="6"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Manager"/>
+						<WTTEXT col="2" value="ATTR(Org.NameFirst)" width="200" label="NameFirst" size="25"/>
+						<WTTEXT col="2" value="ATTR(Org.NameLast)" width="240" label="NameLast" size="25"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Email"/>
+						<WTTEXT col="2" value="ATTR(Org.Email)" size="60"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Secure"/>
+						<WTTEXT col="2" value="ATTR(Org.Secure)" size="2"/>
+					</WTROW>
+					<WTROW margin-top="6" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTCODEGROUP>
+						<WTROW>
+							<WTSTATIC col="1" tag="UserAccess"/>
+							<WTCOMBO col="2" value="ATTR(Org.UserGroup)"/>
+							<WTCOMBO col="2" value="ATTR(Org.UserStatus)"/>
+						</WTROW>
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="NotEmployee"/>
+					<WTCONDITION expr="NotOrgAdmin" connector="and"/>		
+					<WTROW>
+						<WTSTATIC col="1" tag="Manager"/>
+						<WTSTATIC col="2">
+							<WTSTATIC value="ATTR(Org.NameFirst)" space="1"/>
+							<WTSTATIC value="ATTR(Org.NameLast)"/>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" tag="Email"/>
+						<WTSTATIC col="2" value="ATTR(Org.Email)"/>
+					</WTROW>
+					<WTROW>
+						<WTHIDDEN value="ATTR(Org.UserGroup)"/>
+						<WTHIDDEN value="ATTR(Org.UserStatus)"/>
+						<WTHIDDEN value="ATTR(Org.MemberID)"/>
+						<WTHIDDEN value="ATTR(Org.NameFirst)"/>
+						<WTHIDDEN value="ATTR(Org.NameLast)"/>
+						<WTHIDDEN value="ATTR(Org.Email)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTCONDITION expr="IsOrgAdmin" paren="start"/>
+					<WTCONDITION expr="IsOrgManager" connector="or" paren="end"/>
+					<WTCONDITION expr="IsActive" connector="and"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" align="center" msg="ConfirmDelete">
+						<WTCONDITION expr="ATTR(Org.ParentID)" oper="not-equal" value="CONST(0)"/>
+						<WTCONDITION expr="IsManager" connector="and" paren="start"/>
+						<WTCONDITION expr="IsOrgAdmin" connector="or" paren="end"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2803a" navbar="false" header="false" footer="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="125">
+			<!--============================================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+
+      <WTSUB name="UpdateOrg">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTSETATTRIBUTE name="ATTR(OrgName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="LoadOrg">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+          <WTCODEGROUP>
+            <WTCONDITION expr="NotEmployee"/>
+            <WTCONDITION expr="ATTR(CompanyID)" oper="not-equal" value="CONST(CSTR(reqSysCompanyID))" connector="and"/>
+            <WTCUSTOM>AbortUser()</WTCUSTOM>
+          </WTCODEGROUP>
+          <WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadOrg"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateOrg"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadOrg">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="350" align="left"/>
+						<WTCOLUMN width="250" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" class="PageHeading">
+								<WTSTATIC value="ATTR(Org.NameFirst)" space="1"/>
+								<WTSTATIC value="ATTR(Org.NameLast)"/>
+							</WTSTATIC>
+							<WTSTATIC col="2" label="Logon" bold="true">
+                <WTCONDITION expr="IsManager"/>
+                <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+								<WTLINK name="0113">
+									<WTPARAM name="AuthUserID" value="ATTR(Org.AuthUserID)"/>
+								</WTLINK>
+							</WTSTATIC>
+              <WTSTATIC col="2" value="CONST(|)"/>
+              <WTSTATIC col="2" label="2StepVerification" bold="true">
+                <WTCONDITION expr="IsManager"/>
+                <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+                <WTLINK name="0107" target="2FA">
+                  <WTPARAM name="AuthUserID" value="ATTR(Org.AuthUserID)"/>
+                  <WTPARAM name="Popup" value="CONST(1)"/>
+                </WTLINK>
+              </WTSTATIC>
+            </WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="12" margin-top="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Manager"/>
+					<WTTEXT col="2" value="ATTR(Org.NameFirst)" width="200" label="NameFirst" size="25"/>
+					<WTTEXT col="2" value="ATTR(Org.NameLast)" width="240" label="NameLast" size="25"/>
+				</WTROW>
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Org.Email)" size="60"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="UserAccess"/>
+					<WTCOMBO col="2" value="ATTR(Org.UserGroup)"/>
+					<WTCOMBO col="2" value="ATTR(Org.UserStatus)"/>
+					<WTSTATIC col="2" tag="AccessLevel"/>
+					<WTTEXT col="2" value="ATTR(Org.Secure)" size="2" prespace="false"/>
+					<WTSTATIC col="2" tag="MemberID"/>
+					<WTTEXT col="2" value="ATTR(Org.MemberID)" size="4" prespace="false"/>
+				</WTROW>
+				<WTROW margin-top="6">
+          <WTCONDITION expr="IsManager"/>
+          <WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTSTATIC col="1" tag="IP"/>
+					<WTTEXT col="2" value="ATTR(Org.Description)" size="60"/>
+				</WTROW>
+				<WTROW margin-top="6">
+          <WTCONDITION expr="NotManager"/>
+          <WTCONDITION expr="NotOrgAdminOnly" connector="and"/>
+					<WTHIDDEN value="ATTR(Org.Description)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" align="center" msg="ConfirmDelete"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="2804" contentpage="true"  wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" secured="125">
+		<!--============================================================================================-->
+			<WTPARAM name="contentpage" datatype="number"/>
+			<WTPARAM name="Mode" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="Public" datatype="number"/>
+			<WTPARAM name="FolderName" datatype="text"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+							<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(FolderName)" value="ATTR(OrgName)"/>
+			       <WTCODEGROUP>
+						<WTCONDITION expr="ATTR(IsPublic)" oper="not-equal" value="CONST(0)"/>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(PrivateID)" oper="equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="PARAM(Public)" value="CONST(1)"/>
+						</WTCODEGROUP>
+						<WTCODEGROUP>
+							<WTCONDITION expr="ATTR(PrivateID)" oper="not-equal" value="CONST(0)"/>
+							<WTSETATTRIBUTE name="PARAM(Public)" value="CONST(2)"/>
+							<WTMETHOD name="Load">
+									<WTPARAM name="OrgID" direction="input" value="ATTR(PrivateID)"/>
+									<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+							</WTMETHOD>
+							<WTMETHOD name="XML">
+								<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+							</WTMETHOD>
+						</WTCODEGROUP>
+			       </WTCODEGROUP>
+				</WTOBJECT>
+	
+			
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Public)" oper="equal" value="CONST(0)"/>
+					<WTRETURN>
+							<WTLINK name="0401" return="false">
+								<WTPARAM name="contentpage" value="PARAM(contentpage)"/>
+								<WTPARAM name="Mode" value="PARAM(Mode)"/>
+								<WTPARAM name="OrgID" value="PARAM(OrgID)"/>
+								<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							</WTLINK>
+					</WTRETURN>
+				</WTCODEGROUP>
+
+			</WTACTION>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW margin-bottom="24" margin-top="24">
+					<WTCONDITION expr="PARAM(Public)" oper="equal" value="CONST(1)"/> 
+					<WTSTATIC col="1" value="PARAM(FolderName)" align="center" class="pageheading"/>
+					<WTSTATIC col="1" label="FolderAllMembers" align="center" class="pageheading"/>
+				</WTROW>
+				<WTROW margin-bottom="24" margin-top="24">
+					<WTCONDITION expr="PARAM(Public)" oper="equal" value="CONST(2)"/> 
+					<WTSTATIC col="1" value="PARAM(FolderName)" align="center" class="pageheading"/>
+					<WTSTATIC col="1" label="FolderPrivateMembers" align="center" class="pageheading"/>
+					<WTSTATIC col="1" value="ATTR(Org.OrgName)"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2809" caption="Company Folders" header="false" footer="false" navbar="false" focus="false" wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="125">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>			
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="ListTree">
+						<WTCONDITION expr="IsOrgAdmin"/>
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsOrgManagerOnly"/>
+						<WTMETHOD name="ListBranch">
+							<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+							<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						</WTMETHOD>
+ <!-- SET ParentID of Org to zero -->
+<WTCUSTOM>
+						For Each oItem in oOrgs
+                     If CLng(oItem.OrgID) = reqOrgID Then
+								oItem.ParentID = 0
+							End If
+						Next
+</WTCUSTOM>
+					</WTCODEGROUP>
+<WTCUSTOM>
+						For Each oItem in oOrgs
+							If CLng(oItem.ParentID) = 0 Then
+								reqOrgID = CLng(oItem.OrgID)
+							End If
+						Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+				
+				<WTTAB name="OrgTab">
+					<WTITEM label="Properties" width="175"><WTLINK name="JAVA(loadFrame(0, 0))"/></WTITEM>
+					<WTITEM label="IncludeMembers" width="175"><WTLINK name="JAVA(loadFrame(0, 1))"/></WTITEM>
+					<WTITEM label="IncludeCourses" width="175"><WTLINK name="JAVA(loadFrame(0, 2))"/></WTITEM>
+				</WTTAB>
+<!--
+				<WTMENU name="CompanyMenu" type="bar" menuwidth="110">
+					<WTCONDITION expr="IsEmployee"/>
+					<WTITEM label="Tools">
+						<WTIMAGE name="Tools.gif"/>
+						<WTITEM label="Sales"><WTLINK name="8101" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Service"><WTLINK name="8151" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Members"><WTLINK name="0401" nodata="true"><WTPARAM name="Mode" value="CONST(1)"/><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Projects"><WTLINK name="7501" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTDIVIDER/>
+						<WTITEM label="MyResources"><WTLINK name="9304" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="MyCalendar"><WTLINK name="Calendar" nodata="true" target="blank"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="NewsLetters"><WTLINK name="1811" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="EmailManager"><WTLINK name="8801" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTDIVIDER/>
+						<WTITEM label="Suggestions"><WTLINK name="4501" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Surveys"><WTLINK name="4001" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+					</WTITEM>
+					<WTITEM label="Training">
+						<WTIMAGE name="Catalog.gif"/>
+						<WTITEM label="PrivateCourses"><WTLINK name="1101" nodata="true"><WTPARAM name="Mode" value="CONST(1)"/><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Assessments"><WTLINK name="3110" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+					</WTITEM>
+					<WTITEM label="Reports">
+						<WTIMAGE name="Report.gif"/>
+						<WTITEM label="Membership"><WTLINK name="0060" nodata="true" target="Report"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Certifications"><WTLINK name="3420" nodata="true" target="Report"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Notes"><WTLINK name="3816" target="blank"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+					</WTITEM>
+					<WTITEM label="Setup">
+						<WTIMAGE name="Setup.gif"/>
+						<WTITEM label="Company"><WTLINK name="3803" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Pages"><WTLINK name="9101" nodata="true"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Attachments"><WTLINK name="8001" nodata="true" target="EditAttachments"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+						<WTITEM label="Questions"><WTLINK name="1701" nodata="true" target="EditQuestions"><WTPARAM name="CompanyID" value="PARAM(CompanyID)"/></WTLINK></WTITEM>
+					</WTITEM>
+				</WTMENU>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="right">
+						<WTCODEGROUP><WTSTARTMENU name="CompanyMenu" type="bar"/></WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+-->
+<!--				
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" merge="2" label="Company" align="right">
+						<WTLINK name="3803" nodata="true">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+-->
+				<WTSTATIC label="AddMember"/>
+				<WTSTATIC label="AddCourse"/>
+				<WTROW>
+					<WTHIDDEN name="orgType" value="CONST(0)"/>
+					<WTHIDDEN name="CompanyID" value="PARAM(CompanyID)"/>
+					<WTHIDDEN name="OrgID" value="PARAM(OrgID)"/>
+				</WTROW>
+				<WTFUNCTION name="loadFrame(org, otype)">
+					if (otype == null || otype &lt; 0){
+						otype = parseInt(document.getElementById('orgType').value);
+					}else{
+						document.getElementById('orgType').value = otype;
+					}
+					if (org &gt; 0){
+						document.getElementById('OrgID').value = org;
+					}else if (org == 0){
+						org = document.getElementById('OrgID').value;
+					}else{
+						return;
+					}
+					owner = document.getElementById('CompanyID').value;
+					switch(otype){
+					case 1:
+						document.getElementById('frame').src='2804.asp?contentpage=1&amp;Mode=2&amp;OrgID=' + org + '&amp;CompanyID=' + owner;
+						break;
+					case 2:
+						document.getElementById('frame').src='1101.asp?contentpage=1&amp;Mode=2&amp;OrgID=' + org + '&amp;CompanyID=' + owner;
+						break;
+					default:
+						document.getElementById('frame').src='2803.asp?contentpage=1&amp;Mode=2&amp;OrgID=' + org + '&amp;CompanyID=' + owner;
+						break;
+					}
+					//openNode(org);
+				</WTFUNCTION>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" label="OrgInfoText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+<!--				<WTTREE col="1" entity="Org" tree-node-open="folder_open.gif" nodeid="OrgID" parentid="ParentID" height="25" width="500" border="none" overflow="visible" display="true"> -->
+<!--				<WTTREE col="1" entity="Org" tree-node-open="folder_open.gif" nodeid="OrgID" parentid="ParentID" treeheight="150" width="600" border="none"> -->
+<!--				<WTTREE col="1" entity="Org" tree-node-open="folder_open.gif" nodeid="OrgID" parentid="ParentID" height="25" treeheight="200" border="none" borderwidth="200" display="true">-->
+					<WTTREE2 col="1" entity="Org" nodeid="OrgID" parentid="ParentID">
+						<WTNODECLICK>loadFrame(&lt;xsl:value-of select=&quot;@orgid&quot;/&gt;,-1)</WTNODECLICK>
+						<WTSTATIC>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(IsPublic)" oper="equal" value="CONST(0)"/>
+								<WTIMAGE value="CONST(redcheck.gif)" imgheight="12" imgwidth="12"/>
+							</WTCODEGROUP>
+						</WTSTATIC>
+						<WTSTATIC value="DATA(Org.OrgName)"/>
+<!--						
+						<WTSTATIC value="DATA(Org.OrgName)">
+							<WTLINK click="true" class="NodeHover" name="CONST(loadFrame(&lt;xsl:value-of select=&quot;@orgid&quot;/&gt;,-1))"/>
+						</WTSTATIC>
+-->						
+						<WTSTATIC fontcolor="gray">
+							<WTCONDITION expr="DATA(MemberCount)" oper="greater-equal" value="CONST(0)"/>
+							<WTSTATIC value="CONST(&lt;xsl:value-of select=&quot;concat(' (',@membercount,':',@coursecount,')')&quot;/&gt;)"/>
+						</WTSTATIC>
+					</WTTREE2>						
+				</WTROW>
+				
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" merge="2" align="left">
+						<WTCODEGROUP><WTSTARTTAB name="OrgTab"/></WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTFRAME col="1" src="CONST(2803.asp?contentpage=1&amp;amp;OrgID=&lt;xsl:value-of select=&quot;/DATA/PARAM/@orgid&quot;/&gt;)" name="frame" frmclass="FrameNoScroll" frmwidth="600" frmheight="1800" label="NoFrameSupport" border="0"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2811" caption="Certification Program"  wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+<!--				
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="ListDescriptions">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+-->				
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="YourDescriptions" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="DescriptionText" class="prompt"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Org">
+						<WTCOLUMN width="100" align="left"/>
+						<WTROW>
+							<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Org.OrgName)" bold="true"/>
+						</WTROW>
+						<WTROW>
+							<WTDIVIDER col="1" height="1" color="SYS(light)"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(Org.Description)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2812" caption="Company Admins" navbar="false" header="false" footer="false"  wrapper="wrapper600"
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="125">
+			<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+
+      <WTCODEGROUP>
+        <WTCONDITION expr="NotEmployee"/>
+        <WTCONDITION expr="PARAM(CompanyID)" oper="not-equal" value="SYS(CompanyID)" connector="and"/>
+        <WTCUSTOM>AbortUser()</WTCUSTOM>
+      </WTCODEGROUP>
+
+      <WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="ListUsers">
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW margin-bottom="6">
+					<WTTABLE col="1" merge="2">
+						<WTCOLUMN width="400" align="left"/>
+						<WTCOLUMN width="200" align="right"/>
+						<WTROW>
+							<WTSTATIC col="1" label="CompanyAdmins" class="PageHeading"/>
+							<WTSTATIC col="2">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+									<WTSTATIC space="1"/>
+									<WTSTATIC label="NewUser" bold="true">
+										<WTLINK name="2802a">
+											<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="AdminText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTRECORDSET col="1" graybar="true" entity="Org">
+						<WTCOLUMN width="30" align="left" label="UserName"/>
+						<WTCOLUMN width="40" align="left" label="Email"/>
+						<WTCOLUMN width="10" align="center" label="AccessGroup"/>
+						<WTCOLUMN width="10" align="center" label="AccessStatus"/>
+						<WTCOLUMN width="10" align="center" label="AccessLevel"/>
+						<WTROW height="24">
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(NameFirst)" space="1"/>
+								<WTSTATIC value="DATA(NameLast)" space="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" imgalign="absmiddle">
+										<WTLINK name="2803a">
+											<WTPARAM name="OrgID" value="DATA(OrgID)"/>
+										</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Email)"/>
+							<WTSTATIC col="3" value="DATA(UserGroup)"/>
+							<WTSTATIC col="4" value="DATA(UserStatus)"/>
+							<WTSTATIC col="5">
+								<WTSTATIC value="DATA(Secure)">
+									<WTCONDITION expr="DATA(UserGroup)" oper="equal" value="CONST(52)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+            <WTROW>
+              <WTCONDITION expr="DATA(Description)" oper="not-equal" value="CONST('')"/>
+              <WTSTATIC col="1"/>
+              <WTSTATIC col="2" merge="4" value="DATA(Description)"/>
+            </WTROW>
+          </WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2830" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="125">
+		<!--=============================================================================================-->
+		  <!-- Refresh Parent Page -->	
+		  <!--*************************************************************************************-->
+		  <WTCONTENT>
+		  	<WTCOLUMN width="600"/>
+		  	<WTLOAD>window.parent.location.reload()</WTLOAD>
+		  </WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="2838" caption="Custom Certificate" header="false" footer="false" navbar="false" wrapper="wrapper750"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="tmpName" datatype="text"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpDate)" value="SYS(Date)"/>
+					<WTSETATTRIBUTE name="PARAM(tmpName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Addresss" project="ptsAddressUser" class="CAddresss">
+					<WTMETHOD name="ListOwnerType">
+						<WTPARAM name="OwnerType" direction="input" value="ENTITY(Member)"/>
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="AddressType" direction="input" value="SYSCON(ADDRESS-TYPE-MAILING)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				For Each oAddress in oAddresss
+					With oAddress
+						tmpStreet = .Street1
+						tmpUnit   = .Street2
+						tmpCity   = .City
+						tmpState  = .State
+						tmpZip    = .Zip
+					End With
+				Next
+</WTCUSTOM>					
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Certificate.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Org\&quot; &amp; CStr(reqOrgID))"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCUSTOM>
+		xmlHTMLFile = Replace( xmlHTMLFile, "{name}", CleanXMLComment(tmpName) )
+		xmlHTMLFile = Replace( xmlHTMLFile, "{date}", tmpDate )
+		xmlHTMLFile = Replace( xmlHTMLFile, "{street}", CleanXMLComment(tmpStreet + " " + tmpUnit) )
+		xmlHTMLFile = Replace( xmlHTMLFile, "{city}", CleanXMLComment(tmpCity) )
+		xmlHTMLFile = Replace( xmlHTMLFile, "{state}", CleanXMLComment(tmpState) )
+		xmlHTMLFile = Replace( xmlHTMLFile, "{zip}", CleanXMLComment(tmpZip) )
+</WTCUSTOM>
+			</WTACTION>
+			
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				<WTROW>
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" embedhtml="true"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2839" caption="Print Certificate" header="false" footer="false" navbar="false" wrapper="wrapper600"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" print="PARAM(PrintURL)" focus="false" >
+		<!--=============================================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="PrintURL" datatype="text"/>
+
+			<WTACTION name="New" type="New" id="0">
+<WTCUSTOM>
+			reqPrintURL = "2840.asp?OrgID=" + CStr(reqOrgID) + "&amp;MemberID=" + CStr(reqMemberID)
+</WTCUSTOM>				
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="center"/>
+
+				<WTLOAD>
+						document.factory.printing.header = "";
+						document.factory.printing.footer = "";
+						document.factory.printing.portrait = false;
+						document.factory.printing.leftMargin = 0.5;
+						document.factory.printing.topMargin = 0.5;
+						document.factory.printing.rightMargin = 0.5;
+						document.factory.printing.bottomMargin = 0.5;
+						document.factory.printing.Print();
+				</WTLOAD>
+				<WTFUNCTION name="ViewCertificate()">
+					var url, win;
+					url = "2840.asp?orgid=" + document.getElementById('OrgID').value + "&amp;memberid=" + document.getElementById('MemberID').value;
+		            win = window.open(url,"Certificate");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(OrgID)"/>
+					<WTHIDDEN value="PARAM(MemberID)"/>
+				</WTROW>
+
+				<WTROW margin-top="48" margin-bottom="48">
+					<WTSTATIC col="1" label="PrintingCert" class="PageHeading"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="48">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" merge="2" label="PrintingInstructions" align="left" fontcolor="red"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTBUTTON col="1" align="center" action="1" value="CONST(PreviewCertificate)">
+					<WTCLICK>ViewCertificate()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW>
+					<WTAPPLET col="1" style="display:none" classid="clsid:1663ed61-23eb-11d2-b92f-008048fdd814" codebase="CONST(smsx.cab#Version=6,3,435,20)" id="factory" viewastext="1"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+					
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="2840" caption="Certificate" header="false" footer="false" navbar="false" 
+		aspstyle="GenerateWebASP.xsl" focus="false" langfile="2840">
+		<!--=============================================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="MemberID" datatype="number"/>
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="StudentName" datatype="text"/>
+			<WTPARAM name="Day" datatype="text"/>
+			<WTPARAM name="Month" datatype="number"/>
+			<WTPARAM name="Year" datatype="number"/>
+			<WTPARAM name="Signature" datatype="text"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Org" project="ptsOrgUser" class="COrg">
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrg" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Member" project="ptsMemberUser" class="CMember">
+					<WTMETHOD name="Load">
+						<WTPARAM name="MemberID" direction="input" value="PARAM(MemberID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(CompanyID)" value="ATTR(CompanyID)"/>
+					<WTSETATTRIBUTE name="PARAM(StudentName)" value="CONST(.NameFirst + &quot; &quot; + .NameLast)"/>
+				</WTOBJECT>
+			<WTCODEGROUP>
+<WTCUSTOM>
+	today = Date()
+	Select Case Day(today)
+		Case 1: reqDay = CStr(Day(today)) + "st"
+		Case 2: reqDay = CStr(Day(today)) + "nd"
+		Case 3: reqDay = CStr(Day(today)) + "rd"
+		Case Else: reqDay = CStr(Day(today)) + "th"
+	End Select
+	reqMonth = CStr(Month(today))
+	reqYear = CStr(Year(today))
+
+	FileName = "Images\Company\" + CStr(reqCompanyID) + "\Signature.gif"
+	FilePath = Request.ServerVariables("APPL_PHYSICAL_PATH") + FileName
+	Set oFileSys = CreateObject("Scripting.FileSystemObject")
+	Exists = oFileSys.FileExists(FilePath)
+	If Exists Then
+		reqSignature = FileName
+	Else
+		reqSignature = "Images/signature.gif"
+	End If
+	Set oFileSys = Nothing
+</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			</WTACTION>
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT/>
+				<WTSTATIC label="Certification"/>
+				<WTSTATIC label="Certify"/>
+				<WTSTATIC label="Completed"/>
+				<WTSTATIC label="Presented"/>
+				<WTSTATIC label="DayOf"/>
+				<WTSTATIC label="1"/>
+				<WTSTATIC label="2"/>
+				<WTSTATIC label="3"/>
+				<WTSTATIC label="4"/>
+				<WTSTATIC label="5"/>
+				<WTSTATIC label="6"/>
+				<WTSTATIC label="7"/>
+				<WTSTATIC label="8"/>
+				<WTSTATIC label="9"/>
+				<WTSTATIC label="10"/>
+				<WTSTATIC label="11"/>
+				<WTSTATIC label="12"/>
+		</WTWEBPAGE>
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,81 @@
+
+<P align=center><FONT face="arial, helvetica, sans-serif" color=#000099 size=5>Custom&nbsp;Fields</FONT> </P>
+<P><FONT face="arial, helvetica, sans-serif" size=3>You can define multiple custom fields to manage extra information. Each user-defined custom field starts on a separate line and can continue to the next line if too long. The field name must be followed by a colon(:). The following options are available.
+<p>
+
+<Table>
+<tr>
+<td width=30% align=center><b>Option</b></td>>
+<td width=70%><b>Description</b></td>>
+</tr>
+<tr height=24>
+<td colspan=2 width=100%><b>Options preceeding field Colon:</b></td>>
+</tr>
+<tr>
+<td width=30% align=center>*</td>>
+<td width=70%>Required Field</td>>
+</tr>
+<tr>
+<td width=30% align=center>-</td>>
+<td width=70%>Private Field</td>>
+</tr>
+<tr>
+<td width=30% align=center>_</td>>
+<td width=70%>Read Only Field</td>>
+</tr>
+<tr>
+<td width=30% align=center>?</td>>
+<td width=70%>Search Field</td>>
+</tr>
+<tr>
+<td width=30% align=center>+</td>>
+<td width=70%>Combine with previous Field</td>>
+</tr>
+<tr>
+<td width=30% align=center>{x}</td>>
+<td width=70%>x = Field id</td>>
+</tr>
+<tr>
+<td width=30% align=center>[x]</td>>
+<td width=70%>x = Field prompt (following field name)</td>>
+</tr>
+<tr height=12>
+<td width=30% align=center></td>>
+<td width=70%></td>>
+</tr>
+<tr height=24>
+<td colspan=2 width=100%><b>Options following field Colon:</b></td>>
+</tr>
+<tr>
+<td width=30% align=center>;</td>>
+<td width=70%>identifies list items (leading * specifies default choice)</td>>
+</tr>
+<tr>
+<td width=30% align=center>type=x</td>>
+<td width=70%>x = text<em> <font size="2">(default)</font></em> | memo | number | date | yesno</td>>
+</tr>
+<tr>
+<td width=30% align=center>min=x</td>>
+<td width=70%>x = minimum input value</td>>
+</tr>
+<tr>
+<td width=30% align=center>max=x</td>>
+<td width=70%>x = maximum input value</td>>
+</tr>
+<tr>
+<td width=30% align=center>size=x</td>>
+<td width=70%>x = width of text box or rows for memo field</td>>
+</tr>
+<tr>
+<td width=30% align=center>value=x</td>>
+<td width=70%>x = default value (spaces not allowed) (NOW option for date fields)</td>>
+</tr>
+</Table>
+
+</FONT></P>
+
+<P><FONT face="arial, helvetica, sans-serif" size=3><B><FONT color=#000099>EXAMPLES</FONT></B></FONT><FONT face="arial, helvetica, sans-serif" size=3></FONT> 
+<P align=center><FONT size=3><FONT size=3><FONT face=Arial><B>*Size: Small; Medium; Large; Extra Large</B>&nbsp;&nbsp;</FONT></FONT><SELECT name=InputOptionsText1><OPTION value=1 selected>Small</OPTION><OPTION value=2>Medium</OPTION><OPTION value=3>Large</OPTION><OPTION value=4>XLarge</OPTION></SELECT><FONT face=Arial></FONT> 
+<P align=center><FONT size=3><FONT face=Arial><B>*Color: *Red; Green; Blue</B>&nbsp;&nbsp;</FONT></FONT><SELECT name=InputOptionsText2><OPTION value=1 selected>Red</OPTION><OPTION value=2>Green</OPTION><OPTION value=3>Blue</OPTION></SELECT><FONT face=Arial></FONT> 
+<P align=center><FONT size=3><FONT face=Arial><B>Initials[Enter up to 3 characters]: type=text max=3 size=3</B>&nbsp;&nbsp;</FONT></FONT><INPUT size=3></FONT><FONT face=Arial></FONT> 
+<P>&nbsp; 

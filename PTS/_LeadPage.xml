@@ -1,0 +1,992 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="15" name="LeadPage" alias="lp" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="1501" name="LeadPageID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="1502" name="LeadCampaignID" type="number" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="1503" name="LeadPageName" type="text" length="60" min="1" max="60" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="1504" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="InActive"/>
+			<WTENUM id="4" name="Thanks"/>
+			<WTENUM id="5" name="Email"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="1505" name="Seq" type="number" min="1" source="entity" seq="10"/>
+		<WTATTRIBUTE id="1506" name="IsInput" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="1507" name="IsCapture" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="1508" name="IsProspect" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="1509" name="IsNext" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="1510" name="NextCaption" type="text" length="40" source="entity"/>
+		<WTATTRIBUTE id="1511" name="Inputs" type="text" length="1000" source="entity">
+			<WTINPUTOPTIONS name="Inputs" values="&quot;&quot;"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="1512" name="Language" type="text" length="6" min="1" max="6" source="entity" language="false"/>				
+
+		<WTATTRIBUTE id="1515" name="IsLeadURL" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="1516" name="IsRedirectURL" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="1517" name="LeadURL" type="text" length="200" source="entity" language="false"/>				
+		<WTATTRIBUTE id="1518" name="RedirectURL" type="text" length="200" source="entity" language="false"/>				
+		<WTATTRIBUTE id="1519" name="TopCode" type="text" length="500" source="entity" language="false" />
+
+		<!-- Non Persist Fields -->
+		<WTATTRIBUTE id="1590" name="ReportFromDate" type="date" source="entity" persist="false" />
+		<WTATTRIBUTE id="1591" name="ReportToDate" type="date" source="entity" persist="false" />
+		<WTATTRIBUTE id="1592" name="MemberID" type="number" source="entity" persist="false" />
+		<WTATTRIBUTE id="1593" name="AffiliateID" type="number" source="entity" persist="false" />
+
+		<WTINDEX name="LeadCampaignID">
+			<WTATTRIBUTE name="LeadCampaignID"/>
+			<WTATTRIBUTE name="Language"/>
+			<WTATTRIBUTE name="Seq"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="LeadPage" entity="LeadPage" alias="lp"/>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="LEADPAGE-PENDING" value="1"/>
+			<WTSYSCON name="LEADPAGE-ACTIVE" value="2"/>
+			<WTSYSCON name="LEADPAGE-INACTIVE" value="3"/>
+			<WTSYSCON name="LEADPAGE-THANKS" value="4"/>
+			<WTSYSCON name="LEADPAGE-EMAIL" value="5"/>
+			<WTSYSCON name="TYPE-LEAD" value="1" />
+			<WTSYSCON name="TYPE-PRESENT" value="2" />
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="FetchEmail" style="GenerateDataProc.xsl" template="new">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(Language)" direction="input"/>
+			<WTPARAM name="ATTR(LeadPageID)" direction="output"/>
+			<WTPARAM name="ATTR(LeadPageName)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PARAM(LeadPageID)" value="ATTR(LeadPage.LeadPageID)"/>
+					<WTATTRIBUTE name="PARAM(LeadPageName)" value="ATTR(LeadPage.LeadPageName)"/>
+					<WTJOIN name="LeadPage" lock="false"/>
+					<WTCONDITION expr="ATTR(LeadCampaignID)" oper="equal" value="PARAM(LeadCampaignID)"/>
+					<WTCONDITION expr="ATTR(Language)" oper="equal" value="PARAM(Language)" connector="and"/>
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(LEADPAGE-EMAIL)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageID)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageName)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Status)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Seq)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.IsInput)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.IsCapture)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.IsProspect)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.IsNext)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.NextCaption)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Inputs)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Language)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.IsLeadURL)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.IsRedirectURL)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadURL)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.RedirectURL)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.TopCode)"/>
+					<WTJOIN name="LeadPage"/>
+					<WTCONDITION expr="ATTR(LeadCampaignID)" oper="equal" value="PARAM(LeadCampaignID)"/>
+					<WTORDER name="ATTR(LeadPage.Language)"/>
+					<WTORDER name="ATTR(LeadPage.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ViewPages" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(Language)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageID)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageName)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Seq)"/>
+					<WTJOIN name="LeadPage"/>
+					<WTCONDITION expr="ATTR(LeadCampaignID)" oper="equal" value="PARAM(LeadCampaignID)"/>
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(LEADPAGE-ACTIVE)" connector="and"/>
+					<WTCONDITION expr="ATTR(Language)" oper="equal" value="PARAM(Language)" connector="and"/>
+					<WTORDER name="ATTR(LeadPage.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="NextPage" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(LeadPageID)" direction="input" passthru="true"/>
+			<WTPARAM name="ATTR(Language)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetSeq" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(Seq)" direction="input"/>
+			<WTPARAM name="ATTR(Language)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="ThanksPage" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(Language)" direction="input"/>
+			<WTPARAM name="Result" direction="output" datatype="number"/>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ReportCompany" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(ReportFromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ReportToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageID)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageName)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ReportMember" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(MemberID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ReportFromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ReportToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageID)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageName)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ReportAffiliate" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input"/>
+			<WTPARAM name="ATTR(AffiliateID)" direction="input" required="false"/>
+			<WTPARAM name="ATTR(ReportFromDate)" direction="input"/>
+			<WTPARAM name="ATTR(ReportToDate)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageID)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageName)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="Languages" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="ATTR(LeadCampaignID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageID)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.LeadPageName)"/>
+					<WTATTRIBUTE value="ATTR(LeadPage.Language)"/>
+					<WTJOIN name="LeadPage"/>
+					<WTCONDITION expr="ATTR(LeadCampaignID)" oper="equal" value="PARAM(LeadCampaignID)"/>
+					<WTORDER name="ATTR(LeadPage.Language)"/>
+					<WTORDER name="ATTR(LeadPage.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="1502" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="LeadCampaignID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadPageID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadPageID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(LeadCampaignID)" value="PARAM(LeadCampaignID)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(LEADPAGE-ACTIVE)"/>
+					<WTSETATTRIBUTE name="ATTR(IsInput)" value="CONST(0)"/>
+					<WTSETATTRIBUTE name="ATTR(IsCapture)" value="CONST(1)"/>
+					<WTSETATTRIBUTE name="ATTR(IsProspect)" value="CONST(1)"/>
+<!--					<WTSETATTRIBUTE name="ATTR(IsNext)" value="CONST(1)"/>-->
+					<WTSETATTRIBUTE name="ATTR(Inputs)" value="CONST(&quot;*First Name:type=text&quot; + VBCR + &quot;*Last Name:type=text&quot; + VBCR + &quot;*Email:type=text&quot; + VBCR + &quot;Phone:type=text&quot;)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="LeadPageID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLeadPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewLeadPage" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadPageName"/>
+					<WTTEXT col="2" value="ATTR(LeadPage.LeadPageName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(LeadPage.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Language"/>
+					<WTTEXT col="2" value="ATTR(LeadPage.Language)" size="6" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="1503" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="GroupID" datatype="number"/>
+			<WTPARAM name="LeadPageID" datatype="number"/>
+			<WTPARAM name="URL" datatype="text"/>
+			<WTPARAM name="PageType" datatype="number"/>
+
+			<WTSUB name="LoadLeadPage">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadPageID" direction="input" value="PARAM(LeadPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpLanguage)" value="ATTR(language)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCUSTOM>
+			reqURL = "http://" + reqSysServerName + reqSysServerPath + "Sections\Company\" &amp; reqCompanyID &amp; "\Lead\Lead" &amp; reqLeadPageID &amp; "[" &amp; tmpLanguage &amp; "].htm" 
+</WTCUSTOM>
+			</WTSUB>
+
+			<WTSUB name="UpdateLeadPage">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadPageID" direction="input" value="PARAM(LeadPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlLeadPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadLeadPage"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateLeadPage"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="LeadPageID" direction="input" value="PARAM(LeadPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadLeadPage">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="5" name="EditPage" type="Update">
+				<WTCALLSUB name="UpdateLeadPage"/>
+				<WTCALLSUB name="LoadLeadPage">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+					<WTLINK name="1505" nolocaldata="true">
+						<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+						<WTPARAM name="LeadPageID" value="PARAM(LeadPageID)"/>
+						<WTPARAM name="PageType" value="PARAM(PageType)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+<!--
+				<WTROW>
+					<WTSTATIC col="1" merge="2" bold="true" align="right">
+						<WTSTATIC label="MarketingStrategy">
+							<WTLINK name="7707" target="blank">
+								<WTPARAM name="CompanyID" value="PARAM(CompanyID)" />
+							</WTLINK>
+						</WTSTATIC>
+						<WTSTATIC value="CONST( | )"/>
+						<WTSTATIC label="LeadHelp">
+							<WTLINK name="Page" target="help">
+								<WTPARAM name="Page" value="CONST(HelpLMSAdmin)" />
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+-->				
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="LeadPage" value="ATTR(LeadPage.LeadPageName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+<!--
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadPageID" height="18"/>
+					<WTSTATIC col="2" value="ATTR(LeadPage.LeadPageID)" bold="true"/>
+				</WTROW>
+-->
+				<WTROW>
+					<WTSTATIC col="1" tag="LeadPageName"/>
+					<WTTEXT col="2" value="ATTR(LeadPage.LeadPageName)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(LeadPage.Seq)" size="2"/>
+					<WTSTATIC col="2" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(LeadPage.Status)" prespace="false">
+						<WTOPTION id="1" label="Pending"/>
+						<WTOPTION id="2" label="Active"/>
+						<WTOPTION id="3" label="InActive"/>
+						<WTOPTION id="4" label="Thanks">
+							<WTCONDITION expr="PARAM(PageType)" oper="equal" value="SYSCON(TYPE-LEAD)"/>
+						</WTOPTION>
+						<WTOPTION id="5" label="Email"/>
+					</WTCOMBO>
+					<WTSTATIC col="2" tag="Language"/>
+					<WTTEXT col="2" value="ATTR(LeadPage.Language)" size="6" prespace="false"/>
+				</WTROW>
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="ATTR(LeadPage.Status)" oper="less-equal" value="SYSCON(LEADPAGE-INACTIVE)" connector="and"/>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTCHECK col="2" value="ATTR(LeadPage.IsNext)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1"/>
+						<WTSTATIC col="2" tag="NextCaption"/>
+						<WTTEXT col="2" value="ATTR(LeadPage.NextCaption)" size="30" prespace="false"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="TopCode" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(LeadPage.TopCode)" cols="72" rows="3"/>
+				</WTROW>
+				
+				<WTROW margin-top="12">
+					<WTBUTTON col="1" merge="2" align="center" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(EditPage)">
+						<WTCONDITION expr="ATTR(LeadPage.Status)" oper="greater" value="SYSCON(LEADPAGE-INACTIVE)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(LeadPage.Status)" oper="equal" value="SYSCON(LEADPAGE-THANKS)"/>
+					<WTCONDITION expr="PARAM(PageType)" oper="equal" value="SYSCON(TYPE-LEAD)" connector="and"/>
+					<WTROW margin-top="12" margin-bottom="6">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" merge="2" label="DataCaptureThanksText" align="left" class="prompt"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTSTATIC col="1" merge="2" tag="Inputs" align="left">
+							<WTCODEGROUP>
+								<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+									<WTLINK name="Page" target="help">
+										<WTPARAM name="Page" value="CONST(HelpCustomFields)" />
+									</WTLINK>
+								</WTIMAGE>
+							</WTCODEGROUP>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW>
+						<WTMEMO col="1" merge="2" align="left" value="ATTR(LeadPage.Inputs)" cols="72" rows="6"/>
+					</WTROW>
+
+					<WTROW margin-top="12">
+						<WTBUTTON col="1" merge="2" align="center" action="1" value="CONST(Update)">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)"/>
+						<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="ATTR(LeadPage.Status)" oper="less-equal" value="SYSCON(LEADPAGE-INACTIVE)"/>
+					<WTCONDITION expr="PARAM(PageType)" oper="equal" value="SYSCON(TYPE-LEAD)" connector="and"/>
+					<WTROW margin-top="12" margin-bottom="12">
+						<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+					</WTROW>
+					
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)"/>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" merge="2" label="DataCaptureText" align="left" class="prompt"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" merge="2" label="DataCaptureText2" align="left" class="prompt"/>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" merge="2" label="DataCaptureText3" align="left" class="prompt"/>
+					</WTROW>
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(GroupID)" oper="equal" value="CONST(0)"/>
+						<WTROW>
+							<WTCHECK col="1" merge="2" value="ATTR(LeadPage.IsInput)" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCHECK col="1" merge="2" value="ATTR(LeadPage.IsCapture)" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCHECK col="1" merge="2" value="ATTR(LeadPage.IsProspect)" align="left"/>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTROW>
+						<WTCONDITION expr="PARAM(GroupID)" oper="not-equal" value="CONST(0)"/>
+						<WTHIDDEN value="ATTR(LeadPage.IsInput)"/>
+						<WTHIDDEN value="ATTR(LeadPage.IsCapture)"/>
+						<WTHIDDEN value="ATTR(LeadPage.IsProspect)"/>
+					</WTROW>
+<!--						
+					<WTROW>
+						<WTCONDITION expr="NotEmployee"/>
+						<WTHIDDEN value="ATTR(LeadPage.IsProspect)"/>
+					</WTROW>
+-->					
+					<WTROW margin-top="6">
+						<WTSTATIC col="1" merge="2" tag="Inputs" align="left">
+							<WTCODEGROUP>
+								<WTIMAGE value="CONST(LearnMore.gif)" imgalign="absmiddle">
+									<WTLINK name="Page" target="help">
+										<WTPARAM name="Page" value="CONST(HelpCustomFields)" />
+									</WTLINK>
+								</WTIMAGE>
+							</WTCODEGROUP>
+						</WTSTATIC>
+					</WTROW>
+					<WTROW>
+						<WTMEMO col="1" merge="2" align="left" value="ATTR(LeadPage.Inputs)" cols="72" rows="6"/>
+					</WTROW>
+
+					<WTCODEGROUP>
+						<WTCONDITION expr="IsEmployee"/>
+
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" merge="2" label="LeadURLText" align="left" class="prompt"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" merge="2" label="LeadURLText2" align="center" class="prompt" bold="true"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTCHECK col="1" merge="2" value="ATTR(LeadPage.IsLeadURL)" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="LeadURL" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTMEMO col="1" merge="2" align="left" value="ATTR(LeadPage.LeadURL)" cols="72" rows="2"/>
+						</WTROW>
+
+						<WTROW margin-top="6" margin-bottom="6">
+							<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" merge="2" label="RedirectURLText" align="left" class="prompt"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTSTATIC col="1" merge="2" label="RedirectURLText2" align="center" class="prompt" bold="true"/>
+						</WTROW>
+						<WTROW margin-bottom="6">
+							<WTCHECK col="1" merge="2" value="ATTR(LeadPage.IsRedirectURL)" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="1" tag="RedirectURL" align="left"/>
+						</WTROW>
+						<WTROW>
+							<WTMEMO col="1" merge="2" align="left" value="ATTR(LeadPage.RedirectURL)" cols="72" rows="2"/>
+						</WTROW>
+					</WTCODEGROUP>
+					<WTROW>
+						<WTCONDITION expr="NotEmployee"/>
+						<WTHIDDEN value="ATTR(LeadPage.IsLeadURL)"/>
+						<WTHIDDEN value="ATTR(LeadPage.LeadURL)"/>
+						<WTHIDDEN value="ATTR(LeadPage.IsRedirectURL)"/>
+						<WTHIDDEN value="ATTR(LeadPage.RedirectURL)"/>
+					</WTROW>
+
+					<WTROW margin-top="12">
+						<WTBUTTON col="1" merge="2" align="center" action="1" value="CONST(Update)">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+						<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)"/>
+						<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+							<WTCONDITION expr="IsActive"/>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="6">
+					<WTSTATIC col="1" value="PARAM(URL)" merge="2" align="center" bold="true"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1505" caption="Lead Page" header="false" footer="false" navbar="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="LeadPageID" datatype="number"/>
+			<WTPARAM name="PageType" datatype="number"/>
+
+			<WTSUB name="LoadLeadPage">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadPageID" direction="input" value="PARAM(LeadPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpLanguage)" value="ATTR(language)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLanguage)" value="SYS(language)">
+						<WTCONDITION expr="CONST(tmpLanguage)" oper="equal" value="CONST(&quot;&quot;)"/>
+					</WTSETATTRIBUTE>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Lead&quot; &amp; reqLeadPageID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; + CSTR(reqCompanyID) + &quot;\Lead\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="CONST(tmpLanguage)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTSUB name="UpdateLeadPage">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadPageID" direction="input" value="PARAM(LeadPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpLanguage)" value="ATTR(language)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLanguage)" value="SYS(language)">
+						<WTCONDITION expr="CONST(tmpLanguage)" oper="equal" value="CONST(&quot;&quot;)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Lead&quot; &amp; reqLeadPageID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; + CSTR(reqCompanyID) + &quot;\Lead\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="CONST(tmpLanguage)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadLeadPage"/>
+			</WTACTION>
+			
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateLeadPage"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+				
+				<WTROW>
+					<WTSTATIC col="1" class="PageHeading" align="left">
+						<WTSTATIC label="LeadPageContent">
+							<WTCONDITION expr="PARAM(PageType)" oper="equal" value="SYSCON(TYPE-LEAD)"/>
+						</WTSTATIC>
+						<WTSTATIC label="PresentationContent">
+							<WTCONDITION expr="PARAM(PageType)" oper="equal" value="SYSCON(TYPE-PRESENT)"/>
+						</WTSTATIC>
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(PageType)" oper="equal" value="SYSCON(TYPE-LEAD)" />
+								<WTSTATIC space="1"/>
+								<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+									<WTLINK name="Tutorial" target="Tutorial">
+										<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-GRPLEADPAGES)"/>
+										<WTPARAM name="contentpage" value="CONST(3)"/>
+										<WTPARAM name="popup" value="CONST(1)"/>
+									</WTLINK>
+								</WTIMAGE>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="PARAM(PageType)" oper="equal" value="SYSCON(TYPE-PRESENT)" />
+								<WTSTATIC space="1"/>
+								<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+									<WTLINK name="Tutorial" target="Tutorial">
+										<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-GRPPRESENTATIONS)"/>
+										<WTPARAM name="contentpage" value="CONST(3)"/>
+										<WTPARAM name="popup" value="CONST(1)"/>
+									</WTLINK>
+								</WTIMAGE>
+							</WTCODEGROUP>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" label="MemberTags" align="left" class="prompt"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="90" rows="40" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1506" caption="Page Preview" navbar="false" footer="false" top="/DATA/TXN/TOP/comment()"
+		 aspstyle="GenerateWebASPOpen.xsl" xslstyle="GenerateWebXSLOpen.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="LeadPageID" datatype="number"/>
+
+			<WTDATATXN name="TOP"/>
+
+			<WTSUB name="LoadPage">
+				<WTOBJECT name="LeadPage" project="ptsLeadPageUser" class="CLeadPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadPageID" direction="input" value="PARAM(LeadPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)"/>
+					</WTMETHOD>
+					<WTCUSTOM>xmlTOP = "&lt;TOP&gt;&lt;!--" + .TopCode + "--&gt;&lt;/TOP&gt;"</WTCUSTOM>
+					<WTSETATTRIBUTE name="CONST(tmpLeadCampaignID)" value="ATTR(LeadCampaignID)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLanguage)" value="ATTR(language)"/>
+					<WTSETATTRIBUTE name="CONST(tmpLanguage)" value="SYS(language)">
+						<WTCONDITION expr="CONST(tmpLanguage)" oper="equal" value="CONST(&quot;&quot;)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTOBJECT name="LeadCampaign" project="ptsLeadCampaignUser" class="CLeadCampaign">
+					<WTMETHOD name="Load">
+						<WTPARAM name="LeadCampaignID" direction="input" value="CONST(tmpLeadCampaignID)" />
+						<WTPARAM name="SecurityToken" direction="input" value="CONST(1)" />
+					</WTMETHOD>
+					<WTCUSTOM>
+						xmlHead = "&lt;HEAD"
+						If .css &lt;&gt; "" Then xmlHead = xmlHead + " css=""" + .css + """"
+						xmlHead = xmlHead + "/&gt;"
+					</WTCUSTOM>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Lead&quot; &amp; reqLeadPageID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\Company\&quot; + CSTR(reqCompanyID) + &quot;\Lead\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="CONST(tmpLanguage)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCUSTOM>
+					xmlHTMLFile = Replace( xmlHTMLFile, "{id}", "456" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{firstname}", "Peter" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{lastname}", "Prospect" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{email}", "peterp@aol.com" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{phone}", "(987)123-4567" )
+
+					xmlHTMLFile = Replace( xmlHTMLFile, "{signature}", "ACME Corporation&lt;BR&gt;John Smith&lt;BR&gt;johns@aol.com&lt;BR&gt;(123)456-7890" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{m-name}", "ACME Corporation" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{m-email}", "member@member.com" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{m-phone}", "(123)456-7890" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{m-image}", "images/blank.gif" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{m-id}", "1" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{m-ref}", "123" )
+					xmlHTMLFile = Replace( xmlHTMLFile, "{m-logon}", "demo" )
+				</WTCUSTOM>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadPage"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="LoadPage"/>
+			</WTACTION>
+
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCODEGROUP>
+					<WTSTATIC value="ATTR(HTMLFile.Data)" embedhtml="true" newline="2"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTBUTTON valuex="Close" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+					<WTSTATIC newline="1"/>
+				</WTCODEGROUP>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="1507" caption="Page List" navbar="false" header="false" footer="false" wrapper="false"
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="LeadCampaignID" datatype="number"/>
+			<WTPARAM name="Pages" datatype="text"/>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="LeadPages" project="ptsLeadPageUser" class="CLeadPages">
+					<WTMETHOD name="ViewPages">
+						<WTPARAM name="LeadCampaignID" direction="input" value="PARAM(LeadCampaignID)" />
+						<WTPARAM name="Language" direction="input" value="SYS(Language)" />
+					</WTMETHOD>
+<WTCUSTOM>
+				For Each oLeadPage in oLeadPages
+					With oLeadPage
+						If InStr(reqPages, .Seq) = 0 Then .Status = 0 Else .Status = 1
+					End With
+				Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlLeadPages" direction="return" datatype="text" />
+						<WTPARAM name="Option" direction="input" value="CONST(13)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300"/>
+			
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1" label="ViewPagesText" align="center" class="prompt"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="LeadPage">
+						<WTCOLUMN width="5" align="left" valign="top" label="#" />
+						<WTCOLUMN width="40" align="left" valign="top" label="LeadPageName" />
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(Seq)" fontcolor="gray">
+									<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Seq)" bold="true">
+									<WTCONDITION expr="DATA(Status)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2">
+								<WTSTATIC value="DATA(LeadPageName)" fontcolor="gray">
+									<WTCONDITION expr="DATA(Status)" oper="equal" value="CONST(0)"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(LeadPageName)" bold="true">
+									<WTCONDITION expr="DATA(Status)" oper="not-equal" value="CONST(0)"/>
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="1520" caption="Upload File" action="false" submit="1520Upload.asp" type="multi" 
+			navbar="false" header="false" footer="false" page-left="0" margin="false" 
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="LeadPageID" datatype="number"/>
+			<WTPARAM name="Language" datatype="text"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="DeleteFile" datatype="text"/>
+			<WTPARAM name="FileName" datatype="text"/>
+			<WTPARAM name="Status" datatype="number"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+				<WTCUSTOM>DoError reqUploadError, "Upload", reqUploadErrorDesc</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCUSTOM>If Len(reqFileName) = 0 Then reqFileName = "Lead" + CSTR(reqLeadPageID) + "[" + reqLanguage + "]"</WTCUSTOM>
+				<WTSETCACHE name="COMPANYID" value="PARAM(CompanyID)"/>
+				<WTSETCACHE name="FILENAME" value="PARAM(FileName)"/>
+			</WTACTION>			
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="left"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="UploadPage" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" value="PARAM(FileName)" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" label="UploadPageText" class="prompt"/>
+					</WTROW>
+					<WTROW margin-bottom="18">
+						<WTFILE col="1" align="center" value="upload" accept="*.htm" size="30"/>
+						<WTBUTTON col="1" align="center" default="true" action="1" value="CONST(Submit)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(1)"/>
+					<WTROW margin-top="36" margin-bottom="12">
+						<WTSTATIC col="1" label="UploadPageSuccessful" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="24">
+						<WTSTATIC col="1" value="PARAM(FileName)" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW>
+						<WTBUTTON col="1" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>	
+
+	</WTWEBPAGES>
+</WTROOT>

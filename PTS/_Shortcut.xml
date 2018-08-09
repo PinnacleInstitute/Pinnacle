@@ -1,0 +1,435 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="92" name="Shortcut" alias="sh" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="9201" name="ShortcutID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="9202" name="AuthUserID" type="number" source="entity"/>
+		<WTATTRIBUTE id="9203" name="EntityID" type="number" source="entity"/>
+		<WTATTRIBUTE id="9204" name="ItemID" type="number" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="9205" name="ShortcutName" type="text" length="80" min="1" max="80" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="9206" name="URL" type="text" length="100" min="1" max="100" required="true" source="entity"/>
+		<WTATTRIBUTE id="9207" name="IsPinned" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="9208" name="IsPopup" type="yesno" source="entity"/>
+
+		<WTINDEX name="AuthUserID">
+			<WTATTRIBUTE name="AuthUserID"/>
+			<WTATTRIBUTE name="IsPinned"/>
+			<WTATTRIBUTE name="EntityID"/>
+			<WTATTRIBUTE name="ShortcutName"/>
+		</WTINDEX>
+		<WTINDEX name="EntityID">
+			<WTATTRIBUTE name="EntityID"/>
+			<WTATTRIBUTE name="ItemID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Shortcut" entity="Shortcut" alias="sh"/>
+		</WTRELATIONSHIPS>
+
+	<!-- System Constants -->
+	<WTSYSCONS>
+		<WTSYSCON name="NO-USER" value="99"/>
+	</WTSYSCONS>
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Delete" name="DeleteItem" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(EntityID)" direction="input"/>
+			<WTPARAM name="ATTR(ItemID)" direction="input"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTDELETE>
+					<WTJOIN name="Shortcut" lock="true"/>
+					<WTCONDITION expr="ATTR(Shortcut.EntityID)" oper="equal" value="PARAM(EntityID)"/>
+					<WTCONDITION expr="ATTR(Shortcut.ItemID)" oper="equal" value="PARAM(ItemID)" connector="and"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(AuthUserID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Shortcut.ShortcutID)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.EntityID)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.ShortcutName)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.URL)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.IsPinned)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.IsPopup)"/>
+					<WTJOIN name="Shortcut"/>
+					<WTCONDITION expr="ATTR(AuthUserID)" oper="equal" value="PARAM(AuthUserID)"/>
+					<WTORDER name="ATTR(Shortcut.IsPinned)" descend="true"/>
+					<WTORDER name="ATTR(Shortcut.EntityID)"/>
+					<WTORDER name="ATTR(Shortcut.ShortcutName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="List" name="ListPinned" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(AuthUserID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Shortcut.ShortcutID)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.EntityID)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.ShortcutName)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.URL)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.IsPinned)"/>
+					<WTATTRIBUTE value="ATTR(Shortcut.IsPopup)"/>
+					<WTJOIN name="Shortcut"/>
+					<WTCONDITION expr="ATTR(AuthUserID)" oper="equal" value="PARAM(AuthUserID)"/>
+					<WTCONDITION expr="ATTR(IsPinned)" oper="not-equal" value="SYSCON(NO)" connector="and"/>
+					<WTORDER name="ATTR(Shortcut.EntityID)"/>
+					<WTORDER name="ATTR(Shortcut.ShortcutName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="XML" name="XMLShortcuts" element="Shortcut" style="GenerateDataProc.xsl" template="new" nobusn="true" nodata="true">
+			<WTATTRIBUTE value="ShortcutName" alias="name"/>
+			<WTATTRIBUTE value="Url" alias="url"/>
+			<WTATTRIBUTE value="EntityID" alias="type"/>
+			<WTATTRIBUTE value="IsPinned" alias="pin"/>
+		</WTPROCEDURE>
+		
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9202" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="EntityID" datatype="number"/>
+			<WTPARAM name="ItemID" datatype="number"/>
+			<WTPARAM name="Name" datatype="text"/>
+			<WTPARAM name="URL" datatype="text" url="true"/>
+			<WTPARAM name="IsPopup" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Name)" value="CONST(Left(reqName, 80))"/>
+				<WTSETATTRIBUTE name="PARAM(URL)" value="CONST(Replace(reqURL, &quot;%26&quot;, &quot;&amp;&quot;))"/>
+				<WTOBJECT name="Shortcut" project="ptsShortcutUser" class="CShortcut">
+					<WTCONDITION expr="SYS(UserID)" oper="not-equal" value="SYSCON(NO-USER)"/> 
+					<WTMETHOD name="Load">
+						<WTPARAM name="ShortcutID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(UserID)"/>
+					<WTSETATTRIBUTE name="ATTR(EntityID)" value="PARAM(EntityID)"/>
+					<WTSETATTRIBUTE name="ATTR(ItemID)" value="PARAM(ItemID)"/>
+					<WTSETATTRIBUTE name="ATTR(ShortcutName)" value="PARAM(Name)"/>
+					<WTSETATTRIBUTE name="ATTR(URL)" value="PARAM(URL)"/>
+					<WTSETATTRIBUTE name="ATTR(IsPopup)" value="PARAM(IsPopup)"/>
+					<WTSETATTRIBUTE name="ATTR(IsPinned)" value="CONST(1)"/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="ShortcutID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlShortcut" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="center"/>
+				<WTCOLUMN width="350" align="left"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="SYS(UserID)" oper="equal" value="SYSCON(NO-USER)"/> 
+					<WTROW margin-top="24">
+						<WTSTATIC col="1" label="NoUser" class="PageHeading" fontcolor="red"/>
+					</WTROW>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="SYS(UserID)" oper="not-equal" value="SYSCON(NO-USER)"/> 
+					<WTROW margin-top="24">
+						<WTIMAGE col="1" valign="top" value="CONST(Shortcut.gif)" class="PageHeading"/>
+						<WTSTATIC col="1" value="PARAM(Name)" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-top="6">
+						<WTSTATIC col="1" label="AddShortcutText" class="PageHeading"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9203" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ShortcutID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Shortcut" project="ptsShortcutUser" class="CShortcut">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ShortcutID" direction="input" value="PARAM(ShortcutID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlShortcut" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Shortcut" project="ptsShortcutUser" class="CShortcut">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ShortcutID" direction="input" value="PARAM(ShortcutID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlShortcut" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Shortcut" project="ptsShortcutUser" class="CShortcut">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ShortcutID" direction="input" value="PARAM(ShortcutID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Shortcut" project="ptsShortcutUser" class="CShortcut">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ShortcutID" direction="input" value="PARAM(ShortcutID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlShortcut" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Shortcut" value="ATTR(Shortcut.ShortcutName)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="ShortcutName"/>
+					<WTTEXT col="2" value="ATTR(Shortcut.ShortcutName)" size="40"/>
+				</WTROW>
+<!--
+				<WTROW>
+					<WTSTATIC col="1" tag="URL"/>
+					<WTTEXT col="2" value="ATTR(Shortcut.URL)" size="40"/>
+				</WTROW>
+-->
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Shortcut.IsPinned)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Return)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="9211" caption="Shortcut List" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="ShortcutID" datatype="number"/>
+			<WTPARAM name="IsPinned" datatype="number"/>
+			<WTPARAM name="DeleteID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Shortcut" project="ptsShortcutUser" class="CShortcut">
+	 				<WTCONDITION expr="PARAM(ShortcutID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ShortcutID" direction="input" value="PARAM(ShortcutID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(IsPinned)" value="PARAM(IsPinned)"/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Shortcut" project="ptsShortcutUser" class="CShortcut">
+	 				<WTCONDITION expr="PARAM(DeleteID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ShortcutID" direction="input" value="PARAM(DeleteID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Shortcuts" project="ptsShortcutUser" class="CShortcuts">
+					<WTMETHOD name="List">
+						<WTPARAM name="AuthUserID" direction="input" value="SYS(UserID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlShortcuts" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTSTATIC label="Unpin"/>
+				<WTSTATIC label="Pin"/>
+				<WTSTATIC label="Edit"/>
+				<WTSTATIC label="Remove"/>
+
+				<WTROW>
+					<WTIMAGE col="1" valign="top" value="CONST(Shortcut.gif)" class="PageHeading"/>
+					<WTSTATIC col="1" label="Shortcuts">
+						<WTCODEGROUP>
+							<WTCONDITION expr="_IsPinnacleTutorial"/>
+							<WTSTATIC space="1"/>
+							<WTIMAGE value="CONST(Tutorial.gif)" alt="PinnacleTutorials" imgalign="absmiddle">
+								<WTLINK name="Tutorial" target="Tutorial">
+									<WTPARAM name="Lesson" value="SYSCON(TUTORIAL-SHORTCUTS)"/>
+									<WTPARAM name="contentpage" value="CONST(3)"/>
+									<WTPARAM name="popup" value="CONST(1)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" label="ShortcutsText" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Shortcut">
+						<WTCOLUMN width="75" align="left" valign="middle"/>
+						<WTCOLUMN width="25" align="left" valign="middle"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Shortcut.IsPinned)" oper="not-equal" value="SYSCON(NO)"/>
+									<WTIMAGE value="CONST(Pinned.gif)"/>
+									<WTSTATIC space="1"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(entity&lt;xsl:value-of select=&quot;@entityid&quot;/&gt;.gif)"/>
+								</WTCODEGROUP>
+								<WTSTATIC space="2"/>
+								<WTSTATIC value="DATA(Shortcut.ShortcutName)">
+					 				<WTCONDITION expr="DATA(IsPopup)" oper="equal" value="CONST(0)"/>
+									<WTLINK name="DATA(Shortcut.URL)" type="anchor" return="true" nodata="true"/>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(Shortcut.ShortcutName)">
+					 				<WTCONDITION expr="DATA(IsPopup)" oper="not-equal" value="CONST(0)"/>
+									<WTLINK name="DATA(Shortcut.URL)" type="anchor" target="new"/>
+								</WTSTATIC>
+							</WTSTATIC>
+
+							<WTSTATIC col="2" align="right">
+								<WTCODEGROUP>
+					 				<WTCONDITION expr="DATA(IsPinned)" oper="equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(Pinned.gif)" alt="Pin">
+										<WTLINK name="9211">
+											<WTPARAM name="ShortcutID" value="DATA(ShortcutID)"/>
+											<WTPARAM name="IsPinned" value="SYSCON(YES)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="3"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+					 				<WTCONDITION expr="DATA(IsPinned)" oper="not-equal" value="CONST(0)"/>
+									<WTIMAGE value="CONST(Pinned1.gif)" alt="Unpin">
+										<WTLINK name="9211">
+											<WTPARAM name="ShortcutID" value="DATA(ShortcutID)"/>
+											<WTPARAM name="IsPinned" value="SYSCON(NO)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="3"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit">
+										<WTLINK name="9203" label="Edit" class="PageHeadingLink">
+											<WTPARAM name="ShortcutID" value="DATA(ShortcutID)"/>
+										</WTLINK>
+									</WTIMAGE>
+									<WTSTATIC space="3"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Trash.gif)" alt="Remove">
+										<WTLINK name="9211" label="Remove" class="PageHeadingLink">
+											<WTPARAM name="DeleteID" value="DATA(ShortcutID)"/>
+					 					</WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="2" action="3" value="CONST(Return)"/>
+				</WTROW>
+-->
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

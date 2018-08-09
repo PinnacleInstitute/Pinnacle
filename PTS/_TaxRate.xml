@@ -1,0 +1,325 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="66" name="TaxRate" alias="tx" audit="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="6601" name="TaxRateID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="6602" name="Year" type="number" source="entity"/>
+		<WTATTRIBUTE id="6603" name="TaxType" type="number" source="entity" title="true">
+			<WTENUM id="1" name="TaxType1"/>
+			<WTENUM id="2" name="TaxType2"/>
+			<WTENUM id="3" name="TaxType3"/>
+			<WTENUM id="4" name="TaxType4"/>
+			<WTENUM id="5" name="TaxType5"/>
+			<WTENUM id="6" name="TaxType6"/>
+			<WTENUM id="7" name="TaxType7"/>
+			<WTENUM id="8" name="TaxType8"/>
+			<WTENUM id="9" name="TaxType9"/>
+			<WTENUM id="10" name="TaxType10"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6604" name="Rate" type="currency" min="0" max="999999.9999" source="entity">
+			<WTFORMAT value="###,##0.0000" />
+		</WTATTRIBUTE>
+
+		<!--Indexes-->
+		<WTINDEX name="Year">
+			<WTATTRIBUTE name="Year"/>
+			<WTATTRIBUTE name="TaxType"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="TaxRate" entity="TaxRate" alias="tx"/>
+		</WTRELATIONSHIPS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="List" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="SYS(security)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(TaxRate.TaxRateID)"/>
+					<WTATTRIBUTE value="ATTR(TaxRate.Year)"/>
+					<WTATTRIBUTE value="ATTR(TaxRate.TaxType)"/>
+					<WTATTRIBUTE value="ATTR(TaxRate.Rate)"/>
+					<WTJOIN name="TaxRate"/>
+					<WTORDER name="ATTR(TaxRate.Year)"/>
+					<WTORDER name="ATTR(TaxRate.TaxType)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchRate" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(Year)" direction="input"/>
+			<WTPARAM name="ATTR(TaxType)" direction="input"/>
+			<WTPARAM name="ATTR(TaxRateID)" direction="output"/>
+			<WTPARAM name="ATTR(Rate)" direction="output"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PARAM(TaxRateID)" value="ATTR(TaxRate.TaxRateID)"/>
+					<WTATTRIBUTE name="PARAM(Rate)" value="ATTR(TaxRate.Rate)"/>
+					<WTJOIN name="TaxRate" lock="false"/>
+					<WTCONDITION expr="ATTR(TaxRate.Year)" oper="equal" value="PARAM(Year)"/>
+					<WTCONDITION expr="ATTR(TaxRate.TaxType)" oper="equal" value="PARAM(TaxType)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6602" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaxRateID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTaxRate" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaxRateID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="TaxRateID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlTaxRate" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewTaxRate" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Year"/>
+					<WTTEXT col="2" value="ATTR(TaxRate.Year)" size="3"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TaxType"/>
+					<WTCOMBO col="2" value="ATTR(TaxRate.TaxType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Rate"/>
+					<WTTEXT col="2" value="ATTR(TaxRate.Rate)" size="6"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6603" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="TaxRateID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaxRateID" direction="input" value="PARAM(TaxRateID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTaxRate" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaxRateID" direction="input" value="PARAM(TaxRateID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlTaxRate" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="TaxRateID" direction="input" value="PARAM(TaxRateID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="TaxRate" project="ptsTaxRateUser" class="CTaxRate">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="TaxRateID" direction="input" value="PARAM(TaxRateID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTaxRate" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="TaxRate" value="ATTR(TaxRate.TaxType)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Year"/>
+					<WTTEXT col="2" value="ATTR(TaxRate.Year)" size="3"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="TaxType"/>
+					<WTCOMBO col="2" value="ATTR(TaxRate.TaxType)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Rate"/>
+					<WTTEXT col="2" value="ATTR(TaxRate.Rate)" size="6"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6611" caption="TaxRates" header="false" footer="false" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" >
+		<!--============================================================================================-->
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="TaxRates" project="ptsTaxRateUser" class="CTaxRates">
+					<WTMETHOD name="List">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlTaxRates" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Return" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="300" align="right"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="TaxRates" class="PageHeading" align="left"/>
+					<WTSTATIC col="2" align="right" bold="true">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(addnew.gif)" imgalign="absmiddle"/>
+							<WTSTATIC space="1"/>
+							<WTSTATIC label="NewTaxRate">
+								<WTLINK name="6602"/>
+							</WTSTATIC>
+						</WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" merge="2" graybar="true" entity="TaxRate">
+						<WTCOLUMN width="10" align="center" valign="top" label="Year"/>
+						<WTCOLUMN width="50" align="left" valign="top" label="TaxType"/>
+						<WTCOLUMN width="40" align="left" valign="top" label="Rate"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(TaxRate.Year)"/>
+							<WTSTATIC col="2" value="DATA(TaxRate.TaxType)">
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+										<WTLINK name="6603"><WTPARAM name="TaxRateID" value="DATA(TaxRate.TaxRateID)"/></WTLINK>
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" value="DATA(TaxRate.Rate)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

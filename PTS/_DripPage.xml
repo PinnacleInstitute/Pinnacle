@@ -1,0 +1,452 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="115" name="DripPage" alias="dep" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="11501" name="DripPageID" type="number" identity="true" min="1" required="true" source="entity"/>
+		<WTATTRIBUTE id="11502" name="DripCampaignID" type="number" required="true" source="entity"/>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="11503" name="Subject" type="text" length="80" min="1" max="80" required="true" title="true" source="entity"/>
+		<WTATTRIBUTE id="11504" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Pending"/>
+			<WTENUM id="2" name="Active"/>
+			<WTENUM id="3" name="InActive"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="11505" name="Days" type="number" source="entity"/>
+		<WTATTRIBUTE id="11506" name="IsCC" type="yesno" source="entity"/>
+
+		<WTINDEX name="DripCampaignID">
+			<WTATTRIBUTE name="DripCampaignID"/>
+		</WTINDEX>
+
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="DripPage" entity="DripPage" alias="dep"/>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants -->
+		<WTSYSCONS>
+			<WTSYSCON name="DRIPPAGE-PENDING" value="1"/>
+			<WTSYSCON name="DRIPPAGE-ACTIVE" value="2"/>
+			<WTSYSCON name="DRIPPAGE-INACTIVE" value="3"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl"/>
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListAll" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(DripCampaignID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(DripPage.DripPageID)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.Subject)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.Status)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.Days)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.IsCC)"/>
+					<WTJOIN name="DripPage"/>
+					<WTCONDITION expr="ATTR(DripCampaignID)" oper="equal" value="PARAM(DripCampaignID)"/>
+					<WTORDER name="ATTR(DripPage.Days)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--===================================================================================-->
+		<WTPROCEDURE type="List" name="ListActive" style="GenerateDataProc.xsl" template="new" passthru="true">
+			<WTPARAM name="ATTR(DripCampaignID)" direction="input" required="false"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(DripPage.DripPageID)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.Subject)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.Status)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.Days)"/>
+					<WTATTRIBUTE value="ATTR(DripPage.IsCC)"/>
+					<WTJOIN name="DripPage"/>
+					<WTCONDITION expr="ATTR(DripCampaignID)" oper="equal" value="PARAM(DripCampaignID)"/>
+					<WTCONDITION expr="ATTR(Status)" oper="equal" value="SYSCON(DRIPPAGE-ACTIVE)" connector="and"/>
+					<WTORDER name="ATTR(DripPage.Days)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11502" caption="Drip Campaigns" header="false" footer="false" navbar="false" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+      <!--============================================================================================-->
+			<WTPARAM name="DripCampaignID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="DripPage" project="ptsDripPageUser" class="CDripPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripPageID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="DripPage" project="ptsDripPageUser" class="CDripPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripPageID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(DripCampaignID)" value="PARAM(DripCampaignID)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="SYSCON(DRIPPAGE-ACTIVE)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="DripPageID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlDripPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTCONDITION expr="NoErrors"/>
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Drip&quot; &amp; DripPageID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;\Drip\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="590" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="NewDripPage" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="Subject"/>
+          <WTTEXT col="2" value="ATTR(DripPage.Subject)" size="70"/>
+        </WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Days"/>
+					<WTTEXT col="2" value="ATTR(DripPage.Days)" size="2"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="2" align="center" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="DripEditText1" newline="1"/>
+						<WTSTATIC label="DripEditText2"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="90" rows="40" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" action="2" align="center" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="11503" caption="Drip Campaigns" header="false" footer="false" navbar="false" 
+				   aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" >
+		<!--============================================================================================-->
+			<WTPARAM name="DripPageID" datatype="number"/>
+
+			<WTSUB name="LoadDripPage">
+				<WTOBJECT name="DripPage" project="ptsDripPageUser" class="CDripPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripPageID" direction="input" value="PARAM(DripPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Drip&quot; &amp; reqDripPageID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;\Drip\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTSUB name="UpdateDripPage">
+				<WTOBJECT name="DripPage" project="ptsDripPageUser" class="CDripPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripPageID" direction="input" value="PARAM(DripPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlDripPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Drip&quot; &amp; reqDripPageID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;\Drip\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTSETATTRIBUTE name="ATTR(Data)" value="FORM(Data)"/>
+					<WTMETHOD name="Save"/>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadDripPage"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateDripPage"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="DripPage" project="ptsDripPageUser" class="CDripPage">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="DripPageID" direction="input" value="PARAM(DripPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadDripPage">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="590" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="DripPage" value="ATTR(DripPage.Subject)" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Subject"/>
+					<WTTEXT col="2" value="ATTR(DripPage.Subject)" size="70"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Days"/>
+					<WTTEXT col="2" value="ATTR(DripPage.Days)" size="2"/>
+					<WTSTATIC col="2" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(DripPage.Status)" prespace="false"/>
+					<WTCHECK col="2" value="ATTR(DripPage.IsCC)"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" align="center" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" class="prompt">
+						<WTSTATIC label="DripEditText1" newline="1"/>
+						<WTSTATIC label="DripEditText2"/>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTMEMO col="1" merge="2" align="left" value="ATTR(HTMLFile.Data)" cols="90" rows="40" htmleditor="editor" embedhtml="true"/>
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTBUTTON col="1" merge="2" align="center" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="11506" caption="Drip Preview" header="false" navbar="false" footer="false"
+				   aspstyle="GenerateWebASPOpen.xsl" xslstyle="GenerateWebXSLOpen.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="DripPageID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="DripPage" project="ptsDripPageUser" class="CDripPage">
+					<WTMETHOD name="Load">
+						<WTPARAM name="DripPageID" direction="input" value="PARAM(DripPageID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlDripPage" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;Drip&quot; &amp; reqDripPageID &amp; &quot;.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;\Drip\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(Language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<WTCUSTOM>
+  xmlHTMLFile = Replace( xmlHTMLFile, "{id}", "1" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{item}", "1" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{firstname}", "Bill" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{lastname}", "Smith" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{email}", "bill.smith@gmail.com" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{m-id}", "2" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{m-firstname}", "John" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{m-lastname}", "Jones" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{m-phone}", "(214) 123-4567" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{m-email}", "john.jones@gmail.com" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{signature}", "John Jones Signature" )
+  xmlHTMLFile = Replace( xmlHTMLFile, "{username}", "JohnJones" )
+</WTCUSTOM>
+      </WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCODEGROUP>
+					<WTSTATIC value="ATTR(HTMLFile.Data)" embedhtml="true" newline="2"/>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTBUTTON valuex="Close" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+					<WTSTATIC newline="1"/>
+				</WTCODEGROUP>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--=============================================================================================-->
+		<WTWEBPAGE name="11520" caption="Upload File" action="false" submit="11520Upload.asp" type="multi" 
+			navbar="false" header="false" footer="false" page-left="0" margin="false" 
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--=============================================================================================-->
+			<WTPARAM name="DripPageID" datatype="number"/>
+			<WTPARAM name="UploadError" datatype="number"/>
+			<WTPARAM name="UploadErrorDesc" datatype="text"/>
+			<WTPARAM name="DeleteFile" datatype="text"/>
+			<WTPARAM name="FileName" datatype="text"/>
+			<WTPARAM name="Language" datatype="text"/>
+			<WTPARAM name="Status" datatype="number"/>
+			
+			<WTCODEGROUP>
+				<WTCONDITION expr="PARAM(UploadError)" oper="not-equal" value="CONST(0)"/>
+				<WTCUSTOM>DoError reqUploadError, "Upload", reqUploadErrorDesc</WTCUSTOM>
+			</WTCODEGROUP>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Language)" value="CONST(&quot;en&quot;)" />
+				<WTCUSTOM>If Len(reqFileName) = 0 Then reqFileName = "Drip" + CSTR(reqDripPageID) + "[" + reqLanguage + "]"</WTCUSTOM>
+				<WTSETCACHE name="FILENAME" value="PARAM(FileName)"/>
+			</WTACTION>			
+
+	 		<!--*******************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="400" align="left"/>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+					<WTROW>
+						<WTSTATIC col="1" label="UploadPage" class="PageHeading"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+					</WTROW>
+					<WTROW margin-bottom="6">
+						<WTSTATIC col="1" value="PARAM(FileName)" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="12">
+						<WTSTATIC col="1" label="UploadPageText" class="prompt"/>
+					</WTROW>
+					<WTROW margin-bottom="18">
+						<WTFILE col="1" align="center" value="upload" accept="*.htm" size="30"/>
+						<WTBUTTON col="1" align="center" default="true" action="1" value="CONST(Submit)"/>
+					</WTROW>
+				</WTCODEGROUP>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(1)"/>
+					<WTROW margin-top="36" margin-bottom="12">
+						<WTSTATIC col="1" label="UploadPageSuccessful" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW margin-bottom="24">
+						<WTSTATIC col="1" value="PARAM(FileName)" class="PageHeading" align="center"/>
+					</WTROW>
+					<WTROW>
+						<WTBUTTON col="1" value="CONST(Close)" align="center">
+							<WTCLICK>window.close()</WTCLICK>
+						</WTBUTTON>
+					</WTROW>
+				</WTCODEGROUP>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>	
+
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,28 @@
+<STYLE>
+.Trigger{
+      cursor: pointer;
+      cursor: hand;
+      DISPLAY: block;
+}
+.TreeBar{
+      background-image: url('../Images/treebar.gif');
+      background-repeat: repeat-y;
+}
+.SubTreeBar{
+      background-image: url('../Images/treebar.gif');
+      background-repeat: repeat-y;
+      background-position: 50%;
+}
+.TreeBarH{
+      background-image: url('../Images/treebar.gif');
+      background-repeat: repeat-x;
+      background-position: center
+}
+.TreeView{
+      OVERFLOW: auto;
+      BORDER-RIGHT: gray 1px solid; 
+      BORDER-TOP: threeddarkshadow 1px solid; 
+      BORDER-LEFT: threeddarkshadow 1px solid; 
+      BORDER-BOTTOM: gray 1px solid; 
+}
+</STYLE>

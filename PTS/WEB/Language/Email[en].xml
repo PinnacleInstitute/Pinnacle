@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="Email">Email Campaign</LABEL>
+	<LABEL name="Emails">Email Campaigns</LABEL>
+	<LABEL name="NewEmail">Add New Email Campaign</LABEL>
+	<LABEL name="FindEmail">Find Email Campaign</LABEL>
+	<LABEL name="EmailID">Email Campaign</LABEL>
+	<LABEL name="CompanyID">Company</LABEL>
+	<LABEL name="NewsLetterID">NewsLetter</LABEL>
+	<LABEL name="EmailListID">Emailing List</LABEL>
+	<LABEL name="EmailName">Name</LABEL>
+	<LABEL name="FromEmail">From</LABEL>
+	<LABEL name="Subject">Subject</LABEL>
+	<LABEL name="FileName">File</LABEL>
+	<LABEL name="Status">Status</LABEL>
+	<LABEL name="SendDate">Send Date</LABEL>
+	<LABEL name="Repeat">Repeat Every</LABEL>
+	<LABEL name="EndDate">End Date</LABEL>
+	<LABEL name="Mailings">Emailings</LABEL>
+	<LABEL name="TestEmail">Test Email</LABEL>
+	<LABEL name="TestFirstName">First Name</LABEL>
+	<LABEL name="TestLastName">Last Name</LABEL>
+	<LABEL name="TestData1">Data #1</LABEL>
+	<LABEL name="TestData2">Data #2</LABEL>
+	<LABEL name="TestData3">Data #3</LABEL>
+	<LABEL name="TestData4">Data #4</LABEL>
+	<LABEL name="TestData5">Data #5</LABEL>
+	<LABEL name="EmailType">Email Type</LABEL>
+	<LABEL name="IsSalesStep">Sales Step</LABEL>
+	<LABEL name="Compose">Compose</LABEL>
+	<LABEL name="Ready">Ready</LABEL>
+	<LABEL name="Sent">Sent</LABEL>
+	<LABEL name="Cancelled">Cancelled</LABEL>
+	<LABEL name="IsSalesStepTrue">Yes</LABEL>
+	<LABEL name="IsSalesStepFalse">No</LABEL>
+	<LABEL name="EmailManager">Email Manager</LABEL>
+	<LABEL name="EmailLists">Emailing Lists</LABEL>
+	<LABEL name="Emailees">Recipients</LABEL>
+	<LABEL name="EmailSource">Email Source</LABEL>
+	<LABEL name="Help">Help</LABEL>
+	<LABEL name="EmailManagerText">The Email Manager allows you to define Emailing lists and create Email Campaigns.
+	 You can search for an Email Campaign by entering its name, send date or status in the Find text box below and
+	  clicking the "Go" button. 20 Email Campaigns are displayed at a time. Click the "Previous Page" or "Next Page"
+	   links to view additional Email Campaigns. New Emailing lists can be defined by clicking the "Emailing Lists" 
+	   link in the upper right hand corner of this page. New Email Campaigns can be defined by clicking the "New Email
+	    Campaign" link in the upper right hand corner of this page.</LABEL>
+	<LABEL name="EmailDate">Email Date</LABEL>
+	<LABEL name="Msgs">Messages</LABEL>
+	<LABEL name="EmailList">Email List</LABEL>
+	<LABEL name="EmailProspect">Sales Prospect Email</LABEL>
+	<LABEL name="EmailText">Enter a unique name and the desired options for this email Campaign. Change the Status from "Compose" to "Ready" when you are ready for the Campaign to be sent.</LABEL>
+	<LABEL name="MsgsSentIn">Messages Sent In</LABEL>
+	<LABEL name="MessageText">Enter your email message in the editor below. This message and the "Subject" above may include replacable tags
+	 enclosed in curly brackets for the recipient's first name {firstname}, last name {lastname}, email address {email}, {data1}, {data2}, {data3}, {data4} and {data5} as defined by the specified emailing list.</LABEL>
+	<LABEL name="EmailDateText">Enter a date for this Email Campaign to be sent.  The system will send all Campaigns with a status of "Ready" that have a blank or past send date at the end of the day.  Once a Campaign is sent the status is changed to "Sent".
+The mesage can be repeated by entering a number followed by a single letter (d,w,m) for a (day, week, month).  For example: 7d will send the Campaign once every 7 days, and is the same as 1w.
+The End Date specifies when to stop repeating this Campaign. A repeated Campaign with a blank End Date will be sent indefinately.</LABEL>
+	<LABEL name="PreviewText">TEST EMAIL: Enter an email address, first name, last name (and optional data1, data2, data3, data4, data5) and click the "Test Email Message" button to email a preview of this Campaign.</LABEL>
+	<LABEL name="EmailText1">Enter a unique name and the desired options for this prospect email message. Change the Status from "Compose" to "Ready" when it is ready to be used.</LABEL>
+	<LABEL name="MessageText1">Enter your email message in the editor below.  This message and the "Subject" above may include replacable tags	enclosed in curly brackets for 
+	the prospect's first name {firstname}, last name {lastname}, unique identifier {id}, member's first name {m-firstname}, member's last name {m-lastname}, member's email address {m-email} and member's email signature {signature}. The "from email"  
+	may also specify the member's email address {m-email}.</LABEL>
+	<LABEL name="MessageText2">The email message may include one or more links to a utility URL that can play a video 
+	file, display a custom page, update the next step for the prospect, and record an RSVP response. 
+	all parameters are optional. A typical email message may contain multiple links to the same URL to take different actions 
+	based on the prospect's selection. The RSVP can indicate a positive response (1), a negative response (2), or any other value  
+	of importance. A note will be added by the system documenting the RSVP response, video watched, and page viewed. An example of the RSVP URL:</LABEL>
+	<LABEL name="PreviewText1">TEST EMAIL: Enter an email address, first name and last name and click the 
+	"Test Email" button to send the email, or click the "Preview Email" button to view the email.</LABEL>
+	<LABEL name="UnsubscribeLink">Click here to unsubscribe.</LABEL>
+	<LABEL name="NewsLetterArchive">News Letter Archive</LABEL>
+	<LABEL name="NewIssue">New Issue</LABEL>
+	<LABEL name="IssueText1">Enter a unique name and the desired options for this news letter issue. Change the Status from "Compose" to "Ready" when it is ready to be sent on the specified send date.</LABEL>
+	<LABEL name="IssueMsgText">Enter your email message in the editor below. This message and the "Subject" above may include replacable tags enclosed in curly brackets for 
+	the recipient's first name {firstname} and last name {lastname}.</LABEL>
+	<LABEL name="UploadImages">Upload Images</LABEL>
+	<LABEL name="NewsLetterUnsubscribeLink">Click here to unsubscribe from this news letter.</LABEL>
+	<LABEL name="TeamEmailManager">Team Email Manager</LABEL>
+	<LABEL name="NewTeamEmail">Add New Email</LABEL>
+	<LABEL name="TeamEmailManagerText">The Team Email Manager allows you to send Email to your team members. 
+		You can search for an existing Email by entering its name, send date or status in the Find text box below and
+		clicking the "Go" button. 20 Emails are displayed at a time. Click the "Previous Page" or "Next Page"
+		links to view additional Emails. New Emails can be created by clicking the "Add New Email" link above.</LABEL>
+	<LABEL name="AllStatus">All</LABEL>
+	<LABEL name="AllLevel">All</LABEL>
+	<LABEL name="AllTitle">All</LABEL>
+	<LABEL name="Forever">Forever</LABEL>
+	<LABEL name="EnrolledTo">To</LABEL>
+	<LABEL name="TeamEmailText1">Enter a unique name and the desired options for this email message. Click the "Send Now" button to send to all the specified team members.</LABEL>
+	<LABEL name="SentOn">sent on</LABEL>
+	<LABEL name="TeamTarget">TARGETED TEAM MEMBERS: Send this message to a subset of your team members by selecting from the options below. Update your selections below before previewing. "Send as Text Message" will send the message to the "Text Email" address for each member.</LABEL>
+	<LABEL name="Status1">Active</LABEL>
+	<LABEL name="Status2">Trial</LABEL>
+	<LABEL name="Status3">Free</LABEL>
+	<LABEL name="Status4">Suspended</LABEL>
+	<LABEL name="Level0">0</LABEL>
+	<LABEL name="Level1">1</LABEL>
+	<LABEL name="Level2">2</LABEL>
+	<LABEL name="Level3">3</LABEL>
+	<LABEL name="SendToEmail">Send as Email Message</LABEL>
+	<LABEL name="SendToEmail2">Send as Text Message</LABEL>
+	<LABEL name="TeamEmailMsgText">Enter your email message in the editor below. This message and the "Subject" above may include replacable tags enclosed in curly brackets for
+		the recipient's first name {firstname} and last name {lastname}.</LABEL>
+	<LABEL name="Name">Name</LABEL>
+	<LABEL name="CopyEmailID">Copy Email #</LABEL>
+	<LABEL name="TestProspectEmail">Prospect Email</LABEL>
+	<LABEL name="TestProspectFirstName">Prospect First Name</LABEL>
+	<LABEL name="TestProspectLastName">Prospect Last Name</LABEL>
+	<LABEL name="TestProspectID">Prospect #</LABEL>
+	<LABEL name="TestMemberFirstName">Member First Name</LABEL>
+	<LABEL name="TestMemberLastName">Member Last Name</LABEL>
+	<LABEL name="TestMemberEmail">Member Email</LABEL>
+	<LABEL name="TestSignature">Member Signature</LABEL>
+	<LABEL name="From">From</LABEL>
+	<LABEL name="To">To</LABEL>
+	<LABEL name="IssueName">Issue Name</LABEL>
+	<LABEL name="Target">TARGET</LABEL>
+	<LABEL name="Level">Level</LABEL>
+	<LABEL name="Title">Title</LABEL>
+	<LABEL name="EnrolledFrom">Enrolled From</LABEL>
+	<LABEL name="Total">Total</LABEL>
+	<LABEL name="ConfirmPreview">Are you sure you want to preview this email now?</LABEL>
+	<LABEL name="ConfirmSend">Are you sure you want to send this email to everyone now?</LABEL>
+	<LABEL name="ConfirmSendIssue">Are you sure you want to send this email message to the test email address now?</LABEL>
+	<LABEL name="ConfirmSendTeamEmail">Are you sure you want to send this email message to the test email address now?</LABEL>
+	<LABEL name="Preview">Preview Email</LABEL>
+	<LABEL name="Send">Send Email Now</LABEL>
+	<LABEL name="UpdateExit">Update &amp; Exit</LABEL>
+	<LABEL name="PreviewTeam">Preview Specified Members</LABEL>
+</LANGUAGE>

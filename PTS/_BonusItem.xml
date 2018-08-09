@@ -1,0 +1,831 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="63" name="BonusItem" alias="bi" audit="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="6301" name="BonusItemID" type="number" identity="true" min="1" required="true" source="entity" title="true"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="6302" name="BonusID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="6303" name="CompanyID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="6304" name="MemberID" type="number" min="1" source="entity"/>
+		<WTATTRIBUTE id="6305" name="MemberBonusID" type="number" min="1" source="entity"/>
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="6307" name="NameLast" type="text" length="30" source="join">
+			<WTJOIN entity="Member" name="NameLast"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6308" name="NameFirst" type="text" length="30" source="join">
+			<WTJOIN entity="Member" name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6309" name="BonusMemberName" type="text" length="62" min="1" max="62" source="entity">
+			<WTCOMPUTE name="NameLast"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="NameFirst"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6311" name="BonusMemberID" type="text" length="40" source="join">
+			<WTJOIN entity="Bonus" name="MemberID"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="6310" name="CommTypeName" type="text" length="40" source="join">
+			<WTJOIN entity="CommType" name="CommTypeName"/>
+		</WTATTRIBUTE>
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="6312" name="CommType" type="number" source="entity"/>
+		<WTATTRIBUTE id="6313" name="Amount" type="currency" min="-9999999.99" max="9999999.99" source="entity"/>
+		<WTATTRIBUTE id="6314" name="Reference" type="text" length="20" source="entity" language="false"/>
+
+		<!-- Non Persist Fields -->
+
+		<!--Indexes-->
+		<WTINDEX name="BonusID">
+			<WTATTRIBUTE name="BonusID"/>
+			<WTATTRIBUTE name="CommType"/>
+		</WTINDEX>
+		<WTINDEX name="MemberBonusID">
+			<WTATTRIBUTE name="MemberBonusID"/>
+			<WTATTRIBUTE name="CommType"/>
+		</WTINDEX>
+		<WTINDEX name="CompanyID">
+			<WTATTRIBUTE name="CompanyID"/>
+			<WTATTRIBUTE name="MemberBonusID"/>
+			<WTATTRIBUTE name="MemberID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="BonusItem" entity="BonusItem" alias="bi"/>
+			<WTRELATIONSHIP name="Common" entity="BonusItem" alias="bi">
+				<WTENTITY name="Bonus" entity="Bonus" alias="bo">
+					<WTATTRIBUTE alias="bi" name="BonusID" relalias="bo" relname="BonusID" />
+				</WTENTITY>
+				<WTENTITY name="Member" entity="Member" alias="me">
+					<WTATTRIBUTE alias="bo" name="MemberID" relalias="me" relname="MemberID" />
+				</WTENTITY>
+				<WTENTITY name="CommType" entity="CommType" alias="ct">
+					<WTATTRIBUTE alias="bi" name="CompanyID" relalias="ct" relname="CompanyID"/>
+					<WTATTRIBUTE alias="bi" name="CommType" relalias="ct" relname="CommTypeNo" connector="AND"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="BonusMemberName"/>
+			<WTATTRIBUTE name="BonusMemberID"/>
+			<WTATTRIBUTE name="CommTypeName"/>
+			<WTATTRIBUTE name="CommType" default="true"/>
+			<WTATTRIBUTE name="Amount"/>
+		</WTENUM>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTCODEGROUP>
+				<WTINSERT/>
+				<WTSETVALUE name="NewID" value="SYS(identity)"/>
+				<WTSETVALUE name="PARAM(BonusItemID)" value="NewID"/>
+				<WTPROCEDURE name="Bonus_ComputeTotal">
+					<WTPARAM name="BonusID" direction="input" value="PARAM(MemberBonusID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(BonusItem.BonusItemID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTDECLARE name="MemberBonusID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="BonusItem_GetMemberBonusID">
+					<WTPARAM name="BonusItemID" direction="input" value="PARAM(BonusItem.BonusItemID)"/>
+					<WTPARAM name="MemberBonusID" direction="output" value="MemberBonusID"/>
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="BonusItem" lock="true"/>
+					<WTCONDITION expr="ATTR(BonusItem.BonusItemID)" oper="equal" value="PARAM(BonusItemID)"/>
+				</WTDELETE>
+				<WTCODEGROUP>
+					<WTCONDITION expr="MemberBonusID" oper="greater" value="CONST(0)"/>
+					<WTPROCEDURE name="Bonus_ComputeTotal">
+						<WTPARAM name="BonusID" direction="input" value="MemberBonusID"/>
+					</WTPROCEDURE>
+				</WTCODEGROUP>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Find" name="Find" style="GenerateDataProc.xsl">
+			<WTBOOKMARK name=""/>
+			<WTPARAM name="ATTR(MemberBonusID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCONDITION expr="ATTR(BonusItem.MemberBonusID)" oper="equal" value="PARAM(MemberBonusID)" connector="and"/>
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTCODEGROUP>
+				<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+				<WTUPDATE>
+					<WTJOIN name="BonusItem" lock="true"/>
+					<WTCONDITION expr="ATTR(BonusItem.BonusItemID)" oper="equal" value="PARAM(BonusItemID)"/>
+				</WTUPDATE>
+				<WTPROCEDURE name="Bonus_ComputeTotal">
+					<WTPARAM name="BonusID" direction="input" value="PARAM(MemberBonusID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListBonus" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(BonusID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(BonusItem.BonusItemID)"/>
+					<WTATTRIBUTE value="ATTR(CommType.CommTypeName)"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.BonusMemberName)" alias="BonusMemberName"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.Amount)"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.Reference)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListSummary" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberBonusID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(BonusItem.BonusItemID)"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.CommType)"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.CommTypeName)"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.Amount)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================================================================-->
+		<WTPROCEDURE type="List" name="ListType" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+			<WTPARAM name="ATTR(MemberBonusID)" direction="input"/>
+			<WTPARAM name="ATTR(CommType)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(BonusItem.BonusItemID)"/>
+					<WTATTRIBUTE value="ATTR(CommType.CommTypeName)"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.BonusMemberName)" alias="BonusMemberName"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.Amount)"/>
+					<WTATTRIBUTE value="ATTR(BonusItem.Reference)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--==================================================================================================================-->
+		<WTWEBPAGE name="6301" caption="Search Bonuses" action="5" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--==================================================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="SearchText" datatype="text"/>
+			<WTPARAM name="FindTypeID" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="text"/>
+			<WTPARAM name="Direction" datatype="number"/>
+			<WTPARAM name="MemberBonusID" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTSETATTRIBUTE name="PARAM(FindTypeID)" value="FINDID(CommType)">
+					<WTCONDITION expr="PARAM(FindTypeID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTSETATTRIBUTE name="PARAM(CompanyID)" value="SYS(CompanyID)">
+			 		<WTCONDITION expr="PARAM(CompanyID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+			</WTCODEGROUP>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+				<WTOBJECT name="BonusItems" project="ptsBonusItemUser" class="CBonusItems">
+					<WTSETATTRIBUTE name="CONST(.FindTypeID)" value="CONST(reqFindTypeID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBonusItems" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(14)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="Find" type="New">
+				<WTSETATTRIBUTE name="PARAM(Bookmark)" value="CONST(&quot;&quot;)"/>
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="Previous" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(2)"/>
+			</WTACTION>
+
+			<WTACTION id="7" name="Next" type="New">
+				<WTSETATTRIBUTE name="PARAM(Direction)" value="CONST(1)"/>
+			</WTACTION>
+
+			<WTOBJECT name="BonusItems" project="ptsBonusItemUser" class="CBonusItems">
+				<WTCONDITION expr="CONST(reqActionCode)" oper="not-equal" value="CONST(0)"/>
+				<WTMETHOD name="Find">
+					<WTPARAM name="reqBookmark" direction="return" datatype="text"/>
+					<WTPARAM name="FindTypeID" direction="input" value="PARAM(FindTypeID)"/>
+					<WTPARAM name="Bookmark" direction="input" value="PARAM(Bookmark)"/>
+					<WTPARAM name="SearchText" direction="input" value="PARAM(SearchText)"/>
+					<WTPARAM name="Direction" direction="input" value="PARAM(Direction)"/>
+					<WTPARAM name="MemberBonusID" direction="input" value="PARAM(MemberBonusID)"/>
+					<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+				</WTMETHOD>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBonusItems" direction="return" datatype="text"/>
+					<WTPARAM name="Option" direction="input" value="CONST(15)"/>
+				</WTMETHOD>
+			</WTOBJECT>
+			<WTOBJECT name="Bookmark" project="wtSystem" class="CBookmark">
+				<WTSETATTRIBUTE name="ATTR(LastBookmark)" value="PARAM(Bookmark)"/>
+				<WTMETHOD name="XML">
+					<WTPARAM name="xmlBookmark" direction="return" datatype="text"/>
+				</WTMETHOD>
+			</WTOBJECT>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="BonusItems" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="2">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTSTATIC col="1" align="right">
+						<WTCODEGROUP>
+							<WTIMAGE value="CONST(AddNew.gif)" imgalign="absmiddle">
+								<WTLINK name="6302">
+									<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+									<WTPARAM name="MemberBonusID" value="PARAM(MemberBonusID)"/>
+								</WTLINK>
+							</WTIMAGE>
+						</WTCODEGROUP>
+						<WTSTATIC space="1"/>
+						<WTSTATIC label="NewBonusItem" bold="true">
+							<WTLINK name="6302">
+								<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+								<WTPARAM name="MemberBonusID" value="PARAM(MemberBonusID)"/>
+							</WTLINK>
+						</WTSTATIC>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" tag="SearchBy" class="ColumnHeader"/>
+					<WTCOMBO col="1" value="ATTR(BonusItems.FindTypeID)" translate="true"/>
+					<WTSTATIC col="1" tag="SearchFor" class="ColumnHeader"/>
+					<WTTEXT col="1" value="ATTR(Bookmark.SearchText)" size="15" focus="true"/>
+					<WTBUTTON col="1" action="5" value="CONST(Search)" default="true"/>
+					<WTBUTTON col="1" value="CONST(Close)" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW>
+					<WTCONDITION expr="SYS(searchtype)" oper="not-equal" value="CONST(0)"/>
+					<WTRECORDSET col="1" graybar="true" prevnext="top" entity="BonusItem">
+						<WTCOLUMN width="30" align="left" valign="top" label="CommTypeName"/>
+						<WTCOLUMN width="15" align="left" valign="top" label="Amount"/>
+						<WTCOLUMN width="35" align="left" valign="top" label="BonusMemberName"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="Reference"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(CommTypeName)">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTLINK name="6303">
+										<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										<WTPARAM name="BonusItemID" value="DATA(BonusItem.BonusItemID)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(CommTypeName)">
+									<WTCONDITION expr="NotEmployee"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Amount)"/>
+							<WTSTATIC col="3" value="DATA(BonusMemberName)"/>
+							<WTSTATIC col="4" value="DATA(Reference)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="6302" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberBonusID" datatype="number"/>
+
+			<WTSUB name="LoadList">
+				<WTOBJECT name="CommTypes" project="ptsCommTypeUser" class="CCommTypes">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCommTypes" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="BonusItem" project="ptsBonusItemUser" class="CBonusItem">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BonusItemID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBonusItem" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Bonus" project="ptsBonusUser" class="CBonus">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BonusID" direction="input" value="PARAM(MemberBonusID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpMemberID)" value="ATTR(MemberID)"/>
+				</WTOBJECT>
+				<WTOBJECT name="BonusItem" project="ptsBonusItemUser" class="CBonusItem">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BonusItemID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(CompanyID)" value="PARAM(CompanyID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberBonusID)" value="PARAM(MemberBonusID)"/>
+					<WTSETATTRIBUTE name="ATTR(MemberID)" value="CONST(tmpMemberID)"/>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Add">
+						<WTPARAM name="BonusItemID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlBonusItem" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2"  align="left" label="NewBonusItem" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="CommType"/>
+					<WTCOMBO col="2" value="ATTR(BonusItem.CommType)" datapath="/DATA/TXN/PTSCOMMTYPES/ENUM" setselected="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(BonusItem.Amount)" size="10"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Reference"/>
+					<WTTEXT col="2" value="ATTR(BonusItem.Reference)"/>
+				</WTROW>
+
+				<WTROW margin-bottom="12" margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="2" value="CONST(Add)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--==================================================================-->
+		<WTWEBPAGE name="6303" navbar="false" header="false" footer="false"   
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--==================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="BonusItemID" datatype="number"/>
+
+			<WTSUB name="LoadList">
+				<WTOBJECT name="CommTypes" project="ptsCommTypeUser" class="CCommTypes">
+					<WTMETHOD name="EnumCompany">
+						<WTPARAM name="xmlCommTypes" direction="return" concat="true" datatype="text" />
+						<WTPARAM name="CompanyID" direction="input" value="PARAM(CompanyID)" />
+						<WTPARAM name="ItemID" direction="input" value="CONST()" />
+						<WTPARAM name="Element" direction="input" value="CONST()" />
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadList"/>
+				<WTOBJECT name="BonusItem" project="ptsBonusItemUser" class="CBonusItem">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BonusItemID" direction="input" value="PARAM(BonusItemID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBonusItem" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="BonusItem" project="ptsBonusItemUser" class="CBonusItem">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BonusItemID" direction="input" value="PARAM(BonusItemID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlBonusItem" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTCONDITION expr="IsEmployee"/>
+				<WTOBJECT name="BonusItem" project="ptsBonusItemUser" class="CBonusItem">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="BonusItemID" direction="input" value="PARAM(BonusItemID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="BonusItem" project="ptsBonusItemUser" class="CBonusItem">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="BonusItemID" direction="input" value="PARAM(BonusItemID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBonusItem" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadList">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="BonusItemID" value="ATTR(BonusItem.BonusItemID)" align="left" class="PageHeading"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" align="left" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" tag="CommType"/>
+					<WTCOMBO col="2" value="ATTR(BonusItem.CommType)" datapath="/DATA/TXN/PTSCOMMTYPES/ENUM" setselected="true"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Amount"/>
+					<WTTEXT col="2" value="ATTR(BonusItem.Amount)" size="10"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Reference"/>
+					<WTTEXT col="2" value="ATTR(BonusItem.Reference)"/>
+				</WTROW>
+			
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTBUTTON col="2" action="1" value="CONST(Update)">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="2" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="2" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6311" caption="Bonus Summary" page-width="400" page-left="10" margin-width="0" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberBonusID" datatype="number"/>
+			<WTPARAM name="Total" datatype="currency"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="BonusItems" project="ptsBonusItemUser" class="CBonusItems">
+					<WTMETHOD name="ListSummary">
+						<WTPARAM name="MemberBonusID" direction="input" value="PARAM(MemberBonusID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				reqTotal = 0
+				For Each oItem in oBonusItems
+					reqTotal = reqTotal + CCur(oItem.Amount)
+				Next
+				reqTotal = FormatCurrency(reqTotal)
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBonusItems" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="380" align="left"/>
+
+				<WTFUNCTION name="ViewType(typ)">
+					var cid, mbid, url, win;
+					cid = document.getElementById('CompanyID').value;
+					mbid = document.getElementById('MemberBonusID').value;
+					url = "6313.asp?CompanyID=" + cid + "&amp;MemberBonusID=" + mbid + "&amp;CommType=" + typ
+		            win = window.open(url,"BonusTypeDetails","top=100,left=100,height=400,width=625,resizable=yes,status=no,toolbar=no,menubar=no,location=no,titlebar=no,scrollbars=1");
+					win.focus();
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTHIDDEN value="PARAM(CompanyID)"/>
+					<WTHIDDEN value="PARAM(MemberBonusID)"/>
+				</WTROW>
+
+				<WTROW>
+					<WTSTATIC col="1" label="BonusSummary" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="2">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				
+				<WTROW>
+					<WTCONDITION expr="IsEmployee"/>
+					<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+					<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+					<WTSTATIC col="1" label="Search" align="right" bold="true">
+						<WTLINK name="6301" target="SearchBonuses">
+							<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+							<WTPARAM name="MemberBonusID" value="PARAM(MemberBonusID)"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="BonusItem">
+						<WTCOLUMN width="60" align="left" valign="top" label="CommTypeName"/>
+						<WTCOLUMN width="20" align="center" valign="top" label="Amount"/>
+						<WTCOLUMN width="20" align="left" valign="top"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(CommTypeName)"/>
+								<WTCODEGROUP>
+									<WTSTATIC space="1"/>
+									<WTIMAGE value="CONST(Preview.gif)" alt="PreviewSummary" imgalign="absmiddle">
+										<WTLINK name="ViewType(&lt;xsl:value-of select=&quot;@commtype&quot;/&gt;)" click="true" />
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Amount)"/>
+							<WTSTATIC col="3"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="228" align="left"/>
+						<WTCOLUMN width="76" align="center"/>
+						<WTCOLUMN width="76" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" value="PARAM(Total)" bold="true"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6312" caption="Bonus List" page-width="600" page-left="10" margin-width="0" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="BonusID" datatype="number"/>
+			<WTPARAM name="Total" datatype="currency"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="BonusItems" project="ptsBonusItemUser" class="CBonusItems">
+					<WTMETHOD name="ListBonus">
+						<WTPARAM name="BonusID" direction="input" value="PARAM(BonusID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				reqTotal = 0
+				For Each oItem in oBonusItems
+					reqTotal = reqTotal + CCur(oItem.Amount)
+				Next
+				reqTotal = FormatCurrency(reqTotal)
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBonusItems" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="580" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="CalculatedBonuses" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="BonusItem">
+						<WTCOLUMN width="30" align="left" valign="top" label="CommTypeName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Amount"/>
+						<WTCOLUMN width="35" align="left" valign="top" label="BonusMemberName"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="Reference"/>
+						<WTROW>
+							<WTSTATIC col="1" value="DATA(CommTypeName)"/>
+							<WTSTATIC col="2" value="DATA(Amount)"/>
+							<WTSTATIC col="3" value="DATA(BonusMemberName)"/>
+							<WTSTATIC col="4" value="DATA(Reference)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="174" align="left"/>
+						<WTCOLUMN width="87" align="center"/>
+						<WTCOLUMN width="319" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1"/>
+							<WTSTATIC col="2" value="PARAM(Total)" bold="true"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="6313" caption="Bonus Details" page-width="600" page-left="10" margin-width="0" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--============================================================================================-->
+			<WTPARAM name="CompanyID" datatype="number"/>
+			<WTPARAM name="MemberBonusID" datatype="number"/>
+			<WTPARAM name="CommType" datatype="number"/>
+			<WTPARAM name="Total" datatype="currency"/>
+			<WTPARAM name="Count" datatype="int"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="BonusItems" project="ptsBonusItemUser" class="CBonusItems">
+					<WTMETHOD name="ListType">
+						<WTPARAM name="MemberBonusID" direction="input" value="PARAM(MemberBonusID)"/>
+						<WTPARAM name="CommType" direction="input" value="PARAM(CommType)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				reqTotal = 0
+				reqCount = 0
+				For Each oItem in oBonusItems
+					reqTotal = reqTotal + CCur(oItem.Amount)
+					reqCount = reqCount + 1
+				Next
+				reqTotal = FormatCurrency(reqTotal)
+				reqCount = FormatNumber(reqCount,0)
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBonusItems" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="580" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" label="BonusTypeItems" class="PageHeading" align="left"/>
+					<WTBUTTON col="1" value="CONST(Close)" btnclass="smbutton">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="BonusItem">
+						<WTCOLUMN width="30" align="left" valign="top" label="CommTypeName"/>
+						<WTCOLUMN width="15" align="center" valign="top" label="Amount"/>
+						<WTCOLUMN width="35" align="left" valign="top" label="BonusMemberName"/>
+						<WTCOLUMN width="20" align="left" valign="top" label="Reference"/>
+						<WTROW>
+							<WTSTATIC col="1">
+								<WTSTATIC value="DATA(CommTypeName)">
+									<WTCONDITION expr="IsEmployee"/>
+									<WTLINK name="6303">
+										<WTPARAM name="CompanyID" value="PARAM(CompanyID)"/>
+										<WTPARAM name="BonusItemID" value="DATA(BonusItem.BonusItemID)"/>
+									</WTLINK>
+								</WTSTATIC>
+								<WTSTATIC value="DATA(CommTypeName)">
+									<WTCONDITION expr="NotEmployee"/>
+								</WTSTATIC>
+							</WTSTATIC>
+							<WTSTATIC col="2" value="DATA(Amount)"/>
+							<WTSTATIC col="3" value="DATA(BonusMemberName)"/>
+							<WTSTATIC col="4" value="DATA(Reference)"/>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTTABLE col="1">
+						<WTCOLUMN width="174" align="left"/>
+						<WTCOLUMN width="87" align="center"/>
+						<WTCOLUMN width="319" align="left"/>
+						<WTROW>
+							<WTSTATIC col="1" value="PARAM(Count)" bold="true"/>
+							<WTSTATIC col="2" value="PARAM(Total)" bold="true"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+	</WTWEBPAGES>
+</WTROOT>

@@ -1,0 +1,268 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="30" name="OrgCourse" alias="oco" language="false" audit="false" translate="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="3001" name="OrgCourseID" type="number" identity="true" min="1" required="true" title="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="3002" name="OrgID" type="number" source="entity"/>
+		<WTATTRIBUTE id="3003" name="CourseID" type="number" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attributes-->
+		<WTATTRIBUTE id="3010" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="Recommended"/>
+			<WTENUM id="2" name="Required"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3011" name="QuizLimit" type="number" source="entity">
+			<WTENUM id="1" name="NoRetake"/>
+			<WTENUM id="2" name="NoAnswer"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="3012" name="Seq" type="number" source="entity"/>
+		
+		<!-- Non-Persist Attributes -->
+		
+		<!--Indexes-->
+		<WTINDEX name="OrgCourse">
+			<WTATTRIBUTE name="OrgID"/>
+			<WTATTRIBUTE name="CourseID"/>
+		</WTINDEX>
+		<WTINDEX name="CourseID">
+			<WTATTRIBUTE name="CourseID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="OrgCourse" entity="OrgCourse" alias="oco"/>
+			<WTRELATIONSHIP name="Common" entity="OrgCourse" alias="oco">
+				<WTENTITY name="Course" entity="Course" alias="co">
+					<WTATTRIBUTE alias="oco" name="CourseID" relalias="co" relname="CourseID"/>
+				</WTENTITY>
+				<WTENTITY name="Org" entity="Org" alias="org">
+					<WTATTRIBUTE alias="oco" name="OrgID" relalias="org" relname="OrgID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" template="new" >
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTCODEGROUP>
+				<WTINSERT/>
+			</WTCODEGROUP>
+			<WTSETVALUE name="NewID" value="CONST(@@IDENTITY)"/>
+			<WTSETVALUE name="PARAM(OrgCourseID)" value="NewID"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="OrgCourse_Update_Counters">
+					<WTPARAM name="ATTR(OrgCourseID)" direction="input" value="PARAM(OrgCourseID)"/>		
+					<WTPARAM name="ATTR(Status)" direction="input" value="CONST(1)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>   
+				</WTPROCEDURE>			
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(OrgCourseID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="OrgCourse_Update_Counters">
+					<WTPARAM name="ATTR(OrgCourseID)" direction="input" value="PARAM(OrgCourseID)"/>
+					<WTPARAM name="ATTR(Status)" direction="input" value="CONST(-1)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>   
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="OrgCourse" lock="true"/>
+					<WTCONDITION expr="ATTR(OrgCourse.OrgCourseID)" oper="equal" value="PARAM(OrgCourseID)"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================================================-->
+		<WTPROCEDURE name="GetOrgCourse" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================================================-->
+			<WTPARAM name="ATTR(OrgID)" direction="input"/>
+			<WTPARAM name="ATTR(CourseID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="OrgCourseID" direction="output" datatype="number"/>
+			<WTDECLARE name="OrgCourseID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="OrgCourseID" value="ATTR(OrgCourse.OrgCourseID)"/>
+					<WTJOIN name="OrgCourse"/>
+					<WTCONDITION expr="ATTR(OrgCourse.OrgID)" oper="equal" value="PARAM(OrgID)"/>
+					<WTCONDITION expr="ATTR(OrgCourse.CourseID)" oper="equal" value="PARAM(CourseID)" connector="and"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(OrgCourseID)" value="OrgCourseID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl"/>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--============================================================================================-->
+		<WTWEBPAGE name="3003" contentpage="true" 
+			aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" focus="false" secured="52">
+		<!--============================================================================================-->
+			<WTPARAM name="OrgCourseID" datatype="number"/>
+			<WTPARAM name="CourseID" datatype="number"/>
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="contentpage" datatype="number"/>
+
+			<WTSUB name="UpdateOrgCourse">
+				<WTOBJECT name="OrgCourse" project="ptsOrgCourseUser" class="COrgCourse">
+					<WTMETHOD name="GetOrgCourse">
+						<WTCONDITION expr="PARAM(OrgCourseID)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						<WTPARAM name="reqOrgCourseID" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgCourseID" direction="input" value="PARAM(OrgCourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>	
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgCourse" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+			<WTSUB name="LoadOrgCourse">
+				<WTOBJECT name="OrgCourse" project="ptsOrgCourseUser" class="COrgCourse">
+					<WTMETHOD name="GetOrgCourse">
+						<WTCONDITION expr="PARAM(OrgCourseID)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						<WTPARAM name="reqOrgCourseID" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="Load">
+						<WTPARAM name="OrgCourseID" direction="input" value="PARAM(OrgCourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>			
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgCourse" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Course" project="ptsCourseUser" class="CCourse">
+					<WTMETHOD name="Load">
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourse" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadOrgCourse"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTCALLSUB name="UpdateOrgCourse"/>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="OrgCourse" project="ptsOrgCourseUser" class="COrgCourse">
+					<WTMETHOD name="GetOrgCourse">
+						<WTCONDITION expr="PARAM(OrgCourseID)" oper="equal" value="CONST(0)"/>
+						<WTPARAM name="OrgID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="CourseID" direction="input" value="PARAM(CourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						<WTPARAM name="reqOrgCourseID" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTMETHOD name="Delete">
+						<WTPARAM name="OrgCourseID" direction="input" value="PARAM(OrgCourseID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadOrgCourse">
+					<WTCONDITION expr="IsErrors"/>
+				</WTCALLSUB>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>		
+					<WTSTATIC col="1" merge="2" tag="OrgCourse" value="ATTR(Course.CourseName)" align="left" class="PageHeading"/>
+				</WTROW>
+				<WTROW>		
+					<WTSTATIC col="1" merge="2" tag="Trainer" value="ATTR(Course.TrainerName)" align="left" bold="true"/>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="2" align="left" value="ATTR(Course.Description)" class="prompt"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+	
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(OrgCourse.Status)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="QuizLimit"/>
+					<WTCOMBO col="2" value="ATTR(OrgCourse.QuizLimit)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(OrgCourse.Seq)" size="3"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="OrgID"/>
+					<WTTEXT col="2" value="ATTR(OrgCourse.OrgID)" size="5"/>
+				</WTROW>
+								
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTCONDITION expr="IsOrgManager"/>
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Cancel)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(Delete)" align="center" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+	</WTWEBPAGES>
+</WTROOT>

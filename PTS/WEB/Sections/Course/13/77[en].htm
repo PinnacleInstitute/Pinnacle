@@ -1,0 +1,56 @@
+This page explains the uses for other types of form controls including lists, combo boxes, checkboxes, option groups, and command buttons.
+<P><B> List and Combo Boxes</B>
+<P>If there are small, finite number of values for a certain field on a form, using combo or list boxes may be a quicker and easier way of entering data. These two control types differ in the number of values they display. List values are all displayed while the combo box values are not displayed until the arrow button is clicked to open it as shown in these examples:
+<TABLE cellSpacing=5 cellPadding=0 width="40%" align=center border=0>
+<TBODY>
+<TR>
+<TD width="50%"><B>Combo Box</B></TD>
+<TD width="50%"><B>List Box</B></TD>
+</TR><TR vAlign=top>
+<TD width="50%"><SELECT size=1 name=select1> <OPTION selected>Academic 3<OPTION>Ben Hill Griffin III Hall<OPTION>Reed Hall<OPTION>Whitaker Hall</OPTION></SELECT></TD>
+<TD width="50%"><SELECT size=3 name=select2> <OPTION>Academic 3<OPTION>Ben Hill Griffin III Hall<OPTION>Reed Hall<OPTION>Whitaker Hall</OPTION></SELECT></TD>
+</TR></TBODY></TABLE>
+<P>By using a combo or list box, the name of the academic building does not need to be typed for every record. Instead, it simply needs to be selected from the list. Follow these steps to add a list or combo box to a form:
+<OL>
+<LI>Open the form in <B>Design View</B>. 
+<LI>Select <B>View|Toolbox</B> to view the toolbox and make sure the "Control Wizards" button is pressed in. 
+<LI>Click the list or combo box tool button and draw the outline on the form. The combo box wizard dialog box will appear. 
+<LI>Select the source type for the list or combo box values and click <B>Next &gt;</B>.
+<BR><IMG height=335 alt="[Combo Box Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/combowizard1.gif" width=486 vspace=10 border=1> 
+<LI>Depending on your choice in the first dialog box, the next options will vary. If you chose to look up values from a table or query, the following box will be displayed. Select the table or query from which the values of the combo box will come from. Click <B>Next &gt;</B> and choose fields from the table or query that was selected. Click <B>Next &gt;</B> to proceed.
+<BR><IMG height=335 alt="[Combo Box Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/combowizard2.gif" width=486 vspace=10 border=1> 
+<LI>On the next dialog box, set the width of the combo box by clicking and dragging the right edge of the column. Click <B>Next &gt;</B>.
+<BR><IMG height=335 alt="[Combo Box Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/combowizard3.gif" width=486 vspace=10 border=1> 
+<LI>The next dialog box allows tells Access what to do with the value that is selected. Choose "Remember the value for later use" to use the value in a macro or procedure (the value is discarded when the form is closed), or select the field that the value should be stored in. Click <B>Next &gt;</B> to proceed to the final screen.
+<BR><IMG height=335 alt="[Combo Box Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/combowizard4.gif" width=486 vspace=10 border=1> 
+<LI>Type the name that will appear on the box's label and click <B>Finish</B>.
+<BR>
+</OL>
+<P><B> Check Boxes and Option Buttons</B>
+<P>Use check boxes and option buttons to display yes/no, true/false, or on/off values. Only one value from a group of option buttons can be selected while any or all values from a check box group can be chosen. Typically, these controls should be used when five or less options are available. Combo boxes or lists should be used for long lists of options. To add a checkbox or option group:
+<OL>
+<LI>Click the <B>Option Group</B> tool on the toolbox and draw the area where the group will be placed on the form with the mouse. The option group wizard dialog box will appear. 
+<LI>On the first window, enter labels for the options and click the tab key to enter additional labels. Click <B>Next &gt;</B> when finished typing labels.
+<BR><IMG height=281 alt="[Option Group Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/optiongroup1.gif" width=451 vspace=10 border=1> 
+<LI>On the next window, select a default value if there is any and click <B>Next &gt;</B>. 
+<BR><IMG height=281 alt="[Option Group Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/optiongroup2.gif" width=451 vspace=10 border=1> 
+<LI>Select values for the options and click <B>Next &gt;</B>.
+<BR><IMG height=281 alt="[Option Group Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/optiongroup3.gif" width=451 vspace=10 border=1> 
+<LI>Choose what should be done with the value and click <B>Next &gt;</B>.
+<BR><IMG height=281 alt="[Option Group Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/optiongroup4.gif" width=451 vspace=10 border=1> 
+<LI>Choose the type and style of the option group and click <B>Next &gt;</B>.
+<BR><IMG height=281 alt="[Option Group Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/optiongroup5.gif" width=451 vspace=10 border=1> 
+<LI>Type the caption for the option group and click <B>Finish</B>. 
+</OL>
+<P><B> Command Buttons</B>
+<P>In this example, a command button beside each record is used to open another form.
+<OL>
+<LI>Open the form in Design View and ensure that the Control Wizard button on the toolbox is pressed in. 
+<LI>Click the command button icon on the toolbox and draw the button on the form. The Command Button Wizard will then appear. 
+<LI>On the first dialog window, action categories are displayed in the left list while the right list displays the actions in each category. Select an action for the command button and click <B>Next&nbsp;&gt;</B>.
+<BR><IMG height=311 alt="[Command Button Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/commandbutton1.gif" width=486 vspace=10 border=1> 
+<LI>The next few pages of options will vary based on the action you selected. Continue selecting options for the command button. 
+<LI>Choose the appearance of the button by entering caption text or selecting a picture. Check the <B>Show All Pictures</B> box to view the full list of available images. Click <B>Next &gt;</B>. 
+<BR><IMG height=311 alt="[Command Button Wizard]" src="http://www.fgcu.edu/support/office2000/access/images/commandbutton5.gif" width=486 vspace=10 border=1> 
+<LI>Enter a name for the command button and click <B>Finish</B> to create the button. 
+</OL>

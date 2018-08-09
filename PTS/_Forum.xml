@@ -1,0 +1,1305 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="84" name="Forum" alias="mbf" language="false" >
+
+		<!--Identity-->
+		<WTATTRIBUTE id="8401" name="ForumID" type="number" identity="true" min="1" source="entity"/>
+		<WTATTRIBUTE id="8402" name="ParentID" type="number" source="entity"/>
+
+		<!--Foreign Keys-->
+
+		<!--Foreign Table Fields-->
+		<WTATTRIBUTE id="8403" name="ParentName" type="text" length="60" min="1" max="60" source="join">
+			<WTJOIN entity="Parent" name="ForumName"/>
+		</WTATTRIBUTE>
+		
+		<!--Attributes-->
+		<WTATTRIBUTE id="8405" name="ForumName" type="text" length="60" min="1" max="60" source="entity" title="true" required="true"/>
+		<WTATTRIBUTE id="8406" name="Seq" type="number" source="entity"/>
+		
+		<WTATTRIBUTE id="8407" name="Description" type="text" length="500" min="1" max="500" source="entity"/>
+		
+		<WTATTRIBUTE id="8497" name="MessageDate" type="date" source="entity" persist="false"/>
+		<WTATTRIBUTE id="8499" name="BoardUserID" type="number" source="entity" persist="false"/>
+
+		<!--Indexes-->
+		<WTINDEX name="ParentID">
+			<WTATTRIBUTE name="ParentID"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Forum" entity="Forum" alias="mbf"/>
+			<WTRELATIONSHIP name="Common" entity="Forum" alias="mbf">
+				<WTENTITY name="Parent" entity="Forum" alias="mbfp">
+					<WTATTRIBUTE alias="mbf" name="ParentID" relalias="mbfp" relname="ForumID"/>
+				</WTENTITY>
+			</WTRELATIONSHIP>
+		</WTRELATIONSHIPS>
+
+		<!--Parent-->
+
+		<!--List-->
+		<WTENUM id="1" type="find">
+			<WTATTRIBUTE name="ForumName" default="true"/>
+		</WTENUM>
+		
+		<WTENUM id="2" type="list"/>
+
+	</WTENTITY>
+
+	<WTPROCEDURES>
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTCODEGROUP>
+				<WTINSERT/>
+			</WTCODEGROUP>
+			<WTSETVALUE name="NewID" value="CONST(@@IDENTITY)"/>
+<!--
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Forum_AddMUC">
+					<WTPARAM name="ATTR(ForumID)" direction="input" value="NewID"/>
+					<WTPARAM name="ATTR(ForumName)" direction="input" value="PARAM(ForumName)"/>
+					<WTPARAM name="ATTR(Description)" direction="input" value="PARAM(Description)"/>
+				</WTPROCEDURE>			
+			</WTCODEGROUP>	
+-->					
+			<WTSETVALUE name="PARAM(ForumID)" value="NewID"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Count" name="Count" style="GenerateDataProc.xsl"/>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(ForumID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+<!--
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Forum_DeleteMUC">
+					<WTPARAM name="ATTR(ForumID)" direction="input" value="PARAM(ForumID)"/>
+				</WTPROCEDURE>			
+			</WTCODEGROUP>	
+-->			
+			<WTCODEGROUP>
+				<WTDELETE>
+					<WTJOIN name="Forum" lock="true"/>
+					<WTCONDITION expr="ATTR(ForumID)" oper="equal" value="PARAM(ForumID)"/>
+				</WTDELETE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Enum" name="Enum" style="GenerateDataProc.xsl" column="ForumName">
+			<WTORDER name="Seq"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+<!--
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Forum_UpdateMUC">
+					<WTPARAM name="ATTR(ForumID)" direction="input" value="PARAM(ForumID)"/>
+					<WTPARAM name="ATTR(ForumName)" direction="input" value="PARAM(ForumName)"/>
+					<WTPARAM name="ATTR(Description)" direction="input" value="PARAM(Description)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+-->			
+			<WTCODEGROUP>
+				<WTUPDATE>
+					<WTJOIN name="Forum" lock="true"/>
+					<WTCONDITION expr="ATTR(Forum.ForumID)" oper="equal" value="PARAM(ForumID)"/>
+				</WTUPDATE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListForum" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(ParentID)" direction="input" required="false"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Forum.ForumID)"/>
+					<WTATTRIBUTE value="ATTR(Forum.ForumName)"/>
+					<WTATTRIBUTE value="ATTR(Forum.Description)"/>
+					<WTJOIN name="Forum"/>
+					<WTCONDITION expr="ATTR(Forum.ParentID)" oper="equal" value="PARAM(ParentID)"/>
+					<WTORDER name="ATTR(Forum.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListUserForum" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(BoardUserID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Forum.ForumID)"/>
+					<WTATTRIBUTE value="ATTR(Forum.ForumName)"/>
+					<WTATTRIBUTE value="ATTR(Forum.Description)"/>
+					<WTJOIN name="Forum"/>
+					<WTORDER name="ATTR(Forum.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListModerator" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(BoardUserID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Forum.ForumID)"/>
+					<WTATTRIBUTE value="ATTR(Forum.ParentID)"/>
+					<WTATTRIBUTE value="ATTR(Forum.ForumName)"/>
+					<WTJOIN name="Common"/>
+					<WTCONDITION expr="ATTR(BoardUserID)" oper="equal" value="PARAM(BoardUserID)"/>
+					<WTORDER name="ATTR(Forum.Seq)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--==================================================================-->
+		<WTPROCEDURE type="List" name="ListTB" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true" nodata="true">
+		<!--==================================================================-->
+			<WTPARAM name="ATTR(BoardUserID)" direction="input"/> <!-- MemberID -->
+			<WTPARAM name="ATTR(MessageDate)" direction="input"/>
+			<WTPARAM name="ATTR(Seq)" direction="input"/> <!-- list type -->
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Forum.ForumID)"/>
+					<WTATTRIBUTE value="ATTR(Forum.ForumName)"/>
+					<WTATTRIBUTE value="ATTR(Forum.Seq)"/> <!-- Message Count -->
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8402" caption="Forum" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="23">
+		<!--===============================================================================-->
+			<WTPARAM name="CategoryID" datatype="number"/>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ForumID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Forum.ParentID)" value="PARAM(CategoryID)"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlForum" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION name="Add" type="Add" id="1">
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ForumID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(Forum.ParentID)" value="PARAM(CategoryID)"/>
+					<WTSETATTRIBUTES/>
+					
+					<WTMETHOD name="Add">
+						<WTPARAM name="ForumID" direction="return" datatype="number"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlForum" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="Forum" class="PageHeading" align="left"/>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="ForumName"/>
+					<WTTEXT col="2" value="ATTR(Forum.ForumName)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(Forum.Seq)"/>
+				</WTROW>
+				
+
+			
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Add)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8403" caption="Forum" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="23">
+		<!--===============================================================================-->
+			<WTPARAM name="ForumID" datatype="number"/>
+			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlForum" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+			
+			<WTACTION name="Update" type="Update" id="1">
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTCONDITION expr="IsErrors"/>
+						<WTPARAM name="xmlForum" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+			
+			<WTACTION name="Delete" type="Delete" id="2">
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlForum" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="160" align="right"/>
+				<WTCOLUMN width="440" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" label="Forum" class="PageHeading" align="left"/>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="ATTR(ParentID)" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" tag="ParentName" value="ATTR(ParentName)" class="BoldText" align="left">
+						<WTLINK name="8403"><WTPARAM name="ForumID" value="ATTR(Forum.ParentID)"/></WTLINK>
+					</WTSTATIC>
+				</WTROW>				
+
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="ParentID"/>
+					<WTTEXT col="2" value="ATTR(Forum.ParentID)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="ForumName"/>
+					<WTTEXT col="2" value="ATTR(Forum.ForumName)"/>
+				</WTROW>
+				<WTROW >
+					<WTSTATIC col="1" tag="Seq"/>
+					<WTTEXT col="2" value="ATTR(Forum.Seq)"/>
+				</WTROW>
+			
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="2" value="CONST(Delete)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="3" value="CONST(Return)" align="center"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+<!-- ********** Forum Browser ********** -->		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8411" caption="Forum" focus="false" navbar="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="ForumID" datatype="number"/>
+			<WTPARAM name="IsChat" datatype="number"/>
+			<WTPARAM name="Page" datatype="number"/>
+			<WTPARAM name="Bookmark" datatype="date"/>
+			<WTPARAM name="TotalPages" datatype="number"/>
+			<WTPARAM name="ForumName" datatype="text"/>
+
+			<WTDATATXN name="Pages"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(brdusergroup)" oper="equal" value="CONST(0)"/>
+				<WTRETURN><WTLINK name="8305"/></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTSUB name="LoadThreads">
+				<WTOBJECT name="Messages" project="ptsMessageUser" class="CMessages">
+					<WTMETHOD name="ListForum">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="Page" direction="input" value="PARAM(Page)"/>
+						<WTPARAM name="ChangeDate" direction="input" value="PARAM(Bookmark)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+					If (.Count > 0) Then reqBookmark = .Item(.Count).ChangeDate
+</WTCUSTOM>							
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlMessages" direction="return" datatype="text"/>
+					</WTMETHOD>		
+				</WTOBJECT>
+<WTCUSTOM>
+					If CLng(reqPage) > 5 Then
+						tmpStartPage = CLng(reqPage) - 5
+					Else
+						tmpStartPage = 0
+					End If
+					If CLng(reqTotalPages) > ( CLng(tmpStartPage) + 10 ) Then
+						tmpEndPage = CLng(tmpStartPage) + 10
+					Else
+						tmpEndPage = reqTotalPages
+						tmpStartPage = CLng(tmpEndPage) - 10
+						If tmpStartPage &lt; 0 Then tmpStartPage = 0 End If
+					End If
+					
+					xmlPages = xmlPages + "&lt;PTSPAGES&gt;"
+					For tmpC = CLng(tmpStartPage) To CLng(tmpEndPage) Step 1
+					   xmlPages = xmlPages + "&lt;PTSPAGE"
+					   xmlPages = xmlPages + " id=" + Chr(34) + CStr(tmpC) + Chr(34)
+					   xmlPages = xmlPages + " name=" + Chr(34) + CStr(tmpC + 1) + Chr(34)
+					   xmlPages = xmlPages + "/&gt;"
+					Next
+					xmlPages = xmlPages + "&lt;/PTSPAGES&gt;"
+</WTCUSTOM>				
+			</WTSUB>
+			
+			<WTACTION name="New" type="New" id="0">					
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTCONDITION expr="PARAM(ForumID)" oper="greater" value="CONST(0)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlForum" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Message" project="ptsMessageUser" class="CMessage">
+					<WTCONDITION expr="PARAM(TotalPages)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(ForumID)" oper="greater" value="CONST(0)" connector="and"/>
+					<WTMETHOD name="GetForumPages">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						<WTPARAM name="reqTotalPages" direction="return" datatype="number"/>
+					</WTMETHOD>
+<WTCUSTOM>
+					If (Not IsDate(reqBookmark)) Then reqBookmark = CDate("1/1/1900") Else reqBookmark = CDate(reqBookmark)
+					If CLng(reqPageSize) &lt;= 0 Then
+						reqPageSize = 20
+					End If
+					tmpTotal = CDbl(CDbl(reqTotalPages)/CDbl(reqPageSize))
+					If ( tmpTotal > CLng(tmpTotal) ) Or (CLng(tmpTotal) &lt; 1) Then
+						reqTotalPages = CLng(tmpTotal) 
+					Else
+						reqTotalPages = CLng(tmpTotal) - 1
+					End If
+					reqPage = 0
+</WTCUSTOM>					
+				</WTOBJECT>
+				<WTCALLSUB name="LoadThreads">
+					<WTCONDITION expr="PARAM(ForumID)" oper="greater" value="CONST(0)"/>
+				</WTCALLSUB>
+				<WTOBJECT name="BoardUser" project="ptsBoardUserUser" class="CBoardUser">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BoardUserID" direction="input" value="SYS(brduserid)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBoardUser" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="left"/>
+
+				<WTROW margin-bottom="6">
+					<WTTABLE col="1">
+						<WTCOLUMN width="150" align="center"/>
+						<WTCOLUMN width="450" align="left"/>
+						<WTCOLUMN width="150" align="center"/>
+						<WTROW>
+							<WTIMAGE col="1" value="CONST(MessageBoard.gif)" rowspan="2"/>
+							<WTSTATIC col="2" class="PageHeading" align="center">
+								<WTSTATIC value="ATTR(Forum.ForumName)" space="1"/>
+								<WTSTATIC label="Forum" newline="1"/>
+							</WTSTATIC>
+							<WTSTATIC col="3" align="center" newline="1" rowspan="2">
+								<WTSTATIC newline="1"/>
+								<WTCODEGROUP>
+									<WTIMAGE value="CONST(NewMessage.gif)">
+										<WTLINK name="8502">
+											<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+											<WTPARAM name="ThreadID" value="CONST(0)"/>
+										</WTLINK>					
+									</WTIMAGE>
+								</WTCODEGROUP>
+							</WTSTATIC>
+							<WTSTATIC col="3" align="center" valign="top">
+								<WTSTATIC label="NewThread" bold="true">
+									<WTLINK name="8502">
+										<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+										<WTPARAM name="ThreadID" value="CONST(0)"/>
+									</WTLINK>					
+								</WTSTATIC>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="2" label="ForumText" align="left" class="prompt"/>
+						</WTROW>
+
+					</WTTABLE>
+				</WTROW>
+				
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					 <WTLINKGROUP col="1" align="right">
+						<WTLINK name="8303" label="EditUser" class="PageHeadingLink">
+							<WTCONDITION expr="SYS(brduserid)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="BoardUserID" value="ATTR(BoardUser.BoardUserID)"/>
+						</WTLINK>
+						<WTLINK name="8420" label="ConferenceRoom" class="PageHeadingLink">
+							<WTCONDITION expr="PARAM(IsChat)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+							<WTPARAM name="IsForum" value="CONST(1)"/>
+						</WTLINK>
+						<WTLINK name="8311" label="Moderators" class="PageHeadingLink">
+							<WTCONDITION expr="IsEmployee"/>
+							<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+							<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+							<WTPARAM name="ForumID" value="ATTR(ForumID)"/>
+						</WTLINK>
+						<WTLINK name="4620" label="Favorite" class="PageHeadingLink" target="Favorite">
+							<WTPARAM name="MemberID" value="SYS(MemberID)"/>
+							<WTPARAM name="RefType" value="CONST(4)"/>
+							<WTPARAM name="RefID" value="ATTR(ForumID)"/>
+							<WTPARAM name="Name"  value="ATTR(Forum.ForumName)"/>
+						</WTLINK>
+					 </WTLINKGROUP>
+				</WTROW>
+
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Message">
+						<WTCOLUMN width="5" align="left" valign="center"/>
+						<WTCOLUMN width="52" align="left" valign="center" label="Thread"/>
+						<WTCOLUMN width="8" align="center" valign="center" label="Replies"/>
+						<WTCOLUMN width="35" align="left" valign="center" label="StartedBy"/>
+						<WTROW height="30">
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Message.Status)" oper="less" value="CONST(2)"/>
+								<WTSTATIC col="1"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Message.Status)" oper="equal" value="CONST(2)"/>
+								<WTIMAGE col="1" value="CONST(locked.gif)" imgheight="18"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Message.Status)" oper="equal" value="CONST(3)"/>
+								<WTIMAGE col="1" value="CONST(locked.gif)" imgheight="18"/>
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Message.IsSticky)" oper="not-equal" value="CONST(0)"/>
+								<WTSTATIC col="2">
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(required.gif)" imgheight="18"/>
+									</WTCODEGROUP>
+									<WTSTATIC value="DATA(Message.MessageTitle)">
+										<WTLINK name="8512">
+											<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+											<WTPARAM name="ThreadID" value="DATA(Message.MessageID)"/>
+											<WTPARAM name="Title" value="DATA(Message.MessageTitle)"/>
+										</WTLINK>					
+									</WTSTATIC>
+								</WTSTATIC >
+							</WTCODEGROUP>
+							<WTCODEGROUP>
+								<WTCONDITION expr="DATA(Message.IsSticky)" oper="equal" value="CONST(0)"/>
+								<WTSTATIC col="2">
+									<WTSTATIC value="DATA(Message.MessageTitle)">
+										<WTLINK name="8512">
+											<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+											<WTPARAM name="ThreadID" value="DATA(Message.MessageID)"/>
+											<WTPARAM name="Title" value="DATA(Message.MessageTitle)"/>
+										</WTLINK>					
+									</WTSTATIC>
+								</WTSTATIC >
+							</WTCODEGROUP>
+							<WTSTATIC col="3" value="DATA(Message.Replies)"/>
+
+							<WTSTATIC col="4">
+								<WTSTATIC value="DATA(Message.CreateDate)"/>
+								<WTSTATIC value="CONST( - )"/>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Message.BoardUserName)" oper="not-exist"/>
+									<WTSTATIC label="Anonymous" newline="1"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Message.BoardUserName)" oper="not-equal" value="CONST('')"/>
+									<WTSTATIC value="DATA(Message.BoardUserName)" newline="1">
+										<WTLINK name="8303">
+											<WTPARAM name="BoardUserID" value="DATA(Message.BoardUserID)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Message.ModifyID)" oper="not-equal" value="CONST(0)"/>
+									<WTSTATIC value="DATA(Message.ChangeDate)"/>
+									<WTSTATIC value="CONST( - )"/>
+									<WTSTATIC value="DATA(Message.ModifyName)">
+										<WTCONDITION expr="DATA(Message.ModifyID)" oper="not-equal" value="SYS(brduserID)"/>
+										<WTLINK name="8304">
+											<WTPARAM name="BoardUserID" value="DATA(Message.ModifyID)"/>
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Message.ModifyName)" newline="1">
+										<WTCONDITION expr="DATA(Message.ModifyID)" oper="equal" value="SYS(brduserID)"/>
+										<WTLINK name="8303">
+											<WTPARAM name="BoardUserID" value="DATA(Message.ModifyID)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW>
+					<WTCONDITION expr="PARAM(TotalPages)" oper="greater" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(ForumID)" oper="greater" value="CONST(0)" connector="and"/>
+					<WTSTATIC col="1" align="right">
+							<WTREPEAT entity="Page">
+								<WTCODEGROUP>
+									<WTCONDITION expr="CONST(position())" oper="equal" value="CONST(1)"/>
+									<WTCONDITION expr="PARAM(Page)" oper="greater" value="CONST(0)" connector="and"/>
+									<WTSTATIC label="Prev">
+										<WTLINK name="8411" return="false" nodata="true">
+											<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+											<WTPARAM name="Page" value="CONST(&lt;xsl:value-of select=&quot;/DATA/PARAM/@page+-1&quot;/&gt;)"/>
+											<WTPARAM name="Bookmark" value="CONST(1/1/1900)"/>
+											<WTPARAM name="TotalPages" value="PARAM(TotalPages)"/>
+										</WTLINK>
+									</WTSTATIC>
+									<WTSTATIC value="CONST(|)"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Page.ID)" oper="not-equal" value="PARAM(Page)"/>
+									<WTSTATIC value="DATA(Page.Name)">
+										<WTLINK name="8411" return="false" nodata="true">
+											<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+											<WTPARAM name="Page" value="DATA(Page.ID)"/>
+											<WTPARAM name="Bookmark" value="CONST(1/1/1900)"/>
+											<WTPARAM name="TotalPages" value="PARAM(TotalPages)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="DATA(Page.ID)" oper="equal" value="PARAM(Page)"/>
+									<WTSTATIC value="DATA(Page.Name)" underline="true"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="PARAM(Page)" oper="not-equal" value="PARAM(TotalPages)" />
+									<WTCONDITION expr="CONST(position())" oper="not-equal" value="CONST(last())" connector="or"/>
+									<WTSTATIC value="CONST(|)"/>
+								</WTCODEGROUP>
+								<WTCODEGROUP>
+									<WTCONDITION expr="CONST(position())" oper="equal" value="CONST(last())"/>
+									<WTCONDITION expr="PARAM(Page)" oper="less" value="PARAM(TotalPages)" connector="and"/>
+									<WTSTATIC label="Next">
+										<WTLINK name="8411" return="false" nodata="true">
+											<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+											<WTPARAM name="Page" value="CONST(&lt;xsl:value-of select=&quot;/DATA/PARAM/@page+1&quot;/&gt;)"/>
+											<WTPARAM name="Bookmark" value="PARAM(Bookmark)"/>
+											<WTPARAM name="TotalPages" value="PARAM(TotalPages)"/>
+										</WTLINK>
+									</WTSTATIC>
+								</WTCODEGROUP>
+							</WTREPEAT>
+					</WTSTATIC>
+				</WTROW>
+
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8412" caption="Favorite" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl" secured="61">
+			<!--===============================================================================-->
+			<WTPARAM name="MemberID" datatype="number" />
+			<WTPARAM name="Mode" datatype="number" />
+			<WTPARAM name="VisitDate" datatype="text" />
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Forums" project="ptsForumUser" class="CForums">
+					<WTMETHOD name="ListTB">
+						<WTPARAM name="BoardUserID" direction="input" value="PARAM(MemberID)" />
+						<WTPARAM name="MessageDate" direction="input" value="PARAM(VisitDate)" />
+						<WTPARAM name="Seq" direction="input" value="PARAM(Mode)" />
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlForums" direction="return" datatype="text" />
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN />
+			</WTACTION>
+			<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="600" align="left" />
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(24)" />
+					<WTSTATIC col="1" align="left" label="PostedMessagesText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(25)" />
+					<WTSTATIC col="1" align="left" label="RepliedMessagesText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(26)" />
+					<WTSTATIC col="1" align="left" label="RepliedMessagesVisitText" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTCONDITION expr="PARAM(Mode)" oper="equal" value="CONST(27)" />
+					<WTSTATIC col="1" align="left" label="RepliedMessages30Text" class="prompt" />
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" height="1" color="SYS(divider)" />
+				</WTROW>
+				<WTROW>
+					<WTRECORDSET col="1" graybar="true" entity="Forum">
+						<WTCOLUMN width="20" align="center" valign="top" label="Messages" />
+						<WTCOLUMN width="80" align="left" valign="top" label="ForumName" />
+						<WTROW>
+							<WTCODEGROUP>
+								<WTSTATIC col="1" value="DATA(Seq)" />
+								<WTSTATIC col="2" value="DATA(ForumName)">
+									<WTLINK name="8411" target="Forum">
+										<WTPARAM name="ForumID" value="DATA(ForumID)" />
+									</WTLINK>
+								</WTSTATIC>
+							</WTCODEGROUP>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" action="3" value="CONST(Return)" align="center" />
+				</WTROW>
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8413" caption="Chat Rooms" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotConference" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTSETATTRIBUTE name="PARAM(OrgID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="ListMemberHierarchy">
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<!--				
+				<WTOBJECT name="CourseCategorys" project="ptsCourseCategoryUser" class="CCourseCategorys">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+-->				
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="3" label="ConferenceRooms" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="3" align="left" label="ConferenceRoomsText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="false" entity="Org">
+						<WTCOLUMN width="100" align="left" valign="top" label="CompanyConferenceRooms"/>
+						<WTROW>
+							<WTCONDITION expr="DATA(IsChat)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC col="2" value="DATA(Org.OrgName)">
+								<WTLINK name="8420" target="_blank">
+									<WTPARAM name="ForumID" value="DATA(Org.ForumID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--
+				<WTROW margin-top="24">
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSCOURSECATEGORYS/PTSCOURSECATEGORY))" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="false" entity="CourseCategory">
+						<WTCOLUMN width="100" align="left" valign="top" label="TrainingConferenceRooms"/>
+						<WTROW>
+							<WTSTATIC col="2" value="DATA(CourseCategoryName)">
+								<WTLINK name="8420" target="_blank">
+									<WTPARAM name="ForumID" value="DATA(ForumID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+-->
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" merge="3" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8414" caption="Message Boards" contentpage="true"
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+		<!--===============================================================================-->
+			<WTPARAM name="OrgID" datatype="number"/>
+			<WTPARAM name="ContentPage" datatype="number"/>
+			<WTPARAM name="Popup" datatype="number"/>
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="IsMemberOnly"/>
+				<WTCONDITION expr="NotDiscussion" connector="and"/>
+				<WTRETURN>
+					<WTLINK name="0419" return="false">
+						<WTPARAM name="Error" value="CONST(1)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTSETATTRIBUTE name="PARAM(OrgID)" value="SYS(CompanyID)">
+					<WTCONDITION expr="PARAM(OrgID)" oper="equal" value="CONST(0)"/>
+				</WTSETATTRIBUTE>
+				<WTOBJECT name="Orgs" project="ptsOrgUser" class="COrgs">
+					<WTMETHOD name="ListMemberHierarchy">
+						<WTPARAM name="OwnerID" direction="input" value="PARAM(OrgID)"/>
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlOrgs" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+<!--
+				<WTOBJECT name="CourseCategorys" project="ptsCourseCategoryUser" class="CCourseCategorys">
+					<WTMETHOD name="ListMember">
+						<WTPARAM name="MemberID" direction="input" value="SYS(MemberID)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlCourseCategorys" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+-->
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="150" align="left"/>
+				<WTCOLUMN width="300" align="left"/>
+				<WTCOLUMN width="150" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="3" label="MessageBoards" class="PageHeading"/>
+				</WTROW>
+
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTSTATIC col="1" merge="3" align="left" label="MessageBoardsText" class="prompt"/>
+				</WTROW>
+
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="3" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTROW margin-top="12">
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="false" entity="Org">
+						<WTCOLUMN width="100" align="left" valign="top" label="CompanyMessageBoards"/>
+						<WTROW>
+							<WTCONDITION expr="DATA(IsForum)" oper="not-equal" value="CONST(0)"/>
+							<WTSTATIC col="2" value="DATA(Org.OrgName)">
+								<WTLINK name="8411" target="_blank">
+									<WTPARAM name="ForumID" value="DATA(Org.ForumID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+<!--				
+				<WTROW margin-top="24">
+					<WTCONDITION expr="CONST(count(/DATA/TXN/PTSCOURSECATEGORYS/PTSCOURSECATEGORY))" oper="greater" value="CONST(0)"/>
+					<WTSTATIC col="1"/>
+					<WTRECORDSET col="2" graybar="false" entity="CourseCategory">
+						<WTCOLUMN width="100" align="left" valign="top" label="TrainingMessageBoards"/>
+						<WTROW>
+							<WTSTATIC col="2" value="DATA(CourseCategoryName)">
+								<WTLINK name="8411" target="_blank">
+									<WTPARAM name="ForumID" value="DATA(ForumID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+					</WTRECORDSET>
+				</WTROW>
+-->
+				<WTROW margin-top="24" margin-bottom="12">
+					<WTBUTTON col="1" merge="3" action="3" value="CONST(Return)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="3" value="CONST(Close)" align="center">
+						<WTCONDITION expr="PARAM(Popup)" oper="not-equal" value="CONST(0)"/>
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+		<WTWEBPAGE name="8420" caption="Conference Room" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl" secured="61">
+		<!--===============================================================================-->
+			<WTPARAM name="ForumID" datatype="number"/>
+			<WTPARAM name="Class" datatype="text"/>
+			<WTPARAM name="IsForum" datatype="number"/>
+			
+			<WTPARAM name="IsModerator" datatype="yesno"/>
+			<WTPARAM name="Debug" datatype="text"/> <!-- Used by Ryan for testing on the live server -->
+
+			<WTCODEGROUP>
+				<WTCONDITION expr="SYS(brdusergroup)" oper="equal" value="CONST(0)"/>
+				<WTRETURN><WTLINK name="8305"/></WTRETURN>
+			</WTCODEGROUP>
+
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="Forum" project="ptsForumUser" class="CForum">
+					<WTMETHOD name="Load">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				reqClass = .ForumName + " " + CStr(.ForumID) + "@conference" '"@groupchat.web1.pinnaclep.com"
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlForum" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="BoardUser" project="ptsBoardUserUser" class="CBoardUser">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BoardUserID" direction="input" value="SYS(brduserid)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlBoardUser" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="AuthUser" project="ptsAuthUser" class="CAuthUser">
+					<WTSETATTRIBUTE name="ATTR(AuthUserID)" value="SYS(userid)"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlAuthUser" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(IsModerator)" value="CONST(False)"/>
+				<WTOBJECT name="ForumModerator" project="ptsForumModeratorUser" class="CForumModerator">
+					<WTCONDITION expr="SYS(brdusergroup)" oper="equal" value="CONST(2)"/>
+					<WTMETHOD name="GetForumModerator">
+						<WTPARAM name="ForumID" direction="input" value="PARAM(ForumID)"/>
+						<WTPARAM name="BoardUserID" direction="input" value="SYS(brduserid)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+						<WTPARAM name="tmpForumModeratorID" direction="return" datatype="number"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="PARAM(IsModerator)" value="CONST(True)">
+						<WTCONDITION expr="CONST(tmpForumModeratorID)" oper="greater" value="CONST(0)"/>
+					</WTSETATTRIBUTE>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="PARAM(IsModerator)" value="CONST(True)">
+					<WTCONDITION expr="SYS(brdusergroup)" oper="equal" value="CONST(3)"/>
+				</WTSETATTRIBUTE>			
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750" align="center"/>
+
+				<WTROW margin-bottom="6">
+					<WTTABLE col="1">
+						<WTCOLUMN width="150" align="center"/>
+						<WTCOLUMN width="450" align="left"/>
+						<WTCOLUMN width="150" align="right"/>
+						<WTROW>
+							<WTIMAGE col="1" value="CONST(MessageBoard.gif)" rowspan="2"/>
+							<WTSTATIC col="2" class="PageHeading" align="center">
+								<WTSTATIC value="ATTR(Forum.ForumName)" space="1"/>
+								<WTSTATIC label="ConferenceRoom" newline="1"/>
+							</WTSTATIC>
+							<WTSTATIC col="3" label="Moderators" class="PageHeading" align="center">
+								<WTCONDITION expr="IsEmployee"/>
+								<WTCONDITION expr="IsOrgAdminOnly" connector="or"/>
+								<WTCONDITION expr="IsOrgManagerOnly" connector="or"/>
+								<WTLINK name="8311">
+									<WTPARAM name="ForumID" value="ATTR(ForumID)"/>
+								</WTLINK>
+							</WTSTATIC>
+						</WTROW>
+						<WTROW>
+							<WTSTATIC col="2" label="ConferenceRoomText" align="left" class="prompt"/>
+						</WTROW>
+					</WTTABLE>
+				</WTROW>
+				
+				<WTROW>
+					<WTDIVIDER col="1" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					 <WTLINKGROUP col="1" align="right">
+						<WTLINK name="8411" label="Forum" class="PageHeadingLink">
+							<WTCONDITION expr="PARAM(IsForum)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="ForumID" value="PARAM(ForumID)"/>
+							<WTPARAM name="IsChat" value="CONST(1)"/>
+						</WTLINK>
+						<WTLINK name="8303" label="EditUser" class="PageHeadingLink">
+							<WTCONDITION expr="SYS(brduserid)" oper="not-equal" value="CONST(0)"/>
+							<WTPARAM name="BoardUserID" value="ATTR(BoardUser.BoardUserID)"/>
+						</WTLINK>
+						<WTLINK name="4620" label="Favorite" class="PageHeadingLink" target="Favorite">
+							<WTPARAM name="MemberID" value="SYS(MemberID)"/>
+							<WTPARAM name="RefType" value="CONST(3)"/>
+							<WTPARAM name="RefID" value="PARAM(ForumID)"/>
+							<WTPARAM name="Name" value="ATTR(Forum.ForumName)"/>
+						</WTLINK>
+					 </WTLINKGROUP>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTAPPLET col="1" imgheight="400" imgwidth="600" name="CoffeeTalk" id="CoffeeTalk" codebase="include/chat" archive="smack.jar,smackx.jar,CoffeeTalk.jar" code="CoffeeTalk.class">
+						<WTPARAM name="cabbase" value="CONST(CoffeeTalk.cab)"/>
+						<WTPARAM name="server" value="CONST(web1.pinnaclep.com)"/>
+						<WTPARAM name="classroom" value="PARAM(Class)"/>
+						<WTPARAM name="userid" value="ATTR(AuthUser.Logon)"/>
+						<WTPARAM name="userpass" value="ATTR(AuthUser.Password)"/>
+						<WTPARAM name="nickname" value="ATTR(BoardUser.BoardUserName)"/>
+						<WTPARAM name="bgcolor" value="CONST(0xFFFFFF)"/>
+						<WTPARAM name="chat_color" value="CONST(0x0AF00A)"/>
+						<WTPARAM name="debug" value="PARAM(Debug)"/>
+						<WTPARAM name="moderator" value="PARAM(IsModerator)"/>
+					</WTAPPLET>
+				</WTROW>
+				
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" align="center" label="GetJava">
+						<WTLINK name="CONST(http://java.com/en/index.jsp)" target="Java" type="anchor"/>
+					</WTSTATIC>
+					<WTIMAGE col="1" imgpath="http://java.sun.com/j2se/1.5.0/docs/guide/deployment/deployment-guide/upgrade-guide/images/" value="CONST(get_java_red_button.gif)">
+						<WTLINK name="CONST(http://java.com/en/index.jsp)" target="Java" type="anchor"/>
+					</WTIMAGE>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--============================================================================================-->
+		<WTWEBPAGE name="ChatHelp" caption="Conference Room Help" navbar="false" footer="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+		<!--============================================================================================-->
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="HTMLFile" project="wtHTMLFile" class="CHTMLFile">
+					<WTSETATTRIBUTE name="ATTR(Filename)" value="CONST(&quot;ChatHelp.htm&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Path)" value="CONST(reqSysWebDirectory + &quot;Sections\&quot;)"/>
+					<WTSETATTRIBUTE name="ATTR(Language)" value="SYS(language)"/>
+					<WTSETATTRIBUTE name="ATTR(Project)" value="CONST(SysProject)"/>
+					<WTMETHOD name="Load"/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlHTMLFile" direction="return" datatype="text"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+	 		<!--**********************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="750"/>
+
+				<WTROW margin-top="6">
+					<WTSTATIC col="1" value="ATTR(HTMLFile.Data)" align="left" embedhtml="true"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--===============================================================================-->
+<!--
+		<WTWEBPAGE name="UploadControl" caption="File Upload" navbar="false" aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+			<WTPARAM name="UploadID" datatype="text"/>
+			
+			<WTACTION name="New" type="New" id="0">
+		
+			</WTACTION>			
+			
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+
+			</WTACTION>
+			<WTCONTENT>
+				<WTCOLUMN width="450" align="center"/>
+
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+-->				
+
+		<!--===============================================================================-->
+		<WTWEBPAGE name="UploadControl" content-color="EEEEEE" caption="File Upload" navbar="false" 
+		footer="false" header="false" stylesheet="FileUpload.css" aspstyle="GenerateWebASP.xsl"
+		 xslstyle="GenerateWebXSLItem.xsl" langfile="UploadControl" enablesessionstate="false">
+		<!--===============================================================================-->
+			<WTPARAM name="UID" datatype="number"/>
+			<WTPARAM name="Progress" datatype="money"/>
+			<WTPARAM name="KBDone" datatype="number"/>
+			<WTPARAM name="Status" datatype="number"/>
+			<WTPARAM name="StatusText" datatype="text"/>
+            			
+			<WTACTION name="New" type="New" id="0">
+				<WTOBJECT name="fileUpload" project="wtFileUpload" class="CFileUpload">
+					<WTSETATTRIBUTE name="ATTR(LogID)" value="PARAM(UID)"/>
+					<WTMETHOD name="FetchLog"/>
+					<WTSETATTRIBUTE name="CONST(FileName)" value="ATTR(FullFileName)"/>
+					<WTSETATTRIBUTE	 name= "CONST(FileSize)" value="ATTR(FileSize)"/>
+					<WTSETATTRIBUTE name="PARAM(KBDone)" value="ATTR(PhysicalFileSize)"/>
+					<WTSETATTRIBUTE name="PARAM(Status)" value="ATTR(Status)"/>
+				</WTOBJECT>
+				<WTSETATTRIBUTE name="CONST(FileSizeKB)" value="CONST(Filesize/1024)"/>
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(FileSize)" oper="greater" value="CONST(0)" />
+					<WTCONDITION expr="PARAM(KBDone)" oper="greater" value="CONST(0)"  connector="and"/>
+				 
+					<WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(1)" />
+						<WTSETATTRIBUTE name="PARAM(Progress)" value="CONST(1)"/>
+						
+					</WTCODEGROUP>
+					 <WTCODEGROUP>
+						<WTCONDITION expr="PARAM(Status)" oper="not-equal" value="CONST(1)" />
+						<WTSETATTRIBUTE name="PARAM(Progress)" value="CONST(reqKBDone/FileSize)"/>
+							
+					</WTCODEGROUP>
+				</WTCODEGROUP>
+				<WTCODEGROUP>
+					<WTCONDITION expr="CONST(FileSize)" oper="less-equal" value="CONST(0)" />
+					<WTCONDITION expr="PARAM(KBDone)" oper="less-equal" value="CONST(0)"  connector="or"/>
+					<WTSETATTRIBUTE name="PARAM(Progress)" value="CONST(0)"/>
+			    </WTCODEGROUP>
+			    <WTSETATTRIBUTE name="PARAM(KBDone)" value="CONST(Round(reqProgress * FileSizeKB, 1))"/>
+			    <WTCUSTOM>                       
+					strStatus = FormatNumber(lngKBDone, 0, -1, 0, -1) &amp; " of " &amp; FormatNumber(lngFileSizeKB, 0, -1, 0, -1) &amp; " KB (" &amp; Round(dblProgress*100, 1) &amp; "%)"
+				</WTCUSTOM>
+			</WTACTION>			
+			
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="450" align="center"/>
+
+				<WTMETA type="expires" content="Tue, 01 Jan 1981 01:00:00 GMT"/>
+				<WTMETA type="refresh" content="2,UploadControl.asp?UID=&lt;value-of select=&quot;/DATA/PARAM/@uid&quot;/&gt;">
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(Progress)" oper="less" value="CONST(1)" connector="and"/>
+				</WTMETA>
+
+				<WTROW>
+
+						
+					<WTSTATIC class="Title" label="UploadProgress" col="1">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)" />
+					  
+					</WTSTATIC>
+					<WTSTATIC class="Title" label="UploadComplete" col="1" prespace="false">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(1)" />
+					</WTSTATIC>
+					<WTSTATIC class="Error" align="center" label="UploadFileLength" col="1">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(2)" />
+					</WTSTATIC>
+					<WTSTATIC class="Error" align="center" label="InvalidExtension" col="1">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(3)" />
+					</WTSTATIC>
+					<WTSTATIC class="Error" align="center" label="InvalidName" col="1">
+						<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(4)" />
+					</WTSTATIC>
+					<WTSTATIC class="Error" align="center" label="SystemError" value="PARAM(Status)" col="1">
+						<WTCONDITION expr="PARAM(Status)" oper="less" value="CONST(0)" />
+					</WTSTATIC>
+				</WTROW>
+				
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(0)"/>
+					<WTCONDITION expr="PARAM(Status)" oper="equal" value="CONST(1)" connector="or" />
+					<WTROW>
+						<WTTABLE class="ProgressBox" col="1" >
+								<WTROW>
+									<WTSTATIC class="ProgressBar" col="1" value="CONST( )">
+										<WTCONDITION expr="PARAM(Progress)" oper="greater" value="CONST(0)" />
+									</WTSTATIC>
+									<WTSTATIC col="1" value="CONST( )">
+										<WTCONDITION expr="PARAM(Progress)" oper="less-equal" value="CONST(0)" />
+									</WTSTATIC>
+									
+								</WTROW>
+						</WTTABLE>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC  align="right" class="Status" value="PARAM(StatusText)" />
+					</WTROW>
+			</WTCODEGROUP>
+			<WTROW >
+			   <WTSTATIC height="10px" col="1"/>
+			</WTROW>
+			<WTROW>
+				<WTBUTTON  align="center" value="close" col="1"  disabled="true">
+					<WTCONDITION  expr="PARAM(Status)" oper="equal" value="CONST(0)" />
+					<WTCLICK>javascript:window.close();
+					</WTCLICK>
+				</WTBUTTON>
+				<WTBUTTON value="close"  align="center" col="1" >
+					<WTCONDITION  expr="PARAM(Status)" oper="not-equal" value="CONST(0)" />
+					<WTCLICK>javascript:window.close();
+					</WTCLICK>
+				</WTBUTTON>
+			</WTROW>
+			
+			</WTCONTENT>
+		</WTWEBPAGE>
+				
+	</WTWEBPAGES>
+
+</WTROOT>

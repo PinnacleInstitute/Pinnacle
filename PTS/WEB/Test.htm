@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+
+<HEAD>
+<link href="gray.css" rel="stylesheet" type="text/css">
+
+<script language="javascript1.2" src="include/codethatsdk.js"></script>
+<script language="javascript" src="include/codethattreepro.js"></script>
+<script language="javascript1.2">
+<!--
+var MemberMenuDef = {
+	style:{
+		size:[200,30],
+		bgcolor:"9AFF9A",
+		itemoffset:{x:15,y:2}
+	},
+	position:{absolute:false, pos:[10,10]},
+	items:[
+	{
+		text:"Marketing",
+		style:{
+			imgitem:"img/Prospect.gif",
+			imgdir:"img/Prospect.gif",
+			imgdiropen:"img/Prospect.gif"
+		},
+		menu:{
+			position:{anchor:ne,anchor_side:nw},
+			items:[
+			{
+				text:"Contacts",
+				style:{imgitem:"img/Suspect.gif"},
+				action:{js:"ShowTab('TabMarketing',1)"}
+			}
+			]
+		}
+	}
+	]
+};
+
+var TreeDef =
+{
+	"style" :
+	{
+		"css" : "xp",
+		"size"	 : [180, 20],
+		"bgcolor" : "#FCFCF9",
+		"itemoffset" : {
+			"x" : "15", "y" : "2"
+		}
+	},
+	"styleover" : {
+		"css" : "xp",
+		"bgcolor" : "#C1D2EE",
+		"color" : "#000000"
+	},
+	"position" : {
+		"absolute" : false, "pos" : [10, 10]
+	},
+	"items" : [
+	{
+		"text" : "[Home]&nbsp;",
+		"style" : {
+			"imgitem" : "themes_img/home.gif"
+		}
+	},
+	{
+		"text" : "[News]",
+		"style" : {
+			"imgitem" : "themes_img/news.gif",
+			"imgdir" : "themes_img/news.gif",
+			"imgdiropen" : "themes_img/news.gif"
+		},
+		"menu" : {
+			"style" : {
+				"imgitem" : "themes_img/date.gif"
+			},
+			"position" : {
+				"anchor" : "ne",
+				"anchor_side" : "nw"
+			},
+			"items"	 : [
+			{
+				"text" : "{23-06-2003}"
+			},
+			{
+				"text" : "{25-06-2003}"
+			},
+			{
+				"text" : "{26-06-2003}"
+			},
+			{
+				"text" : "{30-06-2003}"
+			} ]
+		}
+	},
+	{
+		"text" : "[About a company]",
+		"style" : {
+			"imgitem" : "themes_img/about.gif"
+		}
+	},
+	{
+		"text" : "[Our Forum]",
+		"style" : {
+			"imgitem" : "themes_img/forum.gif"
+		}
+	},
+	{
+		"text" : "[Contact Us]",
+		"style" : {
+			"imgitem" : "themes_img/contact.gif"
+		}
+	} ]
+}; 
+//-->
+</script>
+</HEAD>
+
+<BODY>
+
+<script language="javascript1.2">
+<!--
+var t1 = new CTree(TreeDef, "sample");
+t1.create(); 
+//-->
+</script>
+      
+<script language="javascript1.2">
+<!--
+t1.draw(); 
+//-->
+</script>
+
+</BODY>
+</html>

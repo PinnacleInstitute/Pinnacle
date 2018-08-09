@@ -1,0 +1,903 @@
+<WTROOT prefix="pts" dbo="dbo" system="Pinnacle">
+	<WTENTITY id="26" name="Guest" alias="gu" audit="false">
+
+		<!--Identity-->
+		<WTATTRIBUTE id="2601" name="GuestID" type="number" identity="true" min="1" required="true" source="entity"/>
+
+		<!--Foreign Keys-->
+		<WTATTRIBUTE id="2602" name="PartyID" type="number" min="1" source="entity"/>
+
+		<!--Foreign Table Fields-->
+
+		<!--Attribute-->
+		<WTATTRIBUTE id="2605" name="NameLast" type="text" length="15" min="1" max="15" source="entity" required="true"/>
+		<WTATTRIBUTE id="2606" name="NameFirst" type="text" length="15" min="1" max="15" source="entity" required="true"/>
+		<WTATTRIBUTE id="2607" name="GuestName" type="text" length="32" min="1" max="32" source="entity" title="true">
+			<WTCOMPUTE name="NameLast"/>
+			<WTCOMPUTE text=", "/>
+			<WTCOMPUTE name="NameFirst"/>
+			<WTCOMPUTE text=""/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2608" name="Email" type="text" length="80" min="1" max="80" source="entity" required="true"/>
+		<WTATTRIBUTE id="2609" name="Status" type="number" source="entity">
+			<WTENUM id="1" name="NotSent"/>
+			<WTENUM id="2" name="Sent"/>
+			<WTENUM id="3" name="AckYes"/>
+			<WTENUM id="4" name="AckNo"/>
+			<WTENUM id="5" name="AckMaybe"/>
+		</WTATTRIBUTE>
+		<WTATTRIBUTE id="2610" name="Attend" type="yesno" source="entity"/>
+		<WTATTRIBUTE id="2611" name="Sale" type="currency" source="entity"/>
+
+		<!--Indexes-->
+		<WTINDEX name="PartyID">
+			<WTATTRIBUTE name="PartyID"/>
+			<WTATTRIBUTE name="NameLast"/>
+			<WTATTRIBUTE name="NameFirst"/>
+		</WTINDEX>
+		<WTINDEX name="Email">
+			<WTATTRIBUTE name="Email"/>
+		</WTINDEX>
+
+		<!--Relationships-->
+		<WTRELATIONSHIPS>
+			<WTRELATIONSHIP name="Guest" entity="Guest" alias="gu"/>
+			<WTRELATIONSHIP name="Common" entity="Guest" alias="gu"/>
+		</WTRELATIONSHIPS>
+
+		<!-- System Constants --> 
+		<WTSYSCONS>
+			<WTSYSCON name="STATUS-NEW" value="1"/>
+			<WTSYSCON name="STATUS-SENT" value="2"/>
+			<WTSYSCON name="STATUS-YES" value="3"/>
+			<WTSYSCON name="STATUS-NO" value="4"/>
+			<WTSYSCON name="STATUS-MAYBE" value="5"/>
+		</WTSYSCONS>
+
+	</WTENTITY>
+
+	<!--Procedures-->
+	<WTPROCEDURES>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="Add" name="Add" style="GenerateDataProc.xsl"/>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE name="Count" type="Count" style="GenerateDataProc.xsl"/>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="Delete" name="Delete" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(GuestID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTDECLARE name="AuthUserID" datatype="number"/>
+			<WTDECLARE name="PartyID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTPROCEDURE name="Guest_FetchPartyID">
+					<WTPARAM name="GuestID" direction="input" value="PARAM(GuestID)"/>
+					<WTPARAM name="SYS(userid)" direction="input" value="PARAM(UserID)"/>
+					<WTPARAM name="PartyID" direction="output"/>
+				</WTPROCEDURE>
+				<WTDELETE>
+					<WTJOIN name="Guest" lock="true"/>
+					<WTCONDITION expr="ATTR(Guest.GuestID)" oper="equal" value="PARAM(GuestID)"/>
+				</WTDELETE>
+				<WTPROCEDURE name="Party_CalcSales">
+					<WTPARAM name="ATTR(PartyID)" direction="input" value="PartyID"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="Fetch" name="Fetch" style="GenerateDataProc.xsl">
+			<WTJOIN name="Common"/>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE name="FetchPartyID" type="Fetch" style="GenerateDataProc.xsl" template="new">
+			<WTPARAM name="ATTR(GuestID)" direction="input"/>
+			<WTPARAM name="SYS(userid)" direction="input"/>
+			<WTPARAM name="ATTR(PartyID)" direction="output"/>
+			<WTDECLARE name="PartyID" datatype="number"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE name="PartyID" value="ATTR(Guest.PartyID)"/>
+					<WTJOIN name="Guest" lock="false"/>
+					<WTCONDITION expr="ATTR(Guest.GuestID)" oper="equal" value="PARAM(GuestID)"/>
+				</WTSELECT>
+				<WTSETVALUE name="PARAM(PartyID)" value="PartyID" null="0"/>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="List" name="ListEmail" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(PartyID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Guest.GuestID)"/>
+					<WTATTRIBUTE value="ATTR(Guest.NameLast)"/>
+					<WTATTRIBUTE value="ATTR(Guest.NameFirst)"/>
+					<WTATTRIBUTE value="ATTR(Guest.Email)"/>
+					<WTJOIN name="Guest"/>
+					<WTCONDITION expr="ATTR(Guest.PartyID)" oper="equal" value="PARAM(PartyID)"/>
+					<WTCONDITION expr="ATTR(Guest.Status)" oper="equal" value="CONST(1)" connector="and"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="List" name="ListEmailAll" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(PartyID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Guest.GuestID)"/>
+					<WTATTRIBUTE value="ATTR(Guest.NameLast)"/>
+					<WTATTRIBUTE value="ATTR(Guest.NameFirst)"/>
+					<WTATTRIBUTE value="ATTR(Guest.Email)"/>
+					<WTJOIN name="Guest"/>
+					<WTCONDITION expr="ATTR(Guest.PartyID)" oper="equal" value="PARAM(PartyID)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE type="List" name="ListGuest" style="GenerateDataProc.xsl" template="new" passthru="true" noedit="true">
+			<WTPARAM name="ATTR(PartyID)" direction="input"/>
+			<WTCODEGROUP>
+				<WTSELECT>
+					<WTATTRIBUTE value="ATTR(Guest.GuestID)"/>
+					<WTATTRIBUTE value="ATTR(Guest.GuestName)" alias="GuestName"/>
+					<WTATTRIBUTE value="ATTR(Guest.Email)"/>
+					<WTATTRIBUTE value="ATTR(Guest.Status)"/>
+					<WTATTRIBUTE value="ATTR(Guest.Attend)"/>
+					<WTATTRIBUTE value="ATTR(Guest.Sale)"/>
+					<WTJOIN name="Guest"/>
+					<WTCONDITION expr="ATTR(Guest.PartyID)" oper="equal" value="PARAM(PartyID)"/>
+					<WTORDER name="ATTR(Guest.GuestName)"/>
+				</WTSELECT>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--================================================================================================-->
+		<WTPROCEDURE type="Update" name="Update" style="GenerateDataProc.xsl" template="new">
+			<WTDECLARE name="Now" datatype="date"/>
+			<WTDECLARE name="NewID" datatype="number"/>
+			<WTSETVALUE name="Now" value="SYS(timestamp)"/>
+			<WTCODEGROUP>
+				<WTUPDATE>
+					<WTJOIN name="Guest" lock="true"/>
+					<WTCONDITION expr="ATTR(Guest.GuestID)" oper="equal" value="PARAM(GuestID)"/>
+				</WTUPDATE>
+				<WTPROCEDURE name="Party_CalcSales">
+					<WTPARAM name="ATTR(PartyID)" direction="input" value="PARAM(PartyID)"/>
+				</WTPROCEDURE>
+			</WTCODEGROUP>
+		</WTPROCEDURE>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE name="UpdateEmailStatus" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="Result" datatype="number" direction="output"/>
+			<WTPARAM name="ATTR(PartyID)" direction="input"/>
+		</WTPROCEDURE>
+		<!--=====================================================================================================-->
+		<WTPROCEDURE name="CopyList" type="Check" style="GenerateDataProc.xsl" template="new" passthru="true" nodata="true">
+			<WTPARAM name="Result" datatype="number" direction="output"/>
+			<WTPARAM name="ATTR(PartyID)" direction="input"/>
+			<WTPARAM name="ATTR(GuestID)" direction="input"/> <!-- ApptID of Party Guest List to copy -->
+		</WTPROCEDURE>
+	</WTPROCEDURES>
+
+	<WTWEBPAGES>
+ 		<!--===============================================================================-->
+		<WTWEBPAGE name="2602" navbar="false" header="false" footer="false"  
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLAdd.xsl">
+ 		<!--===============================================================================-->
+			<WTPARAM name="PartyID" datatype="number"/>
+			
+			<WTACTION id="0" name="New" type="New">
+			</WTACTION>
+
+			<WTACTION id="2" name="Add" type="Add">
+				<WTOBJECT name="Guest" project="ptsGuestUser" class="CGuest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="GuestID" direction="input" value="CONST(0)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="ATTR(PartyID)" value="PARAM(PartyID)"/>
+					<WTSETATTRIBUTE name="ATTR(Status)" value="CONST(1)"/>
+<WTCUSTOM>
+			For x = 1 To 10
+				first = trim(Request.Form.Item("First" &amp; x))
+				last = trim(Request.Form.Item("Last" &amp; x))
+				email = trim(Request.Form.Item("Email" &amp; x))
+				If first &lt;&gt; "" And last &lt;&gt; "" And email &lt;&gt; "" Then 
+					.NameFirst = trim(first)
+					.NameLast = trim(last)
+					.Email = trim(email)
+					GuestID = CLng(.Add(CLng(reqSysUserID)))
+				End If	
+			Next
+</WTCUSTOM>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="20" align="left" />
+				<WTCOLUMN width="120" align="left" />
+				<WTCOLUMN width="120" align="left" />
+				<WTCOLUMN width="300" align="left" />
+
+				<WTFUNCTION name="ValidFirst(id)">
+					var first, last, email;
+					first = document.getElementById('First'+id).value;
+					last = document.getElementById('Last'+id).value;
+					email = document.getElementById('Email'+id).value;
+					if ( first == "" &amp;&amp; ( last != "" || email != "" ) )
+					   alert("#" + id + " first name is required");
+				</WTFUNCTION>
+				<WTFUNCTION name="ValidLast(id)">
+					var first, last, email;
+					first = document.getElementById('First'+id).value;
+					last = document.getElementById('Last'+id).value;
+					email = document.getElementById('Email'+id).value;
+					if ( last == "" &amp;&amp; ( first != "" || email != "" ) )
+					   alert("#" + id + " last name is required");
+					if ( last != "" &amp;&amp; first == "" )
+					   alert("#" + id + " first name is required");
+				</WTFUNCTION>
+				<WTFUNCTION name="ValidEmail(id)">
+					var first, last, email;
+					last = document.getElementById('Last'+id).value;
+					email = document.getElementById('Email'+id).value;
+					if ( email == "" &amp;&amp; last != "" )
+					   alert("#" + id + " email address is required");
+					if ( email != "" ) {
+						var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+						if (! filter.test(email)) alert("#" + id + " invalid email address");
+					}
+					if ( email != "" &amp;&amp; first == "" )
+					   alert("#" + id + " first name is required");
+					if ( email != "" &amp;&amp; last == "" )
+					   alert("#" + id + " last name is required");
+				</WTFUNCTION>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="4" align="left" label="NewGuest" class="PageHeading" />
+				</WTROW>
+				<WTROW margin-bottom="3">
+					<WTDIVIDER col="1" merge="4" align="left" height="1" color="SYS(headerdivider)" />
+				</WTROW>
+				<WTROW>
+					<WTIMAGE col="1" merge="2" value="CONST(Guests.gif)" align="center"/>
+					<WTSTATIC col="3" merge="2" align="left" class="prompt">
+						<WTSTATIC label="NewGuestText"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="4" height="1" color="SYS(divider)" />
+				</WTROW>
+
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTSTATIC col="2">
+						<WTSTATIC label="NameFirst" space="1"/>
+						<WTCODEGROUP><WTIMAGE value="CONST(Required.gif)"/></WTCODEGROUP>
+					</WTSTATIC>
+					<WTSTATIC col="3">
+						<WTSTATIC label="NameLast" space="1"/>
+						<WTCODEGROUP><WTIMAGE value="CONST(Required.gif)"/></WTCODEGROUP>
+					</WTSTATIC>
+					<WTSTATIC col="4">
+						<WTSTATIC label="Email" space="1"/>
+						<WTCODEGROUP><WTIMAGE value="CONST(Required.gif)"/></WTCODEGROUP>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(1.)"/>
+					<WTTEXT col="2" name="First1" size="15" maxlength="15"><WTEXIT>ValidFirst(1);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last1" size="15" maxlength="15"><WTEXIT>ValidLast(1);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email1" size="40" maxlength="80"><WTEXIT>ValidEmail(1);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(2.)"/>
+					<WTTEXT col="2" name="First2" size="15" maxlength="15"><WTEXIT>ValidFirst(2);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last2" size="15" maxlength="15"><WTEXIT>ValidLast(2);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email2" size="40" maxlength="80"><WTEXIT>ValidEmail(2);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(3.)"/>
+					<WTTEXT col="2" name="First3" size="15" maxlength="15"><WTEXIT>ValidFirst(3);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last3" size="15" maxlength="15"><WTEXIT>ValidLast(3);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email3" size="40" maxlength="80"><WTEXIT>ValidEmail(3);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(4.)"/>
+					<WTTEXT col="2" name="First4" size="15" maxlength="15"><WTEXIT>ValidFirst(4);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last4" size="15" maxlength="15"><WTEXIT>ValidLast(4);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email4" size="40" maxlength="80"><WTEXIT>ValidEmail(4);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(5.)"/>
+					<WTTEXT col="2" name="First5" size="15" maxlength="15"><WTEXIT>ValidFirst(5);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last5" size="15" maxlength="15"><WTEXIT>ValidLast(5);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email5" size="40" maxlength="80"><WTEXIT>ValidEmail(5);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(6.)"/>
+					<WTTEXT col="2" name="First6" size="15" maxlength="15"><WTEXIT>ValidFirst(6);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last6" size="15" maxlength="15"><WTEXIT>ValidLast(6);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email6" size="40" maxlength="80"><WTEXIT>ValidEmail(6);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(7.)"/>
+					<WTTEXT col="2" name="First7" size="15" maxlength="15"><WTEXIT>ValidFirst(7);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last7" size="15" maxlength="15"><WTEXIT>ValidLast(7);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email7" size="40" maxlength="80"><WTEXIT>ValidEmail(7);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(8.)"/>
+					<WTTEXT col="2" name="First8" size="15" maxlength="15"><WTEXIT>ValidFirst(8);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last8" size="15" maxlength="15"><WTEXIT>ValidLast(8);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email8" size="40" maxlength="80"><WTEXIT>ValidEmail(8);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(9.)"/>
+					<WTTEXT col="2" name="First9" size="15" maxlength="15"><WTEXIT>ValidFirst(9);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last9" size="15" maxlength="15"><WTEXIT>ValidLast(9);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email9" size="40" maxlength="80"><WTEXIT>ValidEmail(9);</WTEXIT></WTTEXT>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" value="CONST(10.)"/>
+					<WTTEXT col="2" name="First10" size="15" maxlength="15"><WTEXIT>ValidFirst(10);</WTEXIT></WTTEXT>
+					<WTTEXT col="3" name="Last10" size="15" maxlength="15"><WTEXIT>ValidLast(10);</WTEXIT></WTTEXT>
+					<WTTEXT col="4" name="Email10" size="40" maxlength="80"><WTEXIT>ValidEmail(10);</WTEXIT></WTTEXT>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="4" action="2" value="CONST(Add)" align="center">
+						<WTCONDITION expr="IsActive" />
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="4" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+				
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+ 		<!--===============================================================================-->
+		<WTWEBPAGE name="2603" navbar="false" header="false" footer="false" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--===============================================================================-->
+			<WTPARAM name="GuestID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Guest" project="ptsGuestUser" class="CGuest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="GuestID" direction="input" value="PARAM(GuestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlGuest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTACTION>
+
+			<WTACTION id="1" name="Update" type="Update">
+				<WTOBJECT name="Guest" project="ptsGuestUser" class="CGuest">
+					<WTMETHOD name="Load">
+						<WTPARAM name="GuestID" direction="input" value="PARAM(GuestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTES/>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlGuest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+					<WTMETHOD name="Save">
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+			<WTACTION id="4" name="Delete" type="Delete">
+				<WTOBJECT name="Guest" project="ptsGuestUser" class="CGuest">
+					<WTMETHOD name="Delete">
+						<WTPARAM name="GuestID" direction="input" value="PARAM(GuestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Guest" project="ptsGuestUser" class="CGuest">
+					<WTCONDITION expr="IsErrors"/>
+					<WTMETHOD name="Load">
+						<WTPARAM name="GuestID" direction="input" value="PARAM(GuestID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlGuest" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="NoErrors"/>
+				</WTRETURN>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="400" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2"  align="left" tag="Guest" value="ATTR(Guest.GuestName)" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="2">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="GuestName"/>
+					<WTTEXT col="2" value="ATTR(Guest.NameFirst)" width="140" label="NameFirst"/>
+					<WTTEXT col="2" value="ATTR(Guest.NameLast)" width="260" label="NameLast"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Email"/>
+					<WTTEXT col="2" value="ATTR(Guest.Email)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" tag="Status"/>
+					<WTCOMBO col="2" value="ATTR(Guest.Status)"/>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTSTATIC col="1"/>
+					<WTDIVIDER col="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1"/>
+					<WTCHECK col="2" value="ATTR(Guest.Attend)"/>
+					<WTSTATIC col="2" space="2"/>
+					<WTSTATIC col="2" tag="Sale"/>
+					<WTTEXT col="2" value="ATTR(Guest.Sale)" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(Update)" align="center">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+					<WTBUTTON col="1" action="4" value="CONST(Delete)" msg="ConfirmDelete">
+						<WTCONDITION expr="IsActive"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+ 		<!--===============================================================================-->
+		<WTWEBPAGE name="2604" caption="Copy Guest List" navbar="false" header="false" footer="false" 
+		 aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLItem.xsl">
+ 		<!--===============================================================================-->
+			<WTPARAM name="PartyID" datatype="number"/>
+			<WTPARAM name="ApptID" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+			</WTACTION>
+
+			<WTACTION id="1" name="Copy" type="Update">
+				<WTOBJECT name="Guest" project="ptsGuestUser" class="CGuest">
+					<WTCONDITION expr="PARAM(ApptID)" oper="not-equal" value="CONST(0)"/>
+					<WTMETHOD name="CopyList">
+						<WTPARAM name="PartyID" direction="input" value="PARAM(PartyID)"/>
+						<WTPARAM name="GuestID" direction="input" value="PARAM(ApptID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTRETURN>
+					<WTCONDITION expr="PARAM(ApptID)" oper="not-equal" value="CONST(0)"/>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="3" name="Cancel" type="Cancel">
+				<WTRETURN/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="right"/>
+				<WTCOLUMN width="400" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" align="left" label="CopyList" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-top="2" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTIMAGE col="1" value="CONST(Guests.gif)" align="center"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTSTATIC label="CopyListText"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-bottom="12">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="AccessCode" align="center"/>
+					<WTTEXT col="1" merge="2" value="PARAM(ApptID)" size="5" prespace="false"/>
+				</WTROW>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(CopyList)" align="center"/>
+					<WTBUTTON col="1" action="3" value="CONST(Cancel)"/>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+
+ 		<!--===============================================================================-->
+		<WTWEBPAGE name="2611" caption="Guest List" navbar="false" header="false" footer="false" 
+		aspstyle="GenerateWebASP.xsl" xslstyle="GenerateWebXSLList.xsl">
+ 		<!--===============================================================================-->
+			<WTPARAM name="PartyID" datatype="number"/>
+			<WTPARAM name="Count" datatype="number"/>
+			<WTPARAM name="Attended" datatype="number"/>
+			<WTPARAM name="Status1" datatype="number"/>
+			<WTPARAM name="Status2" datatype="number"/>
+			<WTPARAM name="Status3" datatype="number"/>
+			<WTPARAM name="Status4" datatype="number"/>
+			<WTPARAM name="Status5" datatype="number"/>
+
+			<WTSUB name="LoadGuests">
+				<WTOBJECT name="Party" project="ptsPartyUser" class="CParty">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PartyID" direction="input" value="PARAM(PartyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlParty" direction="return" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(2)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+				<WTOBJECT name="Guests" project="ptsGuestUser" class="CGuests">
+					<WTMETHOD name="ListGuest">
+						<WTPARAM name="PartyID" direction="input" value="PARAM(PartyID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				reqCount = 0
+				reqAttended = 0
+				reqStatus1 = 0
+				reqStatus2 = 0
+				reqStatus3 = 0
+				reqStatus4 = 0
+				reqStatus5 = 0
+				For Each oGuest in oGuests
+					With oGuest
+						reqCount = reqCount + 1
+						If .Attend &lt;&gt; "0" Then reqAttended = reqAttended + 1
+						Select Case .Status
+							Case 1: reqStatus1 = reqStatus1 + 1
+							Case 2: reqStatus2 = reqStatus2 + 1
+							Case 3: reqStatus3 = reqStatus3 + 1
+							Case 4: reqStatus4 = reqStatus4 + 1
+							Case 5: reqStatus5 = reqStatus5 + 1
+						End Select	
+					End With
+				Next
+</WTCUSTOM>
+					<WTMETHOD name="XML">
+						<WTPARAM name="xmlGuests" direction="return" concat="true" datatype="text"/>
+						<WTPARAM name="Option" direction="input" value="CONST(13)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			</WTSUB>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTCALLSUB name="LoadGuests"/>
+			</WTACTION>
+
+			<WTACTION id="1" name="Add" type="New">
+				<WTRETURN>
+					<WTLINK name="2602" nolocaldata="true">
+						<WTPARAM name="PartyID" value="PARAM(PartyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="4" name="Send" type="New">
+	<WTCUSTOM>
+					Set oHTTP = server.CreateObject("MSXML2.ServerXMLHTTP")
+					If oHTTP Is Nothing Then
+						Response.Write "Error #" &amp; Err.number &amp; " - " + Err.description
+					Else
+						'email the invitations
+						oHTTP.open "GET", "http://" + reqSysServerName + reqSysServerPath + "2615.asp?PartyID=" &amp; reqPartyID
+						oHTTP.send
+					End If
+					Set oHTTP = Nothing
+	</WTCUSTOM>
+				<WTCALLSUB name="LoadGuests"/>
+			</WTACTION>
+
+			<WTACTION id="5" name="SendAll" type="New">
+	<WTCUSTOM>
+					Set oHTTP = server.CreateObject("MSXML2.ServerXMLHTTP")
+					If oHTTP Is Nothing Then
+						Response.Write "Error #" &amp; Err.number &amp; " - " + Err.description
+					Else
+						'email the invitations
+						oHTTP.open "GET", "http://" + reqSysServerName + reqSysServerPath + "2615.asp?All=1&amp;PartyID=" &amp; reqPartyID
+						oHTTP.send
+					End If
+					Set oHTTP = Nothing
+	</WTCUSTOM>
+				<WTCALLSUB name="LoadGuests"/>
+			</WTACTION>
+
+			<WTACTION id="6" name="CopyList" type="New">
+				<WTRETURN>
+					<WTLINK name="2604" nolocaldata="true">
+						<WTPARAM name="PartyID" value="PARAM(PartyID)"/>
+					</WTLINK>
+				</WTRETURN>
+			</WTACTION>
+
+			<WTACTION id="7" name="DeleteChecked" type="New">
+				<WTOBJECT name="Guests" project="ptsGuestUser" class="CGuests">
+					<WTMETHOD name="ListGuest">
+						<WTPARAM name="PartyID" direction="input" value="PARAM(PartyID)"/>
+					</WTMETHOD>
+<WTCUSTOM>
+				For Each oGuest in oGuests
+					With oGuest
+						If Request.Form.Item( .GuestID ) = "on" Then .Delete CLng(.GuestID), CLng(reqSysUserID)
+					End With
+				Next
+</WTCUSTOM>
+				</WTOBJECT>
+				<WTCALLSUB name="LoadGuests"/>
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="100" align="left"/>
+				<WTCOLUMN width="500" align="left"/>
+
+				<WTROW>
+					<WTSTATIC col="1" merge="2" tag="Guests" value="ATTR(Party.PartyName)" class="PageHeading"/>
+				</WTROW>
+				<WTROW margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(headerdivider)"/>
+				</WTROW>
+				<WTROW>
+					<WTIMAGE col="1" value="CONST(Guests.gif)" align="center"/>
+					<WTSTATIC col="2" align="left" class="prompt">
+						<WTSTATIC label="SendInvitationsText"/>
+					</WTSTATIC>
+				</WTROW>
+				<WTROW margin-top="6" margin-bottom="6">
+					<WTDIVIDER col="1" merge="2" height="1" color="SYS(divider)"/>
+				</WTROW>
+
+				<WTCODEGROUP>
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTROW>
+						<WTRECORDSET col="1" merge="2" graybar="true" entity="Guest">
+							<WTCOLUMN width="22" align="left" valign="top" label="GuestName"/>
+							<WTCOLUMN width="38" align="left" valign="top" label="Email"/>
+							<WTCOLUMN width="18" align="left" valign="top" label="Status"/>
+							<WTCOLUMN width="9" align="center" valign="top" label="Attended"/>
+							<WTCOLUMN width="10" align="right" valign="top" label="Sale"/>
+							<WTCOLUMN width="3" align="right" valign="top"/>
+							<WTROW>
+								<WTSTATIC col="1">
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-YES)"/>
+										<WTIMAGE value="CONST(GreenChecksm.gif)"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-NO)"/>
+										<WTIMAGE value="CONST(RedChecksm.gif)"/>
+									</WTCODEGROUP>
+									<WTCODEGROUP>
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-MAYBE)"/>
+										<WTIMAGE value="CONST(YellowChecksm.gif)"/>
+									</WTCODEGROUP>
+									<WTSTATIC value="DATA(Guest.GuestName)" space="1"/>
+									<WTCODEGROUP>
+										<WTIMAGE value="CONST(Edit.gif)" alt="Edit" imgalign="absmiddle">
+											<WTLINK name="2603"><WTPARAM name="GuestID" value="DATA(Guest.GuestID)"/></WTLINK>
+										</WTIMAGE>
+									</WTCODEGROUP>
+								</WTSTATIC>
+								<WTSTATIC col="2" value="DATA(Guest.Email)"/>
+								<WTSTATIC col="3">
+									<WTSTATIC value="DATA(Guest.Status)">
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-NEW)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Guest.Status)" fontcolor="blue">
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-SENT)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Guest.Status)" fontcolor="green">
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-YES)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Guest.Status)" fontcolor="red">
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-NO)"/>
+									</WTSTATIC>
+									<WTSTATIC value="DATA(Guest.Status)" fontcolor="goldenrod">
+										<WTCONDITION expr="DATA(Guest.Status)" oper="equal" value="SYSCON(STATUS-MAYBE)"/>
+									</WTSTATIC>
+								</WTSTATIC>
+								<WTSTATIC col="4" value="DATA(Guest.Attend)"/>
+								<WTSTATIC col="5" value="DATA(Guest.Sale)"/>
+								<WTCHECK col="6" name="&lt;xsl:value-of select=&quot;@guestid&quot;/&gt;"/>
+							</WTROW>
+						</WTRECORDSET>
+					</WTROW>
+					<WTROW>
+						<WTSTATIC col="1" bold="true">
+							<WTSTATIC tag="TotalGuests" space="1"/>
+							<WTSTATIC value="PARAM(Count)"/>
+						</WTSTATIC>
+						<WTSTATIC col="2" bold="true" align="right">
+							<WTSTATIC tag="TotalAttended" space="1"/>
+							<WTSTATIC value="PARAM(Attended)"/>
+						</WTSTATIC>
+					</WTROW>
+
+					<WTROW>
+						<WTTABLE col="1" merge="2">
+							<WTCOLUMN width="50"/>
+							<WTCOLUMN width="250" align="right"/>
+							<WTCOLUMN width="50" align="left"/>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" tag="NewGuests"/>
+								<WTSTATIC col="3" value="PARAM(Status1)" bold="true"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" tag="PendingGuests" fontcolor="blue"/>
+								<WTSTATIC col="3" value="PARAM(Status2)" bold="true"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" tag="YesGuests" fontcolor="green"/>
+								<WTSTATIC col="3" value="PARAM(Status3)" bold="true"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" tag="NoGuests" fontcolor="red"/>
+								<WTSTATIC col="3" value="PARAM(Status4)" bold="true"/>
+							</WTROW>
+							<WTROW>
+								<WTSTATIC col="1"/>
+								<WTSTATIC col="2" tag="MaybeGuests" fontcolor="goldenrod"/>
+								<WTSTATIC col="3" value="PARAM(Status5)" bold="true"/>
+							</WTROW>
+						</WTTABLE>
+					</WTROW>
+
+				</WTCODEGROUP>
+
+				<WTSTATIC label="ConfirmSend"/>
+				<WTSTATIC label="ConfirmSendAll"/>
+
+				<WTROW margin-top="12" margin-bottom="12">
+					<WTBUTTON col="1" merge="2" action="1" value="CONST(NewGuest)" align="center"/>
+					<WTBUTTON col="1" merge="2" action="6" value="CONST(CopyList)" align="center">
+						<WTCONDITION expr="NotAnonymous"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="7" value="CONST(DeleteChecked)" align="center">
+						<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" value="CONST(Close)" align="center">
+						<WTCLICK>window.close()</WTCLICK>
+					</WTBUTTON>
+				</WTROW>
+
+				<WTROW margin-bottom="12">
+					<WTCONDITION expr="PARAM(Count)" oper="not-equal" value="CONST(0)"/>
+					<WTSTATIC col="1" merge="2" label="HostEmail" align="center" class="prompt">
+						<WTCONDITION expr="ATTR(Party.Email)" oper="not-exist"/>
+					</WTSTATIC>
+					<WTBUTTON col="1" merge="2" action="4" value="CONST(SendInvitations)" align="center" msg="ConfirmSend">
+						<WTCONDITION expr="ATTR(Party.Email)" oper="not-equal" value="CONST('')"/>
+					</WTBUTTON>
+					<WTBUTTON col="1" merge="2" action="5" value="CONST(SendInvitationsAll)" align="center" msg="ConfirmSendAll">
+						<WTCONDITION expr="ATTR(Party.Email)" oper="not-equal" value="CONST('')"/>
+					</WTBUTTON>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+		<!--==================================================================================================-->
+		<WTWEBPAGE name="2615" type="mail" aspstyle="GenerateWebASPMail.xsl" xslstyle="GenerateWebXSLMail.xsl" langfile="2615">
+		<!--==================================================================================================-->
+			<WTPARAM name="MailReturnURL" datatype="text" url="true"/>		<!--Required Parameter for Mail-->
+			<WTPARAM name="PartyID" datatype="number"/>
+			<WTPARAM name="All" datatype="number"/>
+
+			<WTACTION id="0" name="New" type="New">
+				<WTOBJECT name="Business" project="ptsBusinessUser" class="CBusiness">
+					<WTMETHOD name="Load">
+						<WTPARAM name="BusinessID" direction="input" value="CONST(1)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpSender)" value="ATTR(Business.SystemEmail)"/>
+				</WTOBJECT>
+				<WTOBJECT name="Party" project="ptsPartyUser" class="CParty">
+					<WTMETHOD name="Load">
+						<WTPARAM name="PartyID" direction="input" value="PARAM(PartyID)"/>
+						<WTPARAM name="SecurityToken" direction="input" value="SYS(userid)"/>
+					</WTMETHOD>
+					<WTSETATTRIBUTE name="CONST(tmpFrom)" value="ATTR(Email)"/>
+					<WTSETATTRIBUTE name="CONST(tmpSubject)" value="CONST(&quot;Invitation from &quot; + .HostName)"/>
+				</WTOBJECT>
+				
+				<WTMAIL from="tmpFrom" to="tmpTo" subject="tmpSubject" sender="tmpSender" emailtest="false">
+					<WTPREMAIL>
+<WTCUSTOM>
+If InStr(tmpFrom, "@")=0 Then tmpFrom = ""
+If tmpFrom &lt;&gt; "" Then
+
+			Set oGuests = server.CreateObject("ptsGuestUser.CGuests")
+			If oGuests Is Nothing Then
+			   DoError Err.Number, Err.Source, "Unable to Create Object - ptsGuestUser.CGuests"
+			Else
+			   With oGuests
+					.SysCurrentLanguage = reqSysLanguage
+					If reqAll = 0 Then
+						.ListEmail reqPartyID
+					Else
+						.ListEmailAll reqPartyID
+					End If
+					If (Err.Number &lt;&gt; 0) Then DoError Err.Number, Err.Source, Err.Description End If
+					tmpMasterBody = tmpBody
+					For Each oGuest in oGuests
+						With oGuest
+							tmpTo = .Email
+							tmpGuestID = .GuestID
+							tmpBody = Replace( tmpMasterBody, "{id}", tmpGuestID )
+						End With	
+</WTCUSTOM>
+					</WTPREMAIL>
+					<WTPOSTMAIL>
+<WTCUSTOM>
+
+					Next
+			   End With
+			End If
+			Set oGuests = Nothing
+End If
+</WTCUSTOM>
+					</WTPOSTMAIL>
+
+				</WTMAIL>
+
+				<WTOBJECT name="Guest" project="ptsGuestUser" class="CGuest">
+					<WTMETHOD name="UpdateEmailStatus">
+						<WTPARAM name="PartyID" direction="input" value="PARAM(PartyID)"/>
+					</WTMETHOD>
+				</WTOBJECT>
+			   
+			</WTACTION>
+
+	 		<!--************************************************************************************-->
+			<WTCONTENT>
+				<WTCOLUMN width="650" align="left"/>
+
+				<WTROW margin-bottom="12">
+					<WTSTATIC col="1" label="ViewInvitation" bold="true">
+						<WTLINK name="2506" return="false" secure="false" target="Invitation">
+							<WTPARAM name="G" value="CONST({id})"/>
+						</WTLINK>
+					</WTSTATIC>
+				</WTROW>
+
+			</WTCONTENT>
+		</WTWEBPAGE>
+		
+	</WTWEBPAGES>
+</WTROOT>

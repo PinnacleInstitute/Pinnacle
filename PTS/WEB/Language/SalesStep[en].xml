@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="SalesStep">Sales Step</LABEL>
+	<LABEL name="SalesSteps">Sales Steps</LABEL>
+	<LABEL name="NewSalesStep">Add New Sales Step</LABEL>
+	<LABEL name="FindSalesStep">Sales Steps</LABEL>
+	<LABEL name="SalesStepID">Step #</LABEL>
+	<LABEL name="SalesCampaignID">Sales Campaign</LABEL>
+	<LABEL name="EmailID">Email #</LABEL>
+	<LABEL name="SalesStepName">Name</LABEL>
+	<LABEL name="Description">Description</LABEL>
+	<LABEL name="Seq">Step #</LABEL>
+	<LABEL name="AutoStep">Auto Step</LABEL>
+	<LABEL name="NextStep">Next Step #</LABEL>
+	<LABEL name="Delay">Delay (hours)</LABEL>
+	<LABEL name="DateNo">Date #</LABEL>
+	<LABEL name="IsBoard">Display this Sales Step on the Sales Board</LABEL>
+	<LABEL name="BoardRate">Sales Board Conversion Rate</LABEL>
+	<LABEL name="Length">Recommended Length (hours)</LABEL>
+	<LABEL name="Email">Custom Email Address(s)</LABEL>
+	<LABEL name="Data">Data</LABEL>
+	<LABEL name="Count">Count</LABEL>
+	<LABEL name="Potential">Potential</LABEL>
+	<LABEL name="Current">Current</LABEL>
+	<LABEL name="EmailProspect">Email Prospect</LABEL>
+	<LABEL name="EmailMember">Email Member</LABEL>
+	<LABEL name="EmailCustom">Email Custom</LABEL>
+	<LABEL name="IsBoardTrue">Yes</LABEL>
+	<LABEL name="IsBoardFalse">No</LABEL>
+	<LABEL name="DateHelp">MILESTONE DATE: This Sales Step may optionally track when it was achieved. 
+	Enter a unique value from 1 - 10 to select the milestone number.  Each tracked Sales Step of this Sales Campaign must 
+	have its own unique milestone number.  A zero entry will not be tracked.</LABEL>
+	<LABEL name="BoardHelp">SALES BOARD: This Sales Step may optionally be displayed on the Sales Board. 
+	If displayed, specify the typical conversion rate for prospects that reach this step.  
+	This rate (decimal) will be multiplied by the prospect's potential value to calculate an estimated current value on the Sales Board.</LABEL>
+	<LABEL name="AutoStepHelp">AUTOMATED EMAIL STEP: This Sales Step may be an automatic step to be performed immediately
+	 (within the hour) by the system. Select the desired automatic step or leave blank for no automatic step.
+	 Select the email message from the second combo box for this automated email step.  Sales Prospect email messages are created with the Email Manager.</LABEL>
+	<LABEL name="NextStepHelp">AUTOMATED NEXT STEP: This Sales Step may be automatically set to the next Sales Step after the 
+	specify number of hours. (24 = 1 day, 168 = 7 days, 720 = 30 days). A zero entry will not be automatically changed.
+	Specify the next Step # to go to after this step is performed. A zero entry will not go to a next step.
+	(Predefined Steps: -3 = Fallback, -4 = Closed, -5 = Dead)</LABEL>
+	<LABEL name="MyAttachmentsText">ATTACHED DOCUMENTS: Click the Document name to edit or click the "Add New Document" link on the right to attach a file to this Sales Step.</LABEL>
+	<LABEL name="NoAttachments">ATTACHED DOCUMENTS: Click the "Add New Document" link on the right to attach a file to this Sales Step.</LABEL>
+	<LABEL name="NewAttachment">Add New Document</LABEL>
+	<LABEL name="AttachName">Name</LABEL>
+	<LABEL name="File">Attached File</LABEL>
+	<LABEL name="Status">Status</LABEL>
+	<LABEL name="AttachSize">Size</LABEL>
+	<LABEL name="AttachDate">Date</LABEL>
+	<LABEL name="Active">Active</LABEL>
+	<LABEL name="Inactive">Inactive</LABEL>
+	<LABEL name="Attachments">Attachments</LABEL>
+	<LABEL name="View">View</LABEL>
+</LANGUAGE>

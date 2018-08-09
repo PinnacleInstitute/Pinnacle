@@ -1,0 +1,477 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html STYLE="WIDTH: 432px; HEIGHT: 168px">
+	<head>
+		<title>Editor: Help</title>
+		<style> table {font: 8pt Tahoma;}
+	.btn { height: 22px; border: 1px solid buttonface; margin: 0; padding: 0;font: 8pt Tahoma; }
+	.btnOver { height: 22px; border: 1px outset;font: 8pt Tahoma; }
+	body {background: #d4d0c8; margin:0px;}
+	.btnDown {height: 22px; border: 1px inset; background-color: buttonface;font: 8pt Tahoma; }
+	.text1{display:inline;}
+	.text2{display:none;}
+	.title{font:14pt Arial;}
+	</style>
+		<script type="text/javascript" language="javascript">
+function expandText(spanID)
+	{document.all[spanID+2].style.display="inline"; document.all[spanID+1].style.display="none";}
+
+function collapseText(spanID)
+	{document.all[spanID+2].style.display="none"; document.all[spanID+1].style.display="inline";}
+		</script>
+		<script language="javascript">
+function expandAllText() {
+expandText("word","refresh","preview","print","about","help","html","maximize","minimize","spell","instable","showborders","tableprop","rowprop","insrowabove","insrowbelow","delrow","splitrow","inscolleft","inscolright","delcol","cellprop","inscellbefore","inscellafter","delcell","splitcell","mergecell","selectall","cut","copy","paste","delete","remove","undo","redo","find","bold","italics","underline","strike","super","sub","forecolor","backcolor","alignleft","aligncenter","alignright","alignjustify","alignnone","numlist","bulllist","unindent","indent","line","spchar","today","link","anchor","unlink","rtl","ltr");
+} 
+		</script>
+	</head>
+	<BODY BGCOLOR="#ffffff" unselectable="on">
+		<A href="#home"></A>
+		<table bgcolor="#ffffff" width="100%" border="0" cellspacing="0" cellpadding="6">
+			<tr valign="middle">
+				<td>
+					<IMG height="40" alt="Editor Help" src="../images/help.gif" width="40" align="left" border="0"><B CLASS="title">
+						Pinnacle&nbsp;Editor Help</B><BR>
+					&nbsp;<B>• Button Actions</B>
+					<P>Click on the icons for full information.</P>
+				</td>
+			</tr>
+		</table>
+		<table width="100%" border="1" cellspacing="0" cellpadding="3" style="FLOAT: left">
+			<tr>
+				<td>
+					<table border="0" cellspacing="2" cellpadding="2">
+						<span id="word1" class="text1">
+							<TBODY>
+								<tr valign="top">
+									<td CLASS="ui">
+										<span id="forecolor1" class="text1"></span>
+								<tr valign="top">
+									<td CLASS="ui"><A onclick="expandText('forecolor')" href="javascript:void(0)"><IMG height="17" alt="Foreground Color" src="../images/ed_color_fg.gif" width="17" border="0"></A></td>
+									<td><B>Font Foreground Color</B>
+						</span><span id="forecolor2" class="text2"><P>Opens the Color Picker Dialog allowing 
+								to change the foreground color of the selected text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('forecolor')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+											CLOSE</B></A></DIV>
+						</span>
+				</td>
+			</tr>
+			<span id="backcolor1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('backcolor')" href="javascript:void(0)"><IMG height="17" alt="Background" src="../images/ed_color_bg.gif" width="17" border="0"></A></td>
+					<td><B>Font Background Color</B>
+			</span><span id="backcolor2" class="text2"><P>Opens the Color Picker Dialog allowing 
+					to change the background color of the selected text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('backcolor')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="help1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('help')" href="javascript:void(0)"><IMG height="17" alt="Help" src="../images/ed_help.gif" width="17" border="0"></A></td>
+					<td><B>Help</B>
+			</span><span id="help2" class="text2"><P>Opens the help window, containing 
+					information on how to use the program.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('help')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="html1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('html')" href="javascript:void(0)"><IMG height="17" alt="View HTML Source" src="../images/ed_html.gif" width="17" border="0"></A></td>
+					<td><B>Html</B>
+			</span><span id="html2" class="text2"><P>Toggles the editor between HTML source and 
+					WYSIWYG mode.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('html')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="maximize1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('maximize')" href="javascript:void(0)"><IMG height="17" alt="Enlarge Editor" src="../images/fullscreen_maximize.gif" width="17" border="0"></A></td>
+					<td><B>Maximize Editor</B>
+			</span><span id="maximize2" class="text2"><P>Switches from Normal Editor to Full 
+					Screen Mode.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('maximize')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="minimize1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('minimize')" href="javascript:void(0)"><IMG height="17" alt="Normal Editor" src="../images/fullscreen_minimize.gif" width="17" border="0"></A></td>
+					<td><B>Minimize Editor</B>
+			</span><span id="minimize2" class="text2"><P>Switches from Full Screen Mode to Normal 
+					Editor.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('minimize')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="selectall1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('selectall')" href="javascript:void(0)"><IMG height="18" alt="Select All" src="../images/ed_selectall.gif" width="18" border="0"></A></td>
+					<td><B>Select All</B> [ctrl]+a</span><span id="selectall2" class="text2"><P>Highlights 
+					the entire contents of the editor.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('selectall')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="cut1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('cut')" href="javascript:void(0)"><IMG height="17" alt="Cut" src="../images/ed_cut.gif" width="17" border="0"></A></td>
+					<td><B>Cut</B> [ctrl]+x</span><span id="cut2" class="text2"><P>Removes the 
+					selected content and places it into the clipboard.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('cut')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="copy1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('copy')" href="javascript:void(0)"><IMG height="17" alt="Cipy" src="../images/ed_copy.gif" width="17" border="0"></A></td>
+					<td><B>Copy</B> [ctrl]+c</span><span id="copy2" class="text2"><P>Copies the 
+					selected content into the clipboard.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('copy')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="paste1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('paste')" href="javascript:void(0)"><IMG height="17" alt="Paste" src="../images/ed_paste.gif" width="17" border="0"></A></td>
+					<td><B>Paste</B> [ctrl]+v</span><span id="paste2" class="text2"><P>Inserts 
+					content from the clipboard into the editor at the selected position.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('paste')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="delete1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('delete')" href="javascript:void(0)"><IMG height="17" alt="Delete" src="../images/ed_delete.gif" width="17" border="0"></A></td>
+					<td><B>Delete Selection</B> [del]</span><span id="delete2" class="text2"><P>Deletes 
+					the selected content from the editor.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('delete')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="remove1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('remove')" href="javascript:void(0)"><IMG height="17" alt="Remove Format" src="../images/ed_remove.gif" width="17" border="0"></A></td>
+					<td><B>Remove</B> [alt]+x</span><span id="remove2" class="text2"><P>Removes 
+					format of the selected content.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('remove')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="undo1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('undo')" href="javascript:void(0)"><IMG height="17" alt="Undo" src="../images/ed_undo.gif" width="17" border="0"></A></td>
+					<td><B>Undo</B> [ctrl]+z</span><span id="undo2" class="text2"><P>Undoes the last operation in the editor.<P><B>Notes:</B><BR>
+					1. Open Word document, Spellchecking and Paste cannot be undone.<br>
+					2. Switching to HTML mode loses the editor's activity history and prevents you 
+					from undoing any of the previous actions.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('undo')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV></span></TD></TR>
+			<span id="redo1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('redo')" href="javascript:void(0)"><IMG height="17" alt="Redo" src="../images/ed_redo.gif" width="17" border="0"></A></td>
+					<td><B>Redo</B> [ctrl]+y</span><span id="redo2" class="text2"><P>Redoes the 
+					last operation in the editor.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('redo')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="find1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('find')" href="javascript:void(0)"><IMG height="23" alt="Find" src="../images/ed_find.gif" width="22" border="0"></A></td>
+					<td><B>Search and Replace</B> [ctrl]+s</span><span id="find2" class="text2"><P>Opens 
+					the Search and Replace dialog, allowing you to find and replace words or 
+					phrases within the editor.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('find')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="bold1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('bold')" href="javascript:void(0)"><IMG height="17" alt="Bold" src="../images/ed_format_bold.gif" width="17" border="0"></A></td>
+					<td><B>Bold</B> [ctrl]+b</span><span id="bold2" class="text2"><P>Toggles the 
+					selected text between Bold and Normal text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('bold')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="italics1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('italics')" href="javascript:void(0)"><IMG height="17" alt="Italic" src="../images/ed_format_italic.gif" width="17" border="0"></A></td>
+					<td><B>Italics</B> [ctrl]+i</span><span id="italics2" class="text2"><P>Toggles 
+					the selected text between Italicized and Normal text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('italics')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="underline1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('underline')" href="javascript:void(0)"><IMG height="17" alt="Underline" src="../images/ed_format_underline.gif" width="17" border="0"></A></td>
+					<td><B>Underline</B> [ctrl]+u</span><span id="underline2" class="text2"><P>Toggles 
+					the selected text between Underlined and Normal text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('underline')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="strike1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('strike')" href="javascript:void(0)"><IMG height="17" alt="Strikethrough" src="../images/ed_format_strike.gif" width="17" border="0"></A></td>
+					<td><B>Striketrough</B>
+			</span><span id="strike2" class="text2"><P>Toggles the selected text between 
+					Strikethrough and Normal text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('strike')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="super1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('super')" href="javascript:void(0)"><IMG height="17" alt="Superscript" src="../images/ed_format_sup.gif" width="17" border="0"></A></td>
+					<td><B>Superscript</B>
+			</span><span id="super2" class="text2"><P>Toggles the selected text between 
+					Superscript and Normal text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('super')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="sub1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('sub')" href="javascript:void(0)"><IMG height="17" alt="Subscript" src="../images/ed_format_sub.gif" width="17" border="0"></A></td>
+					<td><B>Subscript</B>
+			</span><span id="sub2" class="text2"><P>Toggles the selected text between Subscript 
+					and Normal text.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('sub')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="alignleft1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('alignleft')" href="javascript:void(0)"><IMG height="17" alt="Align Left" src="../images/ed_align_left.gif" width="17" border="0"></A></td>
+					<td><B>Align Left</B> [alt]+l</span><span id="alignleft2" class="text2"><P>Aligns 
+					the selected paragraph to the left.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('alignleft')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="aligncenter1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('aligncenter')" href="javascript:void(0)"><IMG height="17" alt="Align Center" src="../images/ed_align_center.gif" width="17" border="0"></A></td>
+					<td><B>Align Center</B> [alt]+c</span><span id="aligncenter2" class="text2"><P>Centers 
+					the selected content.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('aligncenter')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="alignright1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('alignright')" href="javascript:void(0)"><IMG height="17" alt="Align Right" src="../images/ed_align_right.gif" width="17" border="0"></A></td>
+					<td><B>Align Right</B> [alt]+r</span><span id="alignright2" class="text2"><P>Aligns 
+					the selected paragraph to the right.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('alignright')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="alignjustify1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('alignjustify')" href="javascript:void(0)"><IMG height="17" alt="Justify Full" src="../images/ed_align_justify.gif" width="17" border="0"></A></td>
+					<td><B>Align Justified</B> [alt]+j</span><span id="alignjustify2" class="text2"><P>Aligns 
+					the selected paragraph to be fully justified.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('alignjustify')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="alignnone1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('alignnone')" href="javascript:void(0)"><IMG height="17" alt="Remove Alignment" src="../images/ed_align_none.gif" width="17" border="0"></A></td>
+					<td><B>Remove Alignment</B>
+			</span><span id="alignnone2" class="text2"><P>Removes alignment in selected 
+					paragraph.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('alignnone')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="numlist1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('numlist')" href="javascript:void(0)"><IMG height="17" alt="Ordered List" src="../images/ed_list_num.gif" width="17" border="0"></A></td>
+					<td><B>Numbered List</B> [ctrl]+n</span><span id="numlist2" class="text2"><P>Inserts 
+					an ordered list.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('numlist')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="bulllist1" class="text1"><tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('bulllist')" href="javascript:void(0)"><IMG height="17" alt="Bulleted list" src="../images/ed_list_bullet.gif" width="17" border="0"></A></td>
+					<td><B>Bulleted List</B> [ctrl]+l</span><span id="bulllist2" class="text2"><P>Inserts 
+					an unordered list.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('bulllist')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="unindent1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('unindent')" href="javascript:void(0)"><IMG height="17" alt="Unindent" src="../images/ed_indent_less.gif" width="17" border="0"></A></td>
+					<td><B>Unindent Paragraph</B>
+			</span><span id="unindent2" class="text2"><P>Removes the indent for the selected 
+					paragraph.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('unindent')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="indent1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('indent')" href="javascript:void(0)"><IMG height="17" alt="Indent" src="../images/ed_indent_more.gif" width="17" border="0"></A></td>
+					<td><B>Indent Paragraph</B>
+			</span><span id="indent2" class="text2"><P>Indents the selected content.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('indent')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="spell1" class="text1"><tr valign="top">
+					<td CLASS="ui"><a href="javascript:void(0)" onclick="expandText('spell')"><img height="17" alt="Spell Check" src="../images/ed_spellcheck.gif" width="17" border="0"></a></td>
+					<td><B>Spell Check</B> [alt]+s</span><span id="spell2" class="text2"><P>Opens the Spellchecker to spellcheck the editor contents. The spellchecker requires ActiveX enabled on your computer.<P><B>Enabling 
+						ActiveX</B><P>1. In your browser's toolbar, click on <B>Tools/Internet Options</B>
+					and select the tab labeled as <B>Security</B>.<br>
+					2. Select the green icon that reads <B>Trusted Sites</B> and click on the <B>Sites</B>
+					button.<br>
+					3. Un-check the box that reads <B>Require server verification (https://) for web 
+						sites in this zone</B>.<br>
+					4. Enter <b>http://andsell.com</b> in the box labeled as <B>Add this Web site to 
+						the zone</B> and click the <b>Add</b> button, then click <B>OK.</B><br>
+					5. Now, click the <B>Custom Level</B> button and, from the next window enable the 5 ActiveX settings.<P>The 
+					program will use your own Word's Spellchecker, meaning it will recognize all 
+					the words you have previously added to your dictionary.<DIV ALIGN="right"><a href="javascript:void(0)" class="text1" onclick="collapseText('spell')" style="FONT-SIZE:8pt; COLOR:red; FONT-FAMILY:Tahoma; TEXT-DECORATION:none"><IMG SRC="../images/parent.gif" ALT="Collapse" WIDTH="20" HEIGHT="16" BORDER="0"><B>
+								CLOSE</B></a></DIV></span></TD></TR>
+			<span id="image1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('image')" href="javascript:void(0)"><IMG height="17" alt="Insert Image" src="../images/ed_image.gif" width="17" border="0"></A></td>
+					<td><B>Insert Image</B>
+			</span><span id="image2" class="text2"><P>Opens the Insert Image Dialog allowing to 
+					insert and format a new image at the selected position in the editor or edit 
+					the selected one.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('image')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="line1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('line')" href="javascript:void(0)"><IMG height="17" alt="Horizontal Rule" src="../images/ed_line.gif" width="17" border="0"></A></td>
+					<td><B>Horizontal Line</B>
+			</span><span id="line2" class="text2"><P>Opens the Horizontal Rule Dialog allowing to 
+					insert and format a new line at the selected position in the editor or edit the 
+					selected one.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('line')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="spchar1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('spchar')" href="javascript:void(0)"><IMG height="17" alt="Special Characters" src="../images/ed_spec_char.gif" width="17" border="0"></A></td>
+					<td><B>Special Characters</B>
+			</span><span id="spchar2" class="text2"><P>Opens the Special Character Dialog to 
+					allow a special character to be inserted into the editor at the selected 
+					position.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('spchar')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="today1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('today')" href="javascript:void(0)"><IMG height="17" alt="Insert Today's Date" src="../images/ed_date.gif" width="17" border="0"></A></td>
+					<td><B>Insert Today's Date</B>
+			</span><span id="today2" class="text2"><P>Opens the Insert Today's Date Dialog to 
+					allow Today's Date to be inserted into the editor at the selected position in 
+					the chosen format.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('today')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="marquee1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('marquee')" href="javascript:void(0)"><IMG height="17" alt="Insert Marquee" src="../images/ed_marquee.gif" width="17" border="0"></A></td>
+					<td><B>Insert Marquee</B>
+			</span><span id="marquee2" class="text2"><P>Opens the Insert Marquee Dialog allowing 
+					to insert and format a new marquee at the selected position in the editor or 
+					edit the selected one.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('marquee')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="link1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('link')" href="javascript:void(0)"><IMG height="17" alt="Hyperlink" src="../images/ed_link.gif" width="17" border="0"></A></td>
+					<td><B>Hyperlink</B>
+			</span><span id="link2" class="text2"><P>Opens the Hyperlink Editor Dialog to convert 
+					the selected content into a hyperlink, to insert a new hyperlink, or to edit 
+					the selected one.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('link')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="unlink1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('unlink')" href="javascript:void(0)"><IMG height="17" alt="Unlink" src="../images/ed_unlink.gif" width="17" border="0"></A></td>
+					<td><B>Unlink</B>
+			</span><span id="unlink2" class="text2"><P>Removes an existing hyperlink from the 
+					selected content.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('unlink')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="anchor1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('anchor')" href="javascript:void(0)"><IMG height="17" alt="Anchor" src="../images/ed_anchor.gif" width="17" border="0"></A></td>
+					<td><B>Anchor</B>
+			</span><span id="anchor2" class="text2"><P>Opens the anchor window to allow an anchor 
+					to be created at the selected point.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('anchor')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="instable1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('instable')" href="javascript:void(0)"><IMG height="18" alt="Insert Table" src="../images/insert_table.gif" width="18" border="0"></A></td>
+					<td><B>Insert Table</B>
+			</span><span id="instable2" class="text2"><P>Opens the Insert Table Dialog allowing 
+					you to insert a table into the editor at the selected point or to edit the 
+					selected one.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('instable')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="showborders1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('showborders')" href="javascript:void(0)"><IMG height="18" alt="Show Table Borders" src="../images/ed_show_border.gif" width="18" border="0"></A></td>
+					<td><B>Show Table Borders</B>
+			</span><span id="showborders2" class="text2"><P>Toggles zero borders in tables 
+					between visible and invisible.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('showborders')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="tableprop1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('tableprop')" href="javascript:void(0)"><IMG height="18" alt="Table Properties" src="../images/ed_tableprop.gif" width="18" border="0"></A></td>
+					<td><B>Table Properties</B>
+			</span><span id="tableprop2" class="text2"><P>Opens the Table Properties Dialog 
+					allowing you to add properties to the selected table.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('tableprop')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="rowprop1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('rowprop')" href="javascript:void(0)"><IMG height="18" alt="Row Properties" src="../images/ed_rowprop.gif" width="18" border="0"></A></td>
+					<td><B>Row Properties</B>
+			</span><span id="rowprop2" class="text2"><P>Opens the Row Properties Dialog allowing 
+					you to add properties to the selected row.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('rowprop')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="insrowabove1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('insrowabove')" href="javascript:void(0)"><IMG height="22" alt="Insert Row Before" src="../images/ed_insabove.gif" width="23" border="0"></A></td>
+					<td><B>Insert Row Above</B>
+			</span><span id="insrowabove2" class="text2"><P>Inserts a new row above the selected 
+					row.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('insrowabove')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="insrowbelow1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('insrowbelow')" href="javascript:void(0)"><IMG height="22" alt="Insert Row After" src="../images/ed_insunder.gif" width="23" border="0"></A></td>
+					<td><B>Insert Row Below</B>
+			</span><span id="insrowbelow2" class="text2"><P>Inserts a new row below the selected 
+					row.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('insrowbelow')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="delrow1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('delrow')" href="javascript:void(0)"><IMG height="22" alt="Delete Row" src="../images/ed_delrow.gif" width="23" border="0"></A></td>
+					<td><B>Delete Row</B>
+			</span><span id="delrow2" class="text2"><P>Deletes the selected row and its contents.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('delrow')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="splitrow1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('splitrow')" href="javascript:void(0)"><IMG height="22" alt="Split Row" src="../images/ed_splitrow.gif" width="23" border="0"></A></td>
+					<td><B>Split Row</B>
+			</span><span id="splitrow2" class="text2"><P>Splits the selected row into two rows.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('splitrow')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="inscolleft1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('inscolleft')" href="javascript:void(0)"><IMG height="22" alt="Insert Column Before" src="../images/ed_insleft.gif" width="23" border="0"></A></td>
+					<td><B>Insert Right Column</B>
+			</span><span id="inscolleft2" class="text2"><P>Inserts a new column to the left of 
+					the selected column.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('inscolleft')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="inscolright1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('inscolright')" href="javascript:void(0)"><IMG height="22" alt="Insert Column After" src="../images/ed_insright.gif" width="23" border="0"></A></td>
+					<td><B>Insert Left Column</B>
+			</span><span id="inscolright2" class="text2"><P>Inserts a new column to the right of 
+					the selected column.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('inscolright')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="delcol1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('delcol')" href="javascript:void(0)"><IMG height="22" alt="Delete Column" src="../images/ed_delcol.gif" width="23" border="0"></A></td>
+					<td><B>Delete Column</B>
+			</span><span id="delcol2" class="text2"><P>Deletes the selected column and the 
+					contents inside.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('delcol')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="cellprop1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('cellprop')" href="javascript:void(0)"><IMG height="18" alt="Cell Properties" src="../images/ed_cellprop.gif" width="18" border="0"></A></td>
+					<td><B>Cell Properties</B>
+			</span><span id="cellprop2" class="text2"><P>Opens the Cell Properties Dialog 
+					allowing to add properties to the selected cell.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('cellprop')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="inscellbefore1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('inscellbefore')" href="javascript:void(0)"><IMG height="22" alt="Insert Cell Before" src="../images/ed_inscellft.gif" width="23" border="0"></A></td>
+					<td><B>Insert Cell Before</B>
+			</span><span id="inscellbefore2" class="text2"><P>Inserts a new cell to the left of 
+					the selected cell.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('inscellbefore')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="inscellafter1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('inscellafter')" href="javascript:void(0)"><IMG height="22" alt="Insert Cell After" src="../images/ed_inscelrgt.gif" width="23" border="0"></A></td>
+					<td><B>Insert Cell After</B>
+			</span><span id="inscellafter2" class="text2"><P>Inserts a new cell to the right of 
+					the selected cell.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('inscellafter')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="delcell1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('delcell')" href="javascript:void(0)"><IMG height="22" alt="Delete Cell" src="../images/ed_delcel.gif" width="23" border="0"></A></td>
+					<td><B>Delete Cell</B>
+			</span><span id="delcell2" class="text2"><P>Deletes the selected cell and its 
+					contents.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('delcell')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="splitcell1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('splitcell')" href="javascript:void(0)"><IMG height="22" alt="Split Cell" src="../images/ed_splitcel.gif" width="23" border="0"></A></td>
+					<td><B>Split Cell</B>
+			</span><span id="splitcell2" class="text2"><P>Splits the selected cell into two 
+					cells.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('splitcell')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+			<span id="mergecell1" class="text1">
+				<tr valign="top">
+					<td CLASS="ui"><A onclick="expandText('mergecell')" href="javascript:void(0)"><IMG height="22" alt="Merge Cells" src="../images/ed_mergecels.gif" width="23" border="0"></A></td>
+					<td><B>Merge Cell</B>
+			</span><span id="mergecell2" class="text2"><P>Merges the selected cell with the one 
+					to its right.<DIV ALIGN="right"><A class="text1" style="FONT-SIZE: 8pt; COLOR: red; FONT-FAMILY: Tahoma; TEXT-DECORATION: none" onclick="collapseText('mergecell')" href="javascript:void(0)"><IMG height="16" alt="Collapse" src="../images/parent.gif" width="20" border="0"><B>
+								CLOSE</B></A></DIV>
+			</span></TD></TR>
+		</table>
+		</SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></SPAN></TD></TR></TBODY></TABLE>
+	</BODY>
+</html>

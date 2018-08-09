@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<LANGUAGE><LABEL name="UploadProspects">Import Prospects</LABEL>
+	<LABEL name="UploadProspectsText">The Prospect Import File must be a comma delimited (CSV) format. 
+	Fields that contain commas must be contained within double quotes. 
+	Missing fields can be skipped with consecutive commas (, ,).</LABEL>
+	<LABEL name="UploadProspectsFormat">Each row of the file must include at least the Sales Campaign Number and the Prospect Name. Optional fields include the member number, 
+	contact first name, contact last name, Title, Email, Day Phone, Night Phone, Street, Unit, City, State, Zip, Country.</LABEL>
+	<LABEL name="UploadProspectsExample">1, "Acme, Inc.", 0, Bob, Jones, President, bob@jones.com, (214)345-9876, , 123 Main Street, , Dallas, TX, 75075, USA</LABEL>
+	<LABEL name="Submit">Submit</LABEL>
+	<LABEL name="Close">Close</LABEL>
+</LANGUAGE>

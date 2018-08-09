@@ -1,0 +1,36 @@
+<REPORTS source="ReportsData.asp" language="reports.xml" path="http://localhost/pts/" >
+	<REPORT id="1" name="MemberStatus" desc="MemberStatusDesc" chart="pie" type="company">
+		<PARAM name="CompanyID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="2" name="MemberVisit" desc="MemberVisitDesc" chart="pie" type="company">
+		<PARAM name="CompanyID" type="system"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="3" name="ContactStatus" desc="ContactStatusDesc" title="ContactStatusTitle" translate="true" chart="pie" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="4" name="ProspectStatus" desc="ProspectStatusDesc" title="ProspectStatusTitle" translate="true" chart="pie" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="10" name="MemberStatus" graybar="true" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<COLUMN name="name" width="300" align="left"/>
+		<COLUMN name="title" width="200" align="left"/>
+		<COLUMN name="salary" width="100" align="center" format="currency" decimal="2"/>
+		<COLUMN name="bonus" width="100" align="center" format="currency" decimal="2"/>
+		<TOTAL name="Total" type="count"/>
+		<TOTAL name="salary" type="sum" format="currency" decimal="2"/>
+		<TOTAL name="bonus" type="avg" format="currency" decimal="2"/>
+	</REPORT>
+</REPORTS>

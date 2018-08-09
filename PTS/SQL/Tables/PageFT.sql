@@ -1,0 +1,18 @@
+EXEC [dbo].pts_CheckTable 'PageFT'
+ GO
+
+CREATE TABLE [dbo].[PageFT] (
+   [PageID] int NOT NULL ,
+   [FT] nvarchar (1061) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL 
+   ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[PageFT] WITH NOCHECK ADD
+   CONSTRAINT [DF_Page_FT] DEFAULT ('') FOR [FT] 
+GO
+
+ALTER TABLE [dbo].[PageFT] WITH NOCHECK ADD
+   CONSTRAINT [PK_PageFT] PRIMARY KEY NONCLUSTERED
+   ([PageID])
+   WITH FILLFACTOR = 80 ON [PRIMARY]
+GO

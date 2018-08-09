@@ -1,0 +1,9 @@
+MD c:\pts\SQL
+MD c:\pts\SQL\Custom
+MD c:\pts\SQL\ForeignKeys
+MD c:\pts\SQL\Functions
+MD c:\pts\SQL\Jobs
+MD c:\pts\SQL\Procedures
+MD c:\pts\SQL\Scripts
+MD c:\pts\SQL\Tables
+MD c:\pts\Tools

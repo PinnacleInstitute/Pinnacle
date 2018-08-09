@@ -1,0 +1,24 @@
+<REPORTS source="ReportsData.asp" language="reports.xml" path="http://www.pinnaclep.com/" >
+	<REPORT id="1" name="MemberStatus" desc="MemberStatusDesc" chart="pie" type="company">
+		<PARAM name="CompanyID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="2" name="MemberVisit" desc="MemberVisitDesc" chart="pie" type="company">
+		<PARAM name="CompanyID" type="system"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="3" name="ContactStatus" desc="ContactStatusDesc" title="ContactStatusTitle" translate="true" chart="pie" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+	<REPORT id="4" name="ProspectStatus" desc="ProspectStatusDesc" title="ProspectStatusTitle" translate="true" chart="pie" type="member">
+		<PARAM name="MemberID" type="system"/>
+		<PARAM name="FromDate" type="date" init="now-365"/>
+		<PARAM name="ToDate" type="date" init="now"/>
+		<TOTAL name="Total" type="sum"/>
+	</REPORT>
+</REPORTS>

@@ -1,0 +1,249 @@
+
+<P><B> Introduction to Tables</B>
+<P>Tables are grids that store information in a database similar to the way an Excel worksheet stores information in a workbook. Access provides three ways to create a table for which there are icons in the Database Window. Double-click on the icons to create a table.
+<P align=center><IMG height=318 alt="[Database Window]" src="http://www.fgcu.edu/support/office2000/access/images/blankdb.gif" width=433 border=1>
+<BR><I>the Database Window</I>
+<UL>
+<LI><B>Create table in Design view</B> will allow you to create the fields of the table. This is the most common way of creating a table and is explained in detail below. 
+<LI><B>Create table using wizard</B> will step you through the creation of a table. 
+<LI><B>Create table by entering data</B> will give you a blank datasheet with unlabelled columns that looks much like an Excel worksheet. Enter data into the cells and click the <B>Save</B> button. You will be prompted to add a <A href="http://www.fgcu.edu/support/office2000/access/tables.html#primary_key">primary key</A> field. After the table is saved, the empty cells of the datasheet are trimmed. The fields are given generic names such as "Field1", "Field2", etc. To rename them with more descriptive titles that reflect the content of the fields, select <B>Format|Rename Column</B> from the menu bar or highlight the column, right-click on it with the mouse, and select <B>Rename Column</B> from the shortcut menu. 
+</UL>
+<P><B> Create a Table in Design View</B>
+<P>Design View will allow you to define the fields in the table before adding any data to the datasheet. The window is divided into two parts: a top pane for entering the field name, data type, and an option description of the field, and a bottom pane for specifying field properties.
+<P align=center><IMG height=540 alt="[Design View]" src="http://www.fgcu.edu/support/office2000/access/images/designview.gif" width=559>
+<UL>
+<LI><B>Field Name</B> - This is the name of the field and should represent the contents of the field such as "Name", "Address", "Final Grade", etc. The name can not exceed 64 characters in length and may include spaces. 
+<LI><B>Data Type</B> is the type of value that will be entered into the fields.
+<BR>
+<UL>
+<LI><B><I>Text</I></B> - The default type, text type allows any combination of letters and numbers up to a maximum of 255 characters per field record.
+<BR>
+<LI><B><I>Memo</I></B> - A text type that stores up to 64,000 characters.
+<BR>
+<LI><B><I>Number</I></B> - Any number can be stored.
+<BR>
+<LI><B><I>Date/Time</I></B> - A date, time, or combination of both.
+<BR>
+<LI><B><I>Currency</I></B> - Monetary values that can be set up to automatically include a dollar sign ($) and correct decimal and comma positions.
+<BR>
+<LI><B><I>AutoNumber</I></B> - When a new record is created, Access will automatically assign a unique integer to the record in this field. From the General options, select Increment if the numbers should be assigned in order or random if any random number should be chosen. Since every record in a datasheet must include at least one field that distinguishes it from all others, this is a useful data type to use if the existing data will not produce such values.
+<BR>
+<LI><B><I>Yes/No</I></B> - Use this option for True/False, Yes/No, On/Off, or other values that must be only one of two.
+<BR>
+<LI><B><I>OLE Object</I></B> - An OLE (Object Linking and Embedding) object is a sound, picture, or other object such as a Word document or Excel spreadsheet that is created in another program. Use this data type to embed an OLE object or link to the object in the database.
+<BR>
+<LI><B><I>Hyperlink</I></B> - A hyperlink will link to an Internet or Intranet site, or another location in the database. The data consists of up to four parts each separated by the pound sign (#): DisplayText#Address#SubAddress#ScreenTip. The Address is the only required part of the string. Examples:
+<BR>
+<TABLE cellSpacing=10 cellPadding=0 width="90%" border=0>
+<TBODY>
+<TR>
+<TD><I>Internet hyperlink example:</I></TD>
+<TD>FGCU Home Page#http://www.fgcu.edu#</TD>
+</TR><TR>
+<TD><I>Database link example:</I></TD>
+<TD>#c:\My Documents\database.mdb#MyTable</TD>
+</TR></TBODY></TABLE>
+</UL>
+<LI><B>Description</B> (optional) - Enter a brief description of what the contents of the field are. 
+<LI><B>Field Properties</B> - Select any pertinent properties for the field from the bottom pane. 
+</UL>
+<P><B> Field Properties</B>
+<P>Properties for each field are set from the bottom pane of the Design View window.
+<UL>
+<LI><B>Field Size</B> is used to set the number of characters needed in a text or number field. The default field size for the text type is 50 characters. If the records in the field will only have two or three characters, you can change the size of the field to save disk space or prevent entry errors by limiting the number of characters allowed. Likewise, if the field will require more than 50 characters, enter a number up to 255. The field size is set in exact characters for Text type, but options are give for numbers: 
+<UL>
+<LI><B>Byte</B> - Positive integers between 1 and 255 
+<LI><B>Integer</B> - Positive and negative integers between -32,768 and 32,768 
+<LI><B>Long Integer (default)</B> - Larger positive and negative integers between -2 billion and 2 billion. 
+<LI><B>Single</B> - Single-precision floating-point number 
+<LI><B>Double</B> - Double-precision floating-point number 
+<LI><B>Decimal</B> - Allows for Precision and Scale property control 
+</UL>
+<LI><B>Format</B> conforms the data in the field to the same format when it is entered into the datasheet. For text and memo fields, this property has two parts that are separated by a semicolon. The first part of the property is used to apply to the field and the second applies to empty fields.
+<BR>
+<BR><B>Text and memo format</B>.
+<BR>
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" border=1>
+<TBODY>
+<TR align=middle>
+<TD bgColor=#d7dfee colSpan=4><B>Text Format</B></TD>
+</TR><TR align=middle>
+<TD><B>Format</B></TD>
+<TD><B>Datasheet&nbsp;Entry</B></TD>
+<TD><B>Display</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR>
+<TD><B>@@@-@@@@</B></TD>
+<TD>1234567</TD>
+<TD>123-4567</TD>
+<TD>@ indicates a required
+<BR>character or space</TD>
+</TR><TR>
+<TD><B>@@@-@@@&amp;</B></TD>
+<TD>123456</TD>
+<TD>123-456</TD>
+<TD>&amp; indicates an optional
+<BR>character or space</TD>
+</TR><TR>
+<TD><B>&lt;</B></TD>
+<TD>HELLO</TD>
+<TD>hello</TD>
+<TD>&lt; converts characters to lowercase</TD>
+</TR><TR>
+<TD><B>&gt;</B></TD>
+<TD>hello</TD>
+<TD>HELLO</TD>
+<TD>&gt; converts characters to uppercase</TD>
+</TR><TR>
+<TD><B>@\!</B></TD>
+<TD>Hello</TD>
+<TD>Hello!</TD>
+<TD><B>\</B> adds characters to the end</TD>
+</TR><TR>
+<TD><B>@;"No&nbsp;Data&nbsp;Entered"</B></TD>
+<TD>Hello</TD>
+<TD>Hello</TD>
+<TD>&nbsp;</TD>
+</TR><TR>
+<TD><B>@;"No&nbsp;Data&nbsp;Entered"</B></TD>
+<TD>(blank)</TD>
+<TD>No&nbsp;Data&nbsp;Entered</TD>
+<TD>&nbsp;</TD>
+</TR></TBODY></TABLE>
+<BR><B>Number format</B>. Select one of the preset options from the drop down menu or construct a custom format using symbols explained below:
+<BR>
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" border=1>
+<TBODY>
+<TR align=middle>
+<TD bgColor=#d7dfee colSpan=4><B>Number Format</B></TD>
+</TR><TR align=middle>
+<TD><B>Format</B></TD>
+<TD><B>Datasheet&nbsp;Entry</B></TD>
+<TD><B>Display</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR>
+<TD><B>###,##0.00 </B></TD>
+<TD>123456.78</TD>
+<TD>123,456.78</TD>
+<TD rowSpan=2>0 is a placeholder that displays a digit or 0 if there is none.
+<BR># is a placeholder that displays a digit or nothing if there is none.</TD>
+</TR><TR>
+<TD><B>$###,##0.00</B></TD>
+<TD>0</TD>
+<TD>$0.00</TD>
+</TR><TR>
+<TD><B>###.00%</B></TD>
+<TD>.123</TD>
+<TD>12.3%</TD>
+<TD>% multiplies the number by 100 and added a percent sign</TD>
+</TR></TBODY></TABLE>
+<BR><B>Currency format</B>. This formatting consists of four parts separated by semicolons:
+<BR>format for positive numbers; format for negative numbers; format for zero values; format for Null values.
+<BR>
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" border=1>
+<TBODY>
+<TR align=middle>
+<TD bgColor=#d7dfee colSpan=2><B>Currency Format</B></TD>
+</TR><TR align=middle>
+<TD><B>Format</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR vAlign=top>
+<TD><B>$##0.00;($##0.00)[Red];$0.00;"none"</B></TD>
+<TD>Positive values will be normal currency format, negative numbers will be red in parentheses, zero is entered for zero values, and "none" will be written for Null values.</TD>
+</TR></TBODY></TABLE>
+<BR><B>Date format</B>. In the table below, the value "1/1/01" is entered into the datasheet, and the following values are displayed as a result of the different assigned formats.
+<BR>
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" border=1>
+<TBODY>
+<TR align=middle bgColor=#d7dfee>
+<TD colSpan=3><B>Date Format</B></TD>
+</TR><TR align=middle>
+<TD><B>Format</B></TD>
+<TD><B>Display</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR vAlign=top>
+<TD><B>dddd","mmmm&nbsp;d","yyyy</B></TD>
+<TD>Monday,&nbsp;January&nbsp;1,&nbsp;2001</TD>
+<TD>dddd, mmmm, and yyyy print the full day name, month name, and year</TD>
+</TR><TR vAlign=top>
+<TD><B>ddd","mmm&nbsp;".&nbsp;"&nbsp;d",&nbsp;'"yy</B></TD>
+<TD>Mon, Jan. 1, '01</TD>
+<TD>ddd, mmm, and yy print the first three day letters, first three month letters, and last two year digits </TD>
+</TR><TR vAlign=top>
+<TD><B>"Today is " dddd</B></TD>
+<TD>Today is Monday</TD>
+<TD>&nbsp;</TD>
+</TR><TR vAlign=top>
+<TD><B>h:n:s: AM/PM</B></TD>
+<TD>12:00:00 AM</TD>
+<TD>"n" is used for minutes to
+<BR>avoid confusion with months</TD>
+</TR></TBODY></TABLE>
+<BR><B>Yes/No</B> fields are displayed as check boxes by default on the datasheet. To change the formatting of these fields, first click the Lookup tab and change the Display Control to a text box. Go back to the General tab choices to make formatting changes. The formatting is designated in three sections separated by semicolons. The first section does not contain anything but the semicolon must be included. The second section specifies formatting for Yes values and the third for No values.
+<BR>
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" border=1>
+<TBODY>
+<TR align=middle bgColor=#d7dfee>
+<TD colSpan=2><B>Yes/No Format</B></TD>
+</TR><TR align=middle>
+<TD><B>Format</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR vAlign=top>
+<TD><B>;"Yes"[green];"No"[red]</B></TD>
+<TD>Prints "Yes" in green or "No" in red</TD>
+</TR></TBODY></TABLE>
+<BR>
+<LI><B>Default Value</B> - There may be cases where the value of a field will usually be the same for all records. In this case, a changeable default value can be set to prevent typing the same thing numerous times. Set the Default Value property.
+<BR>
+</UL>
+<P><A name=primary_key></A><B> Primary Key</B>
+<P>Every record in a table must have a primary key that differentiates it from every other record in the table. In some cases, it is only necessary to designate an existing field as the primary key if you are certain that every record in the table will have a different value for that particular field. A social security number is an example of a record whose values will only appear once in a database table.
+<P>Designate the primary key field by right-clicking on the record and selection <B>Primary Key</B> from the shortcut menu or select <B>Edit|Primary Key</B> from the menu bar. The primary key field will be noted with a key image to the left. To remove a primary key, repeat one of these steps.
+<P>If none of the existing fields in the table will produce unique values for every record, a separate field must be added. Access will prompt you to create this type of field at the beginning of the table the first time you save the table and a primary key field has not been assigned. The field is named "ID" and the data type is "autonumber". Since this extra field serves no purpose to you as the user, the autonumber type automatically updates whenever a record is added so there is no extra work on your part. You may also choose to hide this column in the datasheet as explained on a later page in this tutorial.
+<P><B> Indexes</B>
+<P>Creating indexes allows Access to query and sort records faster. To set an indexed field, select a field that is commonly searched and change the Indexed property to <B>Yes (Duplicates OK)</B> if multiple entries of the same data value are allowed or <B>Yes (No Duplicates)</B> to prevent duplicates.
+<P><B> Field Validation Rules</B>
+<P>Validation Rules specify requirements (change word) for the data entered in the worksheet. A customized message can be displayed to the user when data that violates the rule setting is entered. Click the expression builder ("<B>...</B>") button at the end of the Validation Rule box to write the validation rule. Examples of field validation rules include <B>&lt;&gt; 0</B> to not allow zero values in the record, and <B>???</B> to only all data strings three characters in length.
+<P><B> Input Masks</B>
+<P>An input mask controls the value of a record and sets it in a specific format. They are similar to the Format property, but instead display the format on the datasheet before the data is entered. For example, a telephone number field can formatted with an input mask to accept ten digits that are automatically formatted as "(555) 123-4567". The blank field would look like (___) ___-____. An an input mask to a field by following these steps:
+<OL>
+<LI>In design view, place the cursor in the field that the input mask will be applied to. 
+<LI>Click in the white space following <B>Input Mask</B> under the <B>General</B> tab. 
+<LI>Click the "<B>...</B>" button to use the wizard or enter the mask, (@@@) @@@-@@@@, into the field provided. The following symbols can be used to create an input mask from scratch:
+<BR>
+<TABLE borderColor=#00287a cellSpacing=1 cellPadding=1 width="90%" border=1>
+<TBODY>
+<TR align=middle bgColor=#d7dfee>
+<TD colSpan=2><B>Input Mask Symbols</B></TD>
+</TR><TR align=middle>
+<TD><B>Symbol</B></TD>
+<TD><B>Explanation</B></TD>
+</TR><TR>
+<TD align=middle><B>A</B></TD>
+<TD>Letter or digit</TD>
+</TR><TR>
+<TD align=middle><B>0</B></TD>
+<TD>A digit 0 through 9 without a + or - sign and with blanks displayed as zeros</TD>
+</TR><TR>
+<TD align=middle><B>9</B></TD>
+<TD>Same as 0 with blanks displayed as spaces</TD>
+</TR><TR>
+<TD align=middle><B>#</B></TD>
+<TD>Same as 9 with +/- signs</TD>
+</TR><TR>
+<TD align=middle><B>?</B></TD>
+<TD>Letter</TD>
+</TR><TR>
+<TD align=middle><B>L</B></TD>
+<TD>Letter A through Z</TD>
+</TR><TR>
+<TD align=middle><B>C or &amp;</B></TD>
+<TD>Character or space</TD>
+</TR><TR>
+<TD align=middle><B>&lt;</B></TD>
+<TD>Convert letters to lower case</TD>
+</TR><TR>
+<TD align=middle><B>&gt;</B></TD>
+<TD>Convert letters to upper case</TD>
+</TR></TBODY></TABLE>
+</OL>

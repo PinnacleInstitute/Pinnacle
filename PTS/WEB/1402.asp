@@ -1,0 +1,543 @@
+<!--#include file="Include\System.asp"-->
+<% Response.Buffer=true
+'-----action code constants
+Const cActionNew = 0
+Const cActionAdd = 2
+Const cActionCancel = 3
+'-----page variables
+Dim oData
+Dim oStyle
+'-----system variables
+Dim reqActionCode
+Dim reqSysTestFile, reqSysLanguage
+Dim reqSysHeaderImage, reqSysFooterImage, reqSysReturnImage, reqSysNavBarImage, reqSysHeaderURL, reqSysReturnURL
+Dim reqSysUserID, reqSysUserGroup, reqSysUserStatus, reqSysUserName, reqSysEmployeeID, reqSysCustomerID, reqSysAffiliateID, reqSysAffiliateType
+Dim reqSysDate, reqSysTime, reqSysTimeno, reqSysServerName, reqSysServerPath, reqSysWebDirectory
+Dim reqPageURL, reqPageData, reqReturnURL, reqReturnData
+Dim reqSysCompanyID, reqSysTrainerID, reqSysMemberID, reqSysOrgID, reqSysUserMode, reqSysUserOptions, reqSysGA_ACCTID, reqSysGA_DOMAIN
+Dim reqLangDialect, reqLangCountry, reqLangDefault
+Dim xmlSystem, xmlConfig, xmlParam, xmlError, xmlErrorLabels, reqConfirm
+Dim xmlTransaction, xmlData
+'-----language variables
+Dim oLanguage, xmlLanguage
+Dim xslPage
+Dim fileLanguage
+'-----object variables
+Dim oLeadCampaigns, xmlLeadCampaigns
+Dim oLeadCampaign, xmlLeadCampaign
+'-----declare page parameters
+Dim reqCompanyID
+Dim reqGroupID
+Dim reqPageType
+Dim reqCopyLeadCampaignID
+Dim reqMemberID
+Dim reqLoadGroupID
+On Error Resume Next
+
+'-----Call Common System Function
+CommonSystem()
+
+Sub DoError(ByVal bvNumber, ByVal bvSource, ByVal bvErrorMsg)
+   bvErrorMsg = Replace(bvErrorMsg, Chr(39), Chr(34))
+   Set oUtil = server.CreateObject("wtSystem.CUtility")
+   With oUtil
+      tmpMsgFld = .ErrMsgFld( bvErrorMsg )
+      tmpMsgVal = .ErrMsgVal( bvErrorMsg )
+   End With
+   Set oUtil = Nothing
+   xmlError = "<ERROR number=" + Chr(34) & bvNumber & Chr(34) + " src=" + Chr(34) + bvSource + Chr(34) + " msgfld=" + Chr(34) + tmpMsgFld + Chr(34) + " msgval=" + Chr(34) + tmpMsgVal + Chr(34) + ">" + CleanXML(bvErrorMsg) + "</ERROR>"
+   Err.Clear
+End Sub
+
+'-----initialize the error data
+xmlError = ""
+
+'-----save the return URL and form data if supplied
+If (Len(Request.Item("ReturnURL")) > 0) Then
+   reqReturnURL = Replace(Request.Item("ReturnURL"), "&", "%26")
+   reqReturnData = Replace(Request.Item("ReturnData"), "&", "%26")
+   SetCache "1402URL", reqReturnURL
+   SetCache "1402DATA", reqReturnData
+End If
+
+'-----restore my form if it was cached
+reqPageData = GetCache("RETURNDATA")
+SetCache "RETURNDATA", ""
+
+reqSysTestFile = GetInput("SysTestFile", reqPageData)
+If Len(reqSysTestFile) > 0 Then
+   SetCache "SYSTESTFILE", reqSysTestFile
+Else
+   reqSysTestFile = GetCache("SYSTESTFILE")
+End If
+
+reqActionCode = Numeric(GetInput("ActionCode", reqPageData))
+reqSysHeaderImage = GetCache("HEADERIMAGE")
+reqSysFooterImage = GetCache("FOOTERIMAGE")
+reqSysReturnImage = GetCache("RETURNIMAGE")
+reqSysNavBarImage = GetCache("NAVBARIMAGE")
+reqSysHeaderURL = GetCache("HEADERURL")
+reqSysReturnURL = GetCache("RETURNURL")
+reqConfirm = GetCache("CONFIRM")
+SetCache "CONFIRM", ""
+reqSysEmployeeID = Numeric(GetCache("EMPLOYEEID"))
+reqSysCustomerID = Numeric(GetCache("CUSTOMERID"))
+reqSysAffiliateID = Numeric(GetCache("AFFILIATEID"))
+reqSysAffiliateType = Numeric(GetCache("AFFILIATETYPE"))
+reqSysDate = CStr(Date())
+reqSysTime = CStr(Time())
+reqSysTimeno = CStr((Hour(Time())*100 ) + Minute(Time()))
+reqSysServerName = Request.ServerVariables("SERVER_NAME")
+reqSysWebDirectory = Request.ServerVariables("APPL_PHYSICAL_PATH")
+reqSysServerPath = Request.ServerVariables("PATH_INFO")
+pos = InStr(LCASE(reqSysServerPath), "1402")
+If pos > 0 Then reqSysServerPath = left(reqSysServerPath, pos-1)
+
+reqSysCompanyID = Numeric(GetCache("COMPANYID"))
+reqSysTrainerID = Numeric(GetCache("TRAINERID"))
+reqSysMemberID = Numeric(GetCache("MEMBERID"))
+reqSysOrgID = Numeric(GetCache("ORGID"))
+reqSysUserMode = Numeric(GetCache("USERMODE"))
+reqSysUserOptions = GetCache("USEROPTIONS")
+reqSysGA_ACCTID = GetCache("GA_ACCTID")
+reqSysGA_DOMAIN = GetCache("GA_DOMAIN")
+
+'-----fetch page parameters
+reqCompanyID =  Numeric(GetInput("CompanyID", reqPageData))
+reqGroupID =  Numeric(GetInput("GroupID", reqPageData))
+reqPageType =  Numeric(GetInput("PageType", reqPageData))
+reqCopyLeadCampaignID =  Numeric(GetInput("CopyLeadCampaignID", reqPageData))
+reqMemberID =  Numeric(GetInput("MemberID", reqPageData))
+reqLoadGroupID =  Numeric(GetInput("LoadGroupID", reqPageData))
+'-----set my page's URL and form for any of my links
+reqPageURL = Replace(MakeReturnURL(), "&", "%26")
+tmpPageData = Replace(MakeFormCache(), "&", "%26")
+'-----If the Form cache is empty, do not replace the return data
+If tmpPageData <> "" Then
+   reqPageData = tmpPageData
+End If
+
+'-----get the userID and security group
+CheckSecurity reqSysUserID, reqSysUserGroup, 0, 0
+reqSysUserStatus = GetCache("USERSTATUS")
+reqSysUserName = GetCache("USERNAME")
+
+'-----get language settings
+reqLangDefault = "en"
+reqSysLanguage = GetInput("SysLanguage", reqPageData)
+If Len(reqSysLanguage) = 0 Then
+   reqSysLanguage = GetCache("LANGUAGE")
+   If Len(reqSysLanguage) = 0 Then
+      GetLanguage reqLangDialect, reqLangCountry, reqLangDefault
+      If len(reqLangDialect) > 0 Then
+         reqSysLanguage = reqLangDialect
+      ElseIf len(reqLangCountry) > 0 Then
+         reqSysLanguage = reqLangCountry
+      Else
+         reqSysLanguage = reqLangDefault
+      End If
+      SetCache "LANGUAGE", reqSysLanguage
+   End If
+Else
+   SetCache "LANGUAGE", reqSysLanguage
+End If
+
+Sub LoadList()
+   On Error Resume Next
+   tmpGroupID = GetCache("GROUPID")
+   If (reqLoadGroupID <> 0) Then
+      tmpGroupID = reqLoadGroupID
+   End If
+   If (reqLoadGroupID = 0) Then
+      reqLoadGroupID = tmpGroupID
+   End If
+
+   Set oLeadCampaigns = server.CreateObject("ptsLeadCampaignUser.CLeadCampaigns")
+   If oLeadCampaigns Is Nothing Then
+      DoError Err.Number, Err.Source, "Unable to Create Object - ptsLeadCampaignUser.CLeadCampaigns"
+   Else
+      With oLeadCampaigns
+         .SysCurrentLanguage = reqSysLanguage
+         If (reqPageType = 1) Then
+            xmlLeadCampaigns = .EnumMember(CLng(reqCompanyID), tmpGroupID, 0, 0, 0, reqMemberID, , , CLng(reqSysUserID))
+            If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+         End If
+         If (reqPageType = 2) Then
+            xmlLeadCampaigns = .EnumPresent(CLng(reqCompanyID), tmpGroupID, 0, 0, 0, reqMemberID, , , CLng(reqSysUserID))
+            If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+         End If
+      End With
+   End If
+   Set oLeadCampaigns = Nothing
+End Sub
+
+If (reqCompanyID = 0) Then
+   reqCompanyID = reqSysCompanyID
+End If
+If (reqMemberID = 0) Then
+   reqMemberID = reqSysMemberID
+End If
+If (reqPageType = 0) Then
+   reqPageType = 1
+End If
+Select Case CLng(reqActionCode)
+
+   Case CLng(cActionNew):
+
+      Set oLeadCampaign = server.CreateObject("ptsLeadCampaignUser.CLeadCampaign")
+      If oLeadCampaign Is Nothing Then
+         DoError Err.Number, Err.Source, "Unable to Create Object - ptsLeadCampaignUser.CLeadCampaign"
+      Else
+         With oLeadCampaign
+            .SysCurrentLanguage = reqSysLanguage
+            .Load 0, CLng(reqSysUserID)
+            If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+            xmlLeadCampaign = .XML(2)
+            If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+         End With
+      End If
+      Set oLeadCampaign = Nothing
+      LoadList
+
+   Case CLng(cActionAdd):
+      tmpSalesCampaignID = 0
+      tmpProspectTypeID = 0
+      tmpGroupID = 0
+      tmpPEmail = ""
+      tmpObjective = ""
+      tmpTitle = ""
+      tmpDescription = ""
+      tmpKeywords = ""
+      tmpIsMember = 0
+      tmpIsAffiliate = 0
+      tmpNewsLetterID = 0
+      tmpFolderID = 0
+      tmpEntity = 0
+      reqCopyLeadCampaignID = Request.Form.Item("CopyLeadCampaignID")
+
+      If (reqCopyLeadCampaignID <> 0) Then
+         Set oLeadCampaign = server.CreateObject("ptsLeadCampaignUser.CLeadCampaign")
+         If oLeadCampaign Is Nothing Then
+            DoError Err.Number, Err.Source, "Unable to Create Object - ptsLeadCampaignUser.CLeadCampaign"
+         Else
+            With oLeadCampaign
+               .SysCurrentLanguage = reqSysLanguage
+               .Load reqCopyLeadCampaignID, CLng(reqSysUserID)
+               If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+               CopyCompanyID = .CompanyID
+               tmpSalesCampaignID = .SalesCampaignID
+               tmpProspectTypeID = .ProspectTypeID
+               tmpGroupID = .GroupID
+               tmpObjective = .Objective
+               tmpTitle = .Title
+               tmpDescription = .Description
+               tmpKeywords = .Keywords
+               tmpIsMember = .IsMember
+               tmpIsAffiliate = .IsAffiliate
+               tmpNewsLetterID = .NewsLetterID
+               tmpFolderID = .FolderID
+               tmpEntity = .Entity
+            End With
+         End If
+         Set oLeadCampaign = Nothing
+      End If
+
+      Set oLeadCampaign = server.CreateObject("ptsLeadCampaignUser.CLeadCampaign")
+      If oLeadCampaign Is Nothing Then
+         DoError Err.Number, Err.Source, "Unable to Create Object - ptsLeadCampaignUser.CLeadCampaign"
+      Else
+         With oLeadCampaign
+            .SysCurrentLanguage = reqSysLanguage
+            .Load 0, CLng(reqSysUserID)
+            If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+            .CompanyID = reqCompanyID
+            .GroupID = reqGroupID
+            .Status = 1
+            .SalesCampaignID = tmpSalesCampaignID
+            .ProspectTypeID = tmpProspectTypeID
+            .GroupID = tmpGroupID
+            .Objective = tmpObjective
+            .Title = tmpTitle
+            .Description = tmpDescription
+            .Keywords = tmpKeywords
+            .IsMember = tmpIsMember
+            .IsAffiliate = tmpIsAffiliate
+            .NewsLetterID = tmpNewsLetterID
+            .FolderID = tmpFolderID
+            .Entity = tmpEntity
+
+            .LeadCampaignName = Request.Form.Item("LeadCampaignName")
+            .PageType = Request.Form.Item("PageType")
+            If (reqGroupID <> 0) Then
+               .PageType = reqPageType
+            End If
+            NewLeadCampaignID = CLng(.Add(CLng(reqSysUserID)))
+            If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+            If (xmlError <> "") Then
+               xmlLeadCampaign = .XML(2)
+               If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+            End If
+         End With
+      End If
+      Set oLeadCampaign = Nothing
+      If (xmlError = "") And (reqCopyLeadCampaignID <> 0) Then
+
+         Set oLeadPages = server.CreateObject("ptsLeadPageUser.CLeadPages")
+         If oLeadPages Is Nothing Then
+            DoError Err.Number, Err.Source, "Unable to Create Object - ptsLeadPageUser.CLeadPages"
+         Else
+            With oLeadPages
+               .SysCurrentLanguage = reqSysLanguage
+               .List reqCopyLeadCampaignID
+               If (Err.Number <> 0) Then DoError Err.Number, Err.Source, Err.Description End If
+               
+               Set oHTMLFile = server.CreateObject("wtHTMLFile.CHTMLFile")
+               If oHTMLFile Is Nothing Then
+                  DoError Err.Number, Err.Source, "Unable to Create Object - wtHTMLFile.CHTMLFile"
+               End If
+
+               Set oLeadPage = server.CreateObject("ptsLeadPageUser.CLeadPage")
+               If oLeadPage Is Nothing Then
+                  DoError Err.Number, Err.Source, "Unable to Create Object - ptsLeadPageUser.CLeadPage"
+               Else
+                  For Each oPage in oLeadPages
+                     With oPage
+                        oLeadPage.LeadCampaignID = NewLeadCampaignID
+                        oLeadPage.LeadPageName = .LeadPageName
+                        oLeadPage.Status = .Status
+                        oLeadPage.Seq = .Seq
+                        oLeadPage.IsInput = ABS(.IsInput)
+                        oLeadPage.IsCapture = ABS(.IsCapture)
+                        oLeadPage.IsProspect = ABS(.IsProspect)
+                        oLeadPage.IsNext = ABS(.IsNext)
+                        oLeadPage.NextCaption = .NextCaption
+                        oLeadPage.Inputs = .Inputs
+                        oLeadPage.Language = .Language
+                        oLeadPage.IsLeadURL = ABS(.IsLeadURL)
+                        oLeadPage.IsRedirectURL = ABS(.IsRedirectURL)
+                        oLeadPage.LeadURL = .LeadURL
+                        oLeadPage.RedirectURL = .RedirectURL
+                        oLeadPage.TopCode = .TopCode
+
+                        NewLeadPageID = oLeadPage.Add(CLng(reqSysUserID))
+
+                        With oHTMLFile
+                           .Project = SysProject
+                           .Language = oPage.Language
+                           .Filename = "Lead" & oPage.LeadPageID & ".htm"
+                           .Path = reqSysWebDirectory + "Sections\Company\" + CSTR(CopyCompanyID) + "\Lead\"
+                           .Load 
+                           .Filename = "Lead" & NewLeadPageID & ".htm"
+                           .Path = reqSysWebDirectory + "Sections\Company\" & CSTR(reqCompanyID) + "\Lead\"
+                           .Save 
+                        End With
+                     End With
+                  Next
+               End If
+               'Copy the Promotions Page for the Lead Campaign
+               With oHTMLFile
+                  .Project = SysProject
+                  .Language = reqSysLanguage
+                  .Filename = "Promo" & reqCopyLeadCampaignID & ".htm"
+                  .Path = reqSysWebDirectory + "Sections\Company\" + CSTR(CopyCompanyID) + "\Lead\"
+                  .Load 
+                  .Filename = "Promo" & NewLeadCampaignID & ".htm"
+                  .Path = reqSysWebDirectory + "Sections\Company\" + CSTR(reqCompanyID) + "\Lead\"
+                  .Save 
+               End With
+               Set oLeadPage = Nothing
+               Set oHTMLFile = Nothing
+
+            End With
+         End If
+         Set oLeadPages = Nothing
+      End If
+      If (xmlError <> "") Then
+         LoadList
+      End If
+
+      If (xmlError = "") Then
+         reqReturnURL = GetCache("1402URL")
+         reqReturnData = GetCache("1402DATA")
+         SetCache "1402URL", ""
+         SetCache "1402DATA", ""
+         If (Len(reqReturnURL) > 0) Then
+            SetCache "RETURNURL", reqReturnURL
+            SetCache "RETURNDATA", reqReturnData
+            Response.Redirect Replace(reqReturnURL, "%26", "&")
+         End If
+      End If
+
+   Case CLng(cActionCancel):
+
+      reqReturnURL = GetCache("1402URL")
+      reqReturnData = GetCache("1402DATA")
+      SetCache "1402URL", ""
+      SetCache "1402DATA", ""
+      If (Len(reqReturnURL) > 0) Then
+         SetCache "RETURNURL", reqReturnURL
+         SetCache "RETURNDATA", reqReturnData
+         Response.Redirect Replace(reqReturnURL, "%26", "&")
+      End If
+End Select
+
+'-----get system data
+xmlSystem = "<SYSTEM"
+xmlSystem = xmlSystem + " headerimage=" + Chr(34) + reqSysHeaderImage + Chr(34)
+xmlSystem = xmlSystem + " footerimage=" + Chr(34) + reqSysFooterImage + Chr(34)
+xmlSystem = xmlSystem + " returnimage=" + Chr(34) + reqSysReturnImage + Chr(34)
+xmlSystem = xmlSystem + " navbarimage=" + Chr(34) + reqSysNavBarImage + Chr(34)
+xmlSystem = xmlSystem + " headerurl=" + Chr(34) + reqSysHeaderURL + Chr(34)
+xmlSystem = xmlSystem + " returnurl=" + Chr(34) + CleanXML(reqSysReturnURL) + Chr(34)
+xmlSystem = xmlSystem + " language=" + Chr(34) + reqSysLanguage + Chr(34)
+xmlSystem = xmlSystem + " langdialect=" + Chr(34) + reqLangDialect + Chr(34)
+xmlSystem = xmlSystem + " langcountry=" + Chr(34) + reqLangCountry + Chr(34)
+xmlSystem = xmlSystem + " langdefault=" + Chr(34) + reqLangDefault + Chr(34)
+xmlSystem = xmlSystem + " userid=" + Chr(34) + CStr(reqSysUserID) + Chr(34)
+xmlSystem = xmlSystem + " usergroup=" + Chr(34) + CStr(reqSysUserGroup) + Chr(34)
+xmlSystem = xmlSystem + " userstatus=" + Chr(34) + CStr(reqSysUserStatus) + Chr(34)
+xmlSystem = xmlSystem + " username=" + Chr(34) + CleanXML(reqSysUserName) + Chr(34)
+xmlSystem = xmlSystem + " customerid=" + Chr(34) + CStr(reqSysCustomerID) + Chr(34)
+xmlSystem = xmlSystem + " employeeid=" + Chr(34) + CStr(reqSysEmployeeID) + Chr(34)
+xmlSystem = xmlSystem + " affiliateid=" + Chr(34) + CStr(reqSysAffiliateID) + Chr(34)
+xmlSystem = xmlSystem + " affiliatetype=" + Chr(34) + CStr(reqSysAffiliateType) + Chr(34)
+xmlSystem = xmlSystem + " actioncode=" + Chr(34) + CStr(reqActionCode) + Chr(34)
+xmlSystem = xmlSystem + " confirm=" + Chr(34) + CStr(reqConfirm) + Chr(34)
+xmlSystem = xmlSystem + " pageData=" + Chr(34) + CleanXML(reqPageData) + Chr(34)
+xmlSystem = xmlSystem + " pageURL=" + Chr(34) + CleanXML(reqPageURL) + Chr(34)
+xmlSystem = xmlSystem + " currdate=" + Chr(34) + reqSysDate + Chr(34)
+xmlSystem = xmlSystem + " currtime=" + Chr(34) + reqSysTime + Chr(34)
+xmlSystem = xmlSystem + " currtimeno=" + Chr(34) + reqSysTimeno + Chr(34)
+xmlSystem = xmlSystem + " servername=" + Chr(34) + reqSysServerName + Chr(34)
+xmlSystem = xmlSystem + " serverpath=" + Chr(34) + reqSysServerPath + Chr(34)
+xmlSystem = xmlSystem + " webdirectory=" + Chr(34) + reqSysWebDirectory + Chr(34)
+xmlSystem = xmlSystem + " companyid=" + Chr(34) + CStr(reqSysCompanyID) + Chr(34)
+xmlSystem = xmlSystem + " trainerid=" + Chr(34) + CStr(reqSysTrainerID) + Chr(34)
+xmlSystem = xmlSystem + " memberid=" + Chr(34) + CStr(reqSysMemberID) + Chr(34)
+xmlSystem = xmlSystem + " orgid=" + Chr(34) + CStr(reqSysOrgID) + Chr(34)
+xmlSystem = xmlSystem + " usermode=" + Chr(34) + CStr(reqSysUserMode) + Chr(34)
+xmlSystem = xmlSystem + " useroptions=" + Chr(34) + reqSysUserOptions + Chr(34)
+xmlSystem = xmlSystem + " ga_acctid=" + Chr(34) + reqSysGA_ACCTID + Chr(34)
+xmlSystem = xmlSystem + " ga_domain=" + Chr(34) + reqSysGA_DOMAIN + Chr(34)
+xmlSystem = xmlSystem + " />"
+xmlOwner = "<OWNER"
+xmlOwner = xmlOwner + " id=" + Chr(34) + CStr(reqOwnerID) + Chr(34)
+xmlOwner = xmlOwner + " title=" + Chr(34) + CleanXML(reqOwnerTitle) + Chr(34)
+xmlOwner = xmlOwner + " entity=" + Chr(34) + CStr(reqOwner) + Chr(34)
+xmlOwner = xmlOwner + " />"
+xmlConfig = "<CONFIG"
+xmlConfig = xmlConfig + " isdocuments=" + Chr(34) + GetCache("ISDOCUMENTS") + Chr(34)
+xmlConfig = xmlConfig + " documentpath=" + Chr(34) + GetCache("DOCUMENTPATH") + Chr(34)
+xmlConfig = xmlConfig + " />"
+xmlParam = "<PARAM"
+xmlParam = xmlParam + " companyid=" + Chr(34) + CStr(reqCompanyID) + Chr(34)
+xmlParam = xmlParam + " groupid=" + Chr(34) + CStr(reqGroupID) + Chr(34)
+xmlParam = xmlParam + " pagetype=" + Chr(34) + CStr(reqPageType) + Chr(34)
+xmlParam = xmlParam + " copyleadcampaignid=" + Chr(34) + CStr(reqCopyLeadCampaignID) + Chr(34)
+xmlParam = xmlParam + " memberid=" + Chr(34) + CStr(reqMemberID) + Chr(34)
+xmlParam = xmlParam + " loadgroupid=" + Chr(34) + CStr(reqLoadGroupID) + Chr(34)
+xmlParam = xmlParam + " />"
+
+'-----get the transaction XML
+xmlTransaction = "<TXN>"
+xmlTransaction = xmlTransaction +  xmlLeadCampaigns
+xmlTransaction = xmlTransaction +  xmlLeadCampaign
+xmlTransaction = xmlTransaction + "</TXN>"
+
+'-----display the confirmation message if appropriate
+If (Len(xmlError) = 0) Then
+   If (Len(reqConfirm) > 0) Then
+      DoError 0, "", reqConfirm
+   End If
+End If
+'-----get the language XML
+fileLanguage = "Language" + "\LeadCampaign[" + reqSysLanguage + "].xml"
+If reqSysLanguage <> "en" Then
+   If Not FileExists( reqSysWebDirectory + fileLanguage ) Then fileLanguage = "Language\LeadCampaign[en].xml"
+End If
+Set oLanguage = server.CreateObject("MSXML2.FreeThreadedDOMDocument")
+oLanguage.load server.MapPath(fileLanguage)
+If oLanguage.parseError <> 0 Then
+   Response.Write "1402 Load file (oLanguage) failed with error code " + CStr(oLanguage.parseError)
+   Response.End
+End If
+oLanguage.removeChild oLanguage.firstChild
+
+'-----append common labels
+fileLanguage = "Language\Common[" + reqSysLanguage + "].xml"
+If reqSysLanguage <> "en" Then
+   If Not FileExists( reqSysWebDirectory + fileLanguage ) Then fileLanguage = "Language\Common[en].xml"
+End If
+Set oCommon = server.CreateObject("MSXML2.FreeThreadedDOMDocument")
+oCommon.load server.MapPath(fileLanguage)
+If oCommon.parseError <> 0 Then
+   Response.Write "1402 Load file (oCommon) failed with error code " + CStr(oCommon.parseError)
+   Response.End
+End If
+Set oLabels = oCommon.selectNodes("LANGUAGE/LABEL")
+For Each oLabel In oLabels
+Set oAdd = oLanguage.selectSingleNode("LANGUAGE").appendChild(oLabel.cloneNode(True))
+Set oAdd = Nothing
+Next
+xmlLanguage = oLanguage.XML
+Set oLanguage = Nothing
+
+'-----If there is an Error, get the Error Labels XML
+If xmlError <> "" Then
+fileLanguage = "Language\Error[" + reqSysLanguage + "].xml"
+If reqSysLanguage <> "en" Then
+   If Not FileExists( reqSysWebDirectory + fileLanguage ) Then fileLanguage = "Language\Error[en].xml"
+End If
+Set oLanguage = server.CreateObject("MSXML2.FreeThreadedDOMDocument")
+oLanguage.load server.MapPath(fileLanguage)
+If oLanguage.parseError <> 0 Then
+   Response.Write "1402 Load file (oLanguage) failed with error code " + CStr(oLanguage.parseError)
+   Response.End
+End If
+oLanguage.removeChild oLanguage.firstChild
+xmlErrorLabels = oLanguage.XML
+End If
+
+'-----get the data XML
+xmlData = "<DATA>"
+xmlData = xmlData +  xmlTransaction
+xmlData = xmlData +  xmlSystem
+xmlData = xmlData +  xmlParam
+xmlData = xmlData +  xmlOwner
+xmlData = xmlData +  xmlConfig
+xmlData = xmlData +  xmlParent
+xmlData = xmlData +  xmlBookmark
+xmlData = xmlData +  xmlLanguage
+xmlData = xmlData +  xmlError
+xmlData = xmlData +  xmlErrorLabels
+xmlData = xmlData + "</DATA>"
+
+'-----create a DOM object for the XSL
+xslPage = "1402.xsl"
+Set oStyle = server.CreateObject("MSXML2.FreeThreadedDOMDocument")
+oStyle.load server.MapPath(xslPage)
+If oStyle.parseError <> 0 Then
+   Response.Write "1402 Load file (oStyle) failed with error code " + CStr(oStyle.parseError)
+   Response.End
+End If
+
+'-----create a DOM object for the XML
+Set oData = server.CreateObject("MSXML2.FreeThreadedDOMDocument")
+oData.loadXML xmlData
+If oData.parseError <> 0 Then
+   Response.Write "1402 Load file (oData) failed with error code " + CStr(oData.parseError)
+   Response.Write "<BR/>" + xmlData
+   Response.End
+End If
+
+If Len(reqSysTestFile) > 0 Then
+   oData.save reqSysTestFile
+End If
+
+'-----transform the XML with the XSL
+Response.Write oData.transformNode(oStyle)
+
+Set oData = Nothing
+Set oStyle = Nothing
+Set oLanguage = Nothing
+%>
